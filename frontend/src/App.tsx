@@ -17,7 +17,7 @@ function App() {
       <h1>Vite + React</h1>
       <div className="card">
         <p>
-         This is an edit by William  
+         This is an edit by William, and this is a second update
         </p>
         <p>
          This is an edit by         

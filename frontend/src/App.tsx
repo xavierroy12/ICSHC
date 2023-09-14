@@ -20,7 +20,7 @@ function App() {
          This is an edit by William  
         </p>
         <p>
-         This is an edit by         
+         This is an edit by Xavier Roy :D
         </p> <p>
          This is an edit by         
         </p>

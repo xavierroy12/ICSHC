@@ -1,17 +1,32 @@
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import { useEffect, useState } from 'react';
 
 function App() {
   const [emplacements, setEmplacements] = useState<any>(null);
-
+  const fetchUser = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/emplacement/1', {
+        method: 'GET'
+  
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const data = await response.json();
+      setEmplacements(data);
+      // Handle the user data here
+      console.log(data);
+    } catch (error) {
+      // Handle any errors that occurred during the fetch
+      console.error('Fetch error:', error);
+    }
+  };
+  
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/emplacements/1')
-      .then(response => response.json())
-      .then(data => setEmplacements(data))
-      .catch(error => console.error(error));
+    fetchUser();
   }, []);
   console.log(emplacements)
   return (

@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EmplacementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,5 +18,5 @@ use Illuminate\Support\Facades\Route;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-Route::get('/emplacements/{emplacement}', 'EmplacementController@show')->name('emplacement.show');
+Route::get('/emplacement/{id}', [EmplacementController::class, 'show']);
 

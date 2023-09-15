@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Emplacement extends Model
 {
+    protected $table = 'emplacement';
+
     use HasFactory;
 }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Emplacement;
 use Illuminate\Http\Request;
-
+use DB;
 class EmplacementController extends Controller
 {
     /**
@@ -34,13 +34,12 @@ class EmplacementController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Emplacement $emplacement)
+    public function show($id)
     {
          // Find the emplacement by ID
-        $emplacement = Emplacement::find($emplacement->id);
+         $emplacement = DB::table('emplacement')->where('id', $id)->first();
 
-        // Log the emplacement data to the terminal
-        \Log::info($emplacement);
+        return $emplacement;
     }
 
     /**

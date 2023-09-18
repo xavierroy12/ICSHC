@@ -2,20 +2,27 @@ import './App.css'
 import { useEffect, useState } from 'react';
 
 function App() {
-  const [emplacements, setEmplacements] = useState<any>(null);
-  const fetchUser = async () => {
+  const [emplacement, setEmplacement] = useState(null);
+  const fetchEmplacement = async () => {
     try {
       const response = await fetch('http://127.0.0.1:8000/api/emplacement/1', {
-        method: 'GET'
-  
+        method: 'GET',
+        // mode: 'no-cors'
       });
-  
+      console.log(response)
+
+      if (response.type === 'opaque') {
+        // Handle the opaque response here
+        console.error('Received an opaque response');
+        return;
+      }
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
   
       const data = await response.json();
-      setEmplacements(data);
+      console.log(data)
+      setEmplacement(data);
       // Handle the user data here
       console.log(data);
     } catch (error) {
@@ -26,16 +33,15 @@ function App() {
   
 
   useEffect(() => {
-    fetchUser();
+    fetchEmplacement();
   }, []);
-  console.log(emplacements)
+  console.log(emplacement);
   return (
     <>
       <h1>Emplacements</h1>
       <ul>
-        {emplacements && emplacements.map(emplacement => (
-          <li key={emplacement.id}>{emplacement.name}</li>
-        ))}
+        {emplacement && 
+          <li key={emplacement.id}>{emplacement.name}</li>}
       </ul>
       <div className="card">
         <p>

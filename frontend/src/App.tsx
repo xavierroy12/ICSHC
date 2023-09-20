@@ -1,6 +1,7 @@
 import './App.css'
 import { useEffect, useState } from 'react';
 import '@mantine/core/styles.css';
+import Login from './components/Login';
 
 function App() {
   const [emplacement, setEmplacement] = useState(null);
@@ -38,26 +39,7 @@ function App() {
   }, []);
   console.log(emplacement);
   return (
-    <>
-      <h1>Emplacements</h1>
-      <ul>
-        {emplacement && 
-          <li>{emplacement.name}</li>}
-      </ul>
-      <div className="card">
-        <p>
-         This is an edit by William, and this is a second update
-        </p>
-        <p>
-         This is an edit by Xavier Roy :D
-        </p> <p>
-         This is an edit by Nicolas Boissé wassuppp
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+        <Login/>
   )
 }
 

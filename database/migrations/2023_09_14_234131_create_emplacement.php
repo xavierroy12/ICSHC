@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('emplacement', function (Blueprint $table) {
             $table->id();
-            $table->string('nom', 32);
+            $table->string('nom', 64);
             $table->integer('numero_civique');
             $table->string('adresse', 64);
         });

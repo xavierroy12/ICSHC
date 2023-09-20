@@ -6,21 +6,20 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ModeleCommandeSeeder extends Seeder
+class TypeClientSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('modele_commande')->insert([
-            'quantite' => 10,
-            'id_modele' => 1,
+        DB::table('type_client')->insert([
+            'nom' => 'Enseignant',
         ]);
 
-        DB::table('modele_commande')->insert([
-            'quantite' => 5,
-            'id_modele' => 2,
+        DB::table('type_client')->insert([
+            'nom' => 'Personnel',
         ]);
+
     }
 }

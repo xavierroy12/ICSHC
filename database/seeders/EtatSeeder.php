@@ -6,21 +6,23 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ModeleCommandeSeeder extends Seeder
+class EtatSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('modele_commande')->insert([
-            'quantite' => 10,
-            'id_modele' => 1,
+        DB::table('etat')->insert([
+            'nom' => 'En cours de livraison',
         ]);
 
-        DB::table('modele_commande')->insert([
-            'quantite' => 5,
-            'id_modele' => 2,
+        DB::table('etat')->insert([
+            'nom' => 'En préparation',
+        ]);
+
+        DB::table('etat')->insert([
+            'nom' => 'Annulée',
         ]);
     }
 }

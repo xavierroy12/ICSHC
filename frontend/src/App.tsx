@@ -1,5 +1,6 @@
 import './App.css'
 import { useEffect, useState } from 'react';
+import '@mantine/core/styles.css';
 
 function App() {
   const [emplacement, setEmplacement] = useState(null);
@@ -41,7 +42,7 @@ function App() {
       <h1>Emplacements</h1>
       <ul>
         {emplacement && 
-          <li key={emplacement.id}>{emplacement.name}</li>}
+          <li>{emplacement.name}</li>}
       </ul>
       <div className="card">
         <p>

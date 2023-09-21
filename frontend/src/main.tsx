@@ -10,8 +10,6 @@ const theme = createTheme({
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <MantineProvider theme={theme}>
-      <BrowserRouter>
         <App />
-      </BrowserRouter>
     </MantineProvider>
 )

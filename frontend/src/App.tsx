@@ -1,13 +1,21 @@
-import './App.css'
 import '@mantine/core/styles.css';
+import Layout from './Layout';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Actif from './components/Actif';
 
 function App() {
   return (
-    <>
-     <Actif id={1}/>
-    </>
+      <div className="App">
+        <Router>
+          <Layout>
+            <Routes>
+               <Route path="/" element={ <Actif id={1} />} />
+            </Routes>
+          </Layout>
+        </Router>
+      </div>
   )
 }
 
 export default App
+

@@ -1,7 +1,7 @@
 import '@mantine/core/styles.css';
 import Layout from './Layout';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Actif from './components/Actif';
+import Actifs from './components/Actifs';
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
         <Router>
           <Layout>
             <Routes>
-               <Route path="/" element={ <Actif id={1} />} />
+               <Route path="/" element={ <Actifs />} />
             </Routes>
           </Layout>
         </Router>
@@ -18,4 +18,3 @@ function App() {
 }
 
 export default App
-

@@ -61,4 +61,9 @@ class ModeleController extends Controller
     {
         //
     }
+    public function showAll()
+    {
+        $modeles = Modele::all();
+        return response()->json($modeles);
+    }
 }

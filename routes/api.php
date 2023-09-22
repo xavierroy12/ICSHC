@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmplacementController;
+use App\Http\Controllers\ActifController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,4 +20,6 @@ use App\Http\Controllers\EmplacementController;
 //     return $request->user();
 // });
 Route::get('/emplacement/{id}', [EmplacementController::class, 'show']);
+Route::get('/actifs', [ActifController::class, 'showAll']);
+
 

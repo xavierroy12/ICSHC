@@ -62,4 +62,9 @@ class ActifController extends Controller
     {
         //
     }
+    public function showAll()
+    {
+        $actifs = Actif::all();
+        return response()->json($actifs);
+    }
 }

@@ -9,7 +9,7 @@ function App() {
         <Router>
           <Layout>
             <Routes>
-               <Route path="/" element={ <Actifs />} />
+               <Route path="/actifs" element={ <Actifs />} />
             </Routes>
           </Layout>
         </Router>

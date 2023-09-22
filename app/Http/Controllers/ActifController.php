@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Actif;
 use Illuminate\Http\Request;
+use DB;
 
 class ActifController extends Controller
 {
@@ -34,9 +35,12 @@ class ActifController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Actif $Actif)
+    public function show(int $idActif)
     {
-        //
+        // Find the actif by ID
+        $actif = DB::table('actif')->where('id', $idActif)->first();
+
+        return $actif;
     }
 
     /**

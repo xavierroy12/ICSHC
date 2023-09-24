@@ -7,7 +7,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class Actif extends Model
 {
+    public $timestamps = false; // Désactiver les timestamps
+
     protected $table = 'actif';
+    protected $fillable = [
+        'numero_serie',
+        'nom',
+        'en_entrepot',
+        'adresse_mac',
+        'date_retour',
+        'note',
+        'id_modele_commande',
+        'id_statut',
+        'id_emplacement',
+        'id_proprietaire',
+        'id_utilisation',
+        // Autres colonnes autorisées pour l'attribution de masse
+    ];
+
 
     use HasFactory;
 
@@ -36,5 +53,5 @@ class Actif extends Model
         return $this->belongsTo(Emplacement::class, 'id_emplacement');
 
     }
-    
+
 }

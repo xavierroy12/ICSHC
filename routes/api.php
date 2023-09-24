@@ -4,7 +4,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmplacementController;
 use App\Http\Controllers\ActifController;
-use App\Http\Controllers\ActifController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\EtatController;
 use App\Http\Controllers\ModeleController;
@@ -29,5 +28,5 @@ Route::get('/categories', [TypeModeleController::class, 'showAll']);
 //ajout actif
 Route::post('/actif', [ActifController::class, 'store']);
 
-éém
+//modif actif
 Route::put('/actif/{id}', [ActifController::class, 'update']);

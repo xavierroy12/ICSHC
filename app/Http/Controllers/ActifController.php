@@ -29,8 +29,39 @@ class ActifController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            // Validez les données du formulaire
+            $validatedData = $request->validate([
+                'numero_serie' => 'required|max:255',
+                'nom' => 'required|max:255',
+                'en_entrepot' => 'required|in:1,0',
+                'adresse_mac' => 'nullable|max:255',
+                'date_retour' => 'nullable|date',
+                'note' => 'nullable',
+                'id_modele_commande' => 'required',
+                'id_statut' => 'required',
+                'id_emplacement' => 'required',
+                'id_proprietaire' => 'required',
+                'id_utilisation' => 'required',
+            ]);
+
+            // Créez un nouvel actif en utilisant les données validées
+            $actif = new Actif($validatedData);
+
+            // Sauvegarde l'actif dans la base de données
+            if ($actif->save()) {
+                // Retournez une réponse JSON pour indiquer le succès
+                return response()->json(['message' => 'Actif ajouté avec succès'], 201);
+            } else {
+                // En cas d'échec de sauvegarde, retournez une réponse d'erreur
+                return response()->json(['message' => 'Erreur lors de l\'ajout de l\'actif'], 500);
+            }
+        } catch (\Exception $e) {
+            // En cas d'exception, retournez une réponse d'erreur avec le message d'erreur
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
+
 
     /**
      * Display the specified resource.
@@ -54,9 +85,36 @@ class ActifController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Actif $Actif)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            // Recherchez l'actif par ID
+            $actif = Actif::findOrFail($id);
+
+            // Validez les données du formulaire
+            $validatedData = $request->validate([
+                'numero_serie' => 'required|max:255',
+                'nom' => 'required|max:255',
+                'en_entrepot' => 'required|in:1,0',
+                'adresse_mac' => 'nullable|max:255',
+                'date_retour' => 'nullable|date',
+                'note' => 'nullable',
+                'id_modele_commande' => 'required', // Assurez-vous que cette clé est incluse si elle est requise
+                'id_statut' => 'required',
+                'id_emplacement' => 'required',
+                'id_proprietaire' => 'required',
+                'id_utilisation' => 'required',
+            ]);
+
+            // Mettez à jour l'actif en utilisant les données validées
+            $actif->update($validatedData);
+
+            // Retournez une réponse JSON pour indiquer le succès
+            return response()->json(['message' => 'Actif mis à jour avec succès'], 200);
+        } catch (\Exception $e) {
+            // En cas d'exception, retournez une réponse d'erreur avec le message d'erreur
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -72,7 +130,7 @@ class ActifController extends Controller
             return [
                 'id' => $actif->id,
                 'numero_serie' => $actif->numero_serie,
-                'nom' => $actif->nom,   
+                'nom' => $actif->nom,
                 'modele' => $actif->modeleCommande->modele->nom,
                 'modele_id' => $actif->modeleCommande->modele->id,
                 'categorie' => $actif->modeleCommande->modele->categorie->nom,
@@ -82,9 +140,9 @@ class ActifController extends Controller
                 'proprietaire' => $actif->proprietaire->nom,
                 'proprietaire_id' => $actif->proprietaire->id,
                 'emplacement' => $actif->emplacement->nom,
-                'emplacement_id' => $actif->emplacement->id,          
+                'emplacement_id' => $actif->emplacement->id,
             ];
-        });        
+        });
         return response()->json($actifs);
     }
 }

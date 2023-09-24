@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TypeModele extends Model
 {
-    protected $table = 'typeModele';
+    protected $table = 'type_modele';
 
     use HasFactory;
 }

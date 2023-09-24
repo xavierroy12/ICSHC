@@ -14,7 +14,7 @@ class EmplacementSeeder extends Seeder
     public function run(): void
     {
         DB::table('emplacement')->insert([
-            'nom' => 'École Du Parchemin - Côté Couvent',
+            'nom' => 'École Du Parchemin',
             'numero_civique' => 162,
             'adresse' => 'Rue Saint-Jean Est',
         ]);

@@ -62,4 +62,9 @@ class EtatController extends Controller
     {
         //
     }
+    public function showAll()
+    {
+        $etats = Etat::all();
+        return response()->json($etats);
+    }
 }

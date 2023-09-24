@@ -65,4 +65,9 @@ class EmplacementController extends Controller
     {
         //
     }
+    public function showAll()
+    {
+        $emplacements = Emplacement::all();
+        return response()->json($emplacements);
+    }
 }

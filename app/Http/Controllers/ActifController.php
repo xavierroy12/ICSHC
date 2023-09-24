@@ -62,4 +62,25 @@ class ActifController extends Controller
     {
         //
     }
+    public function listShow()
+    {
+        $actifs = Actif::with(['modeleCommande.modele.categorie', 'statut', 'proprietaire', 'emplacement',])->get()->map(function ($actif) {
+            return [
+                'id' => $actif->id,
+                'numero_serie' => $actif->numero_serie,
+                'nom' => $actif->nom,   
+                'modele' => $actif->modeleCommande->modele->nom,
+                'modele_id' => $actif->modeleCommande->modele->id,
+                'categorie' => $actif->modeleCommande->modele->categorie->nom,
+                'categorie_id' => $actif->modeleCommande->modele->categorie->id,
+                'statut' => $actif->statut->nom,
+                'statut_id' => $actif->statut->id,
+                'proprietaire' => $actif->proprietaire->nom,
+                'proprietaire_id' => $actif->proprietaire->id,
+                'emplacement' => $actif->emplacement->nom,
+                'emplacement_id' => $actif->emplacement->id,          
+            ];
+        });        
+        return response()->json($actifs);
+    }
 }

@@ -62,4 +62,9 @@ class ClientController extends Controller
     {
         //
     }
+    public function showAll()
+    {
+        $clients = Client::all();
+        return response()->json($clients);
+    }
 }

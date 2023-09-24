@@ -7,8 +7,8 @@ type Props ={
 const Layout = ({ children }: Props) => {
     return (
         <div className="layout">
-        <NavBar />
-        <div className="content">{children}</div>
+            <NavBar />
+            <div className="content">{children}</div>
         </div>
     )
 }

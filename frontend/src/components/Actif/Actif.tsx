@@ -41,13 +41,13 @@ const Actif = () => {
         actif.nom || actif.numero_serie || actif.en_entrepot !== null || actif.adresse_mac || actif.date_retour || actif.note
       ) ? (
         <>
-          <h1>Actif {actif.id}</h1>
-          <p>Nom : {actif.nom || "N/A"}</p>
-          <p>Numéro de série : {actif.numero_serie || "N/A"}</p>
-          <p>En entrepôt : {actif.en_entrepot === 1 ? "Oui" : "Non"}</p>
-          <p>Adresse MAC : {actif.adresse_mac || "N/A"}</p>
-          <p>Date de retour : {actif.date_retour || "N/A"}</p>
-          <p>Note : {actif.note || "N/A"}</p>
+            <h1>Actif - {actif.nom}</h1>
+            <p>Numéro de série : {actif.numero_serie || "N/A"}</p>
+            <p>Nom : {actif.nom || "N/A"}</p>
+            <p>En entrepôt : {actif.en_entrepot === 1 ? "Oui" : "Non"}</p>
+            <p>Adresse MAC : {actif.adresse_mac || "N/A"}</p>
+            <p>Date de retour : {actif.date_retour || "N/A"}</p>
+            <p>Note : {actif.note || "N/A"}</p>
         </>
       ) : (
         <p>Aucune information disponible pour l'actif avec l'ID {id}.</p>

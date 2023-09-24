@@ -62,4 +62,9 @@ class TypeModeleController extends Controller
     {
         //
     }
+    public function showAll()
+    {
+        $type_modeles = TypeModele::all();
+        return response()->json($type_modeles);
+    }
 }

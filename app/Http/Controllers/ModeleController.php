@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Modele;
 
 class ModeleController extends Controller
 {
@@ -60,5 +61,10 @@ class ModeleController extends Controller
     public function destroy(Modele $modele)
     {
         //
+    }
+    public function showAll()
+    {
+        $modeles = Modele::all();
+        return response()->json($modeles);
     }
 }

@@ -9,7 +9,7 @@ function App() {
         <Router>
           <Layout>
             <Routes>
-                <Route path="/actif/:id" element={<Actif />} />
+                <Route path="/actif/:id" element={<Actif/>} />
             </Routes>
           </Layout>
         </Router>

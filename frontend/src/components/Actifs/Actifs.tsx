@@ -5,6 +5,7 @@ import {
     MantineReactTable,
     useMantineReactTable,
     type MRT_ColumnDef,
+    MRT_RowSelectionState,
   } from 'mantine-react-table';
 import { useNavigate } from "react-router-dom";
 
@@ -13,6 +14,7 @@ const Actifs = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>();
   const [actifs, setActifs] = useState<Actif[]>([]);
+  const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
   const [tableState, setTableState] = useState<TableState>({
     filters: {},
     showColumnFilters: true,
@@ -48,10 +50,11 @@ const Actifs = () => {
         navigate('/actif/' + cell.row.id);
       },
     }),
+    onRowSelectionChange: setRowSelection,
+    state: { rowSelection },
   });
   
   const handleFilterChange = (column: string, value: string) => {
-    console.log("filter change", column, value);
     setTableState((prevState) => ({ ...prevState, filters: { ...prevState.filters, [column]: value } }));
   };
   
@@ -65,7 +68,6 @@ const Actifs = () => {
   }, []);
   useEffect(() => {
     // TODO: adapt to filter change
-    console.log("filter change");
     setTableState((prevState) => ({ ...prevState, filters: { ...prevState.filters, statut: "En stock" } }));
   }, []);
 
@@ -75,13 +77,22 @@ const Actifs = () => {
       <div>
         <MantineReactTable table={table}/>
       </div>
-      <div className="flex justify-between mt-5">
-        <Button.Group>
-          <Button color="indigo">Ajouter</Button>
-          <Button className="shown visible" color="yellow" disabled={Object.keys(table.getState().rowSelection).length === 0}>Modifier</Button>
-        </Button.Group>
-
-      </div>
+      <Button.Group className="flex float-right mt-5">
+        <Button className="mr-8" color="indigo" variant="outline" size="md" onClick={() =>navigate('/actif')}>Ajouter</Button>
+        <Button className="bg-yellow" variant="outline" color="yellow" size="md" disabled={Object.keys(rowSelection).length === 0}
+        onClick={() => {
+          const selectedRows = Object.entries(rowSelection)
+          .filter(([_, isSelected]) => isSelected)
+          .map(([id]) => id);
+          if (selectedRows.length === 1) {
+            navigate('/actif/' + selectedRows[0]);
+          } else {
+            navigate('/actifs/modify', { state: { selectedRows } });
+          }
+        }}>
+          Modifier
+        </Button>
+      </Button.Group>
     </div>
   );
 };

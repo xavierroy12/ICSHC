@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class ModeleCommande extends Model
 {
-    protected $table = 'modeleCommande';
+    public function modele()
+    {
+        return $this->belongsTo(Modele::class, 'id_modele');
+    }
+
+    protected $table = 'modele_commande';
 
     use HasFactory;
 }

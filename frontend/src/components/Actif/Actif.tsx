@@ -3,8 +3,7 @@ import { Actif_Type} from "./type";
 import { useParams } from "react-router-dom";
 
 const Actif = () => {
-
-    const { id } = useParams<{ id: int }>();
+    const { id } = useParams<{ id: string }>();
     const [actif, setActif] = useState<Actif_Type | null>(null);
     const [actifNotFound, setActifNotFound] = useState<boolean>(false); // Définissez actifNotFound comme un état
 

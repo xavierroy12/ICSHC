@@ -14,8 +14,16 @@ import {
   import './Login.scss';
 
   function Login() {
-    const [username, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+
+    const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setUsername(event.target.value);
+    };
+  
+    const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setPassword(event.target.value);
+    };
 
     const handleLogin = () => {
       // Send email and password to server for authentication
@@ -56,8 +64,8 @@ import {
           </Text>
 
           <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-            <TextInput label="username" placeholder="you@mantine.dev" required />
-            <PasswordInput label="password" placeholder="Your password" required mt="md" />
+            <TextInput label="username" placeholder="you@mantine.dev" required value={username} onChange={handleUsernameChange} />
+            <PasswordInput label="password" placeholder="Your password" required mt="md" value={password} onChange={handlePasswordChange} />
             <Group justify="space-between" mt="lg">
               <Checkbox label="Remember me" />
               <Anchor component="button" size="sm">

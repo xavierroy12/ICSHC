@@ -62,7 +62,6 @@ class ProprietaireController extends Controller
     {
         //
     }
-
     public function showAll()
     {
         $proprietaires = Proprietaire::all();

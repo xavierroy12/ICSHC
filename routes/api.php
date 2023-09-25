@@ -13,7 +13,6 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\EtatController;
 use App\Http\Controllers\ModeleController;
 use App\Http\Controllers\TypeModeleController;
-
 use App\Http\Controllers\DropdownController;
 
 Route::get('/emplacement/{id}', [EmplacementController::class, 'show']);

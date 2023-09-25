@@ -62,7 +62,6 @@ class UtilisationController extends Controller
     {
         //
     }
-
     public function showAll()
     {
         $utilisations = Utilisation::all();

@@ -27,7 +27,7 @@ import {
 
     const handleLogin = () => {
       // Send email and password to server for authentication
-      fetch('http://10.0.22.24:8080/', {
+      fetch('http://10.0.22.24:8080/api/login', {
         method: 'POST',
         body: JSON.stringify({ username, password }),
         headers: {
@@ -65,7 +65,7 @@ import {
 
           <Paper withBorder shadow="md" p={30} mt={30} radius="md">
             <TextInput label="username" placeholder="you@mantine.dev" required value={username} onChange={handleUsernameChange} />
-            <PasswordInput label="password" placeholder="Your password" required mt="md" value={password} onChange={handlePasswordChange} />
+            <PasswordInput label="password" placeholder="Your password" required mt="md" value={username} onChange={handlePasswordChange} />
             <Group justify="space-between" mt="lg">
               <Checkbox label="Remember me" />
               <Anchor component="button" size="sm">

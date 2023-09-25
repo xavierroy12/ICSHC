@@ -14,14 +14,14 @@ import {
   import './Login.scss';
 
   function Login() {
-    const [email, setEmail] = useState('');
+    const [username, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleLogin = () => {
       // Send email and password to server for authentication
-      fetch('/api/login', {
+      fetch('http://localhost:8000/api/login', {
         method: 'POST',
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -32,14 +32,15 @@ import {
             console.log('Login successful');
           } else {
             // Display error message if login is unsuccessful
-            alert('Invalid email or password');
+            alert('Invalid username or password');
           }
         })
         .catch(error => {
           console.error('Error:', error);
         });
     };
-const Login = () => {
+
+
 
 
     return (
@@ -55,8 +56,8 @@ const Login = () => {
           </Text>
 
           <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-            <TextInput label="Email" placeholder="you@mantine.dev" required />
-            <PasswordInput label="Password" placeholder="Your password" required mt="md" />
+            <TextInput label="username" placeholder="you@mantine.dev" required />
+            <PasswordInput label="password" placeholder="Your password" required mt="md" />
             <Group justify="space-between" mt="lg">
               <Checkbox label="Remember me" />
               <Anchor component="button" size="sm">
@@ -69,7 +70,7 @@ const Login = () => {
           </Paper>
         </Container>
       );
-    }
+
 }
 
 export default Login; // Don’t forget to use export default!

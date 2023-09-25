@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmplacementController;
+use App\Http\Controllers\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,4 +20,5 @@ use App\Http\Controllers\EmplacementController;
 //     return $request->user();
 // });
 Route::get('/emplacement/{id}', [EmplacementController::class, 'show']);
+Route::post('/login', [LoginController::class, 'checkLogin']);
 

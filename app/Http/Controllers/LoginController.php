@@ -10,23 +10,23 @@ class LoginController extends Controller
 
     public function checkLogin(Request $request)
     {
-        $username = $request->input('username');
+        $user = $request->input('username');
         $password = $request->input('password');
 
         $domain = 'cshc.qc.ca';
         $basedn = 'dc=cshc,dc=qc,dc=ca';
         $group = 'TechInfo-GLPI';
 
-        /*$ad = ldap_connect("ldap://{$domain}") or die('Connexion impossible au serveur LDAP.');
+        $ad = ldap_connect("ldap://{$domain}") or die('Connexion impossible au serveur LDAP.');
         ldap_set_option($ad, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($ad, LDAP_OPT_REFERRALS, 0);
         @ldap_bind($ad, "{$user}@{$domain}", $password) or die("Connexion impossible au serveur LDAP.");
-        $userdn = getDN($ad, $user, $basedn);*/
+        $userdn = getDN($ad, $user, $basedn);
 
-        function getCN($dn) {
-            preg_match('/[^,]*/', $dn, $matchs, PREG_OFFSET_CAPTURE, 3);
-            return $matchs[0][0];
-        }
+      //  function getCN($dn) {
+         //   preg_match('/[^,]*/', $dn, $matchs, PREG_OFFSET_CAPTURE, 3);
+        //    return $matchs[0][0];
+       // }
 
         function getDN($ad, $samaccountname, $basedn) {
             $attributes = array('dn');

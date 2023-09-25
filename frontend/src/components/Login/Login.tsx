@@ -65,7 +65,7 @@ import {
 
           <Paper withBorder shadow="md" p={30} mt={30} radius="md">
             <TextInput label="username" placeholder="you@mantine.dev" required value={username} onChange={handleUsernameChange} />
-            <PasswordInput label="password" placeholder="Your password" required mt="md" value={username} onChange={handlePasswordChange} />
+            <PasswordInput label="password" placeholder="Your password" required mt="md" value={password} onChange={handlePasswordChange} />
             <Group justify="space-between" mt="lg">
               <Checkbox label="Remember me" />
               <Anchor component="button" size="sm">

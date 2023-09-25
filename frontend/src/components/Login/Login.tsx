@@ -19,7 +19,7 @@ import {
 
     const handleLogin = () => {
       // Send email and password to server for authentication
-      fetch('http://localhost:8000/api/login', {
+      fetch('http://127.0.0.1:8000/', {
         method: 'POST',
         body: JSON.stringify({ username, password }),
         headers: {

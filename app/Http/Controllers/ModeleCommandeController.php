@@ -61,4 +61,19 @@ class ModeleCommandeController extends Controller
     {
         //
     }
+    public function showAll()
+    {
+        $modeleCommandes = ModeleCommande::all();
+        return response()->json($modeleCommandes);
+    }
+    public function lightShow()
+    {
+        $modeleCommandes = ModeleCommande::All()->map(function ($modeleCommande) {
+            return [
+                "id" => $modeleCommande->id,
+                "nom" => $modeleCommande->nom,
+            ];
+        });
+        return response()->json($modeleCommandes);
+    }
 }

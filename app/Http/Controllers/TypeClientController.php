@@ -62,4 +62,19 @@ class TypeClientController extends Controller
     {
         //
     }
+    public function showAll()
+    {
+        $typeClients = TypeClient::all();
+        return response()->json($typeClients);
+    }
+    public function lightShow()
+    {
+        $typeClients = TypeClient::All()->map(function ($typeClient) {
+            return [
+                "id" => $typeClient->id,
+                "nom" => $typeClient->nom,
+            ];
+        });
+        return response()->json($typeClients);
+    }
 }

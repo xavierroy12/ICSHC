@@ -67,4 +67,14 @@ class ProprietaireController extends Controller
         $proprietaires = Proprietaire::all();
         return response()->json($proprietaires);
     }
+    public function lightShow()
+    {
+        $proprietaires = Proprietaire::All()->map(function ($proprietaire) {
+            return [
+                "id" => $proprietaire->id,
+                "nom" => $proprietaire->nom,
+            ];
+        });
+        return response()->json($proprietaires);
+    }
 }

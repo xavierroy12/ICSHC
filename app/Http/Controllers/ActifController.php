@@ -185,3 +185,16 @@ class ActifController extends Controller
     }
 
 }
+
+    public function lightShow()
+    {
+        $actifs = Actif::All()->map(function ($actif) {
+            return [
+                "id" => $actif->id,
+                "nom" => $actif->nom,
+                "numero_serie" => $actif->numero_serie,
+            ];
+        });
+        return response()->json($actifs);
+    }
+}

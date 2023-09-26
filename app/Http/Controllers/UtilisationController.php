@@ -67,4 +67,14 @@ class UtilisationController extends Controller
         $utilisations = Utilisation::all();
         return response()->json($utilisations);
     }
+    public function lightShow()
+    {
+        $utilisations = Utilisation::All()->map(function ($utilisation) {
+            return [
+                "id" => $utilisation->id,
+                "nom" => $utilisation->nom,
+            ];
+        });
+        return response()->json($utilisations);
+    }
 }

@@ -62,4 +62,19 @@ class CommandeController extends Controller
     {
         //
     }
+    public function showAll()
+    {
+        $commandes = Commande::all();
+        return response()->json($commandes);
+    }
+    public function lightShow()
+    {
+        $commandes = Commande::All()->map(function ($commande) {
+            return [
+                "id" => $commande->id,
+                "nom" => $commande->nom,
+            ];
+        });
+        return response()->json($commandes);
+    }
 }

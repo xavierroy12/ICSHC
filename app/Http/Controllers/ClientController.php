@@ -67,4 +67,14 @@ class ClientController extends Controller
         $clients = Client::all();
         return response()->json($clients);
     }
+    public function lightShow()
+    {
+        $clients = Client::All()->map(function ($client) {
+            return [
+                "id" => $client->id,
+                "nom" => $client->nom,
+            ];
+        });
+        return response()->json($clients);
+    }
 }

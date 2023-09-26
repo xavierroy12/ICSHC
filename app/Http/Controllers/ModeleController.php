@@ -67,4 +67,14 @@ class ModeleController extends Controller
         $modeles = Modele::all();
         return response()->json($modeles);
     }
+    public function lightShow()
+    {
+        $modeles = Modele::All()->map(function ($modele) {
+            return [
+                "id" => $modele->id,
+                "nom" => $modele->nom,
+            ];
+        });
+        return response()->json($modeles);
+    }
 }

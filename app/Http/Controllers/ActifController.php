@@ -124,6 +124,7 @@ class ActifController extends Controller
     {
         //
     }
+
     public function listShow()
     {
         $actifs = Actif::with(['modeleCommande.modele.categorie', 'statut', 'proprietaire', 'emplacement',])->get()->map(function ($actif) {
@@ -144,5 +145,42 @@ class ActifController extends Controller
             ];
         });
         return response()->json($actifs);
+    }
+
+    public function showActif($id)
+    {
+        $actif = Actif::with([
+            //'modeleCommande.modele.categorie',
+            //'client', // Correction de la relation pour obtenir l'utilisateur assigné
+            'emplacement',
+            'statut',
+            'utilisation',
+            'proprietaire',
+        ])->find($id);
+
+        if (!$actif) {
+            // L'actif n'a pas été trouvé, gérez l'erreur ici
+            return response()->json(['message' => 'Actif non trouvé'], 404);
+        }
+
+        // Filtrer les informations que vous souhaitez afficher
+        $actifData = [
+            'numero_serie' => $actif->numero_serie,
+            'nom' => $actif->nom,
+            //'assigne_a' => $actif->client ? $actif->client->nom : null,
+            //'categorie' => $actif->modeleCommande->modele->categorie->nom,
+            //'modele' => $actif->modeleCommande->modele->nom,
+            'emplacement' => $actif->emplacement->nom,
+            //'entrepot' => $actif->entrepot->nom,
+            'est_en_entrepot' => $actif->en_entrepot,
+            'adresse_mac' => $actif->adresse_mac,
+            'statut' => $actif->statut->nom,
+            'proprietaire' => $actif->proprietaire->nom,
+            'utilisation' => $actif->utilisation->nom,
+            'date_retour' => $actif->date_retour,
+            'note' => $actif->note,
+        ];
+
+        return response()->json($actifData);
     }
 }

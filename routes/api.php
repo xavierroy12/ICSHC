@@ -12,7 +12,7 @@ use App\Http\Controllers\TypeModeleController;
 Route::get('/emplacement/{id}', [EmplacementController::class, 'show']);
 Route::get('/emplacements', [EmplacementController::class, 'showAll']);
 
-Route::get('/actif/{id}', [ActifController::class, 'show']);
+Route::get('/actif/{id}', [ActifController::class, 'showActif']);
 Route::get('/actifs', [ActifController::class, 'listShow']);
 
 Route::get('/clients', [ClientController::class, 'showAll']);

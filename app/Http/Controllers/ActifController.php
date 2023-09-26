@@ -150,12 +150,12 @@ class ActifController extends Controller
     public function showActif($id)
     {
         $actif = Actif::with([
-            //'modeleCommande.modele.categorie',
-            //'client', // Correction de la relation pour obtenir l'utilisateur assigné
+            //'utilisateur', //a verifier
             'emplacement',
             'statut',
             'utilisation',
             'proprietaire',
+            'modeleCommande.modele.categorie',
         ])->find($id);
 
         if (!$actif) {
@@ -167,9 +167,10 @@ class ActifController extends Controller
         $actifData = [
             'numero_serie' => $actif->numero_serie,
             'nom' => $actif->nom,
-            //'assigne_a' => $actif->client ? $actif->client->nom : null,
+            //'assigne_a' => $actif->emplacement->utilisateur->nom,
             //'categorie' => $actif->modeleCommande->modele->categorie->nom,
-            //'modele' => $actif->modeleCommande->modele->nom,
+            'categorie' => $actif->modeleCommande->modele->categorie->nom,
+            'modele' => $actif->modeleCommande->modele->nom,
             'emplacement' => $actif->emplacement->nom,
             //'entrepot' => $actif->entrepot->nom,
             'est_en_entrepot' => $actif->en_entrepot,

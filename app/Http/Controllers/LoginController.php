@@ -30,7 +30,7 @@ class LoginController extends Controller
         $ad = ldap_connect("ldap://{$domain}");
         ldap_set_option($ad, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($ad, LDAP_OPT_REFERRALS, 0);
-        if (@ldap_bind($ldapconn, $ldaprdn, $ldappass)) {
+        if (@ldap_bind($ad, "{$user}@{$domain}", $password)) {
             error_log("LDAP bind successful for user: $user");
             return response()->json([
                 'message' => 'Login successful'

@@ -32,17 +32,12 @@ class LoginController extends Controller
         ldap_set_option($ad, LDAP_OPT_REFERRALS, 0);
         if (@ldap_bind($ad, "{$user}@{$domain}", $password)) {
             error_log("LDAP bind successful for user: $user");
-            $userdn = getDN($ad, $user, $basedn);
-            error_log("Didnt get to return line 37");
-            return response()->json([
-                'message' => 'info user : ',
-                'user' => $user
-            ], 200);
+
             //This is to check if cbind is succesfull
-            /*return response()->json([
+            return response()->json([
                 'message' => 'Login successful',
                 'user' => $user
-            ], 200);*/
+            ], 200);
         }
         else {
             error_log("LDAP bind failed for user: $user");

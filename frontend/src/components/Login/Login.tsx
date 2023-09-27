@@ -36,7 +36,7 @@ import {
       })
         .then(response => {
           if (response.ok) {
-            // Redirect to dashboard if login is successful
+            alert(`Error: ${response.statusText}`);
             console.log('Login successful');
           } else {
             // Display error message if login is unsuccessful

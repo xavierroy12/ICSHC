@@ -33,7 +33,7 @@ class LoginController extends Controller
         if (@ldap_bind($ad, "{$user}@{$domain}", $password)) {
             error_log("LDAP bind successful for user: $user");
             $userdn = getDN($ad, $user, $basedn);
-            $result = ldap_read($ad, $userdn, "(memberof={$groupdn})", array('title'));
+            $result = ldap_read($ad, $userdn, "(objectclass=*)", array('title'));
 
             return response()->json([
                 'message' => 'Login successfulllll',

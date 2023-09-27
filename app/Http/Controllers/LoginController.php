@@ -27,10 +27,20 @@ class LoginController extends Controller
         $basedn = 'dc=cshc,dc=qc,dc=ca';
         $group = 'TechInfo-GLPI';
 
-        $ad = ldap_connect("ldap://{$domain}") or throw new Exception('Unable to connect to LDAP server.');
+        $ad = ldap_connect("ldap://{$domain}");
         ldap_set_option($ad, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($ad, LDAP_OPT_REFERRALS, 0);
-        @ldap_bind($ad, "{$user}@{$domain}", $password) or throw new Exception('Unable to connect to LDAP server.');
+        if (@ldap_bind($ldapconn, $ldaprdn, $ldappass)) {
+            error_log("LDAP bind successful for user: $user");
+            return response()->json([
+                'message' => 'Login successful'
+            ], 200);
+        } else {
+            error_log("LDAP bind failed for user: $user");
+            return response()->json([
+                'message' => 'Invalid username or password'
+            ], 401);
+        }
         $userdn = getDN($ad, $user, $basedn);
 
       //  function getCN($dn) {
@@ -38,11 +48,7 @@ class LoginController extends Controller
         //    return $matchs[0][0];
        // }
 
+        error_log("Username: $user, Password: $password");
 
-
-        error_log("Username: $username, Password: $password");
-        return response()->json([
-            'message' => "allo"
-        ], 200);
     }
 }

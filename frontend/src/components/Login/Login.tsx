@@ -20,7 +20,7 @@ import {
     const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setUsername(event.target.value);
     };
-  
+
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setPassword(event.target.value);
     };
@@ -40,7 +40,7 @@ import {
             console.log('Login successful');
           } else {
             // Display error message if login is unsuccessful
-            alert('Invalid username or password');
+            alert(`Error: ${response.statusText}`);
           }
         })
         .catch(error => {

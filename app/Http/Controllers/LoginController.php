@@ -33,7 +33,6 @@ class LoginController extends Controller
             $result = ldap_read($ad, $userdn, "(objectclass=*)", $attributes);
             if ($result === FALSE) { return FALSE; };
             $entries = ldap_get_entries($ad, $result);
-
             return ($entries[0][$attrib][0]);
         }
 
@@ -48,12 +47,14 @@ class LoginController extends Controller
             error_log("LDAP bind successful for user: $user");
             $userdn = getDN($ad, $user, $basedn);
             $result = showattrib($ad, $userdn, "title");
+            $memberof = showattrib($ad, $userdn, "memberof");
 
             return response()->json([
                 'message' => 'Login successfulllll',
                 'user' => $user,
                 'userdn' => $userdn,
-                'title' => $result
+                'title' => $result,
+                'MemberOf' => $memberof
             ], 200);
         }
         else {

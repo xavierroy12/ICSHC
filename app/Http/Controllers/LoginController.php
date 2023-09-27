@@ -7,21 +7,15 @@ use Illuminate\Http\Request;
 class LoginController extends Controller
 {
 
-    function showattrib($ad, $userdn, $attrib) {
 
-        $attributes = array($attrib);
-        $result = ldap_read($ad, $userdn, "(objectclass=*)", $attributes);
-        if ($result === FALSE) { return FALSE; };
-        $entries = ldap_get_entries($ad, $result);
-
-        return ($entries[0][$attrib][0]);
-    }
 
     public function checkLogin(Request $request)
     {
+        //Get User and Password from login request
         $user = $request->input('username');
         $password = $request->input('password');
 
+        //Function to get the DN of the user
         function getDN($ad, $samaccountname, $basedn) {
             $attributes = array('dn');
             $result = ldap_search($ad, $basedn,
@@ -30,6 +24,17 @@ class LoginController extends Controller
             $entries = ldap_get_entries($ad, $result);
             if ($entries['count']>0) { return $entries[0]['dn']; }
             else { return ''; };
+        }
+
+        //Function to show attribute of that DN
+        function showattrib($ad, $userdn, $attrib) {
+
+            $attributes = array($attrib);
+            $result = ldap_read($ad, $userdn, "(objectclass=*)", $attributes);
+            if ($result === FALSE) { return FALSE; };
+            $entries = ldap_get_entries($ad, $result);
+
+            return ($entries[0][$attrib][0]);
         }
 
         $domain = 'cshc.qc.ca';

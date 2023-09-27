@@ -35,7 +35,7 @@ class LoginController extends Controller
 
             //This is to check if cbind is succesfull
             return response()->json([
-                'message' => 'Login successful',
+                'message' => 'Login successfulllll',
                 'user' => $user
             ], 200);
         }

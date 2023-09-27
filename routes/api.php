@@ -13,28 +13,33 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\EtatController;
 use App\Http\Controllers\ModeleController;
 use App\Http\Controllers\TypeModeleController;
-use App\Http\Controllers\DropdownController;
 
 Route::get('/emplacement/{id}', [EmplacementController::class, 'show']);
 Route::get('/emplacements', [EmplacementController::class, 'showAll']);
+Route::get('/emplacements/light', [EmplacementController::class, 'lightShow']);
 
 Route::get('/actif/{id}', [ActifController::class, 'showActif']);
 Route::get('/actifs', [ActifController::class, 'listShow']);
+Route::get('/actifs/light', [ActifController::class, 'lightShow']);
 
 Route::get('/clients', [ClientController::class, 'showAll']);
+Route::get('/clients/light', [ClientController::class, 'lightShow']);
+
 Route::get('/etats', [EtatController::class, 'showAll']);
-Route::get('/statuts', [StatutController::class, 'showAll']);
-Route::get('/utilisations', [UtilisationController::class, 'showAll']);
-Route::get('/proprietaires', [ProprietaireController::class, 'showAll']);
+Route::get('/etats/light', [EtatController::class, 'lightShow']);
+
 Route::get('/modeles', [ModeleController::class, 'showAll']);
+Route::get('/modeles/light', [ModeleController::class, 'lightShow']);
+
 Route::get('/categories', [TypeModeleController::class, 'showAll']);
+Route::get('/categories/light', [TypeModeleController::class, 'lightShow']);
 
-//ajout actif
-Route::post('/actif', [ActifController::class, 'store']);
+Route::get('/utilisations', [UtilisationController::class, 'showAll']);
+Route::get('/utilisations/light', [UtilisationController::class, 'lightShow']);
 
-//modif actif
-Route::put('/actif/{id}', [ActifController::class, 'update']);
+Route::get('/proprietaires', [ProprietaireController::class, 'showAll']);
+Route::get('/proprietaires/light', [ProprietaireController::class, 'lightShow']);
 
+Route::get('/statuts', [StatutController::class, 'showAll']);
+Route::get('/statuts/light', [StatutController::class, 'lightShow']);
 
-
-Route::get('/dropdowns', [DropdownController::class, 'getAllDropdowns']);

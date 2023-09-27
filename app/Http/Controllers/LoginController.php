@@ -34,7 +34,7 @@ class LoginController extends Controller
             error_log("LDAP bind successful for user: $user");
             $userdn = getDN($ad, $user, $basedn);
             return response()->json([
-                'message' => $userdn,
+                'message' => 'info user : '. $userdn,
                 'user' => $user
             ], 200);
             //This is to check if cbind is succesfull

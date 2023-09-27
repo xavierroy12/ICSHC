@@ -35,9 +35,11 @@ import {
         }
       })
         .then(response => {
-          if (response.ok) {
-            alert(`Error: ${response.statusText}`);
-            console.log('Login successful');
+            if (response.ok) {
+                response.json().then(data => {
+                  alert(`Login successful. Response: ${JSON.stringify(data)}`);
+                  console.log('Login successful');
+                });
           } else {
             // Display error message if login is unsuccessful
             alert(`Error: ${response.statusText}`);

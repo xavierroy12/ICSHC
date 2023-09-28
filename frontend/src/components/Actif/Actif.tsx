@@ -321,8 +321,13 @@ const Actif = () => {
                         </p>
                         <p className="font-bold mt-4">Note :</p>
                         <textarea
-                            value={actif.note || "Aucune note"}
-                            readOnly
+                            onChange={(e) => {
+                                setActif({
+                                    ...actif,
+                                    note: e.target.value,
+                                });
+                            }}
+                            value={actif.note}
                             className="p-2.5 w-2/5 h-24 marker:text-sm text-gray-900 bg-gray-50 rounded-lg border"
                         />
                     </div>

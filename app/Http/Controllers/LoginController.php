@@ -33,7 +33,11 @@ class LoginController extends Controller
             $result = ldap_read($ad, $userdn, "(objectclass=*)", $attributes);
             if ($result === FALSE) { return FALSE; };
             $entries = ldap_get_entries($ad, $result);
-            return ($entries[0][$attrib][0]);
+            $values = array();
+            for ($i = 0; $i < $entries[0][$attrib]['count']; $i++) {
+                array_push($values, $entries[0][$attrib][$i]);
+            }
+            return $values;
         }
 
         $domain = 'cshc.qc.ca';

@@ -34,8 +34,20 @@ class LoginController extends Controller
             if ($result === FALSE) { return FALSE; };
             $entries = ldap_get_entries($ad, $result);
             return $entries[0][$attrib][0];
-
             }
+
+        function getOUs($userdn) {
+            $ous = array();
+            $dn_parts = ldap_explode_dn($userdn, 0);
+            for ($i = 0; $i < $dn_parts['count']; $i++) {
+                $part = $dn_parts[$i];
+                if (strpos($part, 'OU=') === 0) {
+                    $ou = substr($part, 3);
+                    array_push($ous, $ou);
+                }
+            }
+            return $ous;
+        }
 
         
 
@@ -51,13 +63,14 @@ class LoginController extends Controller
             $userdn = getDN($ad, $user, $basedn);
             $result = showattrib($ad, $userdn, "title");
             $memberof = showattrib($ad, $userdn, "memberof");
+            $ous = getOUs($userdn);
 
             return response()->json([
-                'message' => 'Login successfulllll',
                 'user' => $user,
                 'userdn' => $userdn,
                 'title' => $result,
-                'MemberOf' => $memberof
+                'MemberOf' => $memberof,
+                'OUs' => $ous
             ], 200);
         }
         else {

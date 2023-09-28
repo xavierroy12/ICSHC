@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Model;
 
 class Actif extends Model
 {
-    public $timestamps = false; // Désactiver les timestamps
+    use HasFactory, HasTimestamps;
 
     protected $table = 'actif';
     protected $fillable = [
@@ -24,9 +25,6 @@ class Actif extends Model
         'id_utilisation',
         // Autres colonnes autorisées pour l'attribution de masse
     ];
-
-
-    use HasFactory;
 
     public function modeleCommande()
     {
@@ -53,5 +51,13 @@ class Actif extends Model
         return $this->belongsTo(Emplacement::class, 'id_emplacement');
 
     }
+
+    public function client()
+    {
+        return $this->hasOne(Client::class, 'id_actif')->withDefault([
+            'nom' => 'Non assigné', // Définissez la valeur par défaut que vous souhaitez afficher
+        ]);
+    }
+
 
 }

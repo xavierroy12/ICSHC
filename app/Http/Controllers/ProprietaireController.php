@@ -36,7 +36,7 @@ class ProprietaireController extends Controller
      */
     public function show(Proprietaire $proprietaire)
     {
-        //
+
     }
 
     /**
@@ -61,5 +61,11 @@ class ProprietaireController extends Controller
     public function destroy(Proprietaire $proprietaire)
     {
         //
+    }
+
+    public function showAll()
+    {
+        $proprietaires = Proprietaire::all();
+        return response()->json($proprietaires);
     }
 }

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreign('id_type_client')->references('id')->on('type_client');
             $table->foreign('id_actif')->references('id')->on('actif');
             $table->foreign('id_emplacement')->references('id')->on('emplacement');
+            $table->timestamps();
         });
     }
 

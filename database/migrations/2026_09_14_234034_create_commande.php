@@ -21,6 +21,7 @@ return new class extends Migration
 
             $table->foreign('id_etat')->references('id')->on('etat');
             $table->foreign('id_modele_commande')->references('id')->on('modele_commande');
+            $table->timestamps();
         });
     }
 

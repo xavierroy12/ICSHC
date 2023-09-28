@@ -36,7 +36,7 @@ class StatutController extends Controller
      */
     public function show(Statut $statut)
     {
-        //
+
     }
 
     /**
@@ -62,4 +62,15 @@ class StatutController extends Controller
     {
         //
     }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function showAll()
+    {
+        $statuts = Statut::all();
+        return response()->json($statuts);
+    }
+
+
 }

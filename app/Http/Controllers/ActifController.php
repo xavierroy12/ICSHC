@@ -150,12 +150,12 @@ class ActifController extends Controller
     public function showActif($id)
     {
         $actif = Actif::with([
-            //'utilisateur', //a verifier
             'emplacement',
             'statut',
             'utilisation',
             'proprietaire',
             'modeleCommande.modele.categorie',
+            'client', // Ajoutez la relation avec l'utilisateur
         ])->find($id);
 
         if (!$actif) {
@@ -163,16 +163,13 @@ class ActifController extends Controller
             return response()->json(['message' => 'Actif non trouvé'], 404);
         }
 
-        // Filtrer les informations que vous souhaitez afficher
+        // Maintenant, vous pouvez accéder au nom de l'utilisateur assigné à l'actif
         $actifData = [
             'numero_serie' => $actif->numero_serie,
             'nom' => $actif->nom,
-            //'assigne_a' => $actif->emplacement->utilisateur->nom,
-            //'categorie' => $actif->modeleCommande->modele->categorie->nom,
             'categorie' => $actif->modeleCommande->modele->categorie->nom,
             'modele' => $actif->modeleCommande->modele->nom,
             'emplacement' => $actif->emplacement->nom,
-            //'entrepot' => $actif->entrepot->nom,
             'est_en_entrepot' => $actif->en_entrepot,
             'adresse_mac' => $actif->adresse_mac,
             'statut' => $actif->statut->nom,
@@ -180,8 +177,11 @@ class ActifController extends Controller
             'utilisation' => $actif->utilisation->nom,
             'date_retour' => $actif->date_retour,
             'note' => $actif->note,
+            'assigne_a' => $actif->client->nom, // Ajoutez le nom du client assigné
+            'date_creation' => $actif->created_at,
         ];
 
         return response()->json($actifData);
     }
+
 }

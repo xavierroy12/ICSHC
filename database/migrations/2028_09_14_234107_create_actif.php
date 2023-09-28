@@ -32,6 +32,7 @@ return new class extends Migration
             $table->foreign('id_emplacement')->references('id')->on('emplacement');
             $table->foreign('id_proprietaire')->references('id')->on('proprietaire');
             $table->foreign('id_utilisation')->references('id')->on('utilisation');
+            $table->timestamps();
         });
     }
 

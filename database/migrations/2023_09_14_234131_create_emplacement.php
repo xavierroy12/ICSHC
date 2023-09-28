@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nom', 64);
             $table->integer('numero_civique');
             $table->string('adresse', 64);
+            $table->timestamps();
         });
     }
 

@@ -3,6 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmplacementController;
+
+use App\Http\Controllers\StatutController;
+use App\Http\Controllers\UtilisationController;
+use App\Http\Controllers\ProprietaireController;
+
 use App\Http\Controllers\ActifController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\EtatController;
@@ -18,6 +23,10 @@ Route::get('/actifs', [ActifController::class, 'listShow']);
 Route::get('/clients', [ClientController::class, 'showAll']);
 
 Route::get('/etats', [EtatController::class, 'showAll']);
+
+Route::get('/statuts', [StatutController::class, 'showAll']);
+Route::get('/utilisations', [UtilisationController::class, 'showAll']);
+Route::get('/proprietaires', [ProprietaireController::class, 'showAll']);
 
 Route::get('/modeles', [ModeleController::class, 'showAll']);
 

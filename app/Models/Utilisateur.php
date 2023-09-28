@@ -9,6 +9,7 @@ class Utilisateur extends Model
 {
 
     protected $table = 'utilisateur';
+    public $timestamps = false;
     use HasFactory;
 
     public function emplacement()

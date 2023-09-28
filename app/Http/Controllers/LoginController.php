@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\UtilisateurController;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
@@ -35,6 +36,16 @@ class LoginController extends Controller
             return $entries[0][$attrib][0];
             }
 
+        function addUserDb($nom_utilisateur, $nom) {
+            $utilisateur = new UtilisateurController();
+            if($utilisateur->store($user)) {
+                return TRUE;
+            }
+            else {
+                return FALSE;
+            }
+        }
+
         //Variables for LDAP connection
         $domain = 'cshc.qc.ca';
         $basedn = 'dc=cshc,dc=qc,dc=ca';
@@ -49,6 +60,9 @@ class LoginController extends Controller
             error_log("LDAP bind successful for user: $user");
             $userdn = getDN($ad, $user, $basedn);
             $usercn = showattrib($ad, $userdn, 'cn');
+            if (addUserDb($user, $usercn)) {
+                error_log("User $user added to database");
+            }
             return response()->json([
                 'user' => $user,
                 'usercn' => $usercn,

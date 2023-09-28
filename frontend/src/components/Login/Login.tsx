@@ -37,8 +37,13 @@ import {
         .then(response => {
             if (response.ok) {
                 response.json().then(data => {
+                  // Store the user in the session variable
+                  sessionStorage.setItem('user', JSON.stringify(data.user));
+                  //debugging
                   alert(`Login successful. Response: ${JSON.stringify(data)}`);
                   console.log('Login successful');
+                  // Redirect to home page after successful login
+                  window.location.href = '/actifs';
                 });
           } else {
             // Display error message if login is unsuccessful

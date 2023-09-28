@@ -8,8 +8,6 @@ use Illuminate\Http\Request;
 class LoginController extends Controller
 {
 
-
-
     public function checkLogin(Request $request)
     {
         //Get User and Password from login request

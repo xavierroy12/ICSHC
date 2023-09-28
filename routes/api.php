@@ -21,4 +21,4 @@ use App\Http\Controllers\LoginController;
 // });
 Route::get('/emplacement/{id}', [EmplacementController::class, 'show']);
 Route::post('/login', [LoginController::class, 'checkLogin']);
-
+Route::get('/utilisateur', [UtilisateurController::class, 'list_json']);

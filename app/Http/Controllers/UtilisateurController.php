@@ -15,6 +15,12 @@ class UtilisateurController extends Controller
         //
     }
 
+    public function list_json()
+    {
+        $utilisateurs = Utilisateur::all();
+        return response()->json($utilisateurs);
+    }
+
     private function userExists($nom_utilisateur)
     {
         return Utilisateur::where('nom_utilisateur', $nom_utilisateur)->exists();

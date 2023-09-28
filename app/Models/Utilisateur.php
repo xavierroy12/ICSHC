@@ -14,11 +14,11 @@ class Utilisateur extends Model
 
     public function emplacement()
     {
-        return $this->belongsTo(emplacement::class, 'id_emplacement');
+        return $this->belongsTo(emplacement::class, 'id_emplacement')->nullable();
     }
     
     public function role()
     {
-        return $this->belongsTo(role::class, 'id_role');
+        return $this->belongsTo(role::class, 'id_role')->nullable();
     }
 }

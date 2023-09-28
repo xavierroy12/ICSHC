@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nom', 32);
             $table->string('nom_utilisateur', 32);
-            $table->unsignedBigInteger('id_emplacement');
-            $table->unsignedBigInteger('id_role');
+            $table->unsignedBigInteger('id_emplacement')->nullable();
+            $table->unsignedBigInteger('id_role')->nullable();
             $table->foreign('id_emplacement')->references('id')->on('emplacement');
             $table->foreign('id_role')->references('id')->on('role');
         });

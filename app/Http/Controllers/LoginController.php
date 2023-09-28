@@ -26,7 +26,7 @@ class LoginController extends Controller
             else { return ''; };
         }
 
-        //Function to show attribute of that DN
+        //Function to show attribute of that DN, mostly for trouble shooting
         function showattrib($ad, $userdn, $attrib) {
             $attributes = array($attrib);
             $result = ldap_read($ad, $userdn, "(objectclass=*)", $attributes);
@@ -47,7 +47,6 @@ class LoginController extends Controller
         
         if (@ldap_bind($ad, "{$user}@{$domain}", $password)) {
             error_log("LDAP bind successful for user: $user");
-
             $userdn = getDN($ad, $user, $basedn);
             $result = showattrib($ad, $userdn, "title");
             return response()->json([

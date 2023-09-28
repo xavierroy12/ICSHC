@@ -32,6 +32,11 @@ const NavBar = () => {
               Client
             </Button>
           </Link>
+          {user && (
+            <div className="text-white">
+              Logged in as {user.nom_utilisateur}
+            </div>
+          )}
         </div>
       </div>
     </div>

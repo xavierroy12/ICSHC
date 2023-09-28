@@ -15,6 +15,12 @@ class UtilisateurController extends Controller
         //
     }
 
+    private function userExists($nom_utilisateur)
+    {
+        return Utilisateur::where('nom_utilisateur', $nom_utilisateur)->exists();
+    }
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -26,9 +32,17 @@ class UtilisateurController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store($nom_utilisateur, $nom)
     {
-        //
+        if ($this->userExists($nom_utilisateur)) {
+            return FALSE;
+        } else {
+            $utilisateur = new Utilisateur();
+            $utilisateur->nom_utilisateur = $nom_utilisateur;
+            $utilisateur->nom = $nom;
+            $utilisateur->save();
+            return $utilisateur;
+        }
     }
 
     /**

@@ -67,10 +67,11 @@ class LoginController extends Controller
 
             return response()->json([
                 'userdn' => $userdn,
+                'MemberOf' => $memberof,
                 /*'user' => $user,
 
                 'title' => $result,
-                'MemberOf' => $memberof,
+
                 'OUs' => $ous*/
             ], 200);
         }

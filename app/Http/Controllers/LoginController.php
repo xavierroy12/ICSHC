@@ -36,9 +36,9 @@ class LoginController extends Controller
             return $entries[0][$attrib][0];
             }
 
-        function addUserDb($nom_utilisateur, $nom) {
+        function addUserDb($user, $nom) {
             $utilisateur = new UtilisateurController();
-            if($utilisateur->store($user)) {
+            if($utilisateur->store($user, $nom)) {
                 return TRUE;
             }
             else {

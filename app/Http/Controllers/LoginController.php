@@ -29,7 +29,7 @@ class LoginController extends Controller
         //Function to show attribute of that DN
         function showattrib($ad, $userdn, $attrib) {
 
-            $attributes = array($attrib);
+            //$attributes = array($attrib);
             $result = ldap_read($ad, $userdn, "(objectclass=*)");
             if ($result === FALSE) { return FALSE; };
             $entries = ldap_get_entries($ad, $result);

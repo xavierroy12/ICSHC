@@ -48,6 +48,16 @@ class LoginController extends Controller
             }
             return $ous;
         }
+        function getCN($dn) {
+            $dn_parts = ldap_explode_dn($dn, 0);
+            for ($i = 0; $i < $dn_parts['count']; $i++) {
+                $part = $dn_parts[$i];
+                if (strpos($part, 'CN=') === 0) {
+                    return substr($part, 3);
+                }
+            }
+            return '';
+        }
 
         
 
@@ -64,10 +74,16 @@ class LoginController extends Controller
             $result = showattrib($ad, $userdn, "title");
             $memberof = showattrib($ad, $userdn, "memberof");
             $ous = getOUs($userdn);
+            $groups = array();
+            foreach ($memberof as $groupdn) {
+                $groupname = getCN($groupdn);
+                array_push($groups, $groupname);
+            }
+
 
             return response()->json([
-                'userdn' => $userdn,
-                'MemberOf' => $memberof,
+                'message' => 'Login Successful',
+                'groups' => $groups,
                 /*'user' => $user,
 
                 'title' => $result,

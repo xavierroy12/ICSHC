@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
+    private function createCookie($user, $usercn) {
+        $cookie = cookie('user', $user, 60);
+        return $cookie;
+    }
 
     public function checkLogin(Request $request)
     {
@@ -53,18 +57,24 @@ class LoginController extends Controller
         $ad = ldap_connect("ldap://{$domain}");
         ldap_set_option($ad, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($ad, LDAP_OPT_REFERRALS, 0);
-        
         if (@ldap_bind($ad, "{$user}@{$domain}", $password)) {
             error_log("LDAP bind successful for user: $user");
             $userdn = getDN($ad, $user, $basedn);
             $usercn = showattrib($ad, $userdn, 'cn');
+        // If user not in database, add it
             if (addUserDb($user, $usercn)) {
                 error_log("User $user added to database");
             }
-            return response()->json([
+            else {
+                error_log("User $user already in database");
+            }
+            $cookie = $this->createCookie($user, $usercn);
+            $response = response()->json([
                 'user' => $user,
                 'usercn' => $usercn,
             ], 200);
+            $response->withCookie($cookie);
+            return $response;
         }
         else {
             error_log("LDAP bind failed for user: $user");
@@ -73,11 +83,6 @@ class LoginController extends Controller
             ], 401);
         }
 
-
-      //  function getCN($dn) {
-         //   preg_match('/[^,]*/', $dn, $matchs, PREG_OFFSET_CAPTURE, 3);
-        //    return $matchs[0][0];
-       // }
 
         error_log("Username: $user, Password: $password");
 

@@ -20,6 +20,7 @@ type LightActif = {
   nom: string;
   numero_serie: string;
 };
+
 const ModifyActifs = () => {
   const location = useLocation();
   const { selectedRows } = location.state;

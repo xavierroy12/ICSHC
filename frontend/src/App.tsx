@@ -6,18 +6,18 @@ import Actif from './components/Actif';
 
 function App() {
   return (
-      <div className="App">
-        <Router>
-          <Layout>
-            <Routes>
-               <Route path="/actifs" element={ <Actifs />} />
-               <Route path="/actifs/modify" element={ <ModifyActifs />} />
-               <Route path="/actif/:id" element={ <Actif />} />
-            </Routes>
-          </Layout>
-        </Router>
-      </div>
-  )
+    <div className="App">
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path="/actifs" element={<Actifs />} />
+            <Route path="/actifs/modify" element={<ModifyActifs />} />
+            <Route path="/actif/:id" element={<Actif />} />
+          </Routes>
+        </Layout>
+      </Router>
+    </div>
+  );
 }
 
 export default App;

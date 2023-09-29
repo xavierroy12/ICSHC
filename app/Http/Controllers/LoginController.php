@@ -81,8 +81,9 @@ class LoginController extends Controller
                             error_log("User $user is a member $groupcn wich is TechInfo-GLPI");
                             break;
                         }
-                        error_log("User $user already in database");
                     }
+                    error_log("User $user already in database");
+                }
                     error_log("Line 79");
                     $cookie = $this->createCookie($user);
                     $response = response()->json([

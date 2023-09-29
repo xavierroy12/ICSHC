@@ -70,9 +70,11 @@ class LoginController extends Controller
             if ($entries['count'] > 0) {
                 error_log("Line 71");
                 if (addUserDb($user, $usercn)) {
+                    error_log("in if userdb");
                     error_log("User $user added to database");
                 }
                 else {
+                    error_log("in else userdb");
                     error_log("Result $result");
                     error_log("User $user already in database");
                 }

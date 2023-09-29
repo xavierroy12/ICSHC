@@ -67,9 +67,7 @@ class LoginController extends Controller
             $entries = ldap_get_entries($ad, $result);
             // If user in group, create cookie and return user info
             if ($entries['count'] > 0) {
-                error_log("Line 71");
                 if (addUserDb($user, $usercn)) {
-
                     error_log("User $user added to database");
                 }
                 else {
@@ -77,8 +75,8 @@ class LoginController extends Controller
                     for ($i = 0; $i < $entries['count']; $i++) {
                         $groupcn = $entries[$i]['cn'][0];
                         if ($groupcn === 'TechInfo-GLPI') {
-                            // User is a member of TechInfo-GLPI
-                            error_log("User $user is a member $groupcn wich is TechInfo-GLPI");
+
+                            error_log("User $user is a member  wich is TechInfo-GLPI");
                             break;
                         }
                     }

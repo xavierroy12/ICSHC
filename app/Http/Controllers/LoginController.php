@@ -22,7 +22,7 @@ class LoginController extends Controller
         function getDN($ad, $samaccountname, $basedn) {
             $attributes = array('dn');
             $result = ldap_search($ad, $basedn,
-                "(samaccountname={$samaccountname})", $attributes);
+            "(samaccountname={$samaccountname})", $attributes);
             if ($result === FALSE) { return ''; }
             $entries = ldap_get_entries($ad, $result);
             if ($entries['count']>0) { return $entries[0]['dn']; }
@@ -36,7 +36,7 @@ class LoginController extends Controller
             if ($result === FALSE) { return FALSE; };
             $entries = ldap_get_entries($ad, $result);
             return $entries[0][$attrib][0];
-            }
+        }
 
         function addUserDb($user, $nom) {
             $utilisateur = new UtilisateurController();
@@ -61,30 +61,39 @@ class LoginController extends Controller
             error_log("LDAP bind successful for user: $user");
             $userdn = getDN($ad, $user, $basedn);
             $usercn = showattrib($ad, $userdn, 'cn');
-        // If user not in database, add it
-            if (addUserDb($user, $usercn)) {
-                error_log("User $user added to database");
+            $groupdn = getDN($ad, $group, $basedn);
+            $result = ldap_read($ad, $userdn, "(memberof={$groupdn})", array('dn'));
+            $entries = ldap_get_entries($ad, $result);
+            // If user in group, create cookie and return user info
+            if ($entries['count'] > 0) {
+                if (addUserDb($user, $usercn)) {
+                    error_log("User $user added to database");
+                }
+                else {
+                    error_log("User $user already in database");
+                }
+                $cookie = $this->createCookie($user, $usercn);
+                $response = response()->json([
+                    'user' => $user,
+                    'usercn' => $usercn,
+                ], 200);
+                $response->withCookie($cookie);
+                return $response;
             }
+            // If user not in group, return error
             else {
-                error_log("User $user already in database");
+                error_log("User $user not in group $group");
+                return response()->json([
+                    'message' => 'User not in group'
+                ], 401);
             }
-            $cookie = $this->createCookie($user, $usercn);
-            $response = response()->json([
-                'user' => $user,
-                'usercn' => $usercn,
-            ], 200);
-            $response->withCookie($cookie);
-            return $response;
         }
+        // If LDAP bind failed, return error
         else {
             error_log("LDAP bind failed for user: $user");
             return response()->json([
                 'message' => 'Invalid username or password'
             ], 401);
         }
-
-
-        error_log("Username: $user, Password: $password");
-
     }
 }

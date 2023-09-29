@@ -4,6 +4,7 @@ import {
   Textarea,
   Button,
   type SelectItem,
+  Loader,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useEffect, useState } from 'react';
@@ -40,7 +41,7 @@ const ModifyActifs = () => {
   const [note, setNote] = useState('');
 
   const [actifs, setActifs] = useState<LightActif[]>([]);
-
+  const [selectedActifs, setSelectedActifs] = useState<LightActif[]>([]);
   useEffect(() => {
     Promise.all([
       fetch('http://localhost:8000/api/statuts/light'),
@@ -101,6 +102,17 @@ const ModifyActifs = () => {
             }))
           );
           setActifs(actifs);
+          setSelectedActifs(
+            selectedRows.map((selectedRow: string) => ({
+              id: selectedRow,
+              nom: actifs.find(
+                (actif: LightActif) => actif.id.toString() === selectedRow
+              )?.nom,
+              numero_serie: actifs.find(
+                (actif: LightActif) => actif.id.toString() === selectedRow
+              )?.numero_serie,
+            }))
+          );
           setLoading(false);
         }
       )
@@ -124,7 +136,7 @@ const ModifyActifs = () => {
     },
   });
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader className="m-auto mt-20" />;
   }
   return (
     <div className="flex h-fit">
@@ -250,7 +262,11 @@ const ModifyActifs = () => {
           </Button.Group>
         </form>
       </div>
-      <SelectActifsList selectedActifs={selectedRows} actifs={actifs} />
+      <SelectActifsList
+        selectedActifs={selectedActifs}
+        setSelectedActifs={setSelectedActifs}
+        actifs={actifs}
+      />
     </div>
   );
 };

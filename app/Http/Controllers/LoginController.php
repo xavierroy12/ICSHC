@@ -75,7 +75,7 @@ class LoginController extends Controller
                 }
                 else {
                     error_log("in else userdb");
-                    error_log("Result $result");
+                    error_log("Result $entries");
                     error_log("User $user already in database");
                 }
                 error_log("Line 79");

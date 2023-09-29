@@ -13,7 +13,7 @@ const NavBar = () => {
       </div>
       <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
         <div className="text-sm lg:flex-grow">
-   
+
           <Link to={`/dashboard`}>
             <Button variant="link" color="white" className="mr-4">
               Dashboard
@@ -36,7 +36,8 @@ const NavBar = () => {
           </Link>
           {user && (
             <div className="text-white">
-              Logged in as {parsedUser.nom_utilisateur}
+
+              Logged in as {user}
             </div>
           )}
         </div>

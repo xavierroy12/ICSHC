@@ -36,7 +36,7 @@ import {
                   // Store the user in the session variable
                   sessionStorage.setItem('user', JSON.stringify(data.user));
                   // Set the my_cookie cookie
-                  document.cookie = `my_cookie=${data.user}; expires=${new Date(Date.now() + 60 * 60 * 1000).toUTCString()}; path=/`;
+                  document.cookie = `CookieLogged=${data.user}; expires=${new Date(Date.now() + 60 * 60 * 1000).toUTCString()}; path=/`;
                   //debugging
                   alert(`Login successful. Response: ${JSON.stringify(data)}`);
                   console.log('Login successful');

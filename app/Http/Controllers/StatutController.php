@@ -62,15 +62,19 @@ class StatutController extends Controller
     {
         //
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function showAll()
     {
         $statuts = Statut::all();
         return response()->json($statuts);
     }
-
-
+    public function lightShow()
+    {
+        $statuts = Statut::All()->map(function ($statut) {
+            return [
+                "id" => $statut->id,
+                "nom" => $statut->nom,
+            ];
+        });
+        return response()->json($statuts);
+    }
 }

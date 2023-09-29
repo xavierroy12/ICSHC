@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 button.my-btn {
-    -webkit-appearance: none !important;
-  }
+  -webkit-appearance: none !important;
+}

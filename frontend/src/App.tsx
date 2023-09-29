@@ -1,5 +1,5 @@
 import Layout from './Layout';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Actifs from './components/Actifs';
 import ModifyActifs from './components/ModifyActifs';
 import Actif from './components/Actif';
@@ -20,4 +20,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

@@ -67,4 +67,14 @@ class EtatController extends Controller
         $etats = Etat::all();
         return response()->json($etats);
     }
+    public function lightShow()
+    {
+        $etats = Etat::All()->map(function ($etat) {
+            return [
+                "id" => $etat->id,
+                "nom" => $etat->nom,
+            ];
+        });
+        return response()->json($etats);
+    }
 }

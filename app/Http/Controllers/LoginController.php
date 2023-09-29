@@ -70,6 +70,7 @@ class LoginController extends Controller
                     error_log("User $user added to database");
                 }
                 else {
+                    error_log("Result $result");
                     error_log("User $user already in database");
                 }
                 $cookie = $this->createCookie($user, $usercn);

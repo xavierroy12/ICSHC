@@ -9,6 +9,7 @@ class LoginController extends Controller
 {
     private function createCookie($user) {
         $cookie = cookie('user', $user, 60);
+        $_COOKIE['user'] = $user;
         return $cookie;
     }
 

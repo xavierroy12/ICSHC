@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    private function createCookie($user, $usercn) {
+    private function createCookie($user) {
         $cookie = cookie('user', $user, 60);
         return $cookie;
     }
@@ -76,13 +76,16 @@ class LoginController extends Controller
                     error_log("Result $result");
                     error_log("User $user already in database");
                 }
-                $cookie = $this->createCookie($user, $usercn);
+                error_log("Line 79");
+                $cookie = $this->createCookie($user);
                 $response = response()->json([
                     'user' => $user,
                     'usercn' => $usercn,
                 ], 200);
+                error_log("Line 85");
                 $response->withCookie($cookie);
                 return $response;
+                error_log("Line 85");
             }
             // If user not in group, return error
             else {

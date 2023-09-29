@@ -26,15 +26,22 @@ class DropdownController extends Controller
         UtilisationController $utilisationController
     ) {
         $dropdowns = [
-            'modeles' => $modeleController->showAll(),
-            'categories' => $typeModeleController->showAll(),
-            'clients' => $clientController->showAll(),
-            'emplacements' => $emplacementController->showAll(),
-            'statuts' => $statutController->showAll(),
-            'proprietaires' => $proprietaireController->showAll(),
-            'utilisations' => $utilisationController->showAll(),
+            'modeles' => $this->getNames($modeleController->showAll(), 'nom'),
+            'categories' => $this->getNames($typeModeleController->showAll(), 'nom'),
+            'clients' => $this->getNames($clientController->showAll(), 'nom'),
+            'emplacements' => $this->getNames($emplacementController->showAll(), 'nom'),
+            'statuts' => $this->getNames($statutController->showAll(), 'nom'),
+            'proprietaires' => $this->getNames($proprietaireController->showAll(), 'nom'),
+            'utilisations' => $this->getNames($utilisationController->showAll(), 'nom'),
         ];
 
         return response()->json($dropdowns);
     }
+
+    private function getNames($data, $key)
+    {
+        // Use array_column for mapping
+        return array_column($data, $key);
+    }
 }
+

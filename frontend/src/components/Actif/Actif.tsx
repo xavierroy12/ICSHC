@@ -20,6 +20,41 @@ const Actif = () => {
         utilisations: [],
     });
 
+    const fieldMappings: Record<string, string> = {
+        modele: "id_modele_commande",
+        categorie: "id_categorie",
+        assigne_a: "id_client",
+        emplacement: "id_emplacement",
+        statut: "id_statut",
+        proprietaire: "id_proprietaire",
+        utilisation: "id_utilisation",
+    };
+
+    // Create a state to track the selected values for each dropdown
+    const [selectedDropdownValues, setSelectedDropdownValues] = useState<any>({
+        modele: actif ? actif[fieldMappings.modele] : "0",
+        categorie: actif ? actif[fieldMappings.categorie] : "0",
+        assigne_a: actif ? actif[fieldMappings.assigne_a] : "0",
+        emplacement: actif ? actif[fieldMappings.emplacement] : "0",
+        statut: actif ? actif[fieldMappings.statut] : "0",
+        proprietaire: actif ? actif[fieldMappings.proprietaire] : "0",
+        utilisation: actif ? actif[fieldMappings.utilisation] : "0",
+    });
+
+    const renderLabelInputPair = (label: string, value: any) => (
+        <div className="mb-2">
+            <label>
+                {label}:
+                <input
+                    type="text"
+                    className="ml-2 text-gray-400 cursor-not-allowed"
+                    value={value || "N/A"}
+                    readOnly
+                />
+            </label>
+        </div>
+    );
+
     const fetchData = async (url: string, key: string) => {
         try {
             const response = await fetch(url);
@@ -51,19 +86,41 @@ const Actif = () => {
     };
 
     const handleFieldChange = (field: string, newValue: any) => {
-        setActif((prevActif: any) => ({ ...prevActif, [field]: newValue }));
+        setSelectedDropdownValues((prevSelectedValues: any) => ({
+            ...prevSelectedValues,
+            [field]: newValue,
+        }));
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Données à envoyer :", actif);
+        console.log("Données à envoyer :", {
+            ...actif,
+            [fieldMappings.modele]: selectedDropdownValues.modele,
+            [fieldMappings.categorie]: selectedDropdownValues.categorie,
+            [fieldMappings.assigne_a]: selectedDropdownValues.assigne_a,
+            [fieldMappings.emplacement]: selectedDropdownValues.emplacement,
+            [fieldMappings.statut]: selectedDropdownValues.statut,
+            [fieldMappings.proprietaire]: selectedDropdownValues.proprietaire,
+            [fieldMappings.utilisation]: selectedDropdownValues.utilisation,
+        });
+
         try {
             const response = await fetch(`http://127.0.0.1:8000/api/actif/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(actif),
+                body: JSON.stringify({
+                    ...actif,
+                    [fieldMappings.modele]: selectedDropdownValues.modele,
+                    [fieldMappings.categorie]: selectedDropdownValues.categorie,
+                    [fieldMappings.assigne_a]: selectedDropdownValues.assigne_a,
+                    [fieldMappings.emplacement]: selectedDropdownValues.emplacement,
+                    [fieldMappings.statut]: selectedDropdownValues.statut,
+                    [fieldMappings.proprietaire]: selectedDropdownValues.proprietaire,
+                    [fieldMappings.utilisation]: selectedDropdownValues.utilisation,
+                }),
             });
 
             if (!response.ok) {
@@ -74,46 +131,26 @@ const Actif = () => {
         }
     };
 
-    const fieldMappings: Record<string, string> = {
-        modele: "id_modele_commande",
-        categorie: "id_categorie",
-        assigne_a: "id_client",
-        emplacement: "id_emplacement",
-        statut: "id_statut",
-        proprietaire: "id_proprietaire",
-        utilisation: "id_utilisation",
-    };
-
     useEffect(() => {
+        const fetchDropdownData = async () => {
+            const urls = [
+                "http://127.0.0.1:8000/api/modeles",
+                "http://127.0.0.1:8000/api/categories",
+                "http://127.0.0.1:8000/api/clients",
+                "http://127.0.0.1:8000/api/emplacements",
+                "http://127.0.0.1:8000/api/statuts",
+                "http://127.0.0.1:8000/api/proprietaires",
+                "http://127.0.0.1:8000/api/utilisations",
+            ];
+
+            for (let i = 0; i < urls.length; i++) {
+                await fetchData(urls[i], Object.keys(dropdownData)[i]);
+            }
+        };
+
         fetchActif();
-        const urls = [
-            "http://127.0.0.1:8000/api/modeles",
-            "http://127.0.0.1:8000/api/categories",
-            "http://127.0.0.1:8000/api/clients",
-            "http://127.0.0.1:8000/api/emplacements",
-            "http://127.0.0.1:8000/api/statuts",
-            "http://127.0.0.1:8000/api/proprietaires",
-            "http://127.0.0.1:8000/api/utilisations",
-        ];
-
-        urls.forEach((url, index) => {
-            fetchData(url, Object.keys(dropdownData)[index]);
-        });
+        fetchDropdownData();
     }, [id]);
-
-    const renderLabelInputPair = (label: string, value: any) => (
-        <div className="mb-2">
-            <label>
-                {label}:
-                <input
-                    type="text"
-                    className="ml-2 text-gray-400 cursor-not-allowed"
-                    value={value || "N/A"}
-                    readOnly
-                />
-            </label>
-        </div>
-    );
 
     return (
         <div>
@@ -157,12 +194,9 @@ const Actif = () => {
                                 </label>
                                 <select
                                     className="mb-2 ml-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 p-1"
-                                    value={actif[fieldMappings[field]] || "0"}
+                                    value={selectedDropdownValues[field]}
                                     onChange={(e) =>
-                                        handleFieldChange(
-                                            fieldMappings[field],
-                                            parseInt(e.target.value)
-                                        )
+                                        handleFieldChange(field, e.target.value)
                                     }
                                 >
                                     <option value="0">{actif[field]}</option>
@@ -183,7 +217,6 @@ const Actif = () => {
                                 </select>
                             </div>
                         ))}
-
                         <div className="mb-2">
                             <label>
                                 En entrepôt:
@@ -200,7 +233,6 @@ const Actif = () => {
                                 />
                             </label>
                         </div>
-
                         {renderLabelInputPair(
                             "Créé le",
                             actif.date_creation
@@ -211,7 +243,6 @@ const Actif = () => {
                                   )
                                 : "N/A"
                         )}
-
                         <p className="font-bold mt-4">Note :</p>
                         <textarea
                             onChange={(e) => {
@@ -223,7 +254,6 @@ const Actif = () => {
                             value={actif.note}
                             className="p-2.5 w-2/5 h-24 marker:text-sm text-gray-900 bg-gray-50 rounded-lg border"
                         />
-
                         <div className="w-11/12 mx-auto">
                             <Button
                                 className="flex float-right"

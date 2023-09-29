@@ -62,10 +62,12 @@ class LoginController extends Controller
             $userdn = getDN($ad, $user, $basedn);
             $usercn = showattrib($ad, $userdn, 'cn');
             $groupdn = getDN($ad, $group, $basedn);
+            error_log("Line 65");
             $result = ldap_read($ad, $userdn, "(memberof={$groupdn})", array('dn'));
             $entries = ldap_get_entries($ad, $result);
             // If user in group, create cookie and return user info
             if ($entries['count'] > 0) {
+                error_log("Line 70");
                 if (addUserDb($user, $usercn)) {
                     error_log("User $user added to database");
                 }

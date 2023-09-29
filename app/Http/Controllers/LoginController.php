@@ -61,21 +61,23 @@ class LoginController extends Controller
             error_log("LDAP bind successful for user: $user");
             $userdn = getDN($ad, $user, $basedn);
             $usercn = showattrib($ad, $userdn, 'cn');
-            error_log("Line 64");
             $groupdn = getDN($ad, $group, $basedn);
-            error_log("Line 66");
+
             $result = ldap_read($ad, $userdn, "(memberof={$groupdn})", array('dn'));
             $entries = ldap_get_entries($ad, $result);
             // If user in group, create cookie and return user info
             if ($entries['count'] > 0) {
                 error_log("Line 71");
                 if (addUserDb($user, $usercn)) {
-                    error_log("in if userdb");
+
                     error_log("User $user added to database");
                 }
                 else {
-                    error_log("in else userdb");
-                    error_log("Result $entries");
+
+                    for ($i = 0; $i < $entries['count']; $i++) {
+                        $dn = $entries[$i]['dn'];
+                        error_log("DN: $dn\n");
+                    }
                     error_log("User $user already in database");
                 }
                 error_log("Line 79");

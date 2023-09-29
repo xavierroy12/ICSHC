@@ -129,11 +129,6 @@ const ModifyActifs = () => {
       propriete: '',
       note: '',
     },
-
-    onSubmit: (values) => {
-      console.log(values);
-      // Do something with the form values
-    },
   });
   if (loading) {
     return <Loader className="m-auto mt-20" />;
@@ -143,7 +138,9 @@ const ModifyActifs = () => {
       <div className="ml-12 mr-6 mt-20 w-2/3 h-full">
         <h1 className="text-3xl mb-8">Modifier des actifs</h1>
         <form
-          onSubmit={form.handleSubmit}
+          onSubmit={() => {
+            console.log('submit');
+          }}
           className="h-full bg-gray-200 w-full py-10 px-20 pb-20"
         >
           <div>
@@ -158,7 +155,9 @@ const ModifyActifs = () => {
               label="Emplacement"
               placeholder="Sélectionner une option"
               value={emplacement}
-              onChange={(value) => setEmplacement(value || '')}
+              onChange={(value) =>
+                form.setFieldValue('emplacement', value || '')
+              }
               data={localisations}
             />
             <Checkbox
@@ -166,7 +165,7 @@ const ModifyActifs = () => {
               label="Est en entropôt"
               checked={estEnEntropot}
               onChange={(value) =>
-                setEstEnEntropot(value.currentTarget.checked)
+                form.setFieldValue('estEnEntropot', value.currentTarget.checked)
               }
             />
             <Select
@@ -179,9 +178,10 @@ const ModifyActifs = () => {
               searchable
               label="Client"
               placeholder="Sélectionner une option"
-              required
               value={utilisateur}
-              onChange={(value) => setUtilisateur(value || '')}
+              onChange={(value) =>
+                form.setFieldValue('utilisateur', value || '')
+              }
               data={locataires}
             />
             <Select
@@ -193,9 +193,8 @@ const ModifyActifs = () => {
               }}
               label="Statut"
               placeholder="Sélectionner une option"
-              required
               value={statut}
-              onChange={(value) => setStatut(value || '')}
+              onChange={(value) => form.setFieldValue('statut', value || '')}
               data={statuts}
             />
             <Select
@@ -208,9 +207,8 @@ const ModifyActifs = () => {
               searchable
               label="Modèle"
               placeholder="Sélectionner une option"
-              required
               value={modele}
-              onChange={(value) => setModele(value || '')}
+              onChange={(value) => form.setFieldValue('modele', value || '')}
               data={modeles}
             />
             <Select
@@ -222,9 +220,10 @@ const ModifyActifs = () => {
               }}
               label="Utilisation"
               placeholder="Sélectionner une option"
-              required
               value={utilisation}
-              onChange={(value) => setUtilisation(value || '')}
+              onChange={(value) =>
+                form.setFieldValue('utilisation', value || '')
+              }
               data={utilisations}
             />
             <Select
@@ -236,9 +235,8 @@ const ModifyActifs = () => {
               }}
               label="Propriété"
               placeholder="Sélectionner une option"
-              required
               value={propriete}
-              onChange={(value) => setPropriete(value || '')}
+              onChange={(value) => form.setFieldValue('propriete', value || '')}
               data={proprietaires}
             />
             <Textarea
@@ -246,7 +244,9 @@ const ModifyActifs = () => {
               label="Note"
               placeholder="Entrer une note"
               value={note}
-              onChange={(value) => setNote(value.currentTarget.value)}
+              onChange={(value) =>
+                form.setFieldValue('note', value.currentTarget.value || '')
+              }
             />
           </div>
           <Button.Group className="float-right">

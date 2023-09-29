@@ -22,24 +22,23 @@ const SelectActifsList = ({
   const [selectData, setSelectData] = useState<SelectItem[]>([]);
 
   useEffect(() => {
-    console.log(
-      'filtred',
-      actifs.filter(
-        (actif) => !selectedActifs.some((selected) => selected.id === actif.id)
-      )
-    );
+    console.log('actifs', actifs);
+    console.log('selectedActifs', selectedActifs);
+    const tempActif = actifs;
+    selectedActifs.forEach((selected) => {
+      const index = tempActif.findIndex((data) => data.id === selected.id);
+      if (index) {
+        tempActif.splice(index, 1);
+      }
+    });
+    console.log('tempActif', tempActif);
     setSelectData(
-      actifs
-        .filter(
-          (actif) =>
-            !selectedActifs.some((selected) => selected.id === actif.id)
-        )
-        .map((actif) => ({
-          value: actif.id.toString(),
-          label: actif.nom,
-        }))
+      tempActif.map((actif) => ({
+        value: actif.id.toString(),
+        label: actif.nom,
+      }))
     );
-  }, [actifs, selectedActifs]);
+  }, [selectedActifs]);
 
   const updateData = (actif: LightActif) => {
     setSelectedActifs(selectedActifs.filter((a) => a.id !== actif.id));

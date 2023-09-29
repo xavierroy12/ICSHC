@@ -29,6 +29,14 @@ class LoginController extends Controller
             else { return ''; };
         }
 
+        function getDnGroup($ad, $group, $basedn) {
+            $result = ldap_search($ad, $basedn, "(cn={$group})", array('cn'));
+            if ($result === FALSE) { return ''; }
+            $entries = ldap_get_entries($ad, $result);
+            if ($entries['count'] > 0) { return $entries[0]['dn']; }
+            else { return ''; };
+        }
+
         //Function to show attribute of that DN, mostly for trouble shooting
         function showattrib($ad, $userdn, $attrib) {
             $attributes = array($attrib);
@@ -72,14 +80,13 @@ class LoginController extends Controller
                 }
                 else {
                     // Loop through the groups and check if the user is a member of TechInfo-GLPI
-                    for ($i = 0; $i < $entries['count']; $i++) {
-                        $groupcn = $entries[$i]['cn'][0];
+                        $groupcn = showattrib($ad, getDnGroup($ad, $group, $basedn), 'cn');
                         if ($groupcn === 'TechInfo-GLPI') {
-
+                            error_log($groupcn);
                             error_log("User $user is a member  wich is TechInfo-GLPI");
-                            break;
+
                         }
-                    }
+
                     error_log("User $user already in database");
                 }
                     error_log("Line 79");

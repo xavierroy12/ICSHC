@@ -1,14 +1,18 @@
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
-import { MantineProvider, createTheme } from '@mantine/core';
-
-const theme = createTheme({
-  /** Put your mantine theme override here */
-});
+import ReactDOM from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
+import { MantineProvider } from '@mantine/core';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <MantineProvider theme={theme}>
-        <App />
-    </MantineProvider>
-)
+  <MantineProvider
+    withGlobalStyles
+    withNormalizeCSS
+    theme={{
+      fontFamily: 'Verdana, sans-serif',
+      fontFamilyMonospace: 'Monaco, Courier, monospace',
+      headings: { fontFamily: 'Greycliff CF, sans-serif' },
+    }}
+  >
+    <App />
+  </MantineProvider>
+);

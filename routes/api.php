@@ -14,6 +14,8 @@ use App\Http\Controllers\EtatController;
 use App\Http\Controllers\ModeleController;
 use App\Http\Controllers\TypeModeleController;
 
+use App\Http\Controllers\DropdownController;
+
 Route::get('/emplacement/{id}', [EmplacementController::class, 'show']);
 Route::get('/emplacements', [EmplacementController::class, 'showAll']);
 
@@ -21,21 +23,19 @@ Route::get('/actif/{id}', [ActifController::class, 'showActif']);
 Route::get('/actifs', [ActifController::class, 'listShow']);
 
 Route::get('/clients', [ClientController::class, 'showAll']);
-
 Route::get('/etats', [EtatController::class, 'showAll']);
-
 Route::get('/statuts', [StatutController::class, 'showAll']);
 Route::get('/utilisations', [UtilisationController::class, 'showAll']);
 Route::get('/proprietaires', [ProprietaireController::class, 'showAll']);
-
 Route::get('/modeles', [ModeleController::class, 'showAll']);
-
 Route::get('/categories', [TypeModeleController::class, 'showAll']);
-
-
 
 //ajout actif
 Route::post('/actif', [ActifController::class, 'store']);
 
 //modif actif
 Route::put('/actif/{id}', [ActifController::class, 'update']);
+
+
+
+Route::get('/dropdowns', [DropdownController::class, 'getAllDropdowns']);

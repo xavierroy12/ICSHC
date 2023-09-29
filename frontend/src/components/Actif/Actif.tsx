@@ -1,38 +1,45 @@
 import { Button } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { Actif_Type } from "./type";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import React from 'react';
 
 const Actif = () => {
     const { id } = useParams<{ id: string }>();
-    const [actif, setActif] = useState<Actif_Type | null>(null);
+    const [actif, setActif] = useState<any | null>(null);
     const [actifNotFound, setActifNotFound] = useState<boolean>(false);
 
-    const [modeles, setModeles] = useState<any[]>([]);
-    const [categories, setCategories] = useState<any[]>([]);
-    const [clients, setClients] = useState<any[]>([]);
-    const [emplacements, setEmplacements] = useState<any[]>([]);
-    const [statuts, setStatuts] = useState<any[]>([]);
-    const [proprietaires, setProprietaires] = useState<any[]>([]);
-    const [utilisations, setUtilisations] = useState<any[]>([]);
+    const [dropdownData, setDropdownData] = useState<any>({
+        modeles: [],
+        categories: [],
+        clients: [],
+        emplacements: [],
+        statuts: [],
+        proprietaires: [],
+        utilisations: [],
+    });
 
-    const fetchActif = async () => {
+    const fetchData = async (url: string, key: string) => {
         try {
-            const response = await fetch(
-                `http://127.0.0.1:8000/api/actif/${id}`,
-                {
-                    method: "GET",
-                }
-            );
-
+            const response = await fetch(url);
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
-
             const data = await response.json();
+            setDropdownData((prevData: any) => ({ ...prevData, [key]: data }));
+        } catch (error) {
+            console.error("Fetch error:", error);
+        }
+    };
 
+    const fetchActif = async () => {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/api/actif/${id}`);
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
             if (!data) {
                 setActifNotFound(true);
             } else {
@@ -43,168 +50,139 @@ const Actif = () => {
         }
     };
 
-    const loadDropdownData = () => {
-        // Charger les données pour les listes déroulantes Modèle, Catégorie et Statut
-        fetch(`http://127.0.0.1:8000/api/modeles`)
-            .then((response) => response.json())
-            .then((data) => setModeles(data));
+    const handleFieldChange = (field: string, newValue: any) => {
+        setActif((prevActif: any) => ({ ...prevActif, [field]: newValue }));
+    };
 
-        fetch(`http://127.0.0.1:8000/api/categories`)
-            .then((response) => response.json())
-            .then((data) => setCategories(data));
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log("Données à envoyer :", actif);
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/api/actif/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(actif),
+            });
 
-        fetch(`http://127.0.0.1:8000/api/clients`)
-            .then((response) => response.json())
-            .then((data) => setClients(data));
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+        } catch (error) {
+            console.error("Fetch error:", error);
+        }
+    };
 
-        fetch(`http://127.0.0.1:8000/api/emplacements`)
-            .then((response) => response.json())
-            .then((data) => setEmplacements(data));
-
-        fetch(`http://127.0.0.1:8000/api/statuts`)
-            .then((response) => response.json())
-            .then((data) => setStatuts(data));
-
-        fetch(`http://127.0.0.1:8000/api/proprietaires`)
-            .then((response) => response.json())
-            .then((data) => setProprietaires(data));
-
-        fetch(`http://127.0.0.1:8000/api/utilisations`)
-            .then((response) => response.json())
-            .then((data) => setUtilisations(data));
+    const fieldMappings: Record<string, string> = {
+        modele: "id_modele_commande",
+        categorie: "id_categorie",
+        assigne_a: "id_client",
+        emplacement: "id_emplacement",
+        statut: "id_statut",
+        proprietaire: "id_proprietaire",
+        utilisation: "id_utilisation",
     };
 
     useEffect(() => {
         fetchActif();
-        loadDropdownData();
+        const urls = [
+            "http://127.0.0.1:8000/api/modeles",
+            "http://127.0.0.1:8000/api/categories",
+            "http://127.0.0.1:8000/api/clients",
+            "http://127.0.0.1:8000/api/emplacements",
+            "http://127.0.0.1:8000/api/statuts",
+            "http://127.0.0.1:8000/api/proprietaires",
+            "http://127.0.0.1:8000/api/utilisations",
+        ];
+
+        urls.forEach((url, index) => {
+            fetchData(url, Object.keys(dropdownData)[index]);
+        });
     }, [id]);
+
+    const renderLabelInputPair = (label: string, value: any) => (
+        <div className="mb-2">
+            <label>
+                {label}:
+                <input
+                    type="text"
+                    className="ml-2 text-gray-400 cursor-not-allowed"
+                    value={value || "N/A"}
+                    readOnly
+                />
+            </label>
+        </div>
+    );
 
     return (
         <div>
             {actifNotFound ? (
                 <p>
-                    L'actif avec l'ID {id} n'a pas été trouvé dans la base de
-                    données.
+                    L'actif avec l'ID {id} n'a pas été trouvé dans la base de données.
                 </p>
-            ) : actif && // Vérifiez si actif existe et s'il contient des informations valides
-              (actif.numero_serie || actif.adresse_mac) ? (
-                <>
+            ) : actif && (actif.numero_serie || actif.adresse_mac) ? (
+                <form onSubmit={handleSubmit}>
                     <h1 className="mb-8 mt-8 ml-6">Actif - {actif.nom}</h1>
-
                     <div className="mt-2 ml-12">
                         <h2 className="mt-2 font-bold">Spécifications</h2>
-                        <hr className="mb-2 w-96"></hr>
-                        <p className="mb-2">Numéro de série : {actif.numero_serie || "N/A"}</p>
-                        <p className="mb-2">Nom : {actif.nom || "N/A"}</p>
-                        <p className="mb-2">Adresse MAC : {actif.adresse_mac || "N/A"}</p>
+                        <hr className="mb-2 w-96" />
 
-                        <label className="mb-2">Modèle :</label>
-                        <select
-                            className="mb-2 ml-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 p-1.5"
-                            value={actif.id_modele_commande || "0"}
-                            onChange={(e) => {
-                                setActif({
-                                    ...actif,
-                                    id_modele_commande: parseInt(
-                                        e.target.value
-                                    ),
-                                });
-                            }}
-                        >
-                            <option value="0">{actif.modele}</option>
-                            {modeles
-                                .filter((modele) => modele.nom !== actif.modele)
-                                .map((modele) => (
-                                    <option key={modele.id} value={modele.id}>
-                                        {modele.nom}
-                                    </option>
-                                ))}
-                        </select>
+                        {renderLabelInputPair("Numéro de série", actif.numero_serie)}
+                        {renderLabelInputPair("Nom", actif.nom)}
+                        {renderLabelInputPair("Adresse MAC", actif.adresse_mac)}
 
-                        <br />
-
-                        <label className="mb-2">Catégorie :</label>
-                        <select
-                            className="mb-2 ml-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 p-1.5"
-                            value={actif.id_categorie || "0"}
-                            onChange={(e) => {
-                                setActif({
-                                    ...actif,
-                                    id_categorie: parseInt(e.target.value),
-                                });
-                            }}
-                        >
-                            <option value="0">{actif.categorie}</option>
-                            {categories
-                                .filter(
-                                    (categorie) =>
-                                        categorie.nom !== actif.categorie
-                                )
-                                .map((categorie) => (
-                                    <option
-                                        key={categorie.id}
-                                        value={categorie.id}
-                                    >
-                                        {categorie.nom}
-                                    </option>
-                                ))}
-                        </select>
-
-                        <h2 className="mt-2 font-bold">Attributs</h2>
-                        <hr className="mb-2 w-96"></hr>
-                        <p className="mb-2">Date de retour prévue: {actif.date_retour || "N/A"}</p>
-
-                        <label className="mb-2">Assigné à :</label>
-                        <select
-                            className="mb-2 ml-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 p-1.5"
-                            value={actif.id_client || "0"}
-                            onChange={(e) => {
-                                setActif({
-                                    ...actif,
-                                    id_client: parseInt(e.target.value),
-                                });
-                            }}
-                        >
-                            <option value="0">{actif.assigne_a}</option>
-                            {clients
-                                .filter(
-                                    (client) => client.nom !== actif.assigne_a
-                                )
-                                .map((client) => (
-                                    <option key={client.id} value={client.id}>
-                                        {client.nom}
-                                    </option>
-                                ))}
-                        </select>
-
-                        <br />
-
-                        <label className="mb-2">Emplacement :</label>
-                        <select
-                            className="mb-2 ml-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 p-1.5"
-                            value={actif.id_emplacement || "0"}
-                            onChange={(e) => {
-                                setActif({
-                                    ...actif,
-                                    id_emplacement: parseInt(e.target.value),
-                                });
-                            }}
-                        >
-                            <option value="0">{actif.emplacement}</option>
-                            {emplacements
-                                .filter(
-                                    (emplacement) =>
-                                        emplacement.nom !== actif.emplacement
-                                )
-                                .map((emplacement) => (
-                                    <option
-                                        key={emplacement.id}
-                                        value={emplacement.id}
-                                    >
-                                        {emplacement.nom}
-                                    </option>
-                                ))}
-                        </select>
+                        {[
+                            "modele",
+                            "categorie",
+                            "assigne_a",
+                            "emplacement",
+                            "statut",
+                            "proprietaire",
+                            "utilisation",
+                        ].map((field) => (
+                            <div key={field}>
+                                <label className="mb-2">
+                                    {field === "proprietaire"
+                                        ? "Propriétaire"
+                                        : field === "modele"
+                                        ? "Modèle"
+                                        : field === "categorie"
+                                        ? "Catégorie"
+                                        : field === "assigne_a"
+                                        ? "Assigné à"
+                                        : field.charAt(0).toUpperCase() +
+                                          field.slice(1)}{" "}
+                                    :
+                                </label>
+                                <select
+                                    className="mb-2 ml-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 p-1"
+                                    value={actif[fieldMappings[field]] || "0"}
+                                    onChange={(e) =>
+                                        handleFieldChange(
+                                            fieldMappings[field],
+                                            parseInt(e.target.value)
+                                        )
+                                    }
+                                >
+                                    <option value="0">{actif[field]}</option>
+                                    {dropdownData[field + "s"] &&
+                                        dropdownData[field + "s"]
+                                            .filter(
+                                                (item: any) =>
+                                                    item.nom !== actif[field]
+                                            )
+                                            .map((item: any) => (
+                                                <option
+                                                    key={item.id}
+                                                    value={item.id}
+                                                >
+                                                    {item.nom}
+                                                </option>
+                                            ))}
+                                </select>
+                            </div>
+                        ))}
 
                         <div className="mb-2">
                             <label>
@@ -223,102 +201,17 @@ const Actif = () => {
                             </label>
                         </div>
 
-                        <label className="mb-2">Statut :</label>
-                        <select
-                            className="mb-2 ml-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 p-1.5"
-                            value={actif.id_statut || "0"}
-                            onChange={(e) => {
-                                setActif({
-                                    ...actif,
-                                    id_statut: parseInt(e.target.value),
-                                });
-                            }}
-                        >
-                            <option value="0">{actif.statut}</option>
-                            {statuts
-                                .filter(
-                                    (statut) =>
-                                    statut.nom !== actif.statut
-                                )
-                                .map((statut) => (
-                                    <option
-                                        key={statut.id}
-                                        value={statut.id}
-                                    >
-                                        {statut.nom}
-                                    </option>
-                                ))}
-                        </select>
-
-<br />
-                        <label className="mb-2">Propriétaire :</label>
-                        <select
-                            className="mb-2 ml-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 p-1.5"
-                            value={actif.id_proprietaire || "0"}
-                            onChange={(e) => {
-                                setActif({
-                                    ...actif,
-                                    id_proprietaire: parseInt(e.target.value),
-                                });
-                            }}
-                        >
-                            <option value="0">{actif.proprietaire}</option>
-                            {proprietaires
-                                .filter(
-                                    (proprietaire) =>
-                                    proprietaire.nom !== actif.statut
-                                )
-                                .map((proprietaire) => (
-                                    <option
-                                        key={proprietaire.id}
-                                        value={proprietaire.id}
-                                    >
-                                        {proprietaire.nom}
-                                    </option>
-                                ))}
-                        </select>
-
-<br />
-                        <label className="mb-2">Utilisation :</label>
-                        <select
-                            className="mb-2 ml-4  border border-grabg-gray-50y-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 p-1.5"
-                            value={actif.id_utilisation || "0"}
-                            onChange={(e) => {
-                                setActif({
-                                    ...actif,
-                                    id_utilisation: parseInt(e.target.value),
-                                });
-                            }}
-                        >
-                            <option value="0">{actif.utilisation}</option>
-                            {utilisations
-                                .filter(
-                                    (utilisation) =>
-                                    utilisation.nom !== actif.utilisation
-                                )
-                                .map((utilisation) => (
-                                    <option
-                                        key={utilisation.id}
-                                        value={utilisation.id}
-                                    >
-                                        {utilisation.nom}
-                                    </option>
-                                ))}
-                        </select>
-
-
-
-
-                        <p>
-                            Créé le :{" "}
-                            {actif.date_creation
+                        {renderLabelInputPair(
+                            "Créé le",
+                            actif.date_creation
                                 ? format(
                                       new Date(actif.date_creation),
                                       "yyyy-MM-dd 'à' HH':'mm",
                                       { locale: fr }
                                   )
-                                : "N/A"}
-                        </p>
+                                : "N/A"
+                        )}
+
                         <p className="font-bold mt-4">Note :</p>
                         <textarea
                             onChange={(e) => {
@@ -330,20 +223,20 @@ const Actif = () => {
                             value={actif.note}
                             className="p-2.5 w-2/5 h-24 marker:text-sm text-gray-900 bg-gray-50 rounded-lg border"
                         />
-                    </div>
 
-                    <div className="w-11/12 mx-auto">
-                        <Button
-                            className="flex float-right"
-                            color="green"
-                            variant="outline"
-                            size="md"
-                            onClick={() => {}}
-                        >
-                            Sauvegarder
-                        </Button>
+                        <div className="w-11/12 mx-auto">
+                            <Button
+                                className="flex float-right"
+                                color="green"
+                                variant="outline"
+                                size="md"
+                                type="submit"
+                            >
+                                Sauvegarder
+                            </Button>
+                        </div>
                     </div>
-                </>
+                </form>
             ) : (
                 <p>
                     Aucune information disponible pour l'actif avec l'ID {id}.

@@ -73,38 +73,41 @@ class LoginController extends Controller
                     error_log("User $user added to database");
                 }
                 else {
-
+                    // Loop through the groups and check if the user is a member of TechInfo-GLPI
                     for ($i = 0; $i < $entries['count']; $i++) {
-                        $dn = $entries[$i]['dn'];
-                        error_log("DN: $dn\n");
+                        $groupcn = $entries[$i]['cn'][0];
+                        if ($groupcn === 'TechInfo-GLPI') {
+                            // User is a member of TechInfo-GLPI
+                            error_log("User $user is a member $groupcn wich is TechInfo-GLPI");
+                            break;
+                        }
+                        error_log("User $user already in database");
                     }
-                    error_log("User $user already in database");
+                    error_log("Line 79");
+                    $cookie = $this->createCookie($user);
+                    $response = response()->json([
+                        'user' => $user,
+                        'usercn' => $usercn,
+                    ], 200);
+                    error_log("Line 85");
+                    $response->withCookie($cookie);
+                    return $response;
+                    error_log("Line 85");
                 }
-                error_log("Line 79");
-                $cookie = $this->createCookie($user);
-                $response = response()->json([
-                    'user' => $user,
-                    'usercn' => $usercn,
-                ], 200);
-                error_log("Line 85");
-                $response->withCookie($cookie);
-                return $response;
-                error_log("Line 85");
+                // If user not in group, return error
+                else {
+                    error_log("User $user not in group $group");
+                    return response()->json([
+                        'message' => 'User not in group'
+                    ], 401);
+                }
             }
-            // If user not in group, return error
+            // If LDAP bind failed, return error
             else {
-                error_log("User $user not in group $group");
+                error_log("LDAP bind failed for user: $user");
                 return response()->json([
-                    'message' => 'User not in group'
+                    'message' => 'Invalid username or password'
                 ], 401);
             }
         }
-        // If LDAP bind failed, return error
-        else {
-            error_log("LDAP bind failed for user: $user");
-            return response()->json([
-                'message' => 'Invalid username or password'
-            ], 401);
-        }
     }
-}

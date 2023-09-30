@@ -23,6 +23,7 @@ function App() {
             response.json().then(data => {
                 if (data.success === true) {
                     console.log('Token is valid');
+
                     authentified = true;
 
                 } else {
@@ -37,8 +38,9 @@ function App() {
 if (!authentified) {
     return <Login />;
 }
-
+console.log('Authentified');
 return (
+
     <div className="App">
     <Router>
     <Layout>

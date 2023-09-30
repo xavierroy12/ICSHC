@@ -73,9 +73,7 @@ class UtilisateurController extends Controller
         error_log("token in utilisateurcontroller $token");
         $decryptedToken = Crypt::decryptString($token);
         error_log($decryptedToken);
-        $utilisateur = DB::table('utilisateur')
-        ->where('token', $decryptedToken)
-        ->first();
+        $utilisateur = Utilisateur::where('utilisateur')->where('token', $decryptedToken)->first();
         if ($utilisateur) {
             return TRUE;
         } else {

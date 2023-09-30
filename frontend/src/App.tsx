@@ -7,7 +7,9 @@ function App() {
     const cookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('CookieLogged=')); // Get the cookie
     if (cookie) {
         const token = cookie.split('=')[1]; // Extract the token value
+        console.log('CookieLogged found, value: ');
         console.log(token);
+        console.log('End of CookieLogged value');
     }
 
   if (!cookie) {

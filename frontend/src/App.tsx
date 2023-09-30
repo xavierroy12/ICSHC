@@ -25,6 +25,7 @@ function App() {
                     console.log('Token is valid');
 
                     authentified = true;
+                    console.log('Authentified');
 
                 } else {
                     console.log('Token is invalid');

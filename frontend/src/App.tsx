@@ -23,12 +23,12 @@ function App() {
             response.json().then(data => {
                 if (data.success === true) {
                     console.log('Token is valid');
-
                     authentified = true;
                     console.log(authentified);
 
                 } else {
                     console.log('Token is invalid');
+                    return <Login />;
                 }
             });
         }
@@ -36,9 +36,7 @@ function App() {
 }
 
 
-if (!authentified) {
-    return <Login />;
-}
+
 console.log('Authentified');
 return (
 

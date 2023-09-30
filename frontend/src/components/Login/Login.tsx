@@ -8,11 +8,11 @@ import {
   } from '@mantine/core';
     import { useState } from 'react';
   import './Login.scss';
-  import { useNavigate } from 'react-router-dom';
+
 
 
   function Login() {
-    const navigate = useNavigate(); // Get the navigate function from the useNavigate hook
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -43,7 +43,8 @@ import {
                   //debugging
                   alert(`Login successful. Response: ${JSON.stringify(data)}`);
                   console.log('Login successful');
-                  navigate('/'); // Navigate to the home page
+                    // Redirect to the home page
+                    window.location.href = '/';
 
                 });
           } else {

@@ -77,7 +77,15 @@ class UtilisateurController extends Controller
         $utilisateur = Utilisateur::where('token', $decryptedToken)->first();
         error_log("user : $utilisateur");
         if ($utilisateur) {
-            return TRUE;
+            $expiry = strtotime($utilisateur->expiration);
+            $now = time();
+            if ($expiry < $now) {
+                // Token has expired
+                return FALSE;
+            } else {
+                // Token is valid
+                return TRUE;
+            }
         } else {
             return FALSE;
         }

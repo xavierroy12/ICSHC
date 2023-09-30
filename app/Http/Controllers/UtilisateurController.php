@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Crypt;
 use App\Models\Utilisateur;
 use Illuminate\Http\Request;
 

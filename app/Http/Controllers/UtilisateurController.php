@@ -58,8 +58,9 @@ class UtilisateurController extends Controller
     public function updateToken($nom_utilisateur, $token, $expiry)
     {
         if ($this->userExists($nom_utilisateur)) {
+            $decryptedToken = Crypt::decryptString($token);
             $utilisateur = Utilisateur::where('nom_utilisateur', $nom_utilisateur)->first();
-            $utilisateur->token = $token;
+            $utilisateur->token = $decryptedToken;
             $utilisateur->expiration = $expiry;
             $utilisateur->save();
             return $utilisateur;

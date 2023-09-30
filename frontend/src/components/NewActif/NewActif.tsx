@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Button,
@@ -10,7 +10,6 @@ import {
 } from '@mantine/core';
 import { Form, useForm } from '@mantine/form';
 import { Actif_Type } from './type';
-import { Fragment } from 'react';
 
 type LightType = {
   id: number;
@@ -247,6 +246,14 @@ const NewActif = () => {
               data={proprietaires}
             />
 
+            <Select
+              className="mb-8"
+              label="Utilisation :"
+              placeholder="Veuiilez choisir une utilisation"
+              value={form.values.utilisation || ''}
+              onChange={(value) => form.setFieldValue('utilisation', value ?? undefined)}
+              data={utilisations}
+            />
 
             <TextInput
                 className="mb-8"

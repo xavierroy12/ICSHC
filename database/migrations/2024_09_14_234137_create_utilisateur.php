@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('nom_utilisateur', 32);
             $table->unsignedBigInteger('id_emplacement')->nullable();
             $table->unsignedBigInteger('id_role')->nullable();
+            $table->string('token', 60)->nullable(); // Add token column
+            $table->timestamp('expiration')->nullable(); // Add expiration column
             $table->foreign('id_emplacement')->references('id')->on('emplacement');
             $table->foreign('id_role')->references('id')->on('role');
         });

@@ -4,8 +4,12 @@ import Login from './components/Login';
 import Home from './components/Home';
 
 function App() {
-  const cookie = true; // replace with your cookie check
-
+    const cookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('CookieLogged=')); // Get the cookie
+    if (cookie) {
+        const token = cookie.split('=')[1]; // Extract the token value
+        console.log(token);
+    }
+const
   if (!cookie) {
     return <Login />;
   }

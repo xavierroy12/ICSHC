@@ -7,11 +7,23 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
+    //doesnt work
     private function createCookie($user) {
         $cookie = cookie('user', $user, 60);
         $_COOKIE['user'] = $user;
         return $cookie;
     }
+    //create a token to be stored in a cookie on the client side
+    private function generateToken() {
+        $token = bin2hex(random_bytes(30)); // Generate a random token
+        $expiration = Carbon::now()->addDays(30); // Set expiration to 30 days from now
+        $encryptedToken = Crypt::encryptString($token);
+        return [
+            'token' => $encryptedToken,
+            'expiration' => $expiration,
+        ];
+    }
+
 
     public function checkLogin(Request $request)
     {
@@ -46,14 +58,20 @@ class LoginController extends Controller
             $entries = ldap_get_entries($ad, $result);
             return $entries[0][$attrib][0];
         }
-
+        //Function to add user to database, store function check if user already exist
         function addUserDb($user, $nom) {
             $utilisateur = new UtilisateurController();
-            if($utilisateur->store($user, $nom)) {
-                return TRUE;
+            //If user exist, check if token is expired, if not return false
+            if($utilisateur->userExists($user)){
+                $token = generateToken();
+                $utilisateur->updateToken($user, $token['token'], $token['expiration']);
+                return $token;
             }
             else {
-                return FALSE;
+                $token = generateToken();
+                $utilisateur->store($user, $nom, $token['token'], $token['expiration']);
+                error_log("User $user added to database");
+                return $token;
             }
         }
 
@@ -76,30 +94,32 @@ class LoginController extends Controller
             $entries = ldap_get_entries($ad, $result);
             // If user in group, create cookie and return user info
             if ($entries['count'] > 0) {
-                if (addUserDb($user, $usercn)) {
-                    error_log("User $user added to database");
-                }
-                else {
-                    // Loop through the groups and check if the user is a member of TechInfo-GLPI
+                $token = addUserDb($user, $usercn)
+
+
+                /*else {
+                    // troubleshooting purpose
+
                         $groupcn = showattrib($ad, getDnGroup($ad, $group, $basedn), 'cn');
                         if ($groupcn === 'TechInfo-GLPI') {
                             error_log($groupcn);
                             error_log("User $user is a member  wich is TechInfo-GLPI");
-
                         }
 
                     error_log("User $user already in database");
-                }
-                    error_log("Line 79");
+                }*/
+
                     $cookie = $this->createCookie($user);
                     $response = response()->json([
                         'user' => $user,
                         'usercn' => $usercn,
+                        'token' => $token['token'],
+                        'expiration' => $token['expiration'],
+
                     ], 200);
-                    error_log("Line 85");
                     $response->withCookie($cookie);
                     return $response;
-                    error_log("Line 85");
+
                 }
                 // If user not in group, return error
                 else {

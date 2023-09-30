@@ -10,6 +10,8 @@ class UtilisateurController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+
     public function index()
     {
         //
@@ -36,9 +38,9 @@ class UtilisateurController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created resource in storage. checks if user exists, if not creates it.
      */
-    public function store($nom_utilisateur, $nom)
+    public function store($nom_utilisateur, $nom, $token, $expiry)
     {
         if ($this->userExists($nom_utilisateur)) {
             return FALSE;
@@ -46,8 +48,23 @@ class UtilisateurController extends Controller
             $utilisateur = new Utilisateur();
             $utilisateur->nom_utilisateur = $nom_utilisateur;
             $utilisateur->nom = $nom;
+            $utilisateur->token = $token;
+            $utilisateur->expiration = $expiry;
             $utilisateur->save();
             return $utilisateur;
+        }
+    }
+
+    public function updateToken($nom_utilisateur, $token, $expiry)
+    {
+        if ($this->userExists($nom_utilisateur)) {
+            $utilisateur = Utilisateur::where('nom_utilisateur', $nom_utilisateur)->first();
+            $utilisateur->token = $token;
+            $utilisateur->expiration = $expiry;
+            $utilisateur->save();
+            return $utilisateur;
+        } else {
+            return FALSE;
         }
     }
 
@@ -74,6 +91,7 @@ class UtilisateurController extends Controller
     {
         //
     }
+
 
     /**
      * Remove the specified resource from storage.

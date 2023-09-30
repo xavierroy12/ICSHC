@@ -36,12 +36,11 @@ import {
                   // Store the user in the session variable
                   sessionStorage.setItem('user', JSON.stringify(data.user));
                   // Set the my_cookie cookie
-                  document.cookie = `CookieLogged=${data.user}; expires=${new Date(Date.now() + 60 * 60 * 1000).toUTCString()}; path=/`;
+                  document.cookie = `CookieLogged=${data.user}; expires=${new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
                   //debugging
                   alert(`Login successful. Response: ${JSON.stringify(data)}`);
                   console.log('Login successful');
-                  // Redirect to home page after successful login
-                  //window.location.href = '/actifs';
+
                 });
           } else {
             // Display error message if login is unsuccessful

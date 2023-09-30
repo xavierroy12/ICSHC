@@ -63,12 +63,12 @@ class LoginController extends Controller
             $utilisateur = new UtilisateurController();
             //If user exist, check if token is expired, if not return false
             if($utilisateur->userExists($user)){
-                $token = generateToken();
+                $token = LoginController::generateToken();
                 $utilisateur->updateToken($user, $token['token'], $token['expiration']);
                 return $token;
             }
             else {
-                $token = generateToken();
+                $token = LoginController::generateToken();
                 $utilisateur->store($user, $nom, $token['token'], $token['expiration']);
                 error_log("User $user added to database");
                 return $token;

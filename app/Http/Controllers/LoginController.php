@@ -22,7 +22,11 @@ class LoginController extends Controller
     public static function generateToken() {
         $token = bin2hex(random_bytes(30)); // Generate a random token
         $expiration = Carbon::now()->addDays(30); // Set expiration to 30 days from now
+        error_log("Token $token generated");
         $encryptedToken = Crypt::encryptString($token);
+        error_log("Token $encryptedToken encrypted");
+        $unencryptedToken = Crypt::decryptString($encryptedToken);
+        error_log("Token $unencryptedToken decrypted");
         return [
             'token' => $encryptedToken,
             'expiration' => $expiration,

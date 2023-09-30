@@ -14,7 +14,7 @@ function App() {
 
         fetch('http://10.0.22.24:8080/api/checkToken', {
         method: 'POST',
-        body: JSON.stringify(token),
+        body: JSON.stringify({ token: token }),
         headers: {
             'Content-Type': 'application/json'
         }

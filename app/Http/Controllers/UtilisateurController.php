@@ -23,7 +23,7 @@ class UtilisateurController extends Controller
         return response()->json($utilisateurs);
     }
 
-    private function userExists($nom_utilisateur)
+    public function userExists($nom_utilisateur)
     {
         return Utilisateur::where('nom_utilisateur', $nom_utilisateur)->exists();
     }

@@ -1,4 +1,4 @@
-import { Button, TextInput, Checkbox, Select, SelectItem } from '@mantine/core';
+import { Button, Checkbox, Select, SelectItem } from '@mantine/core';
 import { Form, useForm } from '@mantine/form';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -9,13 +9,12 @@ type LightType = {
   nom: string;
 };
 
-const NewActif = () => {
+const Actif = () => {
   const { id } = useParams<{ id: string }>();
 
   const [loading, setLoading] = useState(true);
   const [statuts, setStatuts] = useState<SelectItem[]>([]);
   const [modeles, setModeles] = useState<SelectItem[]>([]);
-  const [categories, setCategories] = useState<SelectItem[]>([]);
   const [emplacements, setEmplacements] = useState<SelectItem[]>([]);
   const [locataires, setLocataires] = useState<SelectItem[]>([]);
   const [utilisations, setUtilisations] = useState<SelectItem[]>([]);
@@ -25,7 +24,6 @@ const NewActif = () => {
     Promise.all([
       fetch('http://localhost:8000/api/statuts/light'),
       fetch('http://localhost:8000/api/modeles/light'),
-      fetch('http://localhost:8000/api/categories/light'),
       fetch('http://localhost:8000/api/emplacements/light'),
       fetch('http://localhost:8000/api/clients/light'),
       fetch('http://localhost:8000/api/utilisations/light'),
@@ -39,7 +37,6 @@ const NewActif = () => {
         ([
           statuts,
           modeles,
-          categories,
           localisations,
           locataires,
           utilisations,
@@ -56,12 +53,6 @@ const NewActif = () => {
             modeles.map((modele: LightType) => ({
               value: modele.id,
               label: modele.nom,
-            }))
-          );
-          setCategories(
-            categories.map((categorie: LightType) => ({
-              value: categorie.id,
-              label: categorie.nom,
             }))
           );
           setEmplacements(
@@ -104,44 +95,16 @@ const NewActif = () => {
       assigne_a: actif?.assigne_a,
       emplacement: actif?.emplacement,
       statut: actif?.statut,
-      proprietaire: actif?.proprietaire,
-      utilisation: actif?.utilisation,
-      estEnEntrepot: actif?.est_en_entrepot,
-      date_creation: actif?.date_creation,
-      note: actif?.note,
     },
   });
-
   const handleSubmit = () => {
     console.log(form.values);
   };
 
   return (
     <div>
-      <h1>Actif - {actif?.nom}</h1>
+      <h1>Actif</h1>
       <Form form={form} onSubmit={handleSubmit}>
-        <TextInput
-          className="mb-8"
-          readOnly
-          label="Numéro de série :"
-          placeholder={actif?.numero_serie ?? ''}
-          value={form.getInputProps('numeroSerie').value}
-        />
-        <TextInput
-          className="mb-8"
-          readOnly
-          label="Nom :"
-          placeholder={actif?.nom ?? ''}
-          value={form.getInputProps('nom').value}
-        />
-        <TextInput
-          className="mb-8"
-          readOnly
-          label="Adresse MAC :"
-          placeholder={actif?.adresse_mac ?? ''}
-          value={form.getInputProps('adresseMac').value}
-        />
-
         <Select
           className="mb-8"
           required
@@ -158,105 +121,14 @@ const NewActif = () => {
           onChange={(value) => form.setFieldValue('emplacement', value || '')}
           data={emplacements}
         />
-
-        <Select
+        <Checkbox
           className="mb-8"
-          required
-          transitionProps={{
-            transition: 'pop-top-left',
-            duration: 80,
-            timingFunction: 'ease',
-          }}
-          error={form.errors.statut && 'Ce champ est requis'}
-          searchable
-          label="Statut :"
-          placeholder="Sélectionner une option"
-          value={form.getInputProps('statut').value}
-          onChange={(value) => form.setFieldValue('statut', value || '')}
-          data={statuts}
+          label="Est en entropôt"
+          checked={form.getInputProps('entrepot').value}
+          onChange={(value) =>
+            form.setFieldValue('estEnEntropot', value.currentTarget.checked)
+          }
         />
-
-        <Select
-          className="mb-8"
-          required
-          transitionProps={{
-            transition: 'pop-top-left',
-            duration: 80,
-            timingFunction: 'ease',
-          }}
-          error={form.errors.statut && 'Ce champ est requis'}
-          searchable
-          label="Propriétaire :"
-          placeholder="Sélectionner une option"
-          value={form.getInputProps('proprietaire').value}
-          onChange={(value) => form.setFieldValue('proprietaire', value || '')}
-          data={proprietaires}
-        />
-
-        <Select
-          className="mb-8"
-          required
-          transitionProps={{
-            transition: 'pop-top-left',
-            duration: 80,
-            timingFunction: 'ease',
-          }}
-          error={form.errors.statut && 'Ce champ est requis'}
-          searchable
-          label="Utilisation :"
-          placeholder="Sélectionner une option"
-          value={form.getInputProps('utilisation').value}
-          onChange={(value) => form.setFieldValue('utilisation', value || '')}
-          data={utilisations}
-        />
-
-        <Select
-          className="mb-8"
-          required
-          transitionProps={{
-            transition: 'pop-top-left',
-            duration: 80,
-            timingFunction: 'ease',
-          }}
-          error={form.errors.statut && 'Ce champ est requis'}
-          searchable
-          label="Catégorie :"
-          placeholder="Sélectionner une option"
-          value={form.getInputProps('categorie').value}
-          onChange={(value) => form.setFieldValue('categorie', value || '')}
-          data={categories}
-        />
-
-        <Select
-          className="mb-8"
-          required
-          transitionProps={{
-            transition: 'pop-top-left',
-            duration: 80,
-            timingFunction: 'ease',
-          }}
-          error={form.errors.statut && 'Ce champ est requis'}
-          searchable
-          label="Modèle :"
-          placeholder="Sélectionner une option"
-          value={form.getInputProps('modele').value}
-          onChange={(value) => form.setFieldValue('modele', value || '')}
-          data={modeles}
-        />
-
-        <div className="mb-8 flex items-center">
-          <label htmlFor="en_entrepot" className="mr-2">
-            En entrepôt :
-          </label>
-          <Checkbox
-            id="en_entrepot"
-            checked={form.getInputProps('est_en_entrepot').value}
-            onChange={(value) =>
-              form.setFieldValue('estEnEntrepot', value.currentTarget.checked)
-            }
-          />
-        </div>
-
         <div className="w-11/12 mx-auto">
           <Button
             className="flex float-right"
@@ -272,4 +144,3 @@ const NewActif = () => {
     </div>
   );
 };
-export default NewActif;

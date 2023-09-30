@@ -67,6 +67,20 @@ class UtilisateurController extends Controller
             return FALSE;
         }
     }
+    //Verifiy if the token exists in the database
+    public function tokenExists($token)
+    {
+        $decryptedToken = Crypt::decryptString($token);
+        $utilisateur = DB::table('utilisateur')
+        ->where('token', $decryptedToken)
+        ->first();
+        if ($utilisateur) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+
+    }
 
     /**
      * Display the specified resource.

@@ -22,4 +22,5 @@ use App\Http\Controllers\UtilisateurController;
 // });
 Route::get('/emplacement/{id}', [EmplacementController::class, 'show']);
 Route::post('/login', [LoginController::class, 'checkLogin']);
+Route::post('/checkToken', [LoginController::class, 'checkToken']);
 Route::get('/utilisateur', [UtilisateurController::class, 'list_json']);

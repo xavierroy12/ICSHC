@@ -29,6 +29,30 @@ class LoginController extends Controller
         ];
     }
 
+    public function checkToken(Request $request)
+    {
+        $token = $request->input('token'); // Get the token from the request
+
+
+        $utilisateur = new UtilisateurController();
+        $utilisateur = $utilisateur->tokenExists($token); // Get the user by the token
+
+        if ($utilisateur) {
+            // Token is valid, return the user information
+            return response()->json([
+                'success' => true,
+                'user' => $utilisateur
+            ], 200);
+        } else {
+            // Token is invalid, return an error message
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid token'
+            ], 401);
+        }
+    }
+
+
 
     public function checkLogin(Request $request)
     {

@@ -9,7 +9,7 @@ function App() {
         const token = cookie.split('=')[1]; // Extract the token value
         console.log(token);
     }
-const
+
   if (!cookie) {
     return <Login />;
   }

@@ -94,7 +94,7 @@ class LoginController extends Controller
             $entries = ldap_get_entries($ad, $result);
             // If user in group, create cookie and return user info
             if ($entries['count'] > 0) {
-                $token = addUserDb($user, $usercn)
+                $token = addUserDb($user, $usercn);
 
 
                 /*else {

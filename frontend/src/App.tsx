@@ -10,15 +10,11 @@ function App() {
     if (cookie === 'Minou') {
         console.log('Bypassing login');
         authentified = true;
-        doReturn();
+        //doReturn();
     }
 
     if (cookie) {
         const token = cookie.split('=')[1]; // Extract the token value
-        console.log('CookieLogged found, value: ');
-        console.log(token);
-        console.log('End of CookieLogged value');
-
         fetch('http://10.0.22.24:8080/api/checkToken', {
         method: 'POST',
         body: JSON.stringify({ token: token }),
@@ -31,8 +27,7 @@ function App() {
                 if (data.success === true) {
                     console.log('Token is valid');
                     authentified = true;
-                    console.log(authentified);
-                    doReturn();
+                    //doReturn();
 
                 } else {
                     console.log('Token is invalid');
@@ -49,7 +44,7 @@ else {
 
 
 console.log('Authentified');
-function doReturn() {
+//function doReturn() {
 return (
 
     <div className="App">
@@ -58,13 +53,13 @@ return (
     <Routes>
     <Route path="/" element={<Home />} />
     <Route path="/login" element={<Login />} />
-    </Routes>
+    </Routes>s
     </Layout>
     </Router>
     </div>
     )
 }
-}
+//}
 
 export default App
 

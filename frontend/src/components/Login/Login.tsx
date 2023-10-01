@@ -57,6 +57,10 @@ import {
         });
     };
 
+    const bypass = () => {
+      document.cookie = `CookieLogged=${"Minou"}; expires=${new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
+    }
+
 
 
 
@@ -70,6 +74,9 @@ import {
             <PasswordInput label="password" placeholder="Your password" required mt="md" value={password} onChange={handlePasswordChange} />
             <Button fullWidth mt="xl" onClick={handleLogin}>
               Login
+            </Button>
+            <Button fullWidth mt="xl" onClick={bypass}>
+              Bypass
             </Button>
           </Paper>
         </Container>

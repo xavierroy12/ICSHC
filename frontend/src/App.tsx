@@ -6,6 +6,13 @@ import Home from './components/Home';
 function App() {
     const cookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('CookieLogged=')); // Get the cookie
     let authentified = false;
+    //Bypass Login for dev purposes, might want to remove that later
+    if (cookie === 'Minou') {
+        console.log('Bypassing login');
+        authentified = true;
+        doReturn();
+    }
+
     if (cookie) {
         const token = cookie.split('=')[1]; // Extract the token value
         console.log('CookieLogged found, value: ');
@@ -25,6 +32,7 @@ function App() {
                     console.log('Token is valid');
                     authentified = true;
                     console.log(authentified);
+                    doReturn();
 
                 } else {
                     console.log('Token is invalid');
@@ -41,6 +49,7 @@ else {
 
 
 console.log('Authentified');
+function doReturn() {
 return (
 
     <div className="App">
@@ -54,6 +63,7 @@ return (
     </Router>
     </div>
     )
+}
 }
 
 export default App

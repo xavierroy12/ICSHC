@@ -5,6 +5,7 @@ import {
     Title,
     Container,
     Button,
+    Text,
   } from '@mantine/core';
     import { useState } from 'react';
   import './Login.scss';
@@ -15,6 +16,8 @@ import {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [loginStatus, setLoginStatus] = useState('');
+
 
     const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setUsername(event.target.value);
@@ -49,11 +52,12 @@ import {
                 });
           } else {
             // Display error message if login is unsuccessful
-            alert(`Error: ${response.statusText}`);
+            setLoginStatus('Information érronée');
           }
         })
         .catch(error => {
           console.error('Error:', error);
+          setLoginStatus('Problème de serveur : ' + error);
         });
     };
 
@@ -70,16 +74,18 @@ import {
           <Title ta="center" className= 'title' mt={-10}>
             Inventaire CSHC 
           </Title>
-          <Title ta="center" className='underTitle' >
-            Logiciel de gestion d'inventaire pour le Centre de services scolaire
-              des Hauts-Cantons
-          </Title>
+          <Text c="dimmed" size="sm" ta="center" mt={5}>
+        Logiciel d'inventaire pour le CSHC
+      </Text>
           <Paper withBorder shadow="md" p={30} mt={30} radius="md" className="w-96">
             <TextInput label="Nom d'utilisateur" placeholder="mleclerc" required value={username} onChange={handleUsernameChange} />
             <PasswordInput label="Mot de passe" placeholder="Mot de passe" required mt="md" value={password} onChange={handlePasswordChange} />
             <Button  fullWidth mt="xl" color="indigo" variant="outline" onClick={handleLogin}>
               Se connecter
             </Button>
+            {loginStatus !== '' && (
+          <div className="text-red-500">{loginStatus}</div>
+        )}
             <Button  fullWidth mt="xl" color="indigo" variant="outline" onClick={bypass}>
               Bypass
             </Button>

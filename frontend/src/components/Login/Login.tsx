@@ -73,10 +73,10 @@ import {
           <Paper withBorder shadow="md" p={30} mt={30} radius="md">
             <TextInput label="username" placeholder="you@mantine.dev" required value={username} onChange={handleUsernameChange} />
             <PasswordInput label="password" placeholder="Your password" required mt="md" value={password} onChange={handlePasswordChange} />
-            <Button fullWidth mt="xl" onClick={handleLogin}>
+            <Button variant="link" fullWidth mt="xl" onClick={handleLogin}>
               Login
             </Button>
-            <Button fullWidth mt="xl" onClick={bypass}>
+            <Button variant="link" fullWidth mt="xl" onClick={bypass}>
               Bypass
             </Button>
           </Paper>

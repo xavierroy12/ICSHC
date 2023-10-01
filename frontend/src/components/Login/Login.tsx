@@ -76,7 +76,7 @@ import {
             <Button variant="link" fullWidth mt="xl" className="purpleblue hover:bg-blue-700" onClick={handleLogin}>
               Login
             </Button>
-            <Button variant="link" fullWidth mt="xl" className="red hover:bg-blue-700" onClick={bypass}>
+            <Button variant="link" fullWidth mt="xl" className="purpleblue hover:bg-blue-700" onClick={bypass}>
               Bypass
             </Button>
           </Paper>

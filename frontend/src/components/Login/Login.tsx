@@ -66,7 +66,7 @@ import {
 
 
     return (
-      <Container className="flex items-center justify-center h-screen">
+      <Container className="">
           <Title ta="center" className= 'title' mt={-10}>
             Inventaire CSHC !
           </Title>

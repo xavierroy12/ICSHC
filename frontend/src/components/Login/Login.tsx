@@ -84,7 +84,9 @@ import {
               Se connecter
             </Button>
             {loginStatus !== '' && (
-          <div className="text-red-500">{loginStatus}</div>
+                  <Text c="red"  size="sm" ta="center" mt={5}>
+                          {loginStatus}
+                  </Text>
         )}
             <Button  fullWidth mt="xl" color="indigo" variant="outline" onClick={bypass}>
               Bypass

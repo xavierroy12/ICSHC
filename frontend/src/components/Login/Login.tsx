@@ -59,6 +59,7 @@ import {
 
     const bypass = () => {
       document.cookie = `CookieLogged=${"Minou"}; expires=${new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
+      window.location.href = '/';
     }
 
 

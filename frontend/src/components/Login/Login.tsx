@@ -68,11 +68,11 @@ import {
     return (
       <Container className="flex flex-col items-center justify-center h-screen">
           <Title ta="center" className= 'title' mt={-10}>
-            Inventaire CSHC !
+            Inventaire CSHC 
           </Title>
           <Paper withBorder shadow="md" p={30} mt={30} radius="md" className="w-96">
-            <TextInput label="username" placeholder="you@mantine.dev" required value={username} onChange={handleUsernameChange} />
-            <PasswordInput label="password" placeholder="Your password" required mt="md" value={password} onChange={handlePasswordChange} />
+            <TextInput label="Nom d'utilisateur" placeholder="mleclerc" required value={username} onChange={handleUsernameChange} />
+            <PasswordInput label="Mot de passe" placeholder="votre mot de passe" required mt="md" value={password} onChange={handlePasswordChange} />
             <Button  fullWidth mt="xl" color="indigo" variant="outline" onClick={handleLogin}>
               Login
             </Button>

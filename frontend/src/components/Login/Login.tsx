@@ -70,11 +70,15 @@ import {
           <Title ta="center" className= 'title' mt={-10}>
             Inventaire CSHC 
           </Title>
+          <Title ta="center" className='underTitle' >
+            Logiciel de gestion d'inventaire pour le Centre de services scolaire
+              des Hauts-Cantons
+          </Title>
           <Paper withBorder shadow="md" p={30} mt={30} radius="md" className="w-96">
             <TextInput label="Nom d'utilisateur" placeholder="mleclerc" required value={username} onChange={handleUsernameChange} />
-            <PasswordInput label="Mot de passe" placeholder="votre mot de passe" required mt="md" value={password} onChange={handlePasswordChange} />
+            <PasswordInput label="Mot de passe" placeholder="Mot de passe" required mt="md" value={password} onChange={handlePasswordChange} />
             <Button  fullWidth mt="xl" color="indigo" variant="outline" onClick={handleLogin}>
-              Login
+              Se connecter
             </Button>
             <Button  fullWidth mt="xl" color="indigo" variant="outline" onClick={bypass}>
               Bypass

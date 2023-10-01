@@ -67,7 +67,7 @@ import {
 
     return (
       <Container className="flex items-center justify-center h-screen">
-          <Title ta="center" className= 'title'>
+          <Title ta="center" className= 'title' mt={-10}>
             Inventaire CSHC !
           </Title>
           <Paper withBorder shadow="md" p={30} mt={30} radius="md">

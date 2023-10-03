@@ -180,7 +180,7 @@ class ActifController extends Controller
 
         return response()->json($actifData);
     }
-
+    
     public function lightShow()
     {
         $actifs = Actif::All()->map(function ($actif) {
@@ -194,4 +194,3 @@ class ActifController extends Controller
     }
 
 }
-

@@ -1,5 +1,6 @@
 import { Button, Loader, Select, SelectItem, Table } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
+import { set } from 'date-fns';
 import { useEffect, useState } from 'react';
 
 type LightActif = {
@@ -22,8 +23,6 @@ const SelectActifsList = ({
   const [selectData, setSelectData] = useState<SelectItem[]>([]);
 
   useEffect(() => {
-    console.log('actifs', actifs);
-    console.log('selectedActifs', selectedActifs);
     const tempActif = actifs;
     selectedActifs.forEach((selected) => {
       const index = tempActif.findIndex((data) => data.id === selected.id);
@@ -31,21 +30,30 @@ const SelectActifsList = ({
         tempActif.splice(index, 1);
       }
     });
-    console.log('tempActif', tempActif);
     setSelectData(
-      tempActif.map((actif) => ({
-        value: actif.id.toString(),
-        label: actif.nom,
-      }))
+      actifs
+        .filter((actif: LightActif) => !selectedActifs.includes(actif))
+        .map(
+          (actif: LightActif) =>
+            ({
+              value: actif.id.toString(),
+              label: actif.numero_serie,
+            }) as SelectItem
+        )
     );
   }, [selectedActifs]);
 
-  const updateData = (actif: LightActif) => {
-    setSelectedActifs(selectedActifs.filter((a) => a.id !== actif.id));
+  const updateData = async (actif: LightActif) => {
+    console.log('updateData', actif);
+
+    await setSelectedActifs(
+      selectedActifs.filter((data) => data.id !== actif.id)
+    );
+    console.log('selectedActifs', selectedActifs);
     setSelectData(
       selectData.concat({
         value: actif.id.toString(),
-        label: actif.nom,
+        label: actif.numero_serie,
       })
     );
   };
@@ -54,6 +62,19 @@ const SelectActifsList = ({
     <div className=" mt-20 w-1/3 mr-12">
       <h1 className="text-3xl mb-8">Actifs</h1>
       <div className="bg-gray-200 w-full h-full pt-10 px-4">
+        <Select
+          className="mb-8"
+          searchable
+          data={selectData}
+          placeholder="Ajouter un actif"
+          // disabled={selectData.length === 0}
+          onChange={(value) => {
+            setSelectedActifs([
+              ...selectedActifs,
+              actifs.find((actif) => actif.id.toString() === value)!,
+            ]);
+          }}
+        />
         {selectedActifs ? (
           <Table>
             <thead>
@@ -86,23 +107,6 @@ const SelectActifsList = ({
                   )
               )}
             </tbody>
-            <tfoot>
-              <tr>
-                <td className="justify-end flex" colSpan={3}>
-                  <Select
-                    data={selectData}
-                    placeholder="Ajouter un actif"
-                    disabled={selectData.length === 0}
-                    onChange={(value) => {
-                      setSelectedActifs([
-                        ...selectedActifs,
-                        actifs.find((actif) => actif.id.toString() === value)!,
-                      ]);
-                    }}
-                  />
-                </td>
-              </tr>
-            </tfoot>
           </Table>
         ) : (
           <Loader className="m-auto" />

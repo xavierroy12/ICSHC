@@ -165,9 +165,13 @@ const ModifyActifs = () => {
               className="mb-8"
               label="Est en entropôt"
               checked={estEnEntropot}
-              onChange={(value) =>
-                form.setFieldValue('estEnEntropot', value.currentTarget.checked)
-              }
+              onChange={(value) => {
+                console.log(value);
+                form.setFieldValue(
+                  'estEnEntropot',
+                  value.currentTarget.checked
+                );
+              }}
             />
             <Select
               className="mb-8"
@@ -255,10 +259,10 @@ const ModifyActifs = () => {
               Archiver
             </Button>
             <Button className="mx-4" variant="outline" color="green">
-              Réception
+              Désassigner
             </Button>
             <Button className="mx-4" type="submit" variant="outline">
-              Submit
+              Sauvegarder
             </Button>
           </Button.Group>
         </form>

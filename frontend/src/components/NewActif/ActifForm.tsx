@@ -8,6 +8,7 @@ import {
   Textarea,
   SelectItem,
 } from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   id: string;
@@ -32,6 +33,8 @@ const ActifForm = ({
   proprietaires,
 }: Props) => {
   console.log(actif);
+  const navigate = useNavigate();
+
   const form = useForm<ActifFormValues>({
     initialValues: {
       numero_serie: actif.numero_serie,
@@ -100,7 +103,7 @@ const ActifForm = ({
       console.log('Data saved successfully');
       console.log(updatedData);
       alert('Données sauvegardées avec succès');
-      window.location.href = 'http://localhost:5173/actifs';
+      navigate('/actifs');
     } catch (error) {
       // Handle errors if the API request fails
       console.error('Error saving data:', error);

@@ -25,3 +25,25 @@ export type Actif_Type = {
   propriete: string; // Type approprié pour les propriétés ou null si non spécifié
   date_creation: string; // Type approprié pour les dates de création ou null si non spécifié
 };
+
+export type LightType = {
+  id: number;
+  nom: string;
+};
+
+export type ActifFormValues = {
+  numero_serie: string;
+  nom: string;
+  adresse_mac: string;
+  id_statut: string;
+  id_emplacement: string;
+  id_proprietaire: string;
+  id_utilisation: string;
+  id_categorie: string;
+  id_modele: string;
+  id_assigne_a: string;
+  est_en_entrepot?: boolean;
+  date_creation?: string;
+  date_retour?: string;
+  note?: string;
+};

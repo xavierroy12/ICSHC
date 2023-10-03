@@ -88,26 +88,28 @@ class ActifController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            // Recherchez l'actif par ID
-            $actif = Actif::findOrFail($id);
+            //données du formulaire
+            $request_data = $request->all();
+            //créer un nouvel actif en utilisant les données du formulaire
+            $actif = this->show($id);
+            if($request_data['id_modele'] != null)
+            {
+                $id_modele_commande = DB::table('modele_commande')->where('id_modele', $request_data['id_modele'])->first()->id;
+                $actif->id_modele = $id_modele_commande ;
+            }
+            if($request_data['id_statut'] != null)
+            {
+                $actif->id_statut = $request_data['id_statut'];
+            }
 
-            // Validez les données du formulaire
-            $validatedData = $request->validate([
-                'en_entrepot' => 'in:True,False,true,false',
-                'date_retour' => 'required|date',
-                'note' => 'nullable',
-                'id_modele_commande' => 'required', // Assurez-vous que cette clé est incluse si elle est requise
-                'id_statut' => 'required',
-                'id_emplacement' => 'required',
-                'id_proprietaire' => 'required',
-                'id_utilisation' => 'required',
-            ]);
-
-            // Mettez à jour l'actif en utilisant les données validées
-            $actif->update($validatedData);
-
-            // Retournez une réponse JSON pour indiquer le succès
-            return response()->json(['message' => 'Actif mis à jour avec succès'], 200);
+            // Sauvegarde l'actif dans la base de données
+            if ($actif->save()) {
+                // Retournez une réponse JSON pour indiquer le succès
+                return response()->json(['message' => 'Actif ajouté avec succès'], 201);
+            } else {
+                // En cas d'échec de sauvegarde, retournez une réponse d'erreur
+                return response()->json(['message' => "Erreur lors de l'ajout de l'actif"], 500);
+            }
         } catch (\Exception $e) {
             // En cas d'exception, retournez une réponse d'erreur avec le message d'erreur
             return response()->json(['message' => $e->getMessage()], 500);
@@ -159,26 +161,7 @@ class ActifController extends Controller
             // L'actif n'a pas été trouvé, gérez l'erreur ici
             return response()->json(['message' => 'Actif non trouvé'], 404);
         }
-
-        // Maintenant, vous pouvez accéder au nom de l'utilisateur assigné à l'actif
-        $actifData = [
-            'numero_serie' => $actif->numero_serie,
-            'nom' => $actif->nom,
-            'categorie' => $actif->modeleCommande->modele->categorie->nom,
-            'modele' => $actif->modeleCommande->modele->nom,
-            'emplacement' => $actif->emplacement->nom,
-            'est_en_entrepot' => $actif->en_entrepot,
-            'adresse_mac' => $actif->adresse_mac,
-            'statut' => $actif->statut->nom,
-            'proprietaire' => $actif->proprietaire->nom,
-            'utilisation' => $actif->utilisation->nom,
-            'date_retour' => $actif->date_retour,
-            'note' => $actif->note,
-            'assigne_a' => $actif->client->nom, // Ajoutez le nom du client assigné
-            'date_creation' => $actif->created_at,
-        ];
-
-        return response()->json($actifData);
+        return response()->json($actif);
     }
     
     public function lightShow()

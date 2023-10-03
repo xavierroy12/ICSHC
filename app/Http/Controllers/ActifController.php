@@ -93,11 +93,8 @@ class ActifController extends Controller
 
             // Validez les données du formulaire
             $validatedData = $request->validate([
-                'numero_serie' => 'required|max:255',
-                'nom' => 'required|max:255',
-                'en_entrepot' => 'required|in:1,0',
-                'adresse_mac' => 'nullable|max:255',
-                'date_retour' => 'nullable|date',
+                'en_entrepot' => 'in:True,False,true,false',
+                'date_retour' => 'required|date',
                 'note' => 'nullable',
                 'id_modele_commande' => 'required', // Assurez-vous que cette clé est incluse si elle est requise
                 'id_statut' => 'required',

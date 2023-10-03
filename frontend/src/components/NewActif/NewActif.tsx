@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import './Actif.scss';
 import {
   Button,
   TextInput,
@@ -17,20 +18,21 @@ type LightType = {
 };
 
 interface ActifFormValues {
-  numeroSerie?: string;
-  nom?: string;
-  adresseMac?: string;
-  modele?: string;
-  categorie?: string;
-  assigne_a?: string;
-  emplacement?: string;
-  statut?: string;
-  proprietaire?: string;
-  utilisation?: string;
-  est_en_entrepot?: boolean;
-  date_creation?: string;
-  date_retour?: string;
-  note?: string;
+    [key: string]: string | boolean | undefined;
+    numero_serie?: string;
+    nom?: string;
+    adresse_mac?: string;
+    modele?: string;
+    categorie?: string;
+    assigne_a?: string;
+    emplacement?: string;
+    statut?: string;
+    proprietaire?: string;
+    utilisation?: string;
+    est_en_entrepot?: boolean;
+    date_creation?: string;
+    date_retour?: string;
+    note?: string;
 }
 
 const NewActif = () => {
@@ -48,6 +50,7 @@ const NewActif = () => {
 
   // Initialize the form context after fetching actif data
   const form = useForm<ActifFormValues>();
+
 
   useEffect(() => {
     Promise.all([
@@ -116,6 +119,7 @@ const NewActif = () => {
               label: proprietaire.nom,
             }))
           );
+          console.log("Données de 'actif' avant l'envoi du form:", actif);
           setActif(actif);
           setLoading(false);
         }
@@ -123,12 +127,13 @@ const NewActif = () => {
   }, [id]);
 
   useEffect(() => {
-    if (actif && !form.values.numeroSerie) { // Add condition to prevent infinite loop
+    if (actif && !form.values.numero_serie) {
+      // Add condition to prevent infinite loop
       // Initialize the form with actif data
       form.setValues({
-        numeroSerie: actif.numero_serie,
+        numero_serie: actif.numero_serie,
         nom: actif.nom,
-        adresseMac: actif.adresse_mac,
+        adresse_mac: actif.adresse_mac,
         modele: actif.modele,
         categorie: actif.categorie,
         assigne_a: actif.assigne_a,
@@ -140,162 +145,275 @@ const NewActif = () => {
         date_creation: actif.date_creation,
         date_retour: actif.date_retour,
         note: actif.note,
+
       });
     }
   }, [actif, form]);
 
-  const handleSubmit = () => {
-    console.log("Données du formulaire:", form.values);
+  const handleSauvegarde = async () => {
+    try {
+      // Map the form values to match the expected field names in your Laravel API
+      const updatedData = {
+        en_entrepot: form.values.est_en_entrepot,
+        date_retour: form.values.date_retour,
+        note: form.values.note,
+        id_modele_commande: form.values.modele, // Map the 'modele' field to 'id_modele_commande'
+        id_statut: form.values.statut, // Map the 'statut' field to 'id_statut'
+        id_emplacement: form.values.emplacement, // Map the 'emplacement' field to 'id_emplacement'
+        id_proprietaire: form.values.proprietaire, // Map the 'proprietaire' field to 'id_proprietaire'
+        id_utilisation: form.values.utilisation, // Map the 'utilisation' field to 'id_utilisation'
+      };
+
+      // Make an API request to update the data in the database
+      await fetch(`http://localhost:8000/api/actif/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData), // Send the updated data with the mapped field names
+      });
+
+      // Display a success message to the user
+      console.log('Data saved successfully');
+      console.log(updatedData);
+      alert('Données sauvegardées avec succès');
+      window.location.href = 'http://localhost:5173/actifs';
+
+    } catch (error) {
+      // Handle errors if the API request fails
+      console.error('Error saving data:', error);
+    }
+  };
+
+  const handleReception = () => {
+    form.setFieldValue('buttonClicked', 'reception');
+    console.log(form.values)
+    console.log("reception")
+  };
+
+  const handleArchive = () => {
+    form.setFieldValue('buttonClicked', 'archiver');
+    console.log(form.values)
+    console.log("archiver")
   };
 
   return (
-    <div>
+    <div className="">
       {loading ? (
         <div>Chargement en cours...</div>
       ) : (
         <>
-          <h1>Actif</h1>
-          <Form form={form} onSubmit={() => handleSubmit()}>
-            <TextInput
-              className="mb-8"
-              label="Numéro de série :"
-              placeholder={actif?.numero_serie}
-              value={form.values.numeroSerie || ''}
-              readOnly
-            />
+          <h1 className="my-8 mx-8">Actif - {id}</h1>
+          <hr className="mb-8" />
+          <Form form={form}>
 
-            <TextInput
-              className="mb-8"
-              label="Nom :"
-              placeholder={actif?.nom}
-              value={form.values.nom || ''}
-              onChange={(event) => form.setFieldValue('nom', event.currentTarget.value)}
-              readOnly
-            />
-
-            <TextInput
-              className="mb-8"
-              label="Adresse MAC :"
-              placeholder={actif?.adresse_mac}
-              value={form.values.adresseMac || ''}
-              onChange={(event) => form.setFieldValue('adresseMac', event.currentTarget.value)}
-              readOnly
-            />
-
-            <Select
-              className="mb-8"
-              label="Modèle :"
-              placeholder="Veuiilez choisir un modèle"
-              value={form.values.modele || ''}
-              onChange={(value) => form.setFieldValue('modele', value ?? undefined)}
-              data={modeles}
-            />
-
-
-            <Select
-              className="mb-8"
-              label="Catégorie :"
-              placeholder="Veuiilez choisir une catégorie"
-              value={form.values.categorie || ''}
-              onChange={(value) => form.setFieldValue('categorie', value ?? undefined)}
-              data={categories}
-            />
-
-            <Select
-              className="mb-8"
-              label="Assigné à :"
-              placeholder="Veuiilez choisir un locataire"
-              value={form.values.assigne_a || ''}
-              onChange={(value) => form.setFieldValue('assigne_a', value ?? undefined)}
-              data={locataires}
-            />
-
-            <Select
-              className="mb-8"
-              label="Emplacement :"
-              placeholder="Veuiilez choisir un emplacement"
-              value={form.values.emplacement || ''}
-              onChange={(value) => form.setFieldValue('emplacement', value ?? undefined)}
-              data={emplacements}
-            />
-
-            <div className="flex checkbox-container mb-8">
-            <label className="flex checkbox-label">Est en entrepôt :</label>
-            <Checkbox
-                className="ml-2 flex checkbox-input"
-                checked={form.values.est_en_entrepot || false}
-                onChange={(event) => form.setFieldValue('est_en_entrepot', event.currentTarget.checked)}
-            />
+          <div className="input-container">
+              <label className="input-label">Nom :</label>
+              <TextInput
+                className="input-field"
+                value={form.values.nom || ''}
+                disabled
+              />
             </div>
 
-            <Select
-              className="mb-8"
-              label="Statut :"
-              placeholder="Veuiilez choisir un statut"
-              value={form.values.statut || ''}
-              onChange={(value) => form.setFieldValue('statut', value ?? undefined)}
-              data={statuts}
-            />
+            <div className="input-container">
+              <label className="input-label">Numéro de série :</label>
+              <TextInput
+                className="input-field"
+                value={form.values.numero_serie || ''}
+                disabled
+              />
+            </div>
 
-            <Select
-              className="mb-8"
-              label="Propriétaire :"
-              placeholder="Veuiilez choisir un propriétaire"
-              value={form.values.proprietaire || ''}
-              onChange={(value) => form.setFieldValue('proprietaire', value ?? undefined)}
-              data={proprietaires}
-            />
+            <div className="input-container">
+              <label className="input-label">Adresse MAC :</label>
+              <TextInput
+                className="input-field"
+                value={form.values.adresse_mac || ''}
+                disabled
+              />
+            </div>
 
-            <Select
-              className="mb-8"
-              label="Utilisation :"
-              placeholder="Veuiilez choisir une utilisation"
-              value={form.values.utilisation || ''}
-              onChange={(value) => form.setFieldValue('utilisation', value ?? undefined)}
-              data={utilisations}
-            />
+            <div className="input-container">
+              <label className="input-label">Modèle :</label>
+              <Select
+                className="input-field"
+                placeholder="Veuiilez choisir un modèle"
+                value={form.values.modele || ''}
+                onChange={(value) =>
+                  form.setFieldValue('modele', value ?? undefined)
+                }
+                data={modeles}
+              />
+            </div>
 
-            <TextInput
-                className="mb-8"
-                label="Date de création :"
-                placeholder={actif?.date_creation}
-                value={form.values.date_creation ? new Date(form.values.date_creation).toISOString().substring(0, 10) : ''}
-                onChange={(event) => form.setFieldValue('date_creation', event.currentTarget.value)}
-                readOnly
-            />
+            <div className="input-container">
+              <label className="input-label">Catégorie :</label>
+              <Select
+                className="input-field"
+                placeholder="Veuiilez choisir une catégorie"
+                value={form.values.categorie || ''}
+                onChange={(value) =>
+                  form.setFieldValue('categorie', value ?? undefined)
+                }
+                data={categories}
+              />
+            </div>
 
+            <div className="input-container">
+              <label className="input-label">Assigné à :</label>
+              <Select
+                className="input-field"
+                placeholder="Veuiilez choisir un locataire"
+                value={form.values.assigne_a || ''}
+                onChange={(value) =>
+                  form.setFieldValue('assigne_a', value ?? undefined)
+                }
+                data={locataires}
+              />
+            </div>
 
-            <TextInput
-              className="mb-8"
-              label="Date de retour :"
-              placeholder={actif?.date_retour}
-              value={form.values.date_retour || ''}
-              onChange={(event) => form.setFieldValue('date_retour', event.currentTarget.value)}
-              readOnly
-            />
+            <div className="input-container">
+              <label className="input-label">Emplacement :</label>
+              <Select
+                className="input-field"
+                placeholder="Veuiilez choisir un emplacement"
+                value={form.values.emplacement || ''}
+                onChange={(value) =>
+                  form.setFieldValue('emplacement', value ?? undefined)
+                }
+                data={emplacements}
+              />
+            </div>
 
+            <div className="input-container">
+              <label className="input-label checkbox-label">
+                En entrepôt :
+              </label>
+                <Checkbox
+                    className="mt-2 checkbox-field"
+                    checked={form.values.est_en_entrepot || false}
+                    onChange={(event) =>
+                    form.setFieldValue('est_en_entrepot', event.currentTarget.checked)
+                    }
+                />
+            </div>
 
-            <Textarea
-              className="mb-8"
-              label="Note :"
-              placeholder={actif?.note}
-              value={form.values.note || ''}
-              onChange={(event) => form.setFieldValue('note', event.currentTarget.value)}
-              readOnly
-            />
+            <div className="input-container">
+              <label className="input-label">Statut :</label>
+              <Select
+                className="input-field"
+                placeholder="Veuiilez choisir un statut"
+                value={form.values.statut || ''}
+                onChange={(value) =>
+                  form.setFieldValue('statut', value ?? undefined)
+                }
+                data={statuts}
+              />
+            </div>
 
+            <div className="input-container">
+              <label className="input-label">Propriétaire :</label>
+              <Select
+                className="input-field"
+                placeholder="Veuiilez choisir un propriétaire"
+                value={form.values.proprietaire || ''}
+                onChange={(value) =>
+                  form.setFieldValue('proprietaire', value ?? undefined)
+                }
+                data={proprietaires}
+              />
+            </div>
 
-            <div className="w-11/12 mx-auto">
+            <div className="input-container">
+              <label className="input-label">Utilisation :</label>
+              <Select
+                className="input-field"
+                placeholder="Veuiilez choisir une utilisation"
+                value={form.values.utilisation || ''}
+                onChange={(value) =>
+                  form.setFieldValue('utilisation', value ?? undefined)
+                }
+                data={utilisations}
+              />
+            </div>
+
+            <div className="input-container">
+              <label className="input-label">Date de création :</label>
+              <TextInput
+                className="input-field"
+                value={
+                  form.values.date_creation
+                    ? new Date(form.values.date_creation)
+                        .toISOString()
+                        .substring(0, 10)
+                    : ''
+                }
+                disabled
+              />
+            </div>
+
+            <div className="input-container">
+              <label className="input-label">Date de retour :</label>
+              <TextInput
+                className="input-field"
+                value={form.values.date_retour || ''}
+                onChange={(event) =>
+                  form.setFieldValue('date_retour', event.currentTarget.value)
+                }
+              />
+            </div>
+
+            <div className="input-container">
+              <label className="input-label">Note :</label>
+              <Textarea
+                className="note-size"
+                value={form.values.note || ''}
+                onChange={(event) =>
+                  form.setFieldValue('note', event.currentTarget.value)
+                }
+              />
+            </div>
+
+            <div className="w-11/12">
               <Button
-                className="flex float-right"
+                className="my-5 mx-5 flex float-right"
                 color="green"
                 variant="outline"
                 size="md"
                 type="submit"
+                onClick={handleSauvegarde}
               >
                 Sauvegarder
               </Button>
             </div>
+
+            <div className="w-11/12">
+              <Button
+                className="my-5 mx-5 flex float-right"
+                color="blue"
+                variant="outline"
+                size="md"
+                type="submit"
+                onClick={handleReception}
+              >
+                Réception
+              </Button>
+            </div>
+
+            <div className="w-11/12">
+              <Button
+                className=" my-5 mx-5 flex float-right"
+                color="red"
+                variant="outline"
+                size="md"
+                type="submit"
+                onClick={handleArchive}
+              >
+                Archiver
+              </Button>
+            </div>
+
           </Form>
         </>
       )}

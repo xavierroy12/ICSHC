@@ -9,7 +9,6 @@ import {
   SelectItem,
 } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
-import { th } from 'date-fns/locale';
 
 type Props = {
   id: string;

@@ -14,11 +14,11 @@ class ProprietaireSeeder extends Seeder
     public function run(): void
     {
         DB::table('proprietaire')->insert([
-            'nom' => 'Kevin Tremblay',
+            'nom' => 'Service informatique',
         ]);
 
         DB::table('proprietaire')->insert([
-            'nom' => 'Julie Gagnon',
+            'nom' => '068 - École Du Parchemin',
         ]);
     }
 }

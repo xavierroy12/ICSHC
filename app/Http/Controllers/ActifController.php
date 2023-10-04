@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+
+
 use App\Models\Actif;
+use App\Models\Client;
+use App\Models\Modele;
 use Illuminate\Http\Request;
 use DB;
 
@@ -38,11 +42,13 @@ class ActifController extends Controller
                 'adresse_mac' => 'nullable|max:255',
                 'date_retour' => 'nullable|date',
                 'note' => 'nullable',
-                'id_modele_commande' => 'required',
                 'id_statut' => 'required',
                 'id_emplacement' => 'required',
                 'id_proprietaire' => 'required',
                 'id_utilisation' => 'required',
+                'numero_commande' => 'required',
+                //'id_modele' => 'required', Might not be since it isnt required when you get commande ?
+
             ]);
 
             // Créez un nouvel actif en utilisant les données validées
@@ -91,35 +97,46 @@ class ActifController extends Controller
         // Get the Actif object to update
         $actif = Actif::findOrFail($id);
 
+
         // Get the data from the form
         $data = $request->all();
 
         // Map the form data to match the expected field names in your Laravel API
-        $updatedData = [
-            'est_en_entrepot' => $data['est_en_entrepot'],
+        $updatedDataActif = [
+            'en_entrepot' => $data['en_entrepot'],
             'date_retour' => $data['date_retour'],
             'note' => $data['note'],
-            'id_assigne_a' => $data['id_client'],
             'id_modele' => $data['id_modele'],
             'id_statut' => $data['id_statut'],
             'id_emplacement' => $data['id_emplacement'],
             'id_proprietaire' => $data['id_proprietaire'],
             'id_utilisation' => $data['id_utilisation'],
-            'id_categorie' => $data['id_categorie'],
+            'numero_commande' => $data['numero_commande'], //Todo add this to the form
         ];
 
+        $updatedDataModele = [
+            'id_type_modele' => $data['id_categorie'],
+        ];
+        $updateDataClient = [
+            'id_actif' => $id,
+        ];
+
+
+        $client = Client::where('id_actif', $id);
+        //Remove assignation from previous client
+        if ($client) {
+            $client->update(['id_actif' => null]);
+        }
         // Update the Actif object with the updated data
-        $actif->fill($updatedData);
+        $actif->fill($updatedDataActif);
+        Modele::where('id', $actif->id_modele)->update($updatedDataModele);
+        Client::where('id', $data['id_assigne_a'])->update($updateDataClient);
 
-        // Update the related models
-        $actif->utilisation()->associate(Utilisation::findOrFail($data['id_utilisation']));
-        $actif->proprietaire()->associate(Proprietaire::findOrFail($data['id_proprietaire']));
-        $actif->statut()->associate(Statut::findOrFail($data['id_statut']));
-        $actif->emplacement()->associate(Emplacement::findOrFail($data['id_emplacement']));
-        $actif->modele()->associate(Modele::findOrFail($data['id_modele']));
-        $actif->client()->associate(Client::findOrFail($data['id_client']));
-        $actif->categorie()->associate(TypeModele::findOrFail($data['id_categorie']));
 
+
+
+        // Check if the Actif object is actually updated
+        print_r($actif);
 
         // Save the updated Actif object to the database
         if ($actif->save()) {
@@ -171,7 +188,8 @@ class ActifController extends Controller
             'statut',
             'utilisation',
             'proprietaire',
-            'modeleCommande.modele.categorie',
+            'modele',
+            'modele.categorie',
             'client', // Ajoutez la relation avec l'utilisateur
         ])->find($id);
 
@@ -179,7 +197,26 @@ class ActifController extends Controller
             // L'actif n'a pas été trouvé, gérez l'erreur ici
             return response()->json(['message' => 'Actif non trouvé'], 404);
         }
-        return response()->json($actif);
+
+        $data = [
+            'numero_serie' => $actif->numero_serie,
+            'nom' => $actif->nom,
+            'adresse_mac' => $actif->adresse_mac,
+
+            'id_modele' => $actif->modele->id,
+            'id_categorie' => $actif->modele->categorie->id,
+            'id_statut' => $actif->statut->id,
+            'id_utilisation' => $actif->utilisation->id,
+            'id_proprietaire' => $actif->proprietaire->id,
+            'id_emplacement' => $actif->emplacement->id,
+            'id_client' => $actif->client->id, // Ajoutez l'ID de l'utilisateur
+            'en_entrepot' => $actif->en_entrepot,
+            'date_retour' => $actif->date_retour,
+            'note' => $actif->note,
+        ];
+
+
+        return response()->json($data);
     }
 
     public function lightShow()

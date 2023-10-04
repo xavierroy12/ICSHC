@@ -21,13 +21,15 @@ return new class extends Migration
             $table->string('adresse_mac', 32)->nullable();
             $table->date('date_retour')->nullable();
             $table->string('note', 512)->nullable();
-            $table->unsignedBigInteger('id_modele_commande');
+            $table->string('modele_descriptif', 64)->nullable();
+            $table->unsignedBigInteger('id_modele')->nullable();
             $table->unsignedBigInteger('id_statut');
             $table->unsignedBigInteger('id_emplacement');
             $table->unsignedBigInteger('id_proprietaire');
             $table->unsignedBigInteger('id_utilisation');
-
-            $table->foreign('id_modele_commande')->references('id')->on('modele_commande');
+            $table->unsignedBigInteger('numero_commande');
+            $table->foreign('numero_commande')->references('numero_commande')->on('commande');
+            $table->foreign('id_modele')->references('id')->on('modele');
             $table->foreign('id_statut')->references('id')->on('statut');
             $table->foreign('id_emplacement')->references('id')->on('emplacement');
             $table->foreign('id_proprietaire')->references('id')->on('proprietaire');

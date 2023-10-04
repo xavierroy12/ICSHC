@@ -50,7 +50,7 @@ const ActifForm = ({
       id_categorie: actif.id_categorie?.toString(),
       id_modele: actif.id_modele?.toString(),
       id_assigne_a: actif.id_client?.toString(),
-      est_en_entrepot: actif.est_en_entrepot || false,
+      en_entrepot: actif.en_entrepot || false,
       date_creation: actif.date_creation,
       date_retour: actif.date_retour,
       note: actif.note,
@@ -72,9 +72,10 @@ const ActifForm = ({
     if (form.isDirty()) {
       try {
         // Map the form values to match the expected field names in your Laravel API
+        console.log(form.values);
         const updatedData = {
           id_categorie: form.values.id_categorie,
-          est_en_entrepot: form.values.est_en_entrepot,
+          en_entrepot: form.values.en_entrepot,
           date_retour: form.values.date_retour,
           note: form.values.note,
           id_assigne_a: form.values.id_assigne_a,
@@ -164,32 +165,34 @@ const ActifForm = ({
           data={modeles}
         />
 
-        <div className="input-container">
-          <NativeSelect
-            label="Catégorie :"
-            className="input-field"
-            placeholder="Veuillez choisir une catégorie"
-            defaultValue={categories[1].value}
-            value={form.values.id_categorie}
-            onChange={(value) => {
-              form.setFieldValue('id_categorie', value.target.value);
-            }}
-            data={categories}
-          />
-        </div>
+      <div className="input-container">
+        <NativeSelect
+          label="Catégorie :"
+          className="input-field"
+          placeholder="Veuillez choisir une catégorie"
+          defaultValue={form.values.id_categorie}
+          value={form.values.id_categorie}
+          onChange={(value) => {
+            form.setFieldValue('id_categorie', value.target.value);
+          }}
+          data={categories}
+        />
+      </div>
 
-        <div className="input-container">
-          <NativeSelect
-            label="Assigné à :"
-            className="input-field"
-            placeholder="Veuillez choisir un locataire"
-            value={form.values.id_assigne_a}
-            onChange={(value) => {
-              form.setFieldValue('id_assigne_a', value.target.value);
-            }}
-            data={locataires}
-          />
-        </div>
+      <div className="input-container">
+
+        <NativeSelect
+          label="Assigné à :"
+          className="input-field"
+          placeholder="Veuillez choisir un locataire"
+          value={form.values.id_assigne_a}
+        defaultValue={form.values.id_assigne_a}
+          onChange={(value) => {
+            form.setFieldValue('id_assigne_a', value.target.value);
+          }}
+          data={locataires}
+        />
+      </div>
 
         <div className="input-container">
           <NativeSelect
@@ -204,19 +207,17 @@ const ActifForm = ({
           />
         </div>
 
-        <div className="input-container">
-          <Checkbox
-            label="Est en entrepôt :"
-            className="checkbox-field"
-            checked={form.values.est_en_entrepot}
-            onChange={(event) => {
-              form.setFieldValue(
-                'est_en_entrepot',
-                event.currentTarget.checked
-              );
-            }}
-          />
-        </div>
+      
+      <div className="input-container">
+        <Checkbox
+          label="Est en entrepôt :"
+          className="checkbox-field"
+          checked={form.values.en_entrepot}
+          onChange={(event) => {
+            form.setFieldValue('en_entrepot', event.currentTarget.checked);
+          }}
+        />
+      </div>
 
         <div className="input-container">
           <NativeSelect
@@ -270,20 +271,29 @@ const ActifForm = ({
           />
         </div>
 
-        <div className="input-container">
-          <DateInput
-            label="Date de retour :"
-            className="input-field"
-            value={
-              form.values.date_retour
-                ? new Date(form.values.date_retour)
-                : undefined
-            }
-            onChange={(value) => {
-              form.setFieldValue('date_retour', value?.toString());
-            }}
-          />
-        </div>
+      <div className="input-container">
+  <DateInput
+    label="Date de retour :"
+    className="input-field"
+    value={
+      form.values.date_retour
+        ? new Date(form.values.date_retour)
+        : undefined // Set to undefined if date_retour is not available
+    }
+    onChange={(value) => {
+      // Adjust the date value for the timezone offset
+      const timezoneOffset = value?.getTimezoneOffset() || 0;
+      const adjustedDate = value ? new Date(value.getTime() - timezoneOffset * 60 * 1000) : undefined;
+
+      // Format the adjusted date value as a string in the 'year-month-date' format
+      const formattedDate = adjustedDate ? adjustedDate.toISOString().slice(0, 10) : '';
+
+      // Update the form field value and log the formatted date value
+      form.setFieldValue('date_retour', formattedDate);
+      console.log(formattedDate);
+    }}
+  />
+</div>
 
         <div className="input-container">
           <Textarea

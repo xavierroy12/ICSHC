@@ -12,6 +12,13 @@ class Client extends Model
 
     protected $table = 'client';
 
+    protected $fillable = [
+        'nom',
+        'id_poste',
+        'id_type_client',
+        'id_actif',
+        'id_emplacement',
+    ];
     public function actif()
     {
         return $this->belongsTo(Actif::class, 'id_actif');

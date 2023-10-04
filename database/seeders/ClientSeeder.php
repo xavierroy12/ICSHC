@@ -13,20 +13,12 @@ class ClientSeeder extends Seeder
      */
     public function run(): void
     {
-        $id_actif = DB::table('actif')
-            ->where('numero_serie', 'ABC123')
-            ->where('nom', 'Ordinateur portable')
-            ->value('id');
 
-        $id_actif_2 = DB::table('actif')
-            ->where('numero_serie', 'XYZ789')
-            ->where('nom', 'Téléphone mobile')
-            ->value('id');
         DB::table('client')->insert([
             'nom' => 'Julie Gagnon',
             'id_poste' => 1,
             'id_type_client' => 1,
-            'id_actif' => $id_actif,
+            'id_actif' => 1,
             'id_emplacement' => 1,
         ]);
 
@@ -34,7 +26,15 @@ class ClientSeeder extends Seeder
             'nom' => 'Kevin Tremblay',
             'id_poste' => 2,
             'id_type_client' => 2,
-            'id_actif' => $id_actif_2,
+            'id_actif' => 2,
+            'id_emplacement' => 2,
+        ]);
+
+        DB::table('client')->insert([
+            'nom' => 'Clien NoActif',
+            'id_poste' => 2,
+            'id_type_client' => 2,
+            'id_actif' => NULL,
             'id_emplacement' => 2,
         ]);
     }

@@ -34,7 +34,7 @@ const ActifForm = ({
   proprietaires,
 }: Props) => {
   const navigate = useNavigate();
-  console.log(actif);
+
   const form = useForm<ActifFormValues>({
     initialValues: {
       numero_serie: actif.numero_serie,

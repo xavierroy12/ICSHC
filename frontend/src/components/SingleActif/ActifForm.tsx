@@ -9,6 +9,7 @@ import {
   SelectItem,
 } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
+import { th } from 'date-fns/locale';
 
 type Props = {
   id: string;
@@ -32,7 +33,6 @@ const ActifForm = ({
   utilisations,
   proprietaires,
 }: Props) => {
-  console.log(actif);
   const navigate = useNavigate();
 
   const form = useForm<ActifFormValues>({
@@ -47,7 +47,7 @@ const ActifForm = ({
       id_categorie: actif.id_categorie?.toString(),
       id_modele: actif.id_modele?.toString(),
       id_assigne_a: actif.id_client?.toString(),
-      est_en_entrepot: actif.est_en_entrepot,
+      est_en_entrepot: actif.est_en_entrepot || false,
       date_creation: actif.date_creation,
       date_retour: actif.date_retour,
       note: actif.note,
@@ -75,23 +75,25 @@ const ActifForm = ({
     //   note: (value: string | undefined) => null,
     // },
   });
+
   const handleSauvegarde = async () => {
     try {
       // Map the form values to match the expected field names in your Laravel API
       const updatedData = {
-        en_entrepot: form.values.est_en_entrepot,
+        id_categorie: form.values.id_categorie,
+        est_en_entrepot: form.values.est_en_entrepot,
         date_retour: form.values.date_retour,
         note: form.values.note,
-        id_client: form.values.id_assigne_a, // Map the 'assigne_a' field to 'id_client'
-        id_modele: form.values.id_modele, // Map the 'modele' field to 'id_modele_commande'
-        id_statut: form.values.id_statut, // Map the 'statut' field to 'id_statut'
-        id_emplacement: form.values.id_emplacement, // Map the 'emplacement' field to 'id_emplacement'
-        id_proprietaire: form.values.id_proprietaire, // Map the 'proprietaire' field to 'id_proprietaire'
-        id_utilisation: form.values.id_utilisation, // Map the 'utilisation' field to 'id_utilisation'
+        id_assigne_a: form.values.id_assigne_a,
+        id_modele: form.values.id_modele,
+        id_statut: form.values.id_statut,
+        id_emplacement: form.values.id_emplacement,
+        id_proprietaire: form.values.id_proprietaire,
+        id_utilisation: form.values.id_utilisation,
       };
 
       // Make an API request to update the data in the database
-      await fetch(`http://localhost:8000/api/actif/${id}`, {
+      const response = await fetch(`http://localhost:8000/api/actif/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -99,11 +101,17 @@ const ActifForm = ({
         body: JSON.stringify(updatedData), // Send the updated data with the mapped field names
       });
 
-      // Display a success message to the user
-      console.log('Data saved successfully');
-      console.log(updatedData);
-      alert('Données sauvegardées avec succès');
-      navigate('/actifs');
+      // Check if the API request was successful
+      if (response.ok) {
+        // Display a success message to the user
+        alert('Données sauvegardées avec succès');
+        console.log('Données sauvegardées avec succès: ', updatedData);
+        navigate('/actifs');
+      } else {
+        // Handle errors if the API request fails
+        console.error('Error saving data:', response.statusText);
+        console.log('CA NE FONCTIONNE PAS ', updatedData);
+      }
     } catch (error) {
       // Handle errors if the API request fails
       console.error('Error saving data:', error);
@@ -124,14 +132,19 @@ const ActifForm = ({
 
   return (
     <Form form={form}>
+
       <div className="input-container">
-        <label className="input-label">Nom :</label>
-        <TextInput className="input-field" value={form.values.nom} disabled />
+        <TextInput
+        label="Nom :"
+        className='input-label'
+        value={form.values.nom}
+        disabled
+        />
       </div>
 
       <div className="input-container">
-        <label className="input-label">Numéro de série :</label>
         <TextInput
+          label ="Numéro de série :"
           className="input-field"
           value={form.values.numero_serie}
           disabled
@@ -139,8 +152,8 @@ const ActifForm = ({
       </div>
 
       <div className="input-container">
-        <label className="input-label">Adresse MAC :</label>
         <TextInput
+          label="Adresse MAC :"
           className="input-field"
           value={form.values.adresse_mac}
           disabled
@@ -148,112 +161,119 @@ const ActifForm = ({
       </div>
 
       <div className="input-container">
-        <label className="input-label">Modèle :</label>
         <Select
+          label="Modèle :"
           className="input-field"
-          placeholder="Veuiilez choisir un modèle"
+          placeholder="Veuillez choisir un modèle"
           value={form.values.id_modele}
           defaultValue={'1'}
           onChange={(value) => {
             if (value) form.setFieldValue('id_modele', value);
+            console.log("Valeur de modele: ", value);
           }}
           data={modeles}
         />
       </div>
 
       <div className="input-container">
-        <label className="input-label">Catégorie :</label>
         <Select
+          label="Catégorie :"
           className="input-field"
-          placeholder="Veuiilez choisir une catégorie"
+          placeholder="Veuillez choisir une catégorie"
           value={form.values.id_categorie}
           onChange={(value) => {
-            console.log(value);
             if (value) form.setFieldValue('id_categorie', value);
+            console.log("Valeur de categorie: ",value);
           }}
           data={categories}
         />
       </div>
 
       <div className="input-container">
-        <label className="input-label">Assigné à :</label>
         <Select
+         label="Assigné à :"
           className="input-field"
-          placeholder="Veuiilez choisir un locataire"
+          placeholder="Veuillez choisir un locataire"
           value={form.values.id_assigne_a}
           onChange={(value) => {
             if (value) form.setFieldValue('id_assigne_a', value);
+            console.log("Valeur de locataire: ",value);
           }}
           data={locataires}
         />
       </div>
 
       <div className="input-container">
-        <label className="input-label">Emplacement :</label>
         <Select
+          label="Emplacement :"
           className="input-field"
-          placeholder="Veuiilez choisir un emplacement"
+          placeholder="Veuillez choisir un emplacement"
           value={form.values.id_emplacement}
           onChange={(value) => {
             if (value) form.setFieldValue('id_emplacement', value);
+            console.log("Valeur de emplacement: ",value);
           }}
           data={emplacements}
         />
       </div>
 
-      <div className="input-container">
-        <label className="input-label checkbox-label">En entrepôt :</label>
+        <div className="input-container">
         <Checkbox
-          className="mt-2 checkbox-field"
-          checked={form.values.est_en_entrepot}
-          onChange={(event) =>
-            form.setFieldValue('est_en_entrepot', event.currentTarget.checked)
-          }
+            label="Est en entrepôt :"
+            className="checkbox-field"
+            checked={form.values.est_en_entrepot}
+            onChange={(event) => {
+            form.setFieldValue('est_en_entrepot', event.currentTarget.checked);
+            console.log(`Valeur de est_en_entrepot: ${event.currentTarget.checked}`);
+            }}
         />
-      </div>
+        </div>
 
       <div className="input-container">
-        <label className="input-label">Statut :</label>
         <Select
+          label="Statut :"
           className="input-field"
-          placeholder="Veuiilez choisir un statut"
+          placeholder="Veuillez choisir un statut"
           value={form.values.id_statut}
           onChange={(value) => {
             if (value) form.setFieldValue('id_statut', value);
+            console.log("Valeur de statut: ",value);
           }}
           data={statuts}
         />
       </div>
 
       <div className="input-container">
-        <label className="input-label">Propriétaire :</label>
         <Select
+          label="Propriétaire :"
           className="input-field"
-          placeholder="Veuiilez choisir un propriétaire"
+          placeholder="Veuillez choisir un propriétaire"
           value={form.values.id_proprietaire}
           onChange={(value) => {
             if (value) form.setFieldValue('id_proprietaire', value);
+            console.log("Valeur de proprietaire: ",value);
           }}
           data={proprietaires}
         />
       </div>
 
       <div className="input-container">
-        <label className="input-label">Utilisation :</label>
         <Select
+         label="Utilisation :"
           className="input-field"
-          placeholder="Veuiilez choisir une utilisation"
+          placeholder="Veuillez choisir une utilisation"
           value={form.values.id_utilisation}
           onChange={(value) => {
             if (value) form.setFieldValue('id_utilisation', value);
+            console.log("Valeur de utilisation: ",value);
           }}
           data={utilisations}
         />
       </div>
 
       <div className="input-container">
-        <label className="input-label">Date de création :</label>
         <TextInput
+          label="Date de création :"
           className="input-field"
           value={
             form.values.date_creation
@@ -267,26 +287,28 @@ const ActifForm = ({
       </div>
 
       <div className="input-container">
-        <label className="input-label">Date de retour :</label>
-        <TextInput
-          className="input-field"
-          value={form.values.date_retour}
-          onChange={(event) =>
-            form.setFieldValue('date_retour', event.currentTarget.value)
-          }
-        />
-      </div>
+  <TextInput
+    label="Date de retour :"
+    className="input-field"
+    value={form.values.date_retour}
+    onChange={(event) => {
+      form.setFieldValue('date_retour', event.currentTarget.value);
+      console.log(`Valeur de date_retour: ${event.currentTarget.value}`);
+    }}
+  />
+</div>
 
-      <div className="input-container">
-        <label className="input-label">Note :</label>
-        <Textarea
-          className="note-size"
-          value={form.values.note}
-          onChange={(event) =>
-            form.setFieldValue('note', event.currentTarget.value)
-          }
-        />
-      </div>
+<div className="input-container">
+  <Textarea
+    label="Note :"
+    className="note-size"
+    value={form.values.note}
+    onChange={(event) => {
+      form.setFieldValue('note', event.currentTarget.value);
+      console.log(`Valeur de note: ${event.currentTarget.value}`);
+    }}
+  />
+</div>
 
       <div className="w-11/12">
         <Button

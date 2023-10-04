@@ -1,266 +1,146 @@
-import { Button } from '@mantine/core';
+import { Button, Checkbox, Select, SelectItem } from '@mantine/core';
+import { Form, useForm } from '@mantine/form';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
-import React from 'react';
+import { Actif_Type } from './type';
+
+type LightType = {
+  id: number;
+  nom: string;
+};
 
 const Actif = () => {
   const { id } = useParams<{ id: string }>();
-  const [actif, setActif] = useState<any | null>(null);
-  const [actifNotFound, setActifNotFound] = useState<boolean>(false);
 
-  const [dropdownData, setDropdownData] = useState<any>({
-    modeles: [],
-    categories: [],
-    clients: [],
-    emplacements: [],
-    statuts: [],
-    proprietaires: [],
-    utilisations: [],
-  });
-
-  const fieldMappings: Record<string, string> = {
-    modele: 'id_modele_commande',
-    categorie: 'id_categorie',
-    assigne_a: 'id_client',
-    emplacement: 'id_emplacement',
-    statut: 'id_statut',
-    proprietaire: 'id_proprietaire',
-    utilisation: 'id_utilisation',
-  };
-
-  // Create a state to track the selected values for each dropdown
-  const [selectedDropdownValues, setSelectedDropdownValues] = useState<any>({
-    modele: actif ? actif[fieldMappings.modele] : '0',
-    categorie: actif ? actif[fieldMappings.categorie] : '0',
-    assigne_a: actif ? actif[fieldMappings.assigne_a] : '0',
-    emplacement: actif ? actif[fieldMappings.emplacement] : '0',
-    statut: actif ? actif[fieldMappings.statut] : '0',
-    proprietaire: actif ? actif[fieldMappings.proprietaire] : '0',
-    utilisation: actif ? actif[fieldMappings.utilisation] : '0',
-  });
-
-  const renderLabelInputPair = (label: string, value: any) => (
-    <div className="mb-2">
-      <label>
-        {label}:
-        <input
-          type="text"
-          className="ml-2 text-gray-400 cursor-not-allowed"
-          value={value || 'N/A'}
-          readOnly
-        />
-      </label>
-    </div>
-  );
-
-  const fetchData = async (url: string, key: string) => {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      setDropdownData((prevData: any) => ({ ...prevData, [key]: data }));
-    } catch (error) {
-      console.error('Fetch error:', error);
-    }
-  };
-
-  const fetchActif = async () => {
-    try {
-      const response = await fetch(`http://127.0.0.1:8000/api/actif/${id}`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      if (!data) {
-        setActifNotFound(true);
-      } else {
-        setActif(data);
-      }
-    } catch (error) {
-      console.error('Fetch error:', error);
-    }
-  };
-
-  const handleFieldChange = (field: string, newValue: any) => {
-    setSelectedDropdownValues((prevSelectedValues: any) => ({
-      ...prevSelectedValues,
-      [field]: newValue,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log('Données à envoyer :', {
-      ...actif,
-      [fieldMappings.modele]: selectedDropdownValues.modele,
-      [fieldMappings.categorie]: selectedDropdownValues.categorie,
-      [fieldMappings.assigne_a]: selectedDropdownValues.assigne_a,
-      [fieldMappings.emplacement]: selectedDropdownValues.emplacement,
-      [fieldMappings.statut]: selectedDropdownValues.statut,
-      [fieldMappings.proprietaire]: selectedDropdownValues.proprietaire,
-      [fieldMappings.utilisation]: selectedDropdownValues.utilisation,
-    });
-
-    try {
-      const response = await fetch(`http://127.0.0.1:8000/api/actif/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...actif,
-          [fieldMappings.modele]: selectedDropdownValues.modele,
-          [fieldMappings.categorie]: selectedDropdownValues.categorie,
-          [fieldMappings.assigne_a]: selectedDropdownValues.assigne_a,
-          [fieldMappings.emplacement]: selectedDropdownValues.emplacement,
-          [fieldMappings.statut]: selectedDropdownValues.statut,
-          [fieldMappings.proprietaire]: selectedDropdownValues.proprietaire,
-          [fieldMappings.utilisation]: selectedDropdownValues.utilisation,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-    } catch (error) {
-      console.error('Fetch error:', error);
-    }
-  };
-
+  const [loading, setLoading] = useState(true);
+  const [statuts, setStatuts] = useState<SelectItem[]>([]);
+  const [modeles, setModeles] = useState<SelectItem[]>([]);
+  const [emplacements, setEmplacements] = useState<SelectItem[]>([]);
+  const [locataires, setLocataires] = useState<SelectItem[]>([]);
+  const [utilisations, setUtilisations] = useState<SelectItem[]>([]);
+  const [proprietaires, setProprietaires] = useState<SelectItem[]>([]);
+  const [actif, setActif] = useState<Actif_Type>();
   useEffect(() => {
-    const fetchDropdownData = async () => {
-      const urls = [
-        'http://127.0.0.1:8000/api/modeles',
-        'http://127.0.0.1:8000/api/categories',
-        'http://127.0.0.1:8000/api/clients',
-        'http://127.0.0.1:8000/api/emplacements',
-        'http://127.0.0.1:8000/api/statuts',
-        'http://127.0.0.1:8000/api/proprietaires',
-        'http://127.0.0.1:8000/api/utilisations',
-      ];
-
-      for (let i = 0; i < urls.length; i++) {
-        await fetchData(urls[i], Object.keys(dropdownData)[i]);
-      }
-    };
-
-    fetchActif();
-    fetchDropdownData();
+    Promise.all([
+      fetch('http://localhost:8000/api/statuts/light'),
+      fetch('http://localhost:8000/api/modeles/light'),
+      fetch('http://localhost:8000/api/emplacements/light'),
+      fetch('http://localhost:8000/api/clients/light'),
+      fetch('http://localhost:8000/api/utilisations/light'),
+      fetch('http://localhost:8000/api/proprietaires/light'),
+      fetch(`http://localhost:8000/api/actif/${id}`),
+    ])
+      .then((responses) =>
+        Promise.all(responses.map((response) => response.json()))
+      )
+      .then(
+        ([
+          statuts,
+          modeles,
+          localisations,
+          locataires,
+          utilisations,
+          proprietaires,
+          actif,
+        ]) => {
+          setStatuts(
+            statuts.map((statut: LightType) => ({
+              value: statut.id,
+              label: statut.nom,
+            }))
+          );
+          setModeles(
+            modeles.map((modele: LightType) => ({
+              value: modele.id,
+              label: modele.nom,
+            }))
+          );
+          setEmplacements(
+            localisations.map((localisation: LightType) => ({
+              value: localisation.id,
+              label: localisation.nom,
+            }))
+          );
+          setLocataires(
+            locataires.map((locataire: LightType) => ({
+              value: locataire.id,
+              label: locataire.nom,
+            }))
+          );
+          setUtilisations(
+            utilisations.map((utilisation: LightType) => ({
+              value: utilisation.id,
+              label: utilisation.nom,
+            }))
+          );
+          setProprietaires(
+            proprietaires.map((proprietaire: LightType) => ({
+              value: proprietaire.id,
+              label: proprietaire.nom,
+            }))
+          );
+          setActif(actif);
+          setLoading(false);
+        }
+      );
   }, [id]);
+
+  const form = useForm({
+    initialValues: {
+      numeroSerie: actif?.numero_serie,
+      nom: actif?.nom,
+      adresseMac: actif?.adresse_mac,
+      modele: actif?.modele,
+      categorie: actif?.categorie,
+      assigne_a: actif?.assigne_a,
+      emplacement: actif?.emplacement,
+      statut: actif?.statut,
+    },
+  });
+  const handleSubmit = () => {
+    console.log(form.values);
+  };
 
   return (
     <div>
-      {actifNotFound ? (
-        <p>
-          L'actif avec l'ID {id} n'a pas été trouvé dans la base de données.
-        </p>
-      ) : actif && (actif.numero_serie || actif.adresse_mac) ? (
-        <form onSubmit={handleSubmit}>
-          <h1 className="mb-8 mt-8 ml-6">Actif - {actif.nom}</h1>
-          <div className="mt-2 ml-12">
-            <h2 className="mt-2 font-bold">Spécifications</h2>
-            <hr className="mb-2 w-96" />
-
-            {renderLabelInputPair('Numéro de série', actif.numero_serie)}
-            {renderLabelInputPair('Nom', actif.nom)}
-            {renderLabelInputPair('Adresse MAC', actif.adresse_mac)}
-
-            {[
-              'modele',
-              'categorie',
-              'assigne_a',
-              'emplacement',
-              'statut',
-              'proprietaire',
-              'utilisation',
-            ].map((field) => (
-              <div key={field}>
-                <label className="mb-2">
-                  {field === 'proprietaire'
-                    ? 'Propriétaire'
-                    : field === 'modele'
-                    ? 'Modèle'
-                    : field === 'categorie'
-                    ? 'Catégorie'
-                    : field === 'assigne_a'
-                    ? 'Assigné à'
-                    : field.charAt(0).toUpperCase() + field.slice(1)}{' '}
-                  :
-                </label>
-                <select
-                  className="mb-2 ml-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 p-1"
-                  value={selectedDropdownValues[field]}
-                  onChange={(e) => handleFieldChange(field, e.target.value)}
-                >
-                  <option value="0">{actif[field]}</option>
-                  {dropdownData[field + 's'] &&
-                    dropdownData[field + 's']
-                      .filter((item: any) => item.nom !== actif[field])
-                      .map((item: any) => (
-                        <option key={item.id} value={item.id}>
-                          {item.nom}
-                        </option>
-                      ))}
-                </select>
-              </div>
-            ))}
-            <div className="mb-2">
-              <label>
-                En entrepôt:
-                <input
-                  type="checkbox"
-                  className="ml-2"
-                  checked={actif.est_en_entrepot}
-                  onChange={(e) => {
-                    setActif({
-                      ...actif,
-                      est_en_entrepot: e.target.checked,
-                    });
-                  }}
-                />
-              </label>
-            </div>
-            {renderLabelInputPair(
-              'Créé le',
-              actif.date_creation
-                ? format(
-                    new Date(actif.date_creation),
-                    "yyyy-MM-dd 'à' HH':'mm",
-                    { locale: fr }
-                  )
-                : 'N/A'
-            )}
-            <p className="font-bold mt-4">Note :</p>
-            <textarea
-              onChange={(e) => {
-                setActif({
-                  ...actif,
-                  note: e.target.value,
-                });
-              }}
-              value={actif.note}
-              className="p-2.5 w-2/5 h-24 marker:text-sm text-gray-900 bg-gray-50 rounded-lg border"
-            />
-            <div className="w-11/12 mx-auto">
-              <Button
-                className="flex float-right"
-                color="green"
-                variant="outline"
-                size="md"
-                type="submit"
-              >
-                Sauvegarder
-              </Button>
-            </div>
-          </div>
-        </form>
-      ) : (
-        <p>Aucune information disponible pour l'actif avec l'ID {id}.</p>
-      )}
+      <h1>Actif</h1>
+      <Form form={form} onSubmit={handleSubmit}>
+        <Select
+          className="mb-8"
+          required
+          transitionProps={{
+            transition: 'pop-top-left',
+            duration: 80,
+            timingFunction: 'ease',
+          }}
+          error={form.errors.statut && 'Ce champ est requis'}
+          searchable
+          label="Emplacement"
+          placeholder="Sélectionner une option"
+          value={form.getInputProps('emplacement').value}
+          onChange={(value) => form.setFieldValue('emplacement', value || '')}
+          data={emplacements}
+        />
+        <Checkbox
+          className="mb-8"
+          label="Est en entropôt"
+          checked={form.getInputProps('entrepot').value}
+          onChange={(value) =>
+            form.setFieldValue('estEnEntropot', value.currentTarget.checked)
+          }
+        />
+        <div className="w-11/12 mx-auto">
+          <Button
+            className="flex float-right"
+            color="green"
+            variant="outline"
+            size="md"
+            type="submit"
+          >
+            Sauvegarder
+          </Button>
+        </div>
+      </Form>
     </div>
   );
 };

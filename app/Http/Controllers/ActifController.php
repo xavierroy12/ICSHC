@@ -86,36 +86,54 @@ class ActifController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-    {
-        try {
-            //données du formulaire
-            $request_data = $request->all();
-            //créer un nouvel actif en utilisant les données du formulaire
-            $actif = this->show($id);
-            if($request_data['id_modele'] != null)
-            {
-                $id_modele_commande = DB::table('modele_commande')->where('id_modele', $request_data['id_modele'])->first()->id;
-                $actif->id_modele = $id_modele_commande ;
-            }
-            if($request_data['id_statut'] != null)
-            {
-                $actif->id_statut = $request_data['id_statut'];
-            }
+{
+    try {
+        // Get the Actif object to update
+        $actif = Actif::findOrFail($id);
 
-            // Sauvegarde l'actif dans la base de données
-            if ($actif->save()) {
-                // Retournez une réponse JSON pour indiquer le succès
-                return response()->json(['message' => 'Actif ajouté avec succès'], 201);
-            } else {
-                // En cas d'échec de sauvegarde, retournez une réponse d'erreur
-                return response()->json(['message' => "Erreur lors de l'ajout de l'actif"], 500);
-            }
-        } catch (\Exception $e) {
-            // En cas d'exception, retournez une réponse d'erreur avec le message d'erreur
-            return response()->json(['message' => $e->getMessage()], 500);
+        // Get the data from the form
+        $data = $request->all();
+
+        // Map the form data to match the expected field names in your Laravel API
+        $updatedData = [
+            'est_en_entrepot' => $data['est_en_entrepot'],
+            'date_retour' => $data['date_retour'],
+            'note' => $data['note'],
+            'id_assigne_a' => $data['id_client'],
+            'id_modele' => $data['id_modele'],
+            'id_statut' => $data['id_statut'],
+            'id_emplacement' => $data['id_emplacement'],
+            'id_proprietaire' => $data['id_proprietaire'],
+            'id_utilisation' => $data['id_utilisation'],
+            'id_categorie' => $data['id_categorie'],
+        ];
+
+        // Update the Actif object with the updated data
+        $actif->fill($updatedData);
+
+        // Update the related models
+        $actif->utilisation()->associate(Utilisation::findOrFail($data['id_utilisation']));
+        $actif->proprietaire()->associate(Proprietaire::findOrFail($data['id_proprietaire']));
+        $actif->statut()->associate(Statut::findOrFail($data['id_statut']));
+        $actif->emplacement()->associate(Emplacement::findOrFail($data['id_emplacement']));
+        $actif->modele()->associate(Modele::findOrFail($data['id_modele']));
+        $actif->client()->associate(Client::findOrFail($data['id_client']));
+        $actif->categorie()->associate(TypeModele::findOrFail($data['id_categorie']));
+
+
+        // Save the updated Actif object to the database
+        if ($actif->save()) {
+            // Return a success response
+            return response()->json(['message' => 'Actif mis à jour avec succès'], 200);
+        } else {
+            // Return an error response
+            return response()->json(['message' => "Erreur lors de la mise à jour de l'actif"], 500);
         }
+    } catch (\Exception $e) {
+        // Return an error response with the error message
+        return response()->json(['message' => $e->getMessage()], 500);
     }
-
+}
     /**
      * Remove the specified resource from storage.
      */
@@ -163,7 +181,7 @@ class ActifController extends Controller
         }
         return response()->json($actif);
     }
-    
+
     public function lightShow()
     {
         $actifs = Actif::All()->map(function ($actif) {

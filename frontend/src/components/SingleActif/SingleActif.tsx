@@ -5,7 +5,7 @@ import { SelectItem } from '@mantine/core';
 import { Actif_Type, LightType } from './type';
 import ActifForm from './ActifForm';
 
-const NewActif = () => {
+const SingleActif = () => {
   const { id } = useParams<{ id: string }>();
 
   const [loading, setLoading] = useState(true);
@@ -85,7 +85,6 @@ const NewActif = () => {
               label: proprietaire.nom,
             }))
           );
-          console.log("Données de 'actif' avant l'envoi du form:", actif);
           setActif(actif);
           setLoading(false);
         }
@@ -101,6 +100,7 @@ const NewActif = () => {
           {actif && id && (
             <Fragment>
               <h1 className="my-8 mx-8">Actif - {id}</h1>
+              <hr className="mb-8"/>
               <ActifForm
                 id={id}
                 actif={actif}
@@ -121,4 +121,4 @@ const NewActif = () => {
   );
 };
 
-export default NewActif;
+export default SingleActif;

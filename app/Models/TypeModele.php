@@ -12,4 +12,18 @@ class TypeModele extends Model
 
     protected $table = 'type_modele';
 
+    protected $fillable = [
+        'nom',
+    ];
+
+    public function modeles()
+    {
+        return $this->hasMany(Modele::class, 'id_type_modele');
+    }
+
+    public function categorie()
+    {
+        return $this->belongsTo(TypeModele::class, 'id_type_modele');
+    }
+
 }

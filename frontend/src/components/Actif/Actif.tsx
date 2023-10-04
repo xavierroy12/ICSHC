@@ -1,13 +1,9 @@
-import { Button, Checkbox, Select, SelectItem } from '@mantine/core';
-import { Form, useForm } from '@mantine/form';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Actif_Type } from './type';
-
-type LightType = {
-  id: number;
-  nom: string;
-};
+import './Actif.scss';
+import { SelectItem } from '@mantine/core';
+import { Actif_Type, LightType } from './type';
+import ActifForm from './ActifForm';
 
 const Actif = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,15 +11,18 @@ const Actif = () => {
   const [loading, setLoading] = useState(true);
   const [statuts, setStatuts] = useState<SelectItem[]>([]);
   const [modeles, setModeles] = useState<SelectItem[]>([]);
+  const [categories, setCategories] = useState<SelectItem[]>([]);
   const [emplacements, setEmplacements] = useState<SelectItem[]>([]);
   const [locataires, setLocataires] = useState<SelectItem[]>([]);
   const [utilisations, setUtilisations] = useState<SelectItem[]>([]);
   const [proprietaires, setProprietaires] = useState<SelectItem[]>([]);
   const [actif, setActif] = useState<Actif_Type>();
+
   useEffect(() => {
     Promise.all([
       fetch('http://localhost:8000/api/statuts/light'),
       fetch('http://localhost:8000/api/modeles/light'),
+      fetch('http://localhost:8000/api/categories/light'),
       fetch('http://localhost:8000/api/emplacements/light'),
       fetch('http://localhost:8000/api/clients/light'),
       fetch('http://localhost:8000/api/utilisations/light'),
@@ -37,6 +36,7 @@ const Actif = () => {
         ([
           statuts,
           modeles,
+          categories,
           localisations,
           locataires,
           utilisations,
@@ -53,6 +53,12 @@ const Actif = () => {
             modeles.map((modele: LightType) => ({
               value: modele.id,
               label: modele.nom,
+            }))
+          );
+          setCategories(
+            categories.map((categorie: LightType) => ({
+              value: categorie.id,
+              label: categorie.nom,
             }))
           );
           setEmplacements(
@@ -85,62 +91,32 @@ const Actif = () => {
       );
   }, [id]);
 
-  const form = useForm({
-    initialValues: {
-      numeroSerie: actif?.numero_serie,
-      nom: actif?.nom,
-      adresseMac: actif?.adresse_mac,
-      modele: actif?.modele,
-      categorie: actif?.categorie,
-      assigne_a: actif?.assigne_a,
-      emplacement: actif?.emplacement,
-      statut: actif?.statut,
-    },
-  });
-  const handleSubmit = () => {
-    console.log(form.values);
-  };
-
   return (
-    <div>
-      <h1>Actif</h1>
-      <Form form={form} onSubmit={handleSubmit}>
-        <Select
-          className="mb-8"
-          required
-          transitionProps={{
-            transition: 'pop-top-left',
-            duration: 80,
-            timingFunction: 'ease',
-          }}
-          error={form.errors.statut && 'Ce champ est requis'}
-          searchable
-          label="Emplacement"
-          placeholder="Sélectionner une option"
-          value={form.getInputProps('emplacement').value}
-          onChange={(value) => form.setFieldValue('emplacement', value || '')}
-          data={emplacements}
-        />
-        <Checkbox
-          className="mb-8"
-          label="Est en entropôt"
-          checked={form.getInputProps('entrepot').value}
-          onChange={(value) =>
-            form.setFieldValue('estEnEntropot', value.currentTarget.checked)
-          }
-        />
-        <div className="w-11/12 mx-auto">
-          <Button
-            className="flex float-right"
-            color="green"
-            variant="outline"
-            size="md"
-            type="submit"
-          >
-            Sauvegarder
-          </Button>
-        </div>
-      </Form>
+    <div className="">
+      {loading ? (
+        <div>Chargement en cours...</div>
+      ) : (
+        <Fragment>
+          {actif && id && (
+            <Fragment>
+              <h1 className="my-8 mx-8">Actif - {id}</h1>
+              <hr className="mb-8" />
+              <ActifForm
+                id={id}
+                actif={actif}
+                statuts={statuts}
+                modeles={modeles}
+                categories={categories}
+                emplacements={emplacements}
+                locataires={locataires}
+                utilisations={utilisations}
+                proprietaires={proprietaires}
+              />
+            </Fragment>
+          )}
+          <hr className="mb-8" />
+        </Fragment>
+      )}
     </div>
   );
 };

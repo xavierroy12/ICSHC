@@ -51,7 +51,10 @@ class Actif extends Model
     public function emplacement()
     {
         return $this->belongsTo(Emplacement::class, 'id_emplacement');
-
+    }
+    public function numero_commande()
+    {
+        return $this->belongsTo(Commande::class, 'numero_commande');
     }
 
     public function client()

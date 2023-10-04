@@ -111,7 +111,7 @@ class ActifController extends Controller
             'id_emplacement' => $data['id_emplacement'],
             'id_proprietaire' => $data['id_proprietaire'],
             'id_utilisation' => $data['id_utilisation'],
-            'numero_commande' => $data['numero_commande'], //Todo add this to the form
+            //'numero_commande' => $data['numero_commande'], //Todo add this to the form
         ];
 
         $updatedDataModele = [
@@ -161,15 +161,16 @@ class ActifController extends Controller
 
     public function listShow()
     {
-        $actifs = Actif::with(['modeleCommande.modele.categorie', 'statut', 'proprietaire', 'emplacement',])->get()->map(function ($actif) {
+        $actifs = Actif::with(['modele.categorie', 'statut', 'proprietaire', 'emplacement',])->get()->map(function ($actif) {
             return [
                 'id' => $actif->id,
+                'numero_commande' => $actif->numero_commande,
                 'numero_serie' => $actif->numero_serie,
                 'nom' => $actif->nom,
-                'modele' => $actif->modeleCommande->modele->nom,
-                'modele_id' => $actif->modeleCommande->modele->id,
-                'categorie' => $actif->modeleCommande->modele->categorie->nom,
-                'categorie_id' => $actif->modeleCommande->modele->categorie->id,
+                'modele' => $actif->modele->nom,
+                'modele_id' => $actif->modele->id,
+                'categorie' => $actif->modele->categorie->nom,
+                'categorie_id' => $actif->modele->categorie->id,
                 'statut' => $actif->statut->nom,
                 'statut_id' => $actif->statut->id,
                 'proprietaire' => $actif->proprietaire->nom,
@@ -202,7 +203,6 @@ class ActifController extends Controller
             'numero_serie' => $actif->numero_serie,
             'nom' => $actif->nom,
             'adresse_mac' => $actif->adresse_mac,
-
             'id_modele' => $actif->modele->id,
             'id_categorie' => $actif->modele->categorie->id,
             'id_statut' => $actif->statut->id,
@@ -213,6 +213,7 @@ class ActifController extends Controller
             'en_entrepot' => $actif->en_entrepot,
             'date_retour' => $actif->date_retour,
             'note' => $actif->note,
+            'numero_commande' => $actif->numero_commande,
         ];
 
 

@@ -37,6 +37,7 @@ const ActifForm = ({
 
   const form = useForm<ActifFormValues>({
     initialValues: {
+      numero_commande: actif.numero_commande,
       numero_serie: actif.numero_serie,
       nom: actif.nom,
       adresse_mac: actif.adresse_mac,
@@ -53,6 +54,7 @@ const ActifForm = ({
       note: actif.note,
     },
     validate: {
+    numero_commande: isNotEmpty('Veuillez entrer un numéro de commande'),
       numero_serie: isNotEmpty('Veuillez entrer un numéro de série'),
       nom: isNotEmpty('Veuillez entrer un nom'),
       adresse_mac: isNotEmpty('Veuillez entrer une adresse MAC'),
@@ -110,6 +112,7 @@ const ActifForm = ({
     }
   };
 
+
   const handleReception = () => {
     form.setFieldValue('buttonClicked', 'reception');
     console.log(form.values);
@@ -124,6 +127,17 @@ const ActifForm = ({
 
   return (
     <Form form={form}>
+
+    <div className="input-container">
+        <TextInput
+          label="Numéro de commande :"
+          className="input-label "
+          value={form.values.numero_commande}
+          disabled
+        />
+      </div>
+
+
       <div className="input-container">
         <TextInput
           label="Nom :"
@@ -271,28 +285,23 @@ const ActifForm = ({
       </div>
 
       <div className="input-container">
-  <DateInput
-    label="Date de retour :"
-    className="input-field"
-    value={
-      form.values.date_retour
-        ? new Date(form.values.date_retour)
-        : undefined // Set to undefined if date_retour is not available
-    }
-    onChange={(value) => {
-      // Adjust the date value for the timezone offset
-      const timezoneOffset = value?.getTimezoneOffset() || 0;
-      const adjustedDate = value ? new Date(value.getTime() - timezoneOffset * 60 * 1000) : undefined;
+        <DateInput
+          label="Date de retour :"
+          className="input-field"
 
-      // Format the adjusted date value as a string in the 'year-month-date' format
-      const formattedDate = adjustedDate ? adjustedDate.toISOString().slice(0, 10) : '';
-
-      // Update the form field value and log the formatted date value
-      form.setFieldValue('date_retour', formattedDate);
-      console.log(formattedDate);
-    }}
-  />
-</div>
+          value={
+            form.values.date_retour
+              ? new Date(form.values.date_retour): undefined
+          }
+          /*
+          onChange={(value) => {
+            form.setFieldValue('date_retour', value?.toString());
+            console.log(value);
+          }}
+          */
+          disabled
+        />
+      </div>
 
       <div className="input-container">
         <Textarea

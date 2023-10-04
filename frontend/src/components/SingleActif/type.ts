@@ -13,7 +13,7 @@ export type Actif_Type = {
   id_utilisation: number;
   id_categorie: number;
   id_modele: number;
-  est_en_entrepot: boolean;
+  en_entrepot: boolean;
   assigne_a: string; // Type approprié pour les utilisateurs ou null si non assigné
   categorie: string; // Type approprié pour les catégories ou null si non spécifié
   modele: string; // Type approprié pour les modèles ou null si non spécifié
@@ -42,7 +42,7 @@ export type ActifFormValues = {
   id_categorie: string;
   id_modele: string;
   id_assigne_a: string;
-  est_en_entrepot?: boolean;
+  en_entrepot?: boolean;
   date_creation?: string;
   date_retour?: string;
   note?: string;

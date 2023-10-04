@@ -14,7 +14,7 @@ class StatutSeeder extends Seeder
     public function run(): void
     {
         DB::table('statut')->insert([
-            'nom' => 'En entrepôt',
+            'nom' => 'En réparation',
         ]);
 
         DB::table('statut')->insert([
@@ -23,6 +23,9 @@ class StatutSeeder extends Seeder
 
         DB::table('statut')->insert([
             'nom' => 'Déployé',
+        ]);
+        DB::table('statut')->insert([
+            'nom' => 'Hors service',
         ]);
     }
 }

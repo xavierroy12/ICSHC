@@ -14,19 +14,19 @@ class EmplacementSeeder extends Seeder
     public function run(): void
     {
         DB::table('emplacement')->insert([
-            'nom' => 'École Du Parchemin',
+            'nom' => '068 - École Du Parchemin',
             'numero_civique' => 162,
             'adresse' => 'Rue Saint-Jean Est',
         ]);
 
         DB::table('emplacement')->insert([
-            'nom' => 'École Ligugé',
+            'nom' => '069 - École Ligugé',
             'numero_civique' => 194,
             'adresse' => 'Rue de l\'Église',
         ]);
 
         DB::table('emplacement')->insert([
-            'nom' => 'École de la Feuille-d\'Or',
+            'nom' => '007 - École de la Feuille-d\'Or',
             'numero_civique' => 215,
             'adresse' => 'Rue de l\'Aréna',
         ]);

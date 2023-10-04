@@ -47,7 +47,7 @@ const ActifForm = ({
       id_categorie: actif.id_categorie?.toString(),
       id_modele: actif.id_modele?.toString(),
       id_assigne_a: actif.id_client?.toString(),
-      est_en_entrepot: actif.est_en_entrepot || false,
+      en_entrepot: actif.en_entrepot || false,
       date_creation: actif.date_creation,
       date_retour: actif.date_retour,
       note: actif.note,
@@ -69,9 +69,10 @@ const ActifForm = ({
     if (form.isDirty()) {
       try {
         // Map the form values to match the expected field names in your Laravel API
+        console.log(form.values);
         const updatedData = {
           id_categorie: form.values.id_categorie,
-          est_en_entrepot: form.values.est_en_entrepot,
+          en_entrepot: form.values.en_entrepot,
           date_retour: form.values.date_retour,
           note: form.values.note,
           id_assigne_a: form.values.id_assigne_a,
@@ -169,7 +170,7 @@ const ActifForm = ({
           label="Catégorie :"
           className="input-field"
           placeholder="Veuillez choisir une catégorie"
-          defaultValue={categories[1].value}
+          defaultValue={form.values.id_categorie}
           value={form.values.id_categorie}
           onChange={(value) => {
             form.setFieldValue('id_categorie', value.target.value);
@@ -179,11 +180,13 @@ const ActifForm = ({
       </div>
 
       <div className="input-container">
+
         <NativeSelect
           label="Assigné à :"
           className="input-field"
           placeholder="Veuillez choisir un locataire"
           value={form.values.id_assigne_a}
+        defaultValue={form.values.id_assigne_a}
           onChange={(value) => {
             form.setFieldValue('id_assigne_a', value.target.value);
           }}
@@ -208,9 +211,9 @@ const ActifForm = ({
         <Checkbox
           label="Est en entrepôt :"
           className="checkbox-field"
-          checked={form.values.est_en_entrepot}
+          checked={form.values.en_entrepot}
           onChange={(event) => {
-            form.setFieldValue('est_en_entrepot', event.currentTarget.checked);
+            form.setFieldValue('en_entrepot', event.currentTarget.checked);
           }}
         />
       </div>

@@ -18,7 +18,8 @@ class Actif extends Model
         'adresse_mac',
         'date_retour',
         'note',
-        'id_modele_commande',
+        'id_modele',
+        'modele_descriptif',
         'id_statut',
         'id_emplacement',
         'id_proprietaire',
@@ -26,9 +27,9 @@ class Actif extends Model
         // Autres colonnes autorisées pour l'attribution de masse
     ];
 
-    public function modeleCommande()
+    public function modele()
     {
-        return $this->belongsTo(ModeleCommande::class, 'id_modele_commande');
+        return $this->belongsTo(Modele::class, 'id_modele');
 
     }
     public function statut()

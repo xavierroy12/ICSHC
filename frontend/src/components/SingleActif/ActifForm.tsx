@@ -7,9 +7,12 @@ import {
   Textarea,
   SelectItem,
   NativeSelect,
+  Select,
 } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { DateInput } from '@mantine/dates';
+import CustomSelect from '../CustomSelect';
+import { Fragment } from 'react';
 
 type Props = {
   id: string;
@@ -110,229 +113,230 @@ const ActifForm = ({
   };
 
   const handleReception = () => {
-    form.setFieldValue('buttonClicked', 'reception');
     console.log(form.values);
     console.log('reception');
   };
 
   const handleArchive = () => {
-    form.setFieldValue('buttonClicked', 'archiver');
+    form.setFieldValue('id_modele', '2');
+
     console.log(form.values);
     console.log('archiver');
   };
+  console.log(form.values);
 
   return (
-    <Form form={form}>
-      <div className="input-container">
-        <TextInput
-          label="Nom :"
-          className="input-label "
-          value={form.values.nom}
-          disabled
-        />
-      </div>
+    <Fragment>
+      <Form form={form}>
+        <div className="input-container">
+          <TextInput
+            label="Nom :"
+            className="input-label "
+            value={form.values.nom}
+            disabled
+          />
+        </div>
 
-      <div className="input-container">
-        <TextInput
-          label="Numéro de série :"
-          className="input-field"
-          value={form.values.numero_serie}
-          disabled
-        />
-      </div>
+        <div className="input-container">
+          <TextInput
+            label="Numéro de série :"
+            className="input-field"
+            value={form.values.numero_serie}
+            disabled
+          />
+        </div>
 
-      <div className="input-container">
-        <TextInput
-          label="Adresse MAC :"
-          className="input-field"
-          value={form.values.adresse_mac}
-          disabled
-        />
-      </div>
+        <div className="input-container">
+          <TextInput
+            label="Adresse MAC :"
+            className="input-field"
+            value={form.values.adresse_mac}
+            disabled
+          />
+        </div>
 
-      <div className="input-container">
-        <NativeSelect
+        <CustomSelect
           label="Modèle :"
-          className="input-field"
-          placeholder="Veuillez choisir un modèle"
           value={form.values.id_modele}
-          defaultValue={form.values.id_modele}
           onChange={(value) => {
-            form.setFieldValue('id_modele', value.target.value);
+            form.setFieldValue('id_modele', value);
           }}
           data={modeles}
         />
-      </div>
 
-      <div className="input-container">
-        <NativeSelect
-          label="Catégorie :"
-          className="input-field"
-          placeholder="Veuillez choisir une catégorie"
-          defaultValue={categories[1].value}
-          value={form.values.id_categorie}
-          onChange={(value) => {
-            form.setFieldValue('id_categorie', value.target.value);
-          }}
-          data={categories}
-        />
-      </div>
+        <div className="input-container">
+          <NativeSelect
+            label="Catégorie :"
+            className="input-field"
+            placeholder="Veuillez choisir une catégorie"
+            defaultValue={categories[1].value}
+            value={form.values.id_categorie}
+            onChange={(value) => {
+              form.setFieldValue('id_categorie', value.target.value);
+            }}
+            data={categories}
+          />
+        </div>
 
-      <div className="input-container">
-        <NativeSelect
-          label="Assigné à :"
-          className="input-field"
-          placeholder="Veuillez choisir un locataire"
-          value={form.values.id_assigne_a}
-          onChange={(value) => {
-            form.setFieldValue('id_assigne_a', value.target.value);
-          }}
-          data={locataires}
-        />
-      </div>
+        <div className="input-container">
+          <NativeSelect
+            label="Assigné à :"
+            className="input-field"
+            placeholder="Veuillez choisir un locataire"
+            value={form.values.id_assigne_a}
+            onChange={(value) => {
+              form.setFieldValue('id_assigne_a', value.target.value);
+            }}
+            data={locataires}
+          />
+        </div>
 
-      <div className="input-container">
-        <NativeSelect
-          label="Emplacement :"
-          className="input-field"
-          placeholder="Veuillez choisir un emplacement"
-          value={form.values.id_emplacement}
-          onChange={(value) => {
-            form.setFieldValue('id_emplacement', value.target.value);
-          }}
-          data={emplacements}
-        />
-      </div>
+        <div className="input-container">
+          <NativeSelect
+            label="Emplacement :"
+            className="input-field"
+            placeholder="Veuillez choisir un emplacement"
+            value={form.values.id_emplacement}
+            onChange={(value) => {
+              form.setFieldValue('id_emplacement', value.target.value);
+            }}
+            data={emplacements}
+          />
+        </div>
 
-      <div className="input-container">
-        <Checkbox
-          label="Est en entrepôt :"
-          className="checkbox-field"
-          checked={form.values.est_en_entrepot}
-          onChange={(event) => {
-            form.setFieldValue('est_en_entrepot', event.currentTarget.checked);
-          }}
-        />
-      </div>
+        <div className="input-container">
+          <Checkbox
+            label="Est en entrepôt :"
+            className="checkbox-field"
+            checked={form.values.est_en_entrepot}
+            onChange={(event) => {
+              form.setFieldValue(
+                'est_en_entrepot',
+                event.currentTarget.checked
+              );
+            }}
+          />
+        </div>
 
-      <div className="input-container">
-        <NativeSelect
-          label="Statut :"
-          className="input-field"
-          placeholder="Veuillez choisir un statut"
-          value={form.values.id_statut}
-          onChange={(value) => {
-            form.setFieldValue('id_statut', value.target.value);
-          }}
-          data={statuts}
-        />
-      </div>
+        <div className="input-container">
+          <NativeSelect
+            label="Statut :"
+            className="input-field"
+            placeholder="Veuillez choisir un statut"
+            value={form.values.id_statut}
+            onChange={(value) => {
+              form.setFieldValue('id_statut', value.target.value);
+            }}
+            data={statuts}
+          />
+        </div>
 
-      <div className="input-container">
-        <NativeSelect
-          label="Propriétaire :"
-          className="input-field"
-          placeholder="Veuillez choisir un propriétaire"
-          value={form.values.id_proprietaire}
-          onChange={(value) => {
-            form.setFieldValue('id_proprietaire', value.target.value);
-          }}
-          data={proprietaires}
-        />
-      </div>
+        <div className="input-container">
+          <NativeSelect
+            label="Propriétaire :"
+            className="input-field"
+            placeholder="Veuillez choisir un propriétaire"
+            value={form.values.id_proprietaire}
+            onChange={(value) => {
+              form.setFieldValue('id_proprietaire', value.target.value);
+            }}
+            data={proprietaires}
+          />
+        </div>
 
-      <div className="input-container">
-        <NativeSelect
-          label="Utilisation :"
-          className="input-field"
-          placeholder="Veuillez choisir une utilisation"
-          value={form.values.id_utilisation}
-          onChange={(value) => {
-            form.setFieldValue('id_utilisation', value.target.value);
-          }}
-          data={utilisations}
-        />
-      </div>
+        <div className="input-container">
+          <NativeSelect
+            label="Utilisation :"
+            className="input-field"
+            placeholder="Veuillez choisir une utilisation"
+            value={form.values.id_utilisation}
+            onChange={(value) => {
+              form.setFieldValue('id_utilisation', value.target.value);
+            }}
+            data={utilisations}
+          />
+        </div>
 
-      <div className="input-container">
-        <DateInput
-          label="Date de création :"
-          className="input-field"
-          value={
-            form.values.date_creation
-              ? new Date(form.values.date_creation)
-              : undefined
-          }
-          disabled
-        />
-      </div>
+        <div className="input-container">
+          <DateInput
+            label="Date de création :"
+            className="input-field"
+            value={
+              form.values.date_creation
+                ? new Date(form.values.date_creation)
+                : undefined
+            }
+            disabled
+          />
+        </div>
 
-      <div className="input-container">
-        <DateInput
-          label="Date de retour :"
-          className="input-field"
-          value={
-            form.values.date_retour
-              ? new Date(form.values.date_retour)
-              : undefined
-          }
-          onChange={(value) => {
-            form.setFieldValue('date_retour', value?.toString());
-          }}
-        />
-      </div>
+        <div className="input-container">
+          <DateInput
+            label="Date de retour :"
+            className="input-field"
+            value={
+              form.values.date_retour
+                ? new Date(form.values.date_retour)
+                : undefined
+            }
+            onChange={(value) => {
+              form.setFieldValue('date_retour', value?.toString());
+            }}
+          />
+        </div>
 
-      <div className="input-container">
-        <Textarea
-          label="Note :"
-          className="note-size"
-          value={form.values.note}
-          onChange={(event) => {
-            form.setFieldValue('note', event.currentTarget.value);
-          }}
-        />
-      </div>
+        <div className="input-container">
+          <Textarea
+            label="Note :"
+            className="note-size"
+            value={form.values.note}
+            onChange={(event) => {
+              form.setFieldValue('note', event.currentTarget.value);
+            }}
+          />
+        </div>
 
-      <div className="w-11/12">
-        <Button
-          className="my-5 mx-5 flex float-right"
-          color="green"
-          variant="outline"
-          size="md"
-          type="submit"
-          onClick={handleSauvegarde}
-          disabled={!form.isDirty()}
-        >
-          Sauvegarder
-        </Button>
-      </div>
+        <div className="w-11/12">
+          <Button
+            className="my-5 mx-5 flex float-right"
+            color="green"
+            variant="outline"
+            size="md"
+            type="submit"
+            onClick={handleSauvegarde}
+            disabled={!form.isDirty()}
+          >
+            Sauvegarder
+          </Button>
+        </div>
 
-      <div className="w-11/12">
-        <Button
-          className="my-5 mx-5 flex float-right"
-          color="blue"
-          variant="outline"
-          size="md"
-          type="submit"
-          onClick={handleReception}
-        >
-          Réception
-        </Button>
-      </div>
+        <div className="w-11/12">
+          <Button
+            className="my-5 mx-5 flex float-right"
+            color="blue"
+            variant="outline"
+            size="md"
+            type="submit"
+            onClick={handleReception}
+          >
+            Réception
+          </Button>
+        </div>
 
-      <div className="w-11/12">
-        <Button
-          className=" my-5 mx-5 flex float-right"
-          color="red"
-          variant="outline"
-          size="md"
-          type="submit"
-          onClick={handleArchive}
-        >
-          Archiver
-        </Button>
-      </div>
-    </Form>
+        <div className="w-11/12">
+          <Button
+            className=" my-5 mx-5 flex float-right"
+            color="red"
+            variant="outline"
+            size="md"
+            type="submit"
+            onClick={handleArchive}
+          >
+            Archiver
+          </Button>
+        </div>
+      </Form>
+    </Fragment>
   );
 };
 

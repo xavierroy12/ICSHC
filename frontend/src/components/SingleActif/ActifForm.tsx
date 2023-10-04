@@ -131,19 +131,18 @@ const ActifForm = ({
 
   return (
     <Form form={form}>
-
       <div className="input-container">
         <TextInput
-        label="Nom :"
-        className='input-label'
-        value={form.values.nom}
-        disabled
+          label="Nom :"
+          className="input-label "
+          value={form.values.nom}
+          disabled
         />
       </div>
 
       <div className="input-container">
         <TextInput
-          label ="Numéro de série :"
+          label="Numéro de série :"
           className="input-field"
           value={form.values.numero_serie}
           disabled
@@ -168,7 +167,7 @@ const ActifForm = ({
           defaultValue={'1'}
           onChange={(value) => {
             if (value) form.setFieldValue('id_modele', value);
-            console.log("Valeur de modele: ", value);
+            console.log('Valeur de modele: ', value);
           }}
           data={modeles}
         />
@@ -182,7 +181,7 @@ const ActifForm = ({
           value={form.values.id_categorie}
           onChange={(value) => {
             if (value) form.setFieldValue('id_categorie', value);
-            console.log("Valeur de categorie: ",value);
+            console.log('Valeur de categorie: ', value);
           }}
           data={categories}
         />
@@ -190,13 +189,13 @@ const ActifForm = ({
 
       <div className="input-container">
         <Select
-         label="Assigné à :"
+          label="Assigné à :"
           className="input-field"
           placeholder="Veuillez choisir un locataire"
           value={form.values.id_assigne_a}
           onChange={(value) => {
             if (value) form.setFieldValue('id_assigne_a', value);
-            console.log("Valeur de locataire: ",value);
+            console.log('Valeur de locataire: ', value);
           }}
           data={locataires}
         />
@@ -210,23 +209,25 @@ const ActifForm = ({
           value={form.values.id_emplacement}
           onChange={(value) => {
             if (value) form.setFieldValue('id_emplacement', value);
-            console.log("Valeur de emplacement: ",value);
+            console.log('Valeur de emplacement: ', value);
           }}
           data={emplacements}
         />
       </div>
 
-        <div className="input-container">
+      <div className="input-container">
         <Checkbox
-            label="Est en entrepôt :"
-            className="checkbox-field"
-            checked={form.values.est_en_entrepot}
-            onChange={(event) => {
+          label="Est en entrepôt :"
+          className="checkbox-field"
+          checked={form.values.est_en_entrepot}
+          onChange={(event) => {
             form.setFieldValue('est_en_entrepot', event.currentTarget.checked);
-            console.log(`Valeur de est_en_entrepot: ${event.currentTarget.checked}`);
-            }}
+            console.log(
+              `Valeur de est_en_entrepot: ${event.currentTarget.checked}`
+            );
+          }}
         />
-        </div>
+      </div>
 
       <div className="input-container">
         <Select
@@ -236,7 +237,7 @@ const ActifForm = ({
           value={form.values.id_statut}
           onChange={(value) => {
             if (value) form.setFieldValue('id_statut', value);
-            console.log("Valeur de statut: ",value);
+            console.log('Valeur de statut: ', value);
           }}
           data={statuts}
         />
@@ -250,7 +251,7 @@ const ActifForm = ({
           value={form.values.id_proprietaire}
           onChange={(value) => {
             if (value) form.setFieldValue('id_proprietaire', value);
-            console.log("Valeur de proprietaire: ",value);
+            console.log('Valeur de proprietaire: ', value);
           }}
           data={proprietaires}
         />
@@ -258,13 +259,13 @@ const ActifForm = ({
 
       <div className="input-container">
         <Select
-         label="Utilisation :"
+          label="Utilisation :"
           className="input-field"
           placeholder="Veuillez choisir une utilisation"
           value={form.values.id_utilisation}
           onChange={(value) => {
             if (value) form.setFieldValue('id_utilisation', value);
-            console.log("Valeur de utilisation: ",value);
+            console.log('Valeur de utilisation: ', value);
           }}
           data={utilisations}
         />
@@ -286,28 +287,28 @@ const ActifForm = ({
       </div>
 
       <div className="input-container">
-  <TextInput
-    label="Date de retour :"
-    className="input-field"
-    value={form.values.date_retour}
-    onChange={(event) => {
-      form.setFieldValue('date_retour', event.currentTarget.value);
-      console.log(`Valeur de date_retour: ${event.currentTarget.value}`);
-    }}
-  />
-</div>
+        <TextInput
+          label="Date de retour :"
+          className="input-field"
+          value={form.values.date_retour}
+          onChange={(event) => {
+            form.setFieldValue('date_retour', event.currentTarget.value);
+            console.log(`Valeur de date_retour: ${event.currentTarget.value}`);
+          }}
+        />
+      </div>
 
-<div className="input-container">
-  <Textarea
-    label="Note :"
-    className="note-size"
-    value={form.values.note}
-    onChange={(event) => {
-      form.setFieldValue('note', event.currentTarget.value);
-      console.log(`Valeur de note: ${event.currentTarget.value}`);
-    }}
-  />
-</div>
+      <div className="input-container">
+        <Textarea
+          label="Note :"
+          className="note-size"
+          value={form.values.note}
+          onChange={(event) => {
+            form.setFieldValue('note', event.currentTarget.value);
+            console.log(`Valeur de note: ${event.currentTarget.value}`);
+          }}
+        />
+      </div>
 
       <div className="w-11/12">
         <Button

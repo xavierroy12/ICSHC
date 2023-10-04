@@ -100,7 +100,7 @@ const SingleActif = () => {
           {actif && id && (
             <Fragment>
               <h1 className="my-8 mx-8">Actif - {id}</h1>
-              <hr className="mb-8"/>
+              <hr className="mb-8" />
               <ActifForm
                 id={id}
                 actif={actif}

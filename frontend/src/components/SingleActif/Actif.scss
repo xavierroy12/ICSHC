@@ -1,26 +1,26 @@
 .input-container {
-    display: flex;
-    margin-bottom: 1rem;
-    margin-left: 4rem;
-  }
-
-  .input-label {
-    margin-right: 1rem;
-  }
-
-  .input-field {
-    min-width: 16%;
-  }
-
-  .note-size textarea{
-    width: 40rem;
-    height: 10rem;
-  }
-
-label{
-    margin-top: 0.5rem;
+  display: flex;
+  margin-bottom: 1rem;
+  margin-left: 4rem;
 }
 
-.mantine-buttons{
-    margin-bottom: 4rem;
+.input-label {
+  margin-right: 1rem;
+}
+
+.input-field {
+  min-width: 16%;
+}
+
+.note-size textarea {
+  width: 40rem;
+  height: 10rem;
+}
+
+label {
+  margin-top: 0.5rem;
+}
+
+.mantine-buttons {
+  margin-bottom: 4rem;
 }

@@ -24,6 +24,7 @@ class Actif extends Model
         'id_emplacement',
         'id_proprietaire',
         'id_utilisation',
+        'numero_commande',
         // Autres colonnes autorisées pour l'attribution de masse
     ];
 

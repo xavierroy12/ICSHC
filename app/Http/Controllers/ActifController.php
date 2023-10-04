@@ -42,11 +42,13 @@ class ActifController extends Controller
                 'adresse_mac' => 'nullable|max:255',
                 'date_retour' => 'nullable|date',
                 'note' => 'nullable',
-                'id_modele_commande' => 'required',
                 'id_statut' => 'required',
                 'id_emplacement' => 'required',
                 'id_proprietaire' => 'required',
                 'id_utilisation' => 'required',
+                'numero_commande' => 'required',
+                //'id_modele' => 'required', Might not be since it isnt required when you get commande ?
+
             ]);
 
             // Créez un nouvel actif en utilisant les données validées
@@ -109,6 +111,7 @@ class ActifController extends Controller
             'id_emplacement' => $data['id_emplacement'],
             'id_proprietaire' => $data['id_proprietaire'],
             'id_utilisation' => $data['id_utilisation'],
+            'numero_commande' => $data['numero_commande'], //Todo add this to the form
         ];
 
         $updatedDataModele = [

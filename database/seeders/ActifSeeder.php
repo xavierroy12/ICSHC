@@ -28,6 +28,8 @@ class ActifSeeder extends Seeder
             'id_emplacement' => 1,
             'id_proprietaire' => 1,
             'id_utilisation' => 1,
+            'numero_commande' => '69123456789',
+
         ]);
 
         DB::table('actif')->insert([
@@ -43,6 +45,7 @@ class ActifSeeder extends Seeder
             'id_emplacement' => 1,
             'id_proprietaire' => 1,
             'id_utilisation' => 1,
+            'numero_commande' => '42012345678',
         ]);
     }
 }

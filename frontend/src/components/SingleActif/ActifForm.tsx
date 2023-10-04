@@ -271,19 +271,28 @@ const ActifForm = ({
       </div>
 
       <div className="input-container">
-        <DateInput
-          label="Date de retour :"
-          className="input-field"
-          value={
-            form.values.date_retour
-              ? new Date(form.values.date_retour)
-              : undefined
-          }
-          onChange={(value) => {
-            form.setFieldValue('date_retour', value?.toString());
-          }}
-        />
-      </div>
+  <DateInput
+    label="Date de retour :"
+    className="input-field"
+    value={
+      form.values.date_retour
+        ? new Date(form.values.date_retour)
+        : undefined // Set to undefined if date_retour is not available
+    }
+    onChange={(value) => {
+      // Adjust the date value for the timezone offset
+      const timezoneOffset = value?.getTimezoneOffset() || 0;
+      const adjustedDate = value ? new Date(value.getTime() - timezoneOffset * 60 * 1000) : undefined;
+
+      // Format the adjusted date value as a string in the 'year-month-date' format
+      const formattedDate = adjustedDate ? adjustedDate.toISOString().slice(0, 10) : '';
+
+      // Update the form field value and log the formatted date value
+      form.setFieldValue('date_retour', formattedDate);
+      console.log(formattedDate);
+    }}
+  />
+</div>
 
       <div className="input-container">
         <Textarea

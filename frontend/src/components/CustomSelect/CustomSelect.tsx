@@ -45,6 +45,7 @@ const CustomSelect: React.FC<SearchableSelectProps> = ({
       renderInput={(params) => (
         <TextField
           {...params}
+          value={defaultValue?.label}
           label={label}
           variant="outlined"
           error={touched[field.name] && Boolean(errors[field.name])}

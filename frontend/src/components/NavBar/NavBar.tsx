@@ -1,22 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Button from '@mui/material/Button'; // Import Material-UI Button
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
 
 const NavBar = () => {
   return (
-    <div className="flex items-center justify-between flex-wrap bg-teal-500 p-6">
-      <div className="flex items-center flex-shrink-0 text-white mr-6">
+    <AppBar position="static">
+      <Toolbar>
         <Link to={`/`}>
-          <span className="font-semibold text-xl tracking-tight">ICSHC</span>
+          <Button color="inherit">
+            <span className="font-semibold text-xl tracking-tight">ICSHC</span>
+          </Button>
         </Link>
-      </div>
-      <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-        <div className="text-sm lg:flex-grow">
+        <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
           <Link to={`/dashboard`}>
             <Button
               component={Link}
               to={`/dashboard`}
-              variant="outlined"
+              color="inherit"
               className="mr-4"
             >
               Dashboard
@@ -26,7 +28,7 @@ const NavBar = () => {
             <Button
               component={Link}
               to={`/actifs`}
-              variant="outlined"
+              color="inherit"
               className="mr-4"
             >
               Actifs
@@ -36,7 +38,7 @@ const NavBar = () => {
             <Button
               component={Link}
               to={`/commande`}
-              variant="outlined"
+              color="inherit"
               className="mr-4"
             >
               Commande
@@ -46,16 +48,15 @@ const NavBar = () => {
             <Button
               component={Link}
               to={`/client`}
-              variant="outlined"
+              color="inherit"
               className="mr-4"
             >
               Client
             </Button>
           </Link>
         </div>
-      </div>
-    </div>
+      </Toolbar>
+    </AppBar>
   );
 };
-
 export default NavBar;

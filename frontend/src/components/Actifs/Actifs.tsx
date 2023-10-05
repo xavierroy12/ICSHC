@@ -64,11 +64,14 @@ const Actifs = () => {
   ];
   const options = {
     filterType: 'dropdown',
-    responsive: 'vertical',
+    responsive: 'simple',
     search: true,
     filter: true,
     tableBodyHeight: '400px',
-    onRowsSelect: (currentRowsSelected, allRowsSelected) => {
+    agination: true,
+    rowsPerPage: 100,
+    rowsPerPageOptions: [100, 200, 500],
+    onRowSelectionChange: (currentRowsSelected, allRowsSelected) => {
       const selectedIds = allRowsSelected.map(
         (row) => actifs[row.dataIndex].id
       );

@@ -1,9 +1,10 @@
-import { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import './Actif.scss';
-import { SelectItem } from '@mantine/core';
-import { Actif_Type, LightType } from './type';
+import CircularProgress from '@mui/material/CircularProgress'; // Import Material-UI CircularProgress
+import { Actif_Type, LightType, SelectItem } from './type';
 import ActifForm from './ActifForm';
+
+// Import any other Material-UI components you might need.
 
 const Actif = () => {
   const { id } = useParams<{ id: string }>();
@@ -34,58 +35,58 @@ const Actif = () => {
       )
       .then(
         ([
-          statuts,
-          modeles,
-          categories,
-          localisations,
-          locataires,
-          utilisations,
-          proprietaires,
-          actif,
+          fetchedStatuts,
+          fetchedModeles,
+          fetchedCategories,
+          fetchedEmplacements,
+          fetchedLocataires,
+          fetchedUtilisations,
+          fetchedProprietaires,
+          fetchedActif,
         ]) => {
           setStatuts(
-            statuts.map((statut: LightType) => ({
-              value: statut.id,
+            fetchedStatuts.map((statut: LightType) => ({
+              id: statut.id,
               label: statut.nom,
             }))
           );
           setModeles(
-            modeles.map((modele: LightType) => ({
-              value: modele.id,
+            fetchedModeles.map((modele: LightType) => ({
+              id: modele.id,
               label: modele.nom,
             }))
           );
           setCategories(
-            categories.map((categorie: LightType) => ({
-              value: categorie.id,
+            fetchedCategories.map((categorie: LightType) => ({
+              id: categorie.id,
               label: categorie.nom,
             }))
           );
           setEmplacements(
-            localisations.map((localisation: LightType) => ({
-              value: localisation.id,
+            fetchedEmplacements.map((localisation: LightType) => ({
+              id: localisation.id,
               label: localisation.nom,
             }))
           );
           setLocataires(
-            locataires.map((locataire: LightType) => ({
-              value: locataire.id,
+            fetchedLocataires.map((locataire: LightType) => ({
+              id: locataire.id,
               label: locataire.nom,
             }))
           );
           setUtilisations(
-            utilisations.map((utilisation: LightType) => ({
-              value: utilisation.id,
+            fetchedUtilisations.map((utilisation: LightType) => ({
+              id: utilisation.id,
               label: utilisation.nom,
             }))
           );
           setProprietaires(
-            proprietaires.map((proprietaire: LightType) => ({
-              value: proprietaire.id,
+            fetchedProprietaires.map((proprietaire: LightType) => ({
+              id: proprietaire.id,
               label: proprietaire.nom,
             }))
           );
-          setActif(actif);
+          setActif(fetchedActif);
           setLoading(false);
         }
       );
@@ -94,7 +95,7 @@ const Actif = () => {
   return (
     <div className="">
       {loading ? (
-        <div>Chargement en cours...</div>
+        <CircularProgress /> // Replace loading indicator with CircularProgress
       ) : (
         <Fragment>
           {actif && id && (

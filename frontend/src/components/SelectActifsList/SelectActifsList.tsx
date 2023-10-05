@@ -1,7 +1,17 @@
-import { Button, Loader, Select, SelectItem, Table } from '@mantine/core';
-import { IconTrash } from '@tabler/icons-react';
-import { set } from 'date-fns';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import {
+  Button,
+  CircularProgress,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 type LightActif = {
   id: number;
@@ -15,47 +25,39 @@ type Props = {
   setSelectedActifs: (actifs: LightActif[]) => void;
 };
 
-const SelectActifsList = ({
+const SelectActifsList: React.FC<Props> = ({
   selectedActifs,
   actifs,
   setSelectedActifs,
-}: Props) => {
-  const [selectData, setSelectData] = useState<SelectItem[]>([]);
+}) => {
+  const [selectData, setSelectData] = useState<
+    { value: string; label: string }[]
+  >([]);
 
   useEffect(() => {
-    const tempActif = actifs;
+    const tempActif = actifs.slice();
     selectedActifs.forEach((selected) => {
       const index = tempActif.findIndex((data) => data.id === selected.id);
-      if (index) {
+      if (index !== -1) {
         tempActif.splice(index, 1);
       }
     });
-    setSelectData(
-      actifs
-        .filter((actif: LightActif) => !selectedActifs.includes(actif))
-        .map(
-          (actif: LightActif) =>
-            ({
-              value: actif.id.toString(),
-              label: actif.numero_serie,
-            }) as SelectItem
-        )
-    );
-  }, [selectedActifs]);
 
-  const updateData = async (actif: LightActif) => {
-    console.log('updateData', actif);
-
-    await setSelectedActifs(
-      selectedActifs.filter((data) => data.id !== actif.id)
-    );
-    console.log('selectedActifs', selectedActifs);
     setSelectData(
-      selectData.concat({
+      tempActif.map((actif: LightActif) => ({
         value: actif.id.toString(),
         label: actif.numero_serie,
-      })
+      }))
     );
+  }, [selectedActifs, actifs]);
+
+  const updateData = (actif: LightActif) => {
+    const updatedActifs = selectedActifs.filter((data) => data.id !== actif.id);
+    setSelectedActifs(updatedActifs);
+    setSelectData((prevData) => [
+      ...prevData,
+      { value: actif.id.toString(), label: actif.numero_serie },
+    ]);
   };
 
   return (
@@ -64,52 +66,66 @@ const SelectActifsList = ({
       <div className="bg-gray-200 w-full h-full pt-10 px-4">
         <Select
           className="mb-8"
-          searchable
-          data={selectData}
-          placeholder="Ajouter un actif"
-          // disabled={selectData.length === 0}
-          onChange={(value) => {
-            setSelectedActifs([
-              ...selectedActifs,
-              actifs.find((actif) => actif.id.toString() === value)!,
-            ]);
+          displayEmpty
+          value=""
+          onChange={(e) => {
+            const selectedValue = e.target.value;
+            if (selectedValue) {
+              const selectedActif = actifs.find(
+                (actif) => actif.id.toString() === selectedValue
+              );
+              if (selectedActif) {
+                setSelectedActifs([...selectedActifs, selectedActif]);
+                setSelectData((prevData) =>
+                  prevData.filter((item) => item.value !== selectedValue)
+                );
+              }
+            }
           }}
-        />
-        {selectedActifs ? (
-          <Table>
-            <thead>
-              <tr>
-                <th>Nom</th>
-                <th>Numéro de série</th>
-              </tr>
-            </thead>
-            <tbody>
-              {selectedActifs.map(
-                (actif) =>
-                  actif && (
-                    <tr key={actif.id}>
-                      <td>{actif.nom}</td>
-                      <td>{actif.numero_serie}</td>
-                      <td>
-                        <Button
-                          color="red"
-                          variant="outline"
-                          size="xs"
-                          radius="xl"
-                          onClick={() => {
-                            updateData(actif);
-                          }}
-                        >
-                          <IconTrash />
-                        </Button>
-                      </td>
-                    </tr>
-                  )
-              )}
-            </tbody>
-          </Table>
+        >
+          <option value="" disabled>
+            Ajouter un actif
+          </option>
+          {selectData.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+        {selectedActifs.length > 0 ? (
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Nom</TableCell>
+                  <TableCell>Numéro de série</TableCell>
+                  <TableCell>Action</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {selectedActifs.map((actif) => (
+                  <TableRow key={actif.id}>
+                    <TableCell>{actif.nom}</TableCell>
+                    <TableCell>{actif.numero_serie}</TableCell>
+                    <TableCell>
+                      <Button
+                        color="error"
+                        variant="outlined"
+                        size="small"
+                        onClick={() => {
+                          updateData(actif);
+                        }}
+                      >
+                        <DeleteIcon />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         ) : (
-          <Loader className="m-auto" />
+          <CircularProgress className="m-auto" />
         )}
       </div>
     </div>

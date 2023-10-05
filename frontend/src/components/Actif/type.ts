@@ -49,3 +49,8 @@ export type ActifFormValues = {
   date_retour?: string;
   note?: string;
 };
+
+export type SelectItem = {
+  label: string;
+  id: number;
+}

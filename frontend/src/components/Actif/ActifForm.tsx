@@ -1,10 +1,11 @@
+import { type SyntheticEvent } from 'react';
 import { Formik, Form, Field, FormikValues } from 'formik';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { useNavigate } from 'react-router-dom';
 import { Actif_Type, SelectItem } from './type';
 import CustomSelect from '../CustomSelect';
-import { TextareaAutosize } from '@mui/material';
+import { Grid } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
@@ -100,183 +101,188 @@ const ActifForm = ({
   };
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-      {({ values, handleChange, dirty }) => (
+      {({ values, handleChange, dirty, setFieldValue }) => (
         <Form>
-          <div className="flex h-fit">
-            <div className="mx-auto mt-20 w-2/3 h-full">
-              <div className="flex justify-between">
-                <div className="input-container">
-                  <Field
-                    as={TextField}
-                    label="Nom"
-                    name="nom"
-                    className="input-label "
-                    disabled
-                  />
-                </div>
-                <div className="input-container">
-                  <Field
-                    as={TextField}
-                    label="Numéro de commande"
-                    name="numero_commande"
-                    className="input-label "
-                    disabled
-                  />
-                </div>
-              </div>
-              <div className="flex justify-between">
-                <div className="input-container">
-                  <Field
-                    as={TextField}
-                    label="Numéro de série"
-                    name="numero_serie"
-                    className="input-field"
-                    disabled
-                  />
-                </div>
-                <div className="input-container">
-                  <Field
-                    as={TextField}
-                    label="Adresse MAC"
-                    name="adresse_mac"
-                    className="input-label "
-                    disabled
-                  />
-                </div>
-              </div>
-              <div className="flex justify-between">
-                <div className="input-container">
-                  <Field
-                    className="input-field"
-                    name="modele"
-                    component={CustomSelect}
-                    options={modeles}
-                    label="Modele"
-                  />
-                </div>
-                <div className="input-container">
-                  <Field
-                    className="input-field"
-                    name="categorie"
-                    component={CustomSelect}
-                    options={categories}
-                    label="Categorie"
-                  />
-                </div>
-              </div>
-              <div className="flex justify-between">
-                <div className="input-container">
-                  <Field
-                    className="input-field"
-                    name="statut"
-                    component={CustomSelect}
-                    options={statuts}
-                    label="Statut"
-                  />
-                </div>
-                <div className="input-container">
-                  <Field
-                    className="input-field"
-                    name="assigne_a"
-                    component={CustomSelect}
-                    options={locataires}
-                    label="Locataire"
-                  />
-                </div>
-              </div>
-              <div className="flex justify-between">
-                <div className="input-container">
-                  <Field
-                    className="input-field"
-                    name="emplacement"
-                    component={CustomSelect}
-                    options={emplacements}
-                    label="Emplacement"
-                  />
-                </div>
-                <div>
-                  <Field
-                    type="checkbox"
-                    name="en_entrepot"
-                    id="en_entrepot"
-                    className="input-field"
-                    checked={values.en_entrepot}
-                    onChange={handleChange}
-                  />
-                  <label htmlFor="en_entrepot">En entrepot</label>
-                </div>
-              </div>
-              <div className="flex justify-between">
-                <div className="input-container">
-                  <Field
-                    className="input-field"
-                    name="utilisation"
-                    component={CustomSelect}
-                    options={utilisations}
-                    label="Utilisation"
-                  />
-                </div>
-                <div className="input-container">
-                  <Field
-                    className="input-field"
-                    name="proprietaire"
-                    component={CustomSelect}
-                    options={proprietaires}
-                    label="Proprietaire"
-                  />
-                </div>
-              </div>
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+              <Field
+                as={TextField}
+                label="Nom"
+                name="nom"
+                className="input-label "
+                disabled
+                sx={{ width: 300 }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Field
+                as={TextField}
+                label="Numéro de commande"
+                name="numero_commande"
+                className="input-label "
+                disabled
+                sx={{ width: 300 }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Field
+                as={TextField}
+                label="Numéro de série"
+                name="numero_serie"
+                className="input-field"
+                disabled
+                sx={{ width: 300 }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Field
+                as={TextField}
+                label="Adresse MAC"
+                name="adresse_mac"
+                className="input-label "
+                disabled
+                sx={{ width: 300 }}
+              />
+            </Grid>
 
-              <div className="flex justify-between">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <div className="input-container">
-                    <Field
-                      component={DatePicker}
-                      label="Date de création"
-                      format="DD/MM/YYYY"
-                      name="date_creation"
-                      className="input-label "
-                      disabled
-                    />
-                  </div>
-                  <div className="input-container">
-                    <Field
-                      component={DatePicker}
-                      label="Date de retour"
-                      format="DD/MM/YYYY"
-                      name="date_retour"
-                      className="input-label "
-                    />
-                  </div>
-                </LocalizationProvider>
-              </div>
-              <div className="input-container">
+            <Grid item xs={6}>
+              <Field
+                className="input-field"
+                name="modele"
+                component={CustomSelect}
+                options={modeles}
+                label="Modele"
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Field
+                className="input-field"
+                name="categorie"
+                component={CustomSelect}
+                options={categories}
+                label="Categorie"
+              />
+            </Grid>
+
+            <Grid item xs={6}>
+              <Field
+                className="input-field"
+                name="statut"
+                component={CustomSelect}
+                options={statuts}
+                label="Statut"
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Field
+                className="input-field"
+                name="assigne_a"
+                component={CustomSelect}
+                options={locataires}
+                label="Locataire"
+              />
+            </Grid>
+
+            <Grid item xs={6}>
+              <Field
+                className="input-field"
+                name="emplacement"
+                component={CustomSelect}
+                options={emplacements}
+                label="Emplacement"
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Field
+                type="checkbox"
+                name="en_entrepot"
+                id="en_entrepot"
+                className="mt-5 ml-2"
+                checked={values.en_entrepot}
+                onChange={(event: SyntheticEvent) => {
+                  const target = event.target as HTMLInputElement;
+                  setFieldValue('en_entrepot', target.checked);
+                }}
+              />
+              <label htmlFor="en_entrepot" className="ml-4">
+                En entrepot
+              </label>
+            </Grid>
+
+            <Grid item xs={6}>
+              <Field
+                className="input-field"
+                name="utilisation"
+                component={CustomSelect}
+                options={utilisations}
+                label="Utilisation"
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Field
+                className="input-field"
+                name="proprietaire"
+                component={CustomSelect}
+                options={proprietaires}
+                label="Proprietaire"
+              />
+            </Grid>
+
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Grid item xs={6}>
                 <Field
-                  as={TextField}
-                  label="Commentaires"
-                  id="note"
-                  name="note"
-                  multiline
-                  rows={4}
-                  value={values.note}
-                  onChange={handleChange}
+                  component={DatePicker}
+                  label="Date de création"
+                  format="DD/MM/YYYY"
+                  name="date_creation"
+                  className="input-label "
+                  disabled
+                  sx={{ width: 300 }}
                 />
-              </div>
-
-              <div className="w-11/12">
-                <Button
-                  className="my-5 mx-5 flex float-right"
-                  variant="contained"
-                  color="primary"
-                  size="medium"
-                  type="submit"
-                  disabled={!dirty}
-                >
-                  Sauvegarder
-                </Button>
-              </div>
-            </div>
-          </div>
+              </Grid>
+              <Grid item xs={6}>
+                <Field
+                  component={DatePicker}
+                  label="Date de retour"
+                  format="DD/MM/YYYY"
+                  name="date_retour"
+                  className="input-label "
+                  sx={{ width: 300 }}
+                  onChange={(value: Date) => {
+                    setFieldValue(
+                      'date_retour',
+                      value.toISOString().substring(0, 10)
+                    );
+                  }}
+                />
+              </Grid>
+            </LocalizationProvider>
+            <Grid item xs={12}>
+              <Field
+                as={TextField}
+                label="Commentaires"
+                id="note"
+                name="note"
+                multiline
+                rows={4}
+                value={values.note}
+                onChange={handleChange}
+                sx={{ width: "100%" }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                className="my-5 mx-5 flex float-right"
+                variant="contained"
+                color="primary"
+                size="medium"
+                type="submit"
+                disabled={!dirty}
+              >
+                Sauvegarder
+              </Button>
+            </Grid>
+          </Grid>
         </Form>
       )}
     </Formik>

@@ -98,28 +98,32 @@ const Actif = () => {
       {loading ? (
         <CircularProgress /> // Replace loading indicator with CircularProgress
       ) : (
-        <Fragment>
+        <div className="mx-auto mt-8">
           {actif && id && (
             <Fragment>
-              <Typography variant="h2" className="my-8 mx-8">
-                Actif - {id}
-              </Typography>
-              <hr className="mb-8" />
-              <ActifForm
-                id={id}
-                actif={actif}
-                statuts={statuts}
-                modeles={modeles}
-                categories={categories}
-                emplacements={emplacements}
-                locataires={locataires}
-                utilisations={utilisations}
-                proprietaires={proprietaires}
-              />
+              <div className="mx-8 ">
+                <Typography variant="h2" className="my-8 mx-auto">
+                  Actif: {actif.nom}
+                </Typography>
+                <hr />
+                <div className="px-4 my-4 py-4 bg-slate-100 w-2/3 mx-auto">
+                  <ActifForm
+                    id={id}
+                    actif={actif}
+                    statuts={statuts}
+                    modeles={modeles}
+                    categories={categories}
+                    emplacements={emplacements}
+                    locataires={locataires}
+                    utilisations={utilisations}
+                    proprietaires={proprietaires}
+                  />
+                </div>
+              </div>
             </Fragment>
           )}
           <hr className="mb-8" />
-        </Fragment>
+        </div>
       )}
     </div>
   );

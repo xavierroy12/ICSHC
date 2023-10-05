@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { SelectItem } from '../Actif/type';
 
+
 interface SearchableSelectProps extends FieldProps {
   options: SelectItem[];
   label: string;
@@ -15,17 +16,9 @@ const CustomSelect: React.FC<SearchableSelectProps> = ({
   options,
   label,
 }) => {
-  const [defaultValue, setDefaultValue] = useState<SelectItem>();
+
   const [inputValue, setInputValue] = useState<string>('');
 
-  useEffect(() => {
-    if (field.value) {
-      setDefaultValue(options.find((option) => option.id === field.value));
-      if (defaultValue) {
-        setInputValue(defaultValue.label);
-      }
-    }
-  }, [field.value]);
 
   return (
     <Autocomplete
@@ -33,9 +26,9 @@ const CustomSelect: React.FC<SearchableSelectProps> = ({
       options={options}
       sx={{ width: 300 }}
       disableClearable
+        defaultValue={options[field.value-1]}
       getOptionLabel={(option) => option.label}
       inputValue={inputValue}
-      value={defaultValue}
       onChange={(_, newValue) => {
         setFieldValue(field.name, newValue);
       }}
@@ -45,7 +38,6 @@ const CustomSelect: React.FC<SearchableSelectProps> = ({
       renderInput={(params) => (
         <TextField
           {...params}
-          value={defaultValue?.label}
           label={label}
           variant="outlined"
           error={touched[field.name] && Boolean(errors[field.name])}

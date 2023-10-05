@@ -99,6 +99,46 @@ const ActifForm = ({
       console.error('Error saving data:', error);
     }
   };
+
+  const handleReception = (values: FormikValues) => {
+    try {
+      const updatedData = {
+        id_categorie: values.categorie.id || values.categorie,
+        en_entrepot: true,
+        date_retour: values.date_retour,
+        note: values.note,
+        id_assigne_a: values.assigne_a.id || values.assigne_a,
+        id_modele: values.modele.id || values.modele,
+        id_statut: 1,
+        id_emplacement: values.emplacement.id || values.emplacement,
+        id_proprietaire: values.proprietaire.id || values.proprietaire,
+        id_utilisation: values.utilisation.id || values.utilisation,
+      };
+
+      fetch(`http://localhost:8000/api/actif/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData),
+      })
+        .then((response) => {
+          if (response.ok) {
+            alert('Données sauvegardées avec succès');
+            console.log('Données sauvegardées avec succès: ', updatedData);
+            navigate('/actifs');
+          } else {
+            console.error('Error saving data:', response.statusText);
+            console.log('CA NE FONCTIONNE PAS ', updatedData);
+          }
+        })
+        .catch((error) => {
+          console.error('Error saving data:', error);
+        });
+    } catch (error) {
+      console.error('Error saving data:', error);
+    }
+  };
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       {({ values, handleChange, dirty, setFieldValue }) => (

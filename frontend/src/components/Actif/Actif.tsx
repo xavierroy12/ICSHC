@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress'; // Import Material-UI CircularProgress
 import { Actif_Type, LightType, SelectItem } from './type';
 import ActifForm from './ActifForm';
+import { Typography } from '@mui/material';
 
 // Import any other Material-UI components you might need.
 
@@ -100,7 +101,9 @@ const Actif = () => {
         <Fragment>
           {actif && id && (
             <Fragment>
-              <h1 className="my-8 mx-8">Actif - {id}</h1>
+              <Typography variant="h2" className="my-8 mx-8">
+                Actif - {id}
+              </Typography>
               <hr className="mb-8" />
               <ActifForm
                 id={id}

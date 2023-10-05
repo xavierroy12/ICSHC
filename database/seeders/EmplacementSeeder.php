@@ -24,9 +24,14 @@ class EmplacementSeeder extends Seeder
             'numero_civique' => 194,
             'adresse' => 'Rue de l\'Église',
         ]);
+        DB::table('emplacement')->insert([
+            'nom' => '099 - Entrepot East Angue',
+            'numero_civique' => 123,
+            'adresse' => 'Rue des Entreprises',
+        ]);
 
         DB::table('emplacement')->insert([
-            'nom' => '007 - École de la Feuille-d\'Or',
+            'nom' => '007 - Polyvalente Louis Saint-Laurent',
             'numero_civique' => 215,
             'adresse' => 'Rue de l\'Aréna',
         ]);

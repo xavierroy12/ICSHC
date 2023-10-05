@@ -106,7 +106,7 @@ const Actif = () => {
                   Actif: {actif.nom}
                 </Typography>
                 <hr />
-                <div className="px-4 my-4 py-4 bg-slate-100 w-2/3 mx-auto">
+                <div className="p-4 my-4 bg-slate-100 w-2/3 mx-auto">
                   <ActifForm
                     id={id}
                     actif={actif}
@@ -122,7 +122,7 @@ const Actif = () => {
               </div>
             </Fragment>
           )}
-          <hr className="mb-8" />
+          <hr />
         </div>
       )}
     </div>

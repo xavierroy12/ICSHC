@@ -2,7 +2,7 @@ import { type SyntheticEvent } from 'react';
 import { Formik, Form, Field, FormikValues } from 'formik';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { useNavigate, useParams  } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Actif_Type, SelectItem } from './type';
 import CustomSelect from '../CustomSelect';
 import { Grid } from '@mui/material';
@@ -34,7 +34,6 @@ const ActifForm = ({
   proprietaires,
 }: Props) => {
   const navigate = useNavigate();
-
 
   const initialValues = {
     numero_commande: actif.numero_commande,
@@ -145,7 +144,6 @@ const ActifForm = ({
                 sx={{ width: 300 }}
               />
             </Grid>
-
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -164,7 +162,6 @@ const ActifForm = ({
                 label="Categorie"
               />
             </Grid>
-
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -183,7 +180,6 @@ const ActifForm = ({
                 label="Locataire"
               />
             </Grid>
-
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -209,7 +205,6 @@ const ActifForm = ({
                 En entrepot
               </label>
             </Grid>
-
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -228,7 +223,6 @@ const ActifForm = ({
                 label="Proprietaire"
               />
             </Grid>
-
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <Grid item xs={6}>
                 <Field
@@ -268,7 +262,7 @@ const ActifForm = ({
                 rows={4}
                 value={values.note}
                 onChange={handleChange}
-                sx={{ width: "100%" }}
+                sx={{ width: '100%' }}
               />
             </Grid>
             <Grid item xs={12}>

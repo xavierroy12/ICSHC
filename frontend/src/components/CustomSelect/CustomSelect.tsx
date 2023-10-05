@@ -4,10 +4,10 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { SelectItem } from '../Actif/type';
 
-
 interface SearchableSelectProps extends FieldProps {
   options: SelectItem[];
   label: string;
+  isClearable?: boolean;
 }
 
 const CustomSelect: React.FC<SearchableSelectProps> = ({
@@ -15,18 +15,17 @@ const CustomSelect: React.FC<SearchableSelectProps> = ({
   form: { touched, errors, setFieldValue },
   options,
   label,
+  isClearable = false,
 }) => {
-
   const [inputValue, setInputValue] = useState<string>('');
-
 
   return (
     <Autocomplete
       placeholder={label}
       options={options}
       sx={{ width: 300 }}
-      disableClearable
-        defaultValue={options[field.value-1]}
+      disableClearable={!isClearable}
+      defaultValue={options[field.value - 1]}
       getOptionLabel={(option) => option.label}
       inputValue={inputValue}
       onChange={(_, newValue) => {

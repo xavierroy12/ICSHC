@@ -10,6 +10,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 type Props = {
   id: string;
   actif: Actif_Type;
@@ -46,7 +47,7 @@ const ActifForm = ({
     utilisation: actif.id_utilisation.toString(),
     categorie: actif.id_categorie.toString(),
     modele: actif.id_modele.toString(),
-    assigne_a: actif.id_client.toString(),
+    assigne_a: actif.id_client?.toString(),
     en_entrepot: actif.en_entrepot || false,
     date_creation: actif.date_creation,
     date_retour: actif.date_retour,
@@ -62,7 +63,7 @@ const ActifForm = ({
         en_entrepot: values.en_entrepot,
         date_retour: values.date_retour,
         note: values.note,
-        id_assigne_a: values.assigne_a.id || values.assigne_a,
+        id_assigne_a: values.assigne_a?.id || values.assigne_a || '',
         id_modele: values.modele.id || values.modele,
         id_statut: values.statut.id || values.statut,
         id_emplacement: values.emplacement.id || values.emplacement,
@@ -217,7 +218,8 @@ const ActifForm = ({
                 name="assigne_a"
                 component={CustomSelect}
                 options={locataires}
-                label="Locataire"
+                label="Assingné à"
+                isClearable={true}
               />
             </Grid>
             <Grid item xs={6}>
@@ -271,6 +273,11 @@ const ActifForm = ({
                   format="DD/MM/YYYY"
                   name="date_creation"
                   className="input-label "
+                  value={
+                    values.date_creation
+                      ? dayjs(values.date_creation)
+                      : undefined
+                  }
                   disabled
                   sx={{ width: 300 }}
                 />
@@ -282,11 +289,18 @@ const ActifForm = ({
                   format="DD/MM/YYYY"
                   name="date_retour"
                   className="input-label "
+                  clearable
                   sx={{ width: 300 }}
+                  slotProps={{
+                    field: { clearable: true },
+                  }}
+                  value={
+                    values.date_retour ? dayjs(values.date_retour) : undefined
+                  }
                   onChange={(value: Date) => {
                     setFieldValue(
                       'date_retour',
-                      value.toISOString().substring(0, 10)
+                      value?.toISOString().substring(0, 10) || ''
                     );
                   }}
                 />
@@ -295,7 +309,7 @@ const ActifForm = ({
             <Grid item xs={12}>
               <Field
                 as={TextField}
-                label="Commentaires"
+                label="Note"
                 id="note"
                 name="note"
                 multiline

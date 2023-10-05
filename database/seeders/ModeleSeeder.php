@@ -14,12 +14,62 @@ class ModeleSeeder extends Seeder
     public function run(): void
     {
         DB::table('modele')->insert([
-            'nom' => 'DELL Inspire',
-            'stockage' => '256 Go',
-            'processeur' => 'Intel Core i7',
-            'memoire_vive' => '16 Go',
-            'taille' => '15 pouces',
-            'id_type_modele' => 1,
+            [
+                'nom' => 'Dell Latitude 3520',
+                'stockage' => '256 Go',
+                'processeur' => 'Intel Core i7',
+                'memoire_vive' => '16 Go',
+                'taille' => '15 pouces',
+                'id_type_modele' => 1,
+            ],
+            [
+                'nom' => 'Dell Latitude 5420',
+                'stockage' => '512 Go',
+                'processeur' => 'Intel Core i7',
+                'memoire_vive' => '16 Go',
+                'taille' => '14 pouces',
+                'id_type_modele' => 1,
+            ],
+            [
+                'nom' => 'Dell Latitude 7320',
+                'stockage' => '1 To',
+                'processeur' => 'Intel Core i7',
+                'memoire_vive' => '16 Go',
+                'taille' => '13 pouces',
+                'id_type_modele' => 1,
+            ],
+            [
+                'nom' => 'HP EliteBook 840 G8',
+                'stockage' => '512 Go',
+                'processeur' => 'Intel Core i7',
+                'memoire_vive' => '16 Go',
+                'taille' => '14 pouces',
+                'id_type_modele' => 1,
+            ],
+            [
+                'nom' => 'HP Pavilion 15',
+                'stockage' => '1 To',
+                'processeur' => 'AMD Ryzen 7',
+                'memoire_vive' => '16 Go',
+                'taille' => '15 pouces',
+                'id_type_modele' => 1,
+            ],
+            [
+                'nom' => 'HP Spectre x360',
+                'stockage' => '512 Go',
+                'processeur' => 'Intel Core i7',
+                'memoire_vive' => '16 Go',
+                'taille' => '13 pouces',
+                'id_type_modele' => 1,
+            ],
+            [
+                'nom' => 'Acer Chromebook Spin 713',
+                'stockage' => '256 Go',
+                'processeur' => 'Intel Core i5',
+                'memoire_vive' => '8 Go',
+                'taille' => '13,5 pouces',
+                'id_type_modele' => 1,
+            ],
         ]);
 
         DB::table('modele')->insert([

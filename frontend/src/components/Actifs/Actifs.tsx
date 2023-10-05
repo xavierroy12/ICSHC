@@ -67,10 +67,10 @@ const Actifs = () => {
     responsive: 'simple',
     search: true,
     filter: true,
-    tableBodyHeight: '400px',
+    tableBodyHeight: '10%',
     agination: true,
     rowsPerPage: 100,
-    rowsPerPageOptions: [100, 200, 500],
+    rowsPerPageOptions: [15, 50, 100],
     onRowSelectionChange: (currentRowsSelected, allRowsSelected) => {
       const selectedIds = allRowsSelected.map(
         (row) => actifs[row.dataIndex].id

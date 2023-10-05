@@ -10,8 +10,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { FormikHelpers } from 'formik';
-
+import dayjs from 'dayjs';
 type Props = {
   id: string;
   actif: Actif_Type;
@@ -48,7 +47,7 @@ const ActifForm = ({
     utilisation: actif.id_utilisation.toString(),
     categorie: actif.id_categorie.toString(),
     modele: actif.id_modele.toString(),
-    assigne_a: actif.id_client.toString(),
+    assigne_a: actif.id_client?.toString(),
     en_entrepot: actif.en_entrepot || false,
     date_creation: actif.date_creation,
     date_retour: actif.date_retour,
@@ -69,7 +68,7 @@ const ActifForm = ({
         en_entrepot: values.en_entrepot,
         date_retour: values.date_retour,
         note: values.note,
-        id_assigne_a: values.assigne_a.id || values.assigne_a,
+        id_assigne_a: values.assigne_a?.id || values.assigne_a || '',
         id_modele: values.modele.id || values.modele,
         id_statut: values.statut.id || values.statut,
         id_emplacement: values.emplacement.id || values.emplacement,
@@ -106,6 +105,47 @@ const ActifForm = ({
       console.error('Error saving data:', error);
     }
   };
+
+  const handleReception = (values: FormikValues) => {
+    try {
+      const updatedData = {
+        id_categorie: values.categorie.id || values.categorie,
+        en_entrepot: true,
+        date_retour: values.date_retour,
+        note: values.note,
+        id_assigne_a: values.assigne_a.id || values.assigne_a,
+        id_modele: values.modele.id || values.modele,
+        id_statut: 1,
+        id_emplacement: values.emplacement.id || values.emplacement,
+        id_proprietaire: values.proprietaire.id || values.proprietaire,
+        id_utilisation: values.utilisation.id || values.utilisation,
+      };
+
+      fetch(`http://localhost:8000/api/actif/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData),
+      })
+        .then((response) => {
+          if (response.ok) {
+            alert('Données sauvegardées avec succès');
+            console.log('Données sauvegardées avec succès: ', updatedData);
+            navigate('/actifs');
+          } else {
+            console.error('Error saving data:', response.statusText);
+            console.log('CA NE FONCTIONNE PAS ', updatedData);
+          }
+        })
+        .catch((error) => {
+          console.error('Error saving data:', error);
+        });
+    } catch (error) {
+      console.error('Error saving data:', error);
+    }
+  };
+
 
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
@@ -192,7 +232,8 @@ const ActifForm = ({
                 name="assigne_a"
                 component={CustomSelect}
                 options={locataires}
-                label="Locataire"
+                label="Assingné à"
+                isClearable={true}
               />
             </Grid>
 
@@ -274,6 +315,18 @@ const ActifForm = ({
                     handleChange(date?.format('YYYY-MM-DD'));
                   }}
                   sx={{ width: 300 }}
+                  slotProps={{
+                    field: { clearable: true },
+                  }}
+                  value={
+                    values.date_retour ? dayjs(values.date_retour) : undefined
+                  }
+                  onChange={(value: Date) => {
+                    setFieldValue(
+                      'date_retour',
+                      value?.toISOString().substring(0, 10) || ''
+                    );
+                  }}
                 />
               </Grid>
             </LocalizationProvider>
@@ -281,7 +334,7 @@ const ActifForm = ({
             <Grid item xs={12}>
               <Field
                 as={TextField}
-                label="Commentaires"
+                label="Note"
                 id="note"
                 name="note"
                 multiline

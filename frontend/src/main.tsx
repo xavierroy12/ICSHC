@@ -1,18 +1,13 @@
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
-import { MantineProvider } from '@mantine/core';
+import { ThemeProvider } from '@emotion/react';
+import { CssBaseline } from '@mui/material';
+import theme from './theme';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <MantineProvider
-    withGlobalStyles
-    withNormalizeCSS
-    theme={{
-      fontFamily: 'Verdana, sans-serif',
-      fontFamilyMonospace: 'Monaco, Courier, monospace',
-      headings: { fontFamily: 'Greycliff CF, sans-serif' },
-    }}
-  >
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
     <App />
-  </MantineProvider>
+  </ThemeProvider>
 );

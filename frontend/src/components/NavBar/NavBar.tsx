@@ -1,5 +1,6 @@
-import { Button } from '@mantine/core';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import Button from '@mui/material/Button'; // Import Material-UI Button
 
 const NavBar = () => {
   return (
@@ -12,22 +13,42 @@ const NavBar = () => {
       <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
         <div className="text-sm lg:flex-grow">
           <Link to={`/dashboard`}>
-            <Button variant="link" color="white" className="mr-4">
+            <Button
+              component={Link}
+              to={`/dashboard`}
+              variant="outlined"
+              className="mr-4"
+            >
               Dashboard
             </Button>
           </Link>
           <Link to={`/actifs`}>
-            <Button variant="link" color="white" className="mr-4">
+            <Button
+              component={Link}
+              to={`/actifs`}
+              variant="outlined"
+              className="mr-4"
+            >
               Actifs
             </Button>
           </Link>
           <Link to={`/commande`}>
-            <Button variant="link" color="white" className="mr-4">
+            <Button
+              component={Link}
+              to={`/commande`}
+              variant="outlined"
+              className="mr-4"
+            >
               Commande
             </Button>
           </Link>
           <Link to={`/client`}>
-            <Button variant="link" color="white" className="mr-4">
+            <Button
+              component={Link}
+              to={`/client`}
+              variant="outlined"
+              className="mr-4"
+            >
               Client
             </Button>
           </Link>

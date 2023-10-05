@@ -44,7 +44,7 @@ const ModifyActifsForm = ({
   const handleSubmit = (values: FormikValues) => {
     console.log(values);
     const updateData = {
-      id: selectedRows,
+      ids: selectedRows.map((id) => parseInt(id)),
       modele: values.modele?.id,
       categorie: values.categorie?.id,
       statut: values.statut?.id,
@@ -56,7 +56,36 @@ const ModifyActifsForm = ({
       date_retour: values.date_retour,
       note: values.note,
     };
-    console.log(updateData);
+    console.log(selectedRows);
+    /*fetch(`http://localhost:8000/api/actifs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData), // Send the updated data with the mapped field names
+      })
+        .then((response) => {
+          if (response.ok) {
+            // Display a success message to the user
+            alert('Données sauvegardées avec succès');
+            console.log('Données sauvegardées avec succès: ', updatedData);
+            navigate('/actifs');
+          } else {
+            // Handle errors if the API request fails
+            console.error('Error saving data:', response.statusText);
+            console.log('CA NE FONCTIONNE PAS ', updatedData);
+          }
+        })
+        .catch((error) => {
+          // Handle errors if the API request fails
+          console.error('Error saving data:', error);
+        });
+    } catch (error) {
+      // Handle errors if the API request fails
+      console.error('Error saving data:', error);
+    }
+  };*/
+
   };
 
   return (

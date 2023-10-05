@@ -42,9 +42,9 @@ const ModifyActifsForm = ({
   };
 
   const handleSubmit = (values: FormikValues) => {
-    console.log(values);
+    console.log(selectedRows);
     const updateData = {
-      id: selectedRows,
+      ids: selectedRows,
       modele: values.modele?.id,
       categorie: values.categorie?.id,
       statut: values.statut?.id,
@@ -56,7 +56,6 @@ const ModifyActifsForm = ({
       date_retour: values.date_retour,
       note: values.note,
     };
-    console.log(updateData);
   };
 
   return (

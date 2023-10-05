@@ -76,7 +76,6 @@ const SelectActifsList: React.FC<Props> = ({
       { value: actif.id.toString(), label: actif.numero_serie },
     ]);
   };
-  console.log(selectedActifs);
   return (
     <div className=" mt-20 w-1/3 mr-12">
       <Typography variant="h4">Actifs sélectionnés</Typography>

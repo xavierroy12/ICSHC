@@ -54,65 +54,67 @@ const ActifForm = ({
     note: actif.note,
   };
 
-  const handleReception = (values: FormikValues) => {
-    // Update the form values
-        const updatedValues = {
-        ...values,
-        en_entrepot: true, // Check the checkbox
-        statut: '2', // Set statut to '2'
-        assigne_a: '', // Set assigne_a to ''
-        };
-
-        console.log('Reception');
-    };
 
   const handleSubmit = (values: FormikValues) => {
-    try {
-      // Map the form values to match the expected field names in your Laravel API
-      console.log(values);
-      const updatedData = {
-        id_categorie: values.categorie.id || values.categorie,
-        en_entrepot: values.en_entrepot,
-        date_retour: values.date_retour,
-        note: values.note,
-        id_assigne_a: values.assigne_a?.id || values.assigne_a || '',
-        id_modele: values.modele.id || values.modele,
-        id_statut: values.statut.id || values.statut,
-        id_emplacement: values.emplacement.id || values.emplacement,
-        id_proprietaire: values.proprietaire.id || values.proprietaire,
-        id_utilisation: values.utilisation.id || values.utilisation,
-      };
+    // Map the form values to match the expected field names in your Laravel API
+    const updatedData = {
+      id_categorie: values.categorie.id || values.categorie,
+      en_entrepot: values.en_entrepot,
+      date_retour: values.date_retour,
+      note: values.note,
+      id_assigne_a: values.assigne_a?.id || values.assigne_a || '',
+      id_modele: values.modele.id || values.modele,
+      id_statut: values.statut.id || values.statut,
+      id_emplacement: values.emplacement.id || values.emplacement,
+      id_proprietaire: values.proprietaire.id || values.proprietaire,
+      id_utilisation: values.utilisation.id || values.utilisation,
+    };
 
-      // Make an API request to update the data in the database
+    handleUpdate(updatedData);
+  };
+
+  const handleReception = (values: FormikValues) => {
+    const updatedData = {
+      id_categorie: values.categorie.id || values.categorie,
+      en_entrepot: true,
+      date_retour: values.date_retour,
+      note: values.note,
+      id_assigne_a: '',
+      id_modele: values.modele.id || values.modele,
+      id_statut: 1,
+      id_emplacement: values.emplacement.id || values.emplacement,
+      id_proprietaire: values.proprietaire.id || values.proprietaire,
+      id_utilisation: values.utilisation.id || values.utilisation,
+    };
+    handleUpdate(updatedData);
+  };
+
+  const handleUpdate = (values: FormikValues) => {
+    try {
       fetch(`http://localhost:8000/api/actif/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(updatedData), // Send the updated data with the mapped field names
+        body: JSON.stringify(values),
       })
         .then((response) => {
           if (response.ok) {
-            // Display a success message to the user
             alert('Données sauvegardées avec succès');
-            console.log('Données sauvegardées avec succès: ', updatedData);
+            console.log('Données sauvegardées avec succès: ', values);
             navigate('/actifs');
           } else {
-            // Handle errors if the API request fails
             console.error('Error saving data:', response.statusText);
-            console.log('CA NE FONCTIONNE PAS ', updatedData);
+            console.log('CA NE FONCTIONNE PAS ', values);
           }
         })
         .catch((error) => {
-          // Handle errors if the API request fails
           console.error('Error saving data:', error);
         });
     } catch (error) {
-      // Handle errors if the API request fails
       console.error('Error saving data:', error);
     }
   };
-
 
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
@@ -316,20 +318,16 @@ const ActifForm = ({
               >
                 Sauvegarder
               </Button>
-
-              <Grid item xs={12}>
-                <Button
-                    className="my-5 mx-4 flex float-right"
-                    variant="contained"
-                    color="primary"
-                    size="medium"
-                    onClick={() => handleReception(values)} // Call handleReception when "Réception" is clicked
-                >
-                    Réception
-                </Button>
-                </Grid>
-
-          </Grid>
+              <Button
+                className="my-5 mx-5 flex float-right"
+                variant="contained"
+                color="primary"
+                size="medium"
+                onClick={()=>handleReception(values)}
+              >
+                Reception
+              </Button>
+            </Grid>
           </Grid>
         </Form>
       )}

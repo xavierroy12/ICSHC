@@ -4,6 +4,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { Formik, Field, FormikValues, Form } from 'formik';
 import { SyntheticEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CustomSelect from '../CustomSelect';
 import { SelectItem } from '../Actif/type';
 
@@ -28,6 +29,7 @@ const ModifyActifsForm = ({
   utilisations,
   proprietaires,
 }: Props) => {
+    const navigate = useNavigate();
   const initialValues = {
     modele: '',
     categorie: '',
@@ -43,12 +45,12 @@ const ModifyActifsForm = ({
 
   const handleSubmit = (values: FormikValues) => {
     console.log(selectedRows);
-    const updateData = {
+    const updatedData = {
       ids: selectedRows,
       modele: values.modele?.id,
       categorie: values.categorie?.id,
       statut: values.statut?.id,
-      assigne_a: values.assigne_a?.id,
+      //assigne_a: values.assigne_a?.id,
       emplacement: values.emplacement?.id,
       en_entrepot: values.en_entrepot,
       utilisation: values.utilisation?.id,
@@ -56,7 +58,38 @@ const ModifyActifsForm = ({
       date_retour: values.date_retour,
       note: values.note,
     };
-  };
+    console.log(updatedData);
+    fetch(`http://localhost:8000/api/actifs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData), // Send the updated data with the mapped field names
+      })
+        .then((response) => {
+          if (response.ok) {
+            // Display a success message to the user
+            alert('Données sauvegardées avec succès');
+            console.log('Données sauvegardées avec succès: ', updatedData);
+            navigate('/actifs');
+          } else {
+            // Handle errors if the API request fails
+            console.error('Error saving data:', response.statusText);
+            console.log('CA NE FONCTIONNE PAS ', updatedData);
+          }
+        })
+        .catch((error) => {
+          // Handle errors if the API request fails
+          console.error('Error saving data:', error);
+        });
+
+    }
+
+
+
+
+
+
 
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
@@ -81,21 +114,12 @@ const ModifyActifsForm = ({
                 isClearable
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <Field
                 name="statut"
                 component={CustomSelect}
                 options={statuts}
                 label="Statut"
-                isClearable
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Field
-                name="assigne_a"
-                component={CustomSelect}
-                options={locataires}
-                label="Locataire"
                 isClearable
               />
             </Grid>

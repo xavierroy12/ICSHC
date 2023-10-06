@@ -28,6 +28,37 @@ class ActifController extends Controller
         //
     }
 
+    public function updateMultiple(Request $request)
+    {
+            $data = $request->all();
+            $arrayId = $data['ids'];
+
+            //request object with all possible fields, if not set, set to null
+            $requestData = [
+                'en_entrepot' => isset($data['en_entrepot']) ? $data['en_entrepot'] : null,
+                'date_retour' => isset($data['date_retour']) ? $data['date_retour'] : null,
+                'note' => isset($data['note']) ? $data['note'] : null,
+                'id_modele' => isset($data['modele']) ? $data['modele'] : null,
+                'id_statut' => isset($data['statut']) ? $data['statut'] : null,
+                'id_emplacement' => isset($data['emplacement']) ? $data['emplacement'] : null,
+                'id_proprietaire' => isset($data['proprietaire']) ? $data['proprietaire'] : null,
+                'id_utilisation' => isset($data['utilisation']) ? $data['utilisation'] : null,
+            ];
+            $filteredData = array_filter($requestData, function ($value) {
+                return $value !== null;
+            });
+
+            //update each actif with the request data
+            foreach ($arrayId as $id) {
+                $actif = Actif::findOrFail($id);
+                if (!$actif->update($filteredData)) {
+                    return response()->json(['message' => 'Erreur lors de la mise à jour de l\'actif'], 500);
+                }
+            }
+            return response()->json(['message' => 'Actifs mis à jour avec succès'], 200);
+
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -138,7 +169,8 @@ class ActifController extends Controller
         // Check if the Actif object is actually updated
         print_r($actif);
 
-        // Save the updated Actif object to the database
+        // Save the updated Actif object to the database,
+
         if ($actif->save()) {
             // Return a success response
             return response()->json(['message' => 'Actif mis à jour avec succès'], 200);
@@ -146,6 +178,7 @@ class ActifController extends Controller
             // Return an error response
             return response()->json(['message' => "Erreur lors de la mise à jour de l'actif"], 500);
         }
+
     } catch (\Exception $e) {
         // Return an error response with the error message
         return response()->json(['message' => $e->getMessage()], 500);

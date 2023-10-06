@@ -69,12 +69,13 @@ class StatutController extends Controller
     }
     public function lightShow()
     {
-        $statuts = Statut::All()->map(function ($statut) {
+        $statuts = Statut::where('nom', '!=', 'Archivé')->get()->map(function ($statut) {
             return [
                 "id" => $statut->id,
                 "nom" => $statut->nom,
             ];
         });
+
         return response()->json($statuts);
     }
 }

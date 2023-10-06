@@ -54,6 +54,36 @@ const ActifForm = ({
     note: actif.note,
   };
 
+  const handleArchive = (values: FormikValues) => {
+    const confirmed = window.confirm(
+      'Attention! Si vous retirez un actif du trafic, il ne sera plus en fonction et accessible dans la liste des actifs. Êtes-vous certain de vouloir faire cette action?'
+    );
+
+    if (confirmed) {
+      // Set the statut of the actif to "Archivé"
+      const updatedActif = {
+        id_categorie: values.categorie.id || values.categorie,
+        en_entrepot: values.en_entrepot,
+        date_retour: values.date_retour,
+        note: values.note,
+        id_assigne_a: values.assigne_a?.id || values.assigne_a || '',
+        id_modele: values.modele.id || values.modele,
+        id_statut: 5,
+        id_emplacement: values.emplacement.id || values.emplacement,
+        id_proprietaire: values.proprietaire.id || values.proprietaire,
+        id_utilisation: values.utilisation.id || values.utilisation,
+      };
+
+      // Update the actif in the database
+      // ...
+      handleUpdate(updatedActif);
+
+      // Navigate back to the actifs page
+      navigate('/actifs');
+    } else {
+      // Cancel the action
+    }
+  };
 
   const handleSubmit = (values: FormikValues) => {
     // Map the form values to match the expected field names in your Laravel API
@@ -327,6 +357,16 @@ const ActifForm = ({
               >
                 Reception
               </Button>
+
+                <Button
+                    className="my-5 mx-5 flex float-right"
+                    variant="contained"
+                    color="error"
+                    size="medium"
+                    onClick={() => handleArchive(values)}
+                >
+                Archivé
+                </Button>
             </Grid>
           </Grid>
         </Form>

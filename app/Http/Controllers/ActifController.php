@@ -28,37 +28,6 @@ class ActifController extends Controller
         //
     }
 
-    public function updateMultiple(Request $request)
-    {
-            $data = $request->all();
-            $arrayId = $data['ids'];
-
-            //request object with all possible fields, if not set, set to null
-            $requestData = [
-                'en_entrepot' => isset($data['en_entrepot']) ? $data['en_entrepot'] : null,
-                'date_retour' => isset($data['date_retour']) ? $data['date_retour'] : null,
-                'note' => isset($data['note']) ? $data['note'] : null,
-                'id_modele' => isset($data['modele']) ? $data['modele'] : null,
-                'id_statut' => isset($data['statut']) ? $data['statut'] : null,
-                'id_emplacement' => isset($data['emplacement']) ? $data['emplacement'] : null,
-                'id_proprietaire' => isset($data['proprietaire']) ? $data['proprietaire'] : null,
-                'id_utilisation' => isset($data['utilisation']) ? $data['utilisation'] : null,
-            ];
-            $filteredData = array_filter($requestData, function ($value) {
-                return $value !== null;
-            });
-
-            //update each actif with the request data
-            foreach ($arrayId as $id) {
-                $actif = Actif::findOrFail($id);
-                if (!$actif->update($filteredData)) {
-                    return response()->json(['message' => 'Erreur lors de la mise à jour de l\'actif'], 500);
-                }
-            }
-            return response()->json(['message' => 'Actifs mis à jour avec succès'], 200);
-
-    }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -169,8 +138,7 @@ class ActifController extends Controller
         // Check if the Actif object is actually updated
         print_r($actif);
 
-        // Save the updated Actif object to the database,
-
+        // Save the updated Actif object to the database
         if ($actif->save()) {
             // Return a success response
             return response()->json(['message' => 'Actif mis à jour avec succès'], 200);
@@ -178,7 +146,6 @@ class ActifController extends Controller
             // Return an error response
             return response()->json(['message' => "Erreur lors de la mise à jour de l'actif"], 500);
         }
-
     } catch (\Exception $e) {
         // Return an error response with the error message
         return response()->json(['message' => $e->getMessage()], 500);
@@ -194,24 +161,30 @@ class ActifController extends Controller
 
     public function listShow()
     {
-        $actifs = Actif::with(['modele.categorie', 'statut', 'proprietaire', 'emplacement',])->get()->map(function ($actif) {
-            return [
-                'id' => $actif->id,
-                'numero_commande' => $actif->numero_commande,
-                'numero_serie' => $actif->numero_serie,
-                'nom' => $actif->nom,
-                'modele' => $actif->modele->nom,
-                'modele_id' => $actif->modele->id,
-                'categorie' => $actif->modele->categorie->nom,
-                'categorie_id' => $actif->modele->categorie->id,
-                'statut' => $actif->statut->nom,
-                'statut_id' => $actif->statut->id,
-                'proprietaire' => $actif->proprietaire->nom,
-                'proprietaire_id' => $actif->proprietaire->id,
-                'emplacement' => $actif->emplacement->nom,
-                'emplacement_id' => $actif->emplacement->id,
-            ];
-        });
+        $actifs = Actif::with(['modele.categorie', 'statut', 'proprietaire', 'emplacement'])
+            ->whereHas('statut', function ($query) {
+                $query->where('nom', '!=', 'Archivé');
+            })
+            ->get()
+            ->map(function ($actif) {
+                return [
+                    'id' => $actif->id,
+                    'numero_commande' => $actif->numero_commande,
+                    'numero_serie' => $actif->numero_serie,
+                    'nom' => $actif->nom,
+                    'modele' => $actif->modele->nom,
+                    'modele_id' => $actif->modele->id,
+                    'categorie' => $actif->modele->categorie->nom,
+                    'categorie_id' => $actif->modele->categorie->id,
+                    'statut' => $actif->statut->nom,
+                    'statut_id' => $actif->statut->id,
+                    'proprietaire' => $actif->proprietaire->nom,
+                    'proprietaire_id' => $actif->proprietaire->id,
+                    'emplacement' => $actif->emplacement->nom,
+                    'emplacement_id' => $actif->emplacement->id,
+                ];
+            });
+
         return response()->json($actifs);
     }
 
@@ -224,12 +197,16 @@ class ActifController extends Controller
             'proprietaire',
             'modele',
             'modele.categorie',
-            'client', // Ajoutez la relation avec l'utilisateur
+            'client',
         ])->find($id);
 
         if (!$actif) {
-            // L'actif n'a pas été trouvé, gérez l'erreur ici
             return response()->json(['message' => 'Actif non trouvé'], 404);
+        }
+
+        // Check if the actif's statut is "Archivé" and return an empty response or handle it as needed.
+        if ($actif->statut->nom === 'Archivé') {
+            return response()->json(['message' => 'Cet actif est archivé'], 404);
         }
 
         $data = [
@@ -242,27 +219,32 @@ class ActifController extends Controller
             'id_utilisation' => $actif->utilisation->id,
             'id_proprietaire' => $actif->proprietaire->id,
             'id_emplacement' => $actif->emplacement->id,
-            'id_client' => $actif->client->id, // Ajoutez l'ID de l'utilisateur
+            'id_client' => $actif->client->id,
             'en_entrepot' => $actif->en_entrepot,
             'date_retour' => $actif->date_retour,
             'note' => $actif->note,
             'numero_commande' => $actif->numero_commande,
         ];
-
-
         return response()->json($data);
     }
 
+
     public function lightShow()
     {
-        $actifs = Actif::All()->map(function ($actif) {
-            return [
-                "id" => $actif->id,
-                "nom" => $actif->nom,
-                "numero_serie" => $actif->numero_serie,
-            ];
-        });
+        $actifs = Actif::whereHas('statut', function ($query) {
+                $query->where('nom', '!=', 'Archivé');
+            })
+            ->get()
+            ->map(function ($actif) {
+                return [
+                    "id" => $actif->id,
+                    "nom" => $actif->nom,
+                    "numero_serie" => $actif->numero_serie,
+                ];
+            });
+
         return response()->json($actifs);
     }
+
 
 }

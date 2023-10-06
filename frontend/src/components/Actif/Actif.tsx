@@ -96,7 +96,9 @@ const Actif = () => {
   return (
     <div className="">
       {loading ? (
-        <CircularProgress /> // Replace loading indicator with CircularProgress
+            <div className="fixed inset-0 flex items-center justify-center">
+                <CircularProgress />
+            </div> // Replace loading indicator with CircularProgress
       ) : (
         <div className="mx-auto mt-8">
           {actif && id && (

@@ -15,7 +15,7 @@ const Actifs = () => {
   const columns = [
     {
       name: 'numero_serie',
-      helabelader: 'Numéro de série',
+      label: 'Numéro de série',
       options: {
         sort: true,
       },

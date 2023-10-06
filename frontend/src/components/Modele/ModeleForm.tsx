@@ -1,6 +1,7 @@
 import { Grid, TextField, Button, Typography } from '@mui/material';
 import { FormikValues, Formik, Field, Form } from 'formik';
 import CustomSelect from '../CustomSelect';
+import { useNavigate } from 'react-router-dom';
 import { SelectItem } from '../Actif/type';
 import { Modele_Type } from './type';
 
@@ -11,19 +12,23 @@ type Props = {
 };
 
 const ModeleForm = ({ modele, categories, handleClose }: Props) => {
+    const navigate = useNavigate();
   console.log(modele);
   const initialValues = {
     nom: modele?.nom,
     id_type_modele: modele?.id_type_modele,
     stockage: modele?.stockage,
     processeur: modele?.processeur,
-    carte_graphique: modele?.carte_graphique,
+
     memoire_vive: modele?.memoire_vive,
-    taille_ecran: modele?.taille_ecran,
-    tactile: modele?.tactile,
+    taille: modele?.taille,
+    /*tactile: modele?.tactile,
+    carte_graphique: modele?.carte_graphique,
     clavier: modele?.clavier,
-    clavier_numerique: modele?.clavier_numerique,
+    clavier_numerique: modele?.clavier_numerique,*/
   };
+  console.log('here');
+  console.log(initialValues)
 
   const handleSubmit = (values: FormikValues) => {
     const updatedData = {
@@ -32,15 +37,37 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
       id_type_modele: values.id_type_modele,
       stockage: values.stockage,
       processeur: values.processeur,
-      carte_graphique: values.carte_graphique,
       memoire_vive: values.memoire_vive,
       taille: values.taille,
-      tactile: values.tactile,
+      /*tactile: values.tactile,
+            carte_graphique: values.carte_graphique,
       clavier: values.clavier,
-      clavier_numerique: values.clavier_numerique,
+      clavier_numerique: values.clavier_numerique,*/
     };
-
     console.log(values);
+    fetch(`http://localhost:8000/api/model/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values), // Send the updated data with the mapped field names
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Display a success message to the user
+          alert('Données sauvegardées avec succès');
+          console.log('Données sauvegardées avec succès: ', values);
+          navigate('/actifs');
+        } else {
+          // Handle errors if the API request fails
+          console.error('Error saving data:', response.statusText);
+          console.log('CA NE FONCTIONNE PAS ', values);
+        }
+      })
+      .catch((error) => {
+        // Handle errors if the API request fails
+        console.error('Error saving data:', error);
+      });
     handleClose(true);
   };
   return (
@@ -92,15 +119,6 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
               <Grid item xs={12}>
                 <Field
                   as={TextField}
-                  label="carte_graphique"
-                  name="carte_graphique"
-                  sx={{ width: 300 }}
-                  value={values.carte_graphique}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Field
-                  as={TextField}
                   label="Memoire Vive"
                   name="memoire_vive"
                   sx={{ width: 300 }}
@@ -113,34 +131,7 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
                   label="taille_ecran"
                   name="taille_ecran"
                   sx={{ width: 300 }}
-                  value={values.taille_ecran}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Field
-                  as={TextField}
-                  label="Tactile"
-                  name="tactile"
-                  sx={{ width: 300 }}
-                  value={values.tactile}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Field
-                  as={TextField}
-                  label="clavier"
-                  name="clavier"
-                  sx={{ width: 300 }}
-                  value={values.clavier}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Field
-                  as={TextField}
-                  label="Clavier Numérique"
-                  name="clavier_numerique"
-                  sx={{ width: 300 }}
-                  value={values.clavier_numerique}
+                  value={values.taille}
                 />
               </Grid>
               <Grid item xs={12}>

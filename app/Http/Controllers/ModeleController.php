@@ -57,12 +57,30 @@ class ModeleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $modele = Modele::find($id);
+
         $data = $request->all();
 
+        $updatedDataModel = [
+            'id' => $data['id'],
+            'nom' => $data['nom'],
+            'stockage' => $data['stockage'],
+            'processeur' => $data['processeur'],
+            'memoire_vive' => $data['memoire_vive'],
+            'taille' => $data['taille'],
+            'id_type_modele' => $data['id_type_modele'],
+        ];
 
+        $modele = Modele::find($updatedDataModel['id']);
+
+        if($modele){
+            $modele->update($updatedDataModel);
+            return response()->json(['message' => 'Modèle mise à jour avec succès'], 200);
+        }
+        else{
+            return response()->json(['message' => 'Modèle non trouvé'], 404);
+        }
 
     }
 

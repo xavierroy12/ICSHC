@@ -31,7 +31,7 @@ class ActifController extends Controller
     public function updateMultiple(Request $request)
     {
             $data = $request->all();
-            $arrayId = $data['ids'];
+            $arrayIdActifs = $data['ids'];
 
             //request object with all possible fields, if not set, set to null
             $requestData = [
@@ -39,7 +39,9 @@ class ActifController extends Controller
                 'date_retour' => isset($data['date_retour']) ? $data['date_retour'] : null,
                 'note' => isset($data['note']) ? $data['note'] : null,
                 'id_modele' => isset($data['modele']) ? $data['modele'] : null,
+                'id_categorie' => isset($data['categorie']) ? $data['categorie'] : null,
                 'id_statut' => isset($data['statut']) ? $data['statut'] : null,
+               // 'id_assigne_a' => isset($data['desasignation']) ? $data['id_assigne_a'] : null,
                 'id_emplacement' => isset($data['emplacement']) ? $data['emplacement'] : null,
                 'id_proprietaire' => isset($data['proprietaire']) ? $data['proprietaire'] : null,
                 'id_utilisation' => isset($data['utilisation']) ? $data['utilisation'] : null,
@@ -47,14 +49,37 @@ class ActifController extends Controller
             $filteredData = array_filter($requestData, function ($value) {
                 return $value !== null;
             });
+            /*$updatedDataModele = [
+                'id_type_modele' => isset($data['id_categorie']) ? $data['id_categorie'] : null,
+            ];*/
+
+
+
+
 
             //update each actif with the request data
-            foreach ($arrayId as $id) {
+            foreach ($arrayIdActifs as $id) {
+                // Get the Actif object to update
                 $actif = Actif::findOrFail($id);
+                if($requestData['id_categorie'])
+                {
+                    $updatedDataModele = [
+                        'id_type_modele' => $requestData['id_categorie'],
+                    ];
+                    Modele::where('id', $actif->id_modele)->update($updatedDataModele);
+                }
+
+                $client = Client::where('id_actif', $id);
+
+                //Remove assignation from previous client
+                if ($data['desasignation']) {
+                    $client->update(['id_actif' => null]);
+                }
                 if (!$actif->update($filteredData)) {
                     return response()->json(['message' => 'Erreur lors de la mise à jour de l\'actif'], 500);
                 }
             }
+            $actif->save();
             return response()->json(['message' => 'Actifs mis à jour avec succès'], 200);
 
     }

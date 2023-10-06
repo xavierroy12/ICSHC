@@ -325,7 +325,7 @@ const ActifForm = ({
                 size="medium"
                 onClick={()=>handleReception(values)}
               >
-                Reception
+                Réception
               </Button>
             </Grid>
           </Grid>

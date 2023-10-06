@@ -30,6 +30,7 @@ Route::get('/etats/light', [EtatController::class, 'lightShow']);
 
 Route::get('/modeles', [ModeleController::class, 'showAll']);
 Route::get('/modeles/light', [ModeleController::class, 'lightShow']);
+Route::get('/modele/{id}', [ModeleController::class, 'get']);
 
 Route::get('/categories', [TypeModeleController::class, 'showAll']);
 Route::get('/categories/light', [TypeModeleController::class, 'lightShow']);

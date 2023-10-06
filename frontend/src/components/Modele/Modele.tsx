@@ -49,11 +49,13 @@ const Modele = ({ id }: Props) => {
 
   return (
     <Modal open>
-      {modele ? (
-        <ModeleForm modele={modele} categories={categories} />
-      ) : (
-        <div>loading...</div>
-      )}
+      <div>
+        {modele ? (
+          <ModeleForm modele={modele} categories={categories} />
+        ) : (
+          <div>loading...</div>
+        )}
+      </div>
     </Modal>
   );
 };

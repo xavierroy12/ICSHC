@@ -22,6 +22,7 @@ const ModifyActifs = () => {
     selectedRows: number[];
     setActifUpdated: React.Dispatch<React.SetStateAction<boolean>>;
   };
+
   const [loading, setLoading] = useState(true);
   const [statuts, setStatuts] = useState<SelectItem[]>([]);
   const [modeles, setModeles] = useState<SelectItem[]>([]);

@@ -9,7 +9,7 @@ import CustomSelect from '../CustomSelect';
 import { SelectItem } from '../Actif/type';
 
 type Props = {
-  selectedRows: string[];
+  selectedRows: number[];
   modeles: SelectItem[];
   categories: SelectItem[];
   statuts: SelectItem[];
@@ -29,7 +29,7 @@ const ModifyActifsForm = ({
   utilisations,
   proprietaires,
 }: Props) => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const initialValues = {
     modele: '',
     categorie: '',

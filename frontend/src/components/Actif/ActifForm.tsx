@@ -171,7 +171,7 @@ const ActifForm = ({
                 name="modele"
                 component={CustomSelect}
                 options={modeles}
-                label="Modele"
+                label="Modèle"
               />
             </Grid>
 
@@ -181,7 +181,7 @@ const ActifForm = ({
                 name="categorie"
                 component={CustomSelect}
                 options={categories}
-                label="Categorie"
+                label="Catégorie"
               />
             </Grid>
 
@@ -201,7 +201,7 @@ const ActifForm = ({
                 name="assigne_a"
                 component={CustomSelect}
                 options={locataires}
-                label="Assingné à"
+                label="Assigné à"
                 isClearable={true}
               />
             </Grid>
@@ -229,7 +229,7 @@ const ActifForm = ({
                 }}
               />
               <label htmlFor="en_entrepot" className="ml-4">
-                En entrepot
+                En entrepôt
               </label>
             </Grid>
 
@@ -249,7 +249,7 @@ const ActifForm = ({
                 name="proprietaire"
                 component={CustomSelect}
                 options={proprietaires}
-                label="Proprietaire"
+                label="Propriétaire"
               />
             </Grid>
 

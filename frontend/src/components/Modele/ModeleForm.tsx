@@ -19,7 +19,7 @@ const ModeleForm = ({ modele, categories }: Props) => {
     clavier: modele?.clavier,
     clavier_numerique: modele?.clavier_numerique,
   };
-  
+
   const handleSubmit = (values: FormikValues) => {
     const updatedData = {
       id: modele.id,
@@ -34,6 +34,7 @@ const ModeleForm = ({ modele, categories }: Props) => {
       clavier: values.clavier,
       clavier_numerique: values.clavier_numerique,
     };
+
     console.log(values);
   };
   return (

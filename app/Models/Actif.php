@@ -3,17 +3,34 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Model;
 
 class Actif extends Model
 {
+    use HasFactory, HasTimestamps;
+
     protected $table = 'actif';
+    protected $fillable = [
+        'numero_serie',
+        'nom',
+        'en_entrepot',
+        'adresse_mac',
+        'date_retour',
+        'note',
+        'id_modele',
+        'modele_descriptif',
+        'id_statut',
+        'id_emplacement',
+        'id_proprietaire',
+        'id_utilisation',
+        'numero_commande',
+        // Autres colonnes autorisées pour l'attribution de masse
+    ];
 
-    use HasFactory;
-
-    public function modeleCommande()
+    public function modele()
     {
-        return $this->belongsTo(ModeleCommande::class, 'id_modele_commande');
+        return $this->belongsTo(Modele::class, 'id_modele');
 
     }
     public function statut()
@@ -34,7 +51,18 @@ class Actif extends Model
     public function emplacement()
     {
         return $this->belongsTo(Emplacement::class, 'id_emplacement');
-
     }
-    
+    public function numero_commande()
+    {
+        return $this->belongsTo(Commande::class, 'numero_commande');
+    }
+
+    public function client()
+    {
+        return $this->hasOne(Client::class, 'id_actif')->withDefault([
+            'nom' => 'Non assigné', // Définissez la valeur par défaut que vous souhaitez afficher
+        ]);
+    }
+
+
 }

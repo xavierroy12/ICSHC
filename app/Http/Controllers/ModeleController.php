@@ -15,6 +15,13 @@ class ModeleController extends Controller
         //
     }
 
+    public function get($id)
+    {
+        $modele = Modele::find($id);
+        return response()->json($modele);
+    }
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -50,9 +57,30 @@ class ModeleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Modele $modele)
+    public function update(Request $request, $id)
     {
-        //
+
+        $data = $request->all();
+
+        $updatedDataModel = [
+            'nom' => $data['nom'],
+            'stockage' => $data['stockage'],
+            'processeur' => $data['processeur'],
+            'memoire_vive' => $data['memoire_vive'],
+            'taille' => $data['taille'],
+            'id_type_modele' => $data['id_type_modele'],
+        ];
+
+        $modele = Modele::find($id);
+
+        if($modele){
+            $modele->update($updatedDataModel);
+            return response()->json(['message' => 'Modèle mise à jour avec succès'], 200);
+        }
+        else{
+            return response()->json(['message' => 'Modèle non trouvé'], 404);
+        }
+
     }
 
     /**
@@ -65,6 +93,16 @@ class ModeleController extends Controller
     public function showAll()
     {
         $modeles = Modele::all();
+        return response()->json($modeles);
+    }
+    public function lightShow()
+    {
+        $modeles = Modele::All()->map(function ($modele) {
+            return [
+                "id" => $modele->id,
+                "nom" => $modele->nom,
+            ];
+        });
         return response()->json($modeles);
     }
 }

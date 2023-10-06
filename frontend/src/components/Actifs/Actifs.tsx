@@ -1,100 +1,151 @@
-import { Button, Title } from "@mantine/core";
-import { useEffect, useState, useMemo } from "react";
-import { Actif, TableState } from "./type";
-import {
-    MantineReactTable,
-    useMantineReactTable,
-    type MRT_ColumnDef,
-    MRT_RowSelectionState,
-  } from 'mantine-react-table';
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useMemo } from 'react';
+import { Actif } from './type';
+
+import { useNavigate } from 'react-router-dom';
+import MUIDataTable, { MUIDataTableProps } from 'mui-datatables';
+import { Button, CircularProgress } from '@mui/material';
 
 const Actifs = () => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState<boolean>();
   const [actifs, setActifs] = useState<Actif[]>([]);
-  const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
-  const [tableState, setTableState] = useState<TableState>({
-    filters: {},
-    showColumnFilters: true,
-    sortBy: undefined,
-    sortDirection: undefined,
-    page: 1,
-    pageSize: 10,
-  });
-
-  const columns = useMemo<MRT_ColumnDef<Actif>[]>( () =>
-    [
-      { accessorKey: "numero_serie", header: "Numéro de série" , enableColumnFilter: false},
-      { accessorKey: "nom", header: "Nom" , enableColumnFilter: false},
-      { accessorKey: "modele", header: "Modèle", filterVariant: "autocomplete", },
-      { accessorKey: "categorie", header: "Catégorie", filterVariant: "autocomplete" },
-      { accessorKey: "statut", header: "Statut", filterVariant: "autocomplete" },
-      { accessorKey: "proprietaire", header: "Propriétaire", filterVariant: "autocomplete" },
-      { accessorKey: "emplacement", header: "Emplacement", filterVariant: "autocomplete" },
-    ],
-    [],
-  );
-  const table = useMantineReactTable({
-    columns: columns,
-    data: actifs,
-    enableFacetedValues: true,
-    enableRowSelection: true,
-    getRowId: (row) => row.id,
-    initialState: { ...tableState, isLoading: isLoading, showColumnFilters: true , },
-    enableStickyHeader: true,
-    mantineTableContainerProps: { sx: { maxHeight: '500px' } },
-    mantineTableBodyCellProps: ({ cell }) => ({
-      onDoubleClick: () => {
-        navigate('/actif/' + cell.row.id);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [actifUpdated, setActifUpdated] = useState<boolean>(false);
+  const columns = [
+    {
+      name: 'numero_serie',
+      label: 'Numéro de série',
+      options: {
+        sort: true,
       },
-    }),
-    onRowSelectionChange: setRowSelection,
-    state: { rowSelection },
-  });
-  
-  const handleFilterChange = (column: string, value: string) => {
-    setTableState((prevState) => ({ ...prevState, filters: { ...prevState.filters, [column]: value } }));
+    },
+    { name: 'nom', header: 'Nom', enableColumnFilter: false },
+    {
+      name: 'modele',
+      label: 'Modèle',
+      options: {
+        filter: true,
+        sort: true,
+      },
+    },
+    {
+      name: 'categorie',
+      label: 'Catégorie',
+      options: {
+        filter: true,
+        sort: true,
+      },
+    },
+    {
+      name: 'statut',
+      label: 'Statut',
+      options: {
+        filter: true,
+        sort: true,
+      },
+    },
+    {
+      name: 'client',
+      label: 'Assigné à',
+      options: {
+        filter: true,
+        sort: true,
+      },
+    },
+    {
+      name: 'emplacement',
+      label: 'Emplacement',
+      options: {
+        filter: true,
+        sort: true,
+      },
+    },
+  ];
+  const options = {
+    filterType: 'dropdown',
+    responsive: 'simple',
+    search: true,
+    filter: true,
+    tableBodyHeight: 'calc(100vh - 300px)',
+    pagination: true,
+    rowsPerPage: 50,
+    rowsPerPageOptions: [50, 100, 200],
+    onRowSelectionChange: (currentRowsSelected, allRowsSelected) => {
+      const selectedIds = allRowsSelected.map(
+        (row) => actifs[row.dataIndex].id
+      );
+      setSelectedRows(selectedIds);
+    },
+    print: false,
+    download: false,
   };
-  
-  useEffect(() => {   
-    setIsLoading(true); 
-    fetch("http://localhost:8000/api/actifs").then((response) => response.json())
-      .then((values) => {setActifs(values);})
-      .then(() => setIsLoading(false))
-      .catch((error) => console.error(error));
 
-  }, []);
   useEffect(() => {
-    // TODO: adapt to filter change
-    setTableState((prevState) => ({ ...prevState, filters: { ...prevState.filters, statut: "En stock" } }));
-  }, []);
+    setIsLoading(true);
+    fetch('http://localhost:8000/api/actifs')
+      .then((response) => response.json())
+      .then((values) => {
+        console.log('actif', values);
+        setActifs(values);
+      })
+      .then(() => {
+        setIsLoading(false);
+        setActifUpdated(false);
+      })
+      .catch((error) => console.error(error));
+  }, [actifUpdated]);
+
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center">
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <div className="w-11/12 mx-auto mt-10">
-      <Title order={1}>Actifs</Title>
       <div>
-        <MantineReactTable table={table}/>
+        <MUIDataTable
+          title={'Actifs'}
+          data={actifs}
+          columns={columns}
+          options={options as MUIDataTableProps['options']}
+        />
       </div>
-      <Button.Group className="flex float-right mt-5">
-        <Button className="mr-8" color="indigo" variant="outline" size="md" onClick={() =>navigate('/actif')}>Ajouter</Button>
-        <Button className="bg-yellow" variant="outline" color="yellow" size="md" disabled={Object.keys(rowSelection).length === 0}
-        onClick={() => {
-          const selectedRows = Object.entries(rowSelection)
-          .filter(([_, isSelected]) => isSelected)
-          .map(([id]) => id);
-          if (selectedRows.length === 1) {
-            navigate('/actif/' + selectedRows[0]);
-          } else {
-            navigate('/actifs/modify', { state: { selectedRows } });
-          }
-        }}>
+      <div className="float-right m-4 ">
+        <Button
+          className="ml-12"
+          style={{ marginRight: '1rem'}}
+          color="primary"
+          size="medium"
+          onClick={() => navigate('/actif')}
+        >
+          Ajouter
+        </Button>
+        <Button
+          color="secondary"
+          size="medium"
+          style={{ marginRight: '1rem'}}
+          disabled={selectedRows.length === 0}
+          onClick={() => {
+            if (selectedRows.length === 1) {
+              navigate('/actif/' + selectedRows[0]);
+            } else {
+              navigate('/actifs/modify', {
+                state: {
+                  selectedRows,
+                },
+              });
+            }
+          }}
+        >
           Modifier
         </Button>
-      </Button.Group>
+      </div>
     </div>
   );
 };
 
-export default Actifs
+export default Actifs;

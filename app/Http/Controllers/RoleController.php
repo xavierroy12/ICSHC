@@ -62,4 +62,19 @@ class RoleController extends Controller
     {
         //
     }
+    public function showAll()
+    {
+        $roles = Role::all();
+        return response()->json($roles);
+    }
+    public function lightShow()
+    {
+        $roles = Role::All()->map(function ($role) {
+            return [
+                "id" => $role->id,
+                "nom" => $role->nom,
+            ];
+        });
+        return response()->json($roles);
+    }
 }

@@ -25,7 +25,9 @@ const Modele = ({ id }: Props) => {
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<SelectItem[]>([]);
   const [modele, setModele] = useState<Modele_Type>();
-
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   useEffect(() => {
     Promise.all([
       fetch('http://localhost:8000/api/categories/light'),
@@ -48,15 +50,18 @@ const Modele = ({ id }: Props) => {
   }, [id]);
 
   return (
-    <Modal open>
-      <div>
-        {modele ? (
-          <ModeleForm modele={modele} categories={categories} />
-        ) : (
-          <div>loading...</div>
-        )}
-      </div>
-    </Modal>
+    <div>
+      <button onClick={handleOpen}>Open modal</button>
+      <Modal open={open} onClose={handleClose}>
+        <div>
+          {modele ? (
+            <ModeleForm modele={modele} categories={categories} />
+          ) : (
+            <div>loading...</div>
+          )}
+        </div>
+      </Modal>
+    </div>
   );
 };
 export default Modele;

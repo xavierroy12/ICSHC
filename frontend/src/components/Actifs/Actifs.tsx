@@ -67,10 +67,10 @@ const Actifs = () => {
     responsive: 'simple',
     search: true,
     filter: true,
-    tableBodyHeight: '10%',
-    agination: true,
-    rowsPerPage: 100,
-    rowsPerPageOptions: [15, 50, 100],
+    tableBodyHeight: 'calc(100vh - 300px)',
+    pagination: true,
+    rowsPerPage: 50,
+    rowsPerPageOptions: [50, 100, 200],
     onRowSelectionChange: (currentRowsSelected, allRowsSelected) => {
       const selectedIds = allRowsSelected.map(
         (row) => actifs[row.dataIndex].id
@@ -107,28 +107,30 @@ const Actifs = () => {
           options={options as MUIDataTableProps['options']}
         />
       </div>
-      <Button
-        className="mr-8"
-        color="primary"
-        size="medium"
-        onClick={() => navigate('/actif')}
-      >
-        Ajouter
-      </Button>
-      <Button
-        color="secondary"
-        size="medium"
-        disabled={selectedRows.length === 0}
-        onClick={() => {
-          if (selectedRows.length === 1) {
-            navigate('/actif/' + selectedRows[0]);
-          } else {
-            navigate('/actifs/modify', { state: { selectedRows } });
-          }
-        }}
-      >
-        Modifier
-      </Button>
+      <div className="float-right m-4 ">
+        <Button
+          className="ml-12"
+          color="primary"
+          size="medium"
+          onClick={() => navigate('/actif')}
+        >
+          Ajouter
+        </Button>
+        <Button
+          color="secondary"
+          size="medium"
+          disabled={selectedRows.length === 0}
+          onClick={() => {
+            if (selectedRows.length === 1) {
+              navigate('/actif/' + selectedRows[0]);
+            } else {
+              navigate('/actifs/modify', { state: { selectedRows } });
+            }
+          }}
+        >
+          Modifier
+        </Button>
+      </div>
     </div>
   );
 };

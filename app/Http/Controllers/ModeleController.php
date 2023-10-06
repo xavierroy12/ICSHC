@@ -63,7 +63,6 @@ class ModeleController extends Controller
         $data = $request->all();
 
         $updatedDataModel = [
-            'id' => $data['id'],
             'nom' => $data['nom'],
             'stockage' => $data['stockage'],
             'processeur' => $data['processeur'],
@@ -72,7 +71,7 @@ class ModeleController extends Controller
             'id_type_modele' => $data['id_type_modele'],
         ];
 
-        $modele = Modele::find($updatedDataModel['id']);
+        $modele = Modele::find($id);
 
         if($modele){
             $modele->update($updatedDataModel);

@@ -168,13 +168,7 @@ class ActifController extends Controller
 
         // Check if the Actif object is actually updated
         print_r($actif);
-        $isMultiple = $data['isMultiple'];
-        if ($isMultiple) {
-            if($actif->save())
-            return True;
-            else
-            return False;
-        }
+
         // Save the updated Actif object to the database,
 
         if ($actif->save()) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { CircularProgress, Typography } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import SelectActifsList from '../SelectActifsList';
@@ -93,7 +93,7 @@ const ModifyActifs = () => {
           setActifs(actifsData);
           console.log(actifsData);
           setSelectedActifs(
-            selectedRows.map((selectedRow) =>
+            selectedRows.map((selectedRow: any) =>
               actifsData.find((actif: LightActif) => actif.id === selectedRow)
             )
           );
@@ -105,38 +105,40 @@ const ModifyActifs = () => {
 
   if (loading) {
     return (
-        <div className="fixed inset-0 flex items-center justify-center">
-          <CircularProgress />
-        </div>
-      );
+      <div className="fixed inset-0 flex items-center justify-center">
+        <CircularProgress />
+      </div>
+    );
   }
   return (
-    <div className="flex h-fit">
-      <div className="ml-12 mr-6 mt-20 w-2/3 h-full">
-        <div className="mb-8">
-          <Typography variant="h4">Modifier des actifs</Typography>
-        </div>
-        <hr />
+    <Fragment>
+      <div className="flex h-fit">
+        <div className="ml-12 mr-6 mt-20 w-2/3 h-full">
+          <div className="mb-8">
+            <Typography variant="h4">Modifier des actifs</Typography>
+          </div>
+          <hr />
 
-        <div className="p-4 my-4 bg-slate-100 w-full mx-auto h-full">
-          <ModifyActifsForm
-            selectedRows={selectedRows}
-            statuts={statuts}
-            modeles={modeles}
-            categories={categories}
-            emplacements={emplacements}
-            utilisations={utilisations}
-            proprietaires={proprietaires}
-          />
+          <div className="p-4 my-4 bg-slate-100 w-full mx-auto h-full">
+            <ModifyActifsForm
+              selectedRows={selectedRows}
+              statuts={statuts}
+              modeles={modeles}
+              categories={categories}
+              emplacements={emplacements}
+              utilisations={utilisations}
+              proprietaires={proprietaires}
+            />
+          </div>
         </div>
+
+        <SelectActifsList
+          selectedActifs={selectedActifs}
+          setSelectedActifs={setSelectedActifs}
+          actifs={actifs}
+        />
       </div>
-
-      <SelectActifsList
-        selectedActifs={selectedActifs}
-        setSelectedActifs={setSelectedActifs}
-        actifs={actifs}
-      />
-    </div>
+    </Fragment>
   );
 };
 

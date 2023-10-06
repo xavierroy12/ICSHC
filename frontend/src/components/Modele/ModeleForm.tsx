@@ -8,7 +8,7 @@ import { Modele_Type } from './type';
 type Props = {
   modele: Modele_Type;
   categories: SelectItem[];
-  handleClose: (isClose: boolean) => void;
+  handleClose: () => void;
 };
 
 const ModeleForm = ({ modele, categories, handleClose }: Props) => {
@@ -71,7 +71,7 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
     handleClose(true);
   };
   return (
-    <div className="w-1/2 bg-slate-100 m-auto mt-20 p-10">
+    <div className="w-min bg-slate-100 m-auto mt-20 p-10">
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({ values, dirty }) => (
           <Form>
@@ -101,7 +101,7 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
               <Grid item xs={12}>
                 <Field
                   as={TextField}
-                  label="stockage"
+                  label="Stockage"
                   name="stockage"
                   sx={{ width: 300 }}
                   value={values.stockage}
@@ -110,7 +110,7 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
               <Grid item xs={12}>
                 <Field
                   as={TextField}
-                  label="processeur"
+                  label="Processeur"
                   name="processeur"
                   sx={{ width: 300 }}
                   value={values.processeur}
@@ -128,7 +128,7 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
               <Grid item xs={12}>
                 <Field
                   as={TextField}
-                  label="taille_ecran"
+                  label="Taille écran"
                   name="taille_ecran"
                   sx={{ width: 300 }}
                   value={values.taille}
@@ -136,7 +136,15 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
               </Grid>
               <Grid item xs={12}>
                 <Button
-                  className="my-5 mx-5 flex float-right"
+                  variant="contained"
+                  color="error"
+                  size="medium"
+                  style={{ marginRight: '1rem' }}
+                  onClick={handleClose}
+                >
+                  Fermer
+                </Button>
+                <Button
                   variant="contained"
                   color="secondary"
                   size="medium"

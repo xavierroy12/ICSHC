@@ -5,15 +5,18 @@ import { Modal } from '@mui/material';
 import { Modele_Type } from './type';
 
 type Props = {
-  id: string;
+  id: number;
+  setOpen: (isOpen: boolean) => void;
+  open: boolean;
 };
 
-const Modele = ({ id }: Props) => {
+const Modele = ({ id, setOpen, open }: Props) => {
   const [categories, setCategories] = useState<SelectItem[]>([]);
   const [modele, setModele] = useState<Modele_Type>();
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   useEffect(() => {
     Promise.all([
       fetch('http://localhost:8000/api/categories/light'),
@@ -35,7 +38,6 @@ const Modele = ({ id }: Props) => {
 
   return (
     <div>
-      <button onClick={handleOpen}>Open modal</button>
       <Modal open={open} onClose={handleClose}>
         <div>
           {modele ? (

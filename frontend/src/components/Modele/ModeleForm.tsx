@@ -74,7 +74,7 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
               <Grid item xs={12}>
                 <Field
                   as={TextField}
-                  label="stockage"
+                  label="Stockage"
                   name="stockage"
                   sx={{ width: 300 }}
                   value={values.stockage}
@@ -83,7 +83,7 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
               <Grid item xs={12}>
                 <Field
                   as={TextField}
-                  label="processeur"
+                  label="Processeur"
                   name="processeur"
                   sx={{ width: 300 }}
                   value={values.processeur}
@@ -92,7 +92,7 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
               <Grid item xs={12}>
                 <Field
                   as={TextField}
-                  label="carte_graphique"
+                  label="Carte Graphique"
                   name="carte_graphique"
                   sx={{ width: 300 }}
                   value={values.carte_graphique}
@@ -110,7 +110,7 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
               <Grid item xs={12}>
                 <Field
                   as={TextField}
-                  label="taille_ecran"
+                  label="Taille écran"
                   name="taille_ecran"
                   sx={{ width: 300 }}
                   value={values.taille_ecran}
@@ -128,7 +128,7 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
               <Grid item xs={12}>
                 <Field
                   as={TextField}
-                  label="clavier"
+                  label="Clavier"
                   name="clavier"
                   sx={{ width: 300 }}
                   value={values.clavier}

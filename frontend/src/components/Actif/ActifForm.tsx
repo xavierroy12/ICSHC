@@ -332,6 +332,15 @@ const ActifForm = ({
               >
                 Sauvegarder
               </Button>
+              <Button
+                className="my-5 mx-5 flex float-right"
+                variant="contained"
+                color="primary"
+                size="medium"
+                onClick={()=>handleReception(values)}
+              >
+                Reception
+              </Button>
             </Grid>
           </Grid>
         </Form>

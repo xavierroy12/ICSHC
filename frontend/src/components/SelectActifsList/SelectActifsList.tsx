@@ -34,7 +34,6 @@ const SelectActifsList: React.FC<Props> = ({
   const [selectData, setSelectData] = useState<SelectItem[]>([]);
   const [currentValue, setCurrentValue] = useState<SelectItem>();
 
-  console.log(selectedActifs);
   useEffect(() => {
     const tempActif = actifs.slice();
     selectedActifs.forEach((selected) => {
@@ -74,8 +73,12 @@ const SelectActifsList: React.FC<Props> = ({
   };
   return (
     <div className=" mt-20 w-1/3 mr-12">
-      <Typography variant="h4">Actifs sélectionnés</Typography>
-      <div className="bg-slate-100 w-full h-full pt-10 px-4">
+      <div className="mb-8">
+        <Typography variant="h4">Actifs sélectionnés</Typography>
+      </div>
+      <hr />
+
+      <div className="p-4 mt-4 bg-slate-100 w-full mx-auto h-full max-h-[1000px] overflow-scroll">
         <div>
           <Autocomplete
             placeholder={'Actifs'}

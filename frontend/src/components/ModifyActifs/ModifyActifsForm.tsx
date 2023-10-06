@@ -123,7 +123,7 @@ const ModifyActifsForm = ({
       {({ values, handleChange, dirty, setFieldValue }) => (
         <Form>
           <Grid container spacing={3}>
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <Field
                 name="modele"
                 component={CustomSelect}
@@ -131,9 +131,6 @@ const ModifyActifsForm = ({
                 label="Modele"
                 isClearable
               />
-            </Grid>
-            <Grid item xs={2}>
-              <Button>test</Button>
             </Grid>
             <Grid item xs={6}>
               <Field
@@ -238,7 +235,7 @@ const ModifyActifsForm = ({
               <Button
                 className="my-5 mx-5 flex float-right"
                 variant="contained"
-                style={{ marginRight: '1rem'}}
+                style={{ marginRight: '1rem' }}
                 color="primary"
                 size="medium"
                 type="submit"
@@ -248,7 +245,7 @@ const ModifyActifsForm = ({
               </Button>
               <Button
                 className="my-5 mx-5 flex float-right"
-                style={{ marginRight: '1rem'}}
+                style={{ marginRight: '1rem' }}
                 variant="contained"
                 color="primary"
                 size="medium"

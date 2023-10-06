@@ -3,13 +3,14 @@ import { useLocation, useParams } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress'; // Import Material-UI CircularProgress
 import { Actif_Type, LightType, SelectItem } from './type';
 import ActifForm from './ActifForm';
-import { Typography } from '@mui/material';
+import { Modal, Typography } from '@mui/material';
+import Modele from '../Modele';
 
 // Import any other Material-UI components you might need.
 
 const Actif = () => {
   const { id } = useParams<{ id: string }>();
-  const location = useLocation();
+  const [open, setOpen] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [statuts, setStatuts] = useState<SelectItem[]>([]);
@@ -95,11 +96,11 @@ const Actif = () => {
   }, [id]);
 
   return (
-    <div className="">
+    <Fragment>
       {loading ? (
         <div className="fixed inset-0 flex items-center justify-center">
           <CircularProgress />
-        </div> // Replace loading indicator with CircularProgress
+        </div>
       ) : (
         <div className="mx-auto mt-8">
           {actif && id && (
@@ -120,14 +121,16 @@ const Actif = () => {
                     locataires={locataires}
                     utilisations={utilisations}
                     proprietaires={proprietaires}
+                    setOpen={setOpen}
                   />
                 </div>
               </div>
+              <Modele id={actif?.id_modele} open={open} setOpen={setOpen} />
             </Fragment>
           )}
         </div>
       )}
-    </div>
+    </Fragment>
   );
 };
 

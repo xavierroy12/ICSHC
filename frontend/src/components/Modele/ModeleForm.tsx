@@ -7,7 +7,7 @@ import { Modele_Type } from './type';
 type Props = {
   modele: Modele_Type;
   categories: SelectItem[];
-  handleClose: (isClose: boolean) => void;
+  handleClose: () => void;
 };
 
 const ModeleForm = ({ modele, categories, handleClose }: Props) => {
@@ -41,10 +41,10 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
     };
 
     console.log(values);
-    handleClose(true);
+    handleClose();
   };
   return (
-    <div className="w-1/2 bg-slate-100 m-auto mt-20 p-10">
+    <div className="w-min bg-slate-100 m-auto mt-20 p-10">
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({ values, dirty }) => (
           <Form>
@@ -145,7 +145,15 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
               </Grid>
               <Grid item xs={12}>
                 <Button
-                  className="my-5 mx-5 flex float-right"
+                  variant="contained"
+                  color="error"
+                  size="medium"
+                  style={{ marginRight: '1rem' }}
+                  onClick={handleClose}
+                >
+                  Fermer
+                </Button>
+                <Button
                   variant="contained"
                   color="secondary"
                   size="medium"

@@ -19,6 +19,7 @@ type Props = {
   locataires: SelectItem[];
   utilisations: SelectItem[];
   proprietaires: SelectItem[];
+  setOpen: (isOpen: boolean) => void;
 };
 
 const ActifForm = ({
@@ -31,6 +32,7 @@ const ActifForm = ({
   locataires,
   utilisations,
   proprietaires,
+  setOpen,
 }: Props) => {
   const navigate = useNavigate();
 
@@ -193,7 +195,7 @@ const ActifForm = ({
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <Field
                 className="input-field"
                 name="modele"
@@ -202,7 +204,18 @@ const ActifForm = ({
                 label="Modèle"
               />
             </Grid>
-
+            <Grid item xs={2}>
+              <div className="my-3">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  onClick={() => setOpen(true)}
+                >
+                  Voir
+                </Button>
+              </div>
+            </Grid>
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -348,7 +361,7 @@ const ActifForm = ({
               <Button
                 className="my-5 mx-5 flex float-right"
                 variant="contained"
-                style={{ marginRight: '1rem'}}
+                style={{ marginRight: '1rem' }}
                 color="primary"
                 size="medium"
                 onClick={() => handleReception(values)}
@@ -358,7 +371,7 @@ const ActifForm = ({
 
               <Button
                 className="my-5 mx-5 flex float-right"
-                style={{ marginRight: '1rem'}}
+                style={{ marginRight: '1rem' }}
                 variant="contained"
                 color="error"
                 size="medium"

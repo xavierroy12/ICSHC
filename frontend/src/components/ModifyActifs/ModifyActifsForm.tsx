@@ -123,7 +123,7 @@ const ModifyActifsForm = ({
       {({ values, handleChange, dirty, setFieldValue }) => (
         <Form>
           <Grid container spacing={3}>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <Field
                 name="modele"
                 component={CustomSelect}
@@ -131,6 +131,9 @@ const ModifyActifsForm = ({
                 label="Modele"
                 isClearable
               />
+            </Grid>
+            <Grid item xs={2}>
+              <Button>test</Button>
             </Grid>
             <Grid item xs={6}>
               <Field

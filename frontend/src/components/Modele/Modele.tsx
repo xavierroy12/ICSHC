@@ -2,27 +2,13 @@ import ModeleForm from './ModeleForm';
 import { useEffect, useState } from 'react';
 import { LightType, SelectItem } from '../Actif/type';
 import { Modal } from '@mui/material';
-
-export type Modele_Type = {
-  id: number;
-  nom: string;
-  categorie: string;
-  stockage: string;
-  processeur: string;
-  carte_graphique: string;
-  memoire: string;
-  taille_ecran: string;
-  tactile: string;
-  clavier: string;
-  clavier_numerique: string;
-};
+import { Modele_Type } from './type';
 
 type Props = {
   id: string;
 };
 
 const Modele = ({ id }: Props) => {
-  const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<SelectItem[]>([]);
   const [modele, setModele] = useState<Modele_Type>();
   const [open, setOpen] = useState(false);
@@ -44,8 +30,6 @@ const Modele = ({ id }: Props) => {
           }))
         );
         setModele(fetchedModele);
-
-        setLoading(false);
       });
   }, [id]);
 
@@ -55,7 +39,11 @@ const Modele = ({ id }: Props) => {
       <Modal open={open} onClose={handleClose}>
         <div>
           {modele ? (
-            <ModeleForm modele={modele} categories={categories} />
+            <ModeleForm
+              modele={modele}
+              categories={categories}
+              handleClose={handleClose}
+            />
           ) : (
             <div>loading...</div>
           )}

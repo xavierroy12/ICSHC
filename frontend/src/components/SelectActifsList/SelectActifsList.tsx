@@ -3,7 +3,6 @@ import {
   Autocomplete,
   Button,
   CircularProgress,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -13,7 +12,6 @@ import {
   TextField,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CustomSelect from '../CustomSelect';
 import { Typography } from '@mui/material';
 
 type LightActif = {
@@ -21,7 +19,7 @@ type LightActif = {
   nom: string;
   numero_serie: string;
 };
-
+type SelectItem = { value: string; label: string };
 type Props = {
   selectedActifs: LightActif[];
   actifs: LightActif[];
@@ -33,10 +31,10 @@ const SelectActifsList: React.FC<Props> = ({
   actifs,
   setSelectedActifs,
 }) => {
-  const [selectData, setSelectData] = useState<
-    { value: string; label: string }[]
-  >([]);
+  const [selectData, setSelectData] = useState<SelectItem[]>([]);
+  const [currentValue, setCurrentValue] = useState<SelectItem>();
 
+  console.log(selectedActifs);
   useEffect(() => {
     const tempActif = actifs.slice();
     selectedActifs.forEach((selected) => {
@@ -59,20 +57,18 @@ const SelectActifsList: React.FC<Props> = ({
       (actifData) => actifData.numero_serie === actif
     );
     if (!selectedActif) return;
-    const updatedActifs = selectedActifs.filter(
-      (data) => data.numero_serie !== selectedActif.numero_serie
-    );
-    setSelectedActifs(updatedActifs);
+    setSelectedActifs([...selectedActifs, selectedActif]);
 
-    setSelectData((prevData) =>
-      prevData.filter((data) => data.value !== selectedActif.id.toString())
+    setSelectData(
+      selectData.filter((data) => data.value !== selectedActif.id.toString())
     );
   };
+
   const onDeleteData = (actif: LightActif) => {
     const updatedActifs = selectedActifs.filter((data) => data.id !== actif.id);
     setSelectedActifs(updatedActifs);
-    setSelectData((prevData) => [
-      ...prevData,
+    setSelectData([
+      ...selectData,
       { value: actif.id.toString(), label: actif.numero_serie },
     ]);
   };
@@ -80,21 +76,26 @@ const SelectActifsList: React.FC<Props> = ({
     <div className=" mt-20 w-1/3 mr-12">
       <Typography variant="h4">Actifs sélectionnés</Typography>
       <div className="bg-slate-100 w-full h-full pt-10 px-4">
-        <Autocomplete
-          placeholder={'Actifs'}
-          options={selectData}
-          sx={{ width: 300 }}
-          getOptionLabel={(option) => option.label}
-          onChange={(_, newValue) => {
-            updateData(newValue?.label as string);
-          }}
-          onInputChange={(_, newInputValue) => {
-            updateData(newInputValue);
-          }}
-          renderInput={(params) => (
-            <TextField {...params} label={'Actifs'} variant="outlined" />
-          )}
-        />
+        <div>
+          <Autocomplete
+            placeholder={'Actifs'}
+            value={currentValue}
+            options={selectData}
+            sx={{ width: 300 }}
+            getOptionLabel={(option) => option.label}
+            onChange={(_, newValue) => {
+              updateData(newValue?.label as string);
+              setCurrentValue(undefined);
+            }}
+            onInputChange={(_, newInputValue) => {
+              updateData(newInputValue);
+              setCurrentValue(undefined);
+            }}
+            renderInput={(params) => (
+              <TextField {...params} label={'Actifs'} variant="outlined" />
+            )}
+          />
+        </div>
         {selectedActifs.length > 0 ? (
           <TableContainer>
             <Table>

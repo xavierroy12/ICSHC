@@ -81,21 +81,12 @@ const ModifyActifsForm = ({
                 isClearable
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <Field
                 name="statut"
                 component={CustomSelect}
                 options={statuts}
                 label="Statut"
-                isClearable
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Field
-                name="assigne_a"
-                component={CustomSelect}
-                options={locataires}
-                label="Locataire"
                 isClearable
               />
             </Grid>

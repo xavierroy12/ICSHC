@@ -45,6 +45,8 @@ Route::get('/statuts', [StatutController::class, 'showAll']);
 Route::get('/statuts/light', [StatutController::class, 'lightShow']);
 
 
+Route::get('/actifs/archived', [ActifController::class, 'archivedActifs']);
+
 
 Route::post('/actif', [ActifController::class, 'store']);
 Route::post('/actif/{id}', [ActifController::class, 'update']);

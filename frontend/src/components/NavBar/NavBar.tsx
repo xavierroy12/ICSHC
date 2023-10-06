@@ -10,7 +10,7 @@ const NavBar = () => {
       <Toolbar>
         <Link to={`/`}>
           <Button color="inherit">
-            <span className="font-semibold text-xl tracking-tight">ICSHC</span>
+            <span className="font-semibold text-xl tracking-tight">ICSSHC</span>
           </Button>
         </Link>
         <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">

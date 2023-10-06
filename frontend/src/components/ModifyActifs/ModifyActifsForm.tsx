@@ -7,6 +7,8 @@ import { SyntheticEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomSelect from '../CustomSelect';
 import { SelectItem } from '../Actif/type';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 type Props = {
   selectedRows: number[];
@@ -118,6 +120,16 @@ const ModifyActifsForm = ({
     handleUpdate(updatedData);
   };
 
+const [openModal, setOpenModal] = useState(false);
+
+    useEffect(() => {
+    console.log('State modal:', openModal);
+    }, [openModal]);
+
+    const handleState = () => {
+    setOpenModal(true);
+    };
+
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       {({ values, handleChange, dirty, setFieldValue }) => (
@@ -132,9 +144,11 @@ const ModifyActifsForm = ({
                 isClearable
               />
             </Grid>
+
             <Grid item xs={2}>
-              <Button>test</Button>
+                <Button onClick={handleState}>Test</Button>
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 name="categorie"
@@ -261,7 +275,6 @@ const ModifyActifsForm = ({
         </Form>
       )}
     </Formik>
-  );
+    );
 };
-
 export default ModifyActifsForm;

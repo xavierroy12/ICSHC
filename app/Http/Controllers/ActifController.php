@@ -194,7 +194,7 @@ class ActifController extends Controller
 
     public function listShow()
     {
-        $actifs = Actif::with(['modele.categorie', 'statut', 'proprietaire', 'emplacement',])->get()->map(function ($actif) {
+        $actifs = Actif::with(['modele.categorie', 'statut', 'client', 'emplacement'])->get()->map(function ($actif) {
             return [
                 'id' => $actif->id,
                 'numero_commande' => $actif->numero_commande,
@@ -206,8 +206,8 @@ class ActifController extends Controller
                 'categorie_id' => $actif->modele->categorie->id,
                 'statut' => $actif->statut->nom,
                 'statut_id' => $actif->statut->id,
-                'proprietaire' => $actif->proprietaire->nom,
-                'proprietaire_id' => $actif->proprietaire->id,
+                'client' => $actif->client->nom,
+                'client_id' => $actif->client->id,
                 'emplacement' => $actif->emplacement->nom,
                 'emplacement_id' => $actif->emplacement->id,
             ];
@@ -224,7 +224,7 @@ class ActifController extends Controller
             'proprietaire',
             'modele',
             'modele.categorie',
-            'client', // Ajoutez la relation avec l'utilisateur
+            'client'
         ])->find($id);
 
         if (!$actif) {

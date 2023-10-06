@@ -46,8 +46,8 @@ const Actifs = () => {
       },
     },
     {
-      name: 'proprietaire',
-      label: 'Propriétaire',
+      name: 'client',
+      label: 'Assigné à',
       options: {
         filter: true,
         sort: true,

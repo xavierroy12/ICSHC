@@ -8,17 +8,8 @@ export type Actif = {
   categorie_id: number;
   statut: string;
   statut_id: number;
-  proprietaire: string;
-  proprietaire_id: number;
+  assigne_a: string;
+  assigne_a_id: number;
   emplacement: string;
   emplacement_id: number;
-};
-
-export type TableState = {
-  filters?: Record<string, string>;
-  showColumnFilters?: boolean;
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
-  page?: number;
-  pageSize?: number;
 };

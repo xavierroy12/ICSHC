@@ -59,6 +59,10 @@ class ModeleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $modele = Modele::find($id);
+        $data = $request->all();
+
+
 
     }
 

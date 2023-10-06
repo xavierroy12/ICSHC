@@ -104,7 +104,11 @@ const ModifyActifs = () => {
   }, []);
 
   if (loading) {
-    return <CircularProgress className="m-auto mt-20" />;
+    return (
+        <div className="fixed inset-0 flex items-center justify-center">
+          <CircularProgress />
+        </div>
+      );
   }
   return (
     <div className="flex h-fit">

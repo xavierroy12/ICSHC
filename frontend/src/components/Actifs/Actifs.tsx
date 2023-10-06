@@ -117,6 +117,7 @@ const Actifs = () => {
       <div className="float-right m-4 ">
         <Button
           className="ml-12"
+          style={{ marginRight: '1rem'}}
           color="primary"
           size="medium"
           onClick={() => navigate('/actif')}
@@ -126,6 +127,7 @@ const Actifs = () => {
         <Button
           color="secondary"
           size="medium"
+          style={{ marginRight: '1rem'}}
           disabled={selectedRows.length === 0}
           onClick={() => {
             if (selectedRows.length === 1) {

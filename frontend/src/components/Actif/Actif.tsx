@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress'; // Import Material-UI CircularProgress
 import { Actif_Type, LightType, SelectItem } from './type';
 import ActifForm from './ActifForm';
@@ -9,6 +9,7 @@ import { Typography } from '@mui/material';
 
 const Actif = () => {
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
 
   const [loading, setLoading] = useState(true);
   const [statuts, setStatuts] = useState<SelectItem[]>([]);
@@ -19,7 +20,9 @@ const Actif = () => {
   const [utilisations, setUtilisations] = useState<SelectItem[]>([]);
   const [proprietaires, setProprietaires] = useState<SelectItem[]>([]);
   const [actif, setActif] = useState<Actif_Type>();
-
+  const { setActifUpdated } = location.state as {
+    setActifUpdated: React.Dispatch<React.SetStateAction<boolean>>;
+  };
   useEffect(() => {
     Promise.all([
       fetch('http://localhost:8000/api/statuts/light'),
@@ -96,9 +99,9 @@ const Actif = () => {
   return (
     <div className="">
       {loading ? (
-            <div className="fixed inset-0 flex items-center justify-center">
-                <CircularProgress />
-            </div> // Replace loading indicator with CircularProgress
+        <div className="fixed inset-0 flex items-center justify-center">
+          <CircularProgress />
+        </div> // Replace loading indicator with CircularProgress
       ) : (
         <div className="mx-auto mt-8">
           {actif && id && (
@@ -119,6 +122,7 @@ const Actif = () => {
                     locataires={locataires}
                     utilisations={utilisations}
                     proprietaires={proprietaires}
+                    onActifUpdate={setActifUpdated}
                   />
                 </div>
               </div>

@@ -15,7 +15,7 @@ function App() {
             <Route path="/actifs/modify" element={<ModifyActifs />} />
             <Route path="/actif/:id" element={<Actif />} />
             <Route path="*" element={<h1>Not Found</h1>} />
-            <Route path="/" element={<Modele/>} />
+            <Route path="/" element={<Modele id={'1'} />} />
           </Routes>
         </Layout>
       </Router>

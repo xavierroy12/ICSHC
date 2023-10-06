@@ -48,7 +48,7 @@ const Modele = ({ id }: Props) => {
   }, [id]);
 
   return (
-    <Modal>
+    <Modal open>
       {modele ? (
         <ModeleForm modele={modele} categories={categories} />
       ) : (

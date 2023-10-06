@@ -21,6 +21,19 @@ const ModeleForm = ({ modele, categories }: Props) => {
   };
 
   const handleSubmit = (values: FormikValues) => {
+    const updatedData = {
+      id: modele.id,
+      nom: values.nom,
+      categorie: values.categorie,
+      stockage: values.stockage,
+      processeur: values.processeur,
+      carte_graphique: values.carte_graphique,
+      memoire: values.memoire,
+      taille_ecran: values.taille_ecran,
+      tactile: values.tactile,
+      clavier: values.clavier,
+      clavier_numerique: values.clavier_numerique,
+    };
     console.log(values);
   };
   return (

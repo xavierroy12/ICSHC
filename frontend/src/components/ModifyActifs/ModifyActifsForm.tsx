@@ -7,6 +7,8 @@ import { SyntheticEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomSelect from '../CustomSelect';
 import { SelectItem } from '../Actif/type';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 type Props = {
   selectedRows: number[];
@@ -258,7 +260,6 @@ const ModifyActifsForm = ({
         </Form>
       )}
     </Formik>
-  );
+    );
 };
-
 export default ModifyActifsForm;

@@ -8,9 +8,9 @@ import CustomSelect from '../CustomSelect';
 import { Grid } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
+import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs from 'dayjs';
+
 type Props = {
   id: string;
   actif: Actif_Type;
@@ -54,83 +54,58 @@ const ActifForm = ({
     note: actif.note,
   };
 
-  const handleSubmit = (values: FormikValues) => {
-    try {
-      // Map the form values to match the expected field names in your Laravel API
-      console.log(values);
-      const updatedData = {
-        id_categorie: values.categorie.id || values.categorie,
-        en_entrepot: values.en_entrepot,
-        date_retour: values.date_retour,
-        note: values.note,
-        id_assigne_a: values.assigne_a?.id || values.assigne_a || '',
-        id_modele: values.modele.id || values.modele,
-        id_statut: values.statut.id || values.statut,
-        id_emplacement: values.emplacement.id || values.emplacement,
-        id_proprietaire: values.proprietaire.id || values.proprietaire,
-        id_utilisation: values.utilisation.id || values.utilisation,
-      };
 
-      // Make an API request to update the data in the database
-      fetch(`http://localhost:8000/api/actif/${id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedData), // Send the updated data with the mapped field names
-      })
-        .then((response) => {
-          if (response.ok) {
-            // Display a success message to the user
-            alert('Données sauvegardées avec succès');
-            console.log('Données sauvegardées avec succès: ', updatedData);
-            navigate('/actifs');
-          } else {
-            // Handle errors if the API request fails
-            console.error('Error saving data:', response.statusText);
-            console.log('CA NE FONCTIONNE PAS ', updatedData);
-          }
-        })
-        .catch((error) => {
-          // Handle errors if the API request fails
-          console.error('Error saving data:', error);
-        });
-    } catch (error) {
-      // Handle errors if the API request fails
-      console.error('Error saving data:', error);
-    }
+  const handleSubmit = (values: FormikValues) => {
+    // Map the form values to match the expected field names in your Laravel API
+    const updatedData = {
+      id_categorie: values.categorie.id || values.categorie,
+      en_entrepot: values.en_entrepot,
+      date_retour: values.date_retour,
+      note: values.note,
+      id_assigne_a: values.assigne_a?.id || values.assigne_a || '',
+      id_modele: values.modele.id || values.modele,
+      id_statut: values.statut.id || values.statut,
+      id_emplacement: values.emplacement.id || values.emplacement,
+      id_proprietaire: values.proprietaire.id || values.proprietaire,
+      id_utilisation: values.utilisation.id || values.utilisation,
+    };
+
+    handleUpdate(updatedData);
   };
 
   const handleReception = (values: FormikValues) => {
-    try {
-      const updatedData = {
-        id_categorie: values.categorie.id || values.categorie,
-        en_entrepot: true,
-        date_retour: values.date_retour,
-        note: values.note,
-        id_assigne_a: values.assigne_a.id || values.assigne_a,
-        id_modele: values.modele.id || values.modele,
-        id_statut: 1,
-        id_emplacement: values.emplacement.id || values.emplacement,
-        id_proprietaire: values.proprietaire.id || values.proprietaire,
-        id_utilisation: values.utilisation.id || values.utilisation,
-      };
+    const updatedData = {
+      id_categorie: values.categorie.id || values.categorie,
+      en_entrepot: true,
+      date_retour: values.date_retour,
+      note: values.note,
+      id_assigne_a: '',
+      id_modele: values.modele.id || values.modele,
+      id_statut: 1,
+      id_emplacement: values.emplacement.id || values.emplacement,
+      id_proprietaire: values.proprietaire.id || values.proprietaire,
+      id_utilisation: values.utilisation.id || values.utilisation,
+    };
+    handleUpdate(updatedData);
+  };
 
+  const handleUpdate = (values: FormikValues) => {
+    try {
       fetch(`http://localhost:8000/api/actif/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(updatedData),
+        body: JSON.stringify(values),
       })
         .then((response) => {
           if (response.ok) {
             alert('Données sauvegardées avec succès');
-            console.log('Données sauvegardées avec succès: ', updatedData);
+            console.log('Données sauvegardées avec succès: ', values);
             navigate('/actifs');
           } else {
             console.error('Error saving data:', response.statusText);
-            console.log('CA NE FONCTIONNE PAS ', updatedData);
+            console.log('CA NE FONCTIONNE PAS ', values);
           }
         })
         .catch((error) => {
@@ -140,7 +115,6 @@ const ActifForm = ({
       console.error('Error saving data:', error);
     }
   };
-
 
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
@@ -157,6 +131,7 @@ const ActifForm = ({
                 sx={{ width: 300 }}
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 as={TextField}
@@ -167,6 +142,7 @@ const ActifForm = ({
                 sx={{ width: 300 }}
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 as={TextField}
@@ -177,6 +153,7 @@ const ActifForm = ({
                 sx={{ width: 300 }}
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 as={TextField}
@@ -187,6 +164,7 @@ const ActifForm = ({
                 sx={{ width: 300 }}
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -196,6 +174,7 @@ const ActifForm = ({
                 label="Modele"
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -205,6 +184,7 @@ const ActifForm = ({
                 label="Categorie"
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -214,6 +194,7 @@ const ActifForm = ({
                 label="Statut"
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -224,6 +205,7 @@ const ActifForm = ({
                 isClearable={true}
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -233,6 +215,7 @@ const ActifForm = ({
                 label="Emplacement"
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 type="checkbox"
@@ -249,6 +232,7 @@ const ActifForm = ({
                 En entrepot
               </label>
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -258,6 +242,7 @@ const ActifForm = ({
                 label="Utilisation"
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -267,47 +252,46 @@ const ActifForm = ({
                 label="Proprietaire"
               />
             </Grid>
+
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <Grid item xs={6}>
                 <Field
                   component={DatePicker}
                   label="Date de création"
-                  format="DD/MM/YYYY"
+                  format="YYYY-MM-DD"
                   name="date_creation"
                   className="input-label "
                   value={
-                    values.date_creation
-                      ? dayjs(values.date_creation)
-                      : undefined
+                    values.date_creation ? dayjs(values.date_creation) : null
                   }
-                  disabled
+                  disabled={!values.date_creation}
                   sx={{ width: 300 }}
                 />
               </Grid>
+            </LocalizationProvider>
+
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
               <Grid item xs={6}>
                 <Field
                   component={DatePicker}
                   label="Date de retour"
-                  format="DD/MM/YYYY"
+                  format="YYYY-MM-DD"
                   name="date_retour"
+                  value={values.date_retour ? dayjs(values.date_retour) : null}
                   className="input-label "
-                  clearable
+                  onChange={(date: Dayjs | null) => {
+                    console.log(date?.format('YYYY-MM-DD'));
+                    handleChange(date?.format('YYYY-MM-DD'));
+                  }}
                   sx={{ width: 300 }}
                   slotProps={{
                     field: { clearable: true },
                   }}
-                  value={
-                    values.date_retour ? dayjs(values.date_retour) : undefined
-                  }
-                  onChange={(value: Date) => {
-                    setFieldValue(
-                      'date_retour',
-                      value?.toISOString().substring(0, 10) || ''
-                    );
-                  }}
+
                 />
               </Grid>
             </LocalizationProvider>
+
             <Grid item xs={12}>
               <Field
                 as={TextField}
@@ -316,16 +300,18 @@ const ActifForm = ({
                 name="note"
                 multiline
                 rows={4}
+                defaultValue=""
                 value={values.note}
                 onChange={handleChange}
                 sx={{ width: '100%' }}
               />
             </Grid>
+
             <Grid item xs={12}>
               <Button
                 className="my-5 mx-5 flex float-right"
                 variant="contained"
-                color="primary"
+                color="secondary"
                 size="medium"
                 type="submit"
                 disabled={!dirty}

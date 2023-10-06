@@ -8,9 +8,9 @@ import CustomSelect from '../CustomSelect';
 import { Grid } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
+import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs from 'dayjs';
+
 type Props = {
   id: string;
   actif: Actif_Type;
@@ -53,6 +53,7 @@ const ActifForm = ({
     date_retour: actif.date_retour,
     note: actif.note,
   };
+
 
   const handleSubmit = (values: FormikValues) => {
     // Map the form values to match the expected field names in your Laravel API
@@ -130,6 +131,7 @@ const ActifForm = ({
                 sx={{ width: 300 }}
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 as={TextField}
@@ -140,6 +142,7 @@ const ActifForm = ({
                 sx={{ width: 300 }}
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 as={TextField}
@@ -150,6 +153,7 @@ const ActifForm = ({
                 sx={{ width: 300 }}
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 as={TextField}
@@ -160,6 +164,7 @@ const ActifForm = ({
                 sx={{ width: 300 }}
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -169,6 +174,7 @@ const ActifForm = ({
                 label="Modele"
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -178,6 +184,7 @@ const ActifForm = ({
                 label="Categorie"
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -187,6 +194,7 @@ const ActifForm = ({
                 label="Statut"
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -197,6 +205,7 @@ const ActifForm = ({
                 isClearable={true}
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -206,6 +215,7 @@ const ActifForm = ({
                 label="Emplacement"
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 type="checkbox"
@@ -222,6 +232,7 @@ const ActifForm = ({
                 En entrepot
               </label>
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -231,6 +242,7 @@ const ActifForm = ({
                 label="Utilisation"
               />
             </Grid>
+
             <Grid item xs={6}>
               <Field
                 className="input-field"
@@ -240,47 +252,46 @@ const ActifForm = ({
                 label="Proprietaire"
               />
             </Grid>
+
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <Grid item xs={6}>
                 <Field
                   component={DatePicker}
                   label="Date de création"
-                  format="DD/MM/YYYY"
+                  format="YYYY-MM-DD"
                   name="date_creation"
                   className="input-label "
                   value={
-                    values.date_creation
-                      ? dayjs(values.date_creation)
-                      : undefined
+                    values.date_creation ? dayjs(values.date_creation) : null
                   }
-                  disabled
+                  disabled={!values.date_creation}
                   sx={{ width: 300 }}
                 />
               </Grid>
+            </LocalizationProvider>
+
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
               <Grid item xs={6}>
                 <Field
                   component={DatePicker}
                   label="Date de retour"
-                  format="DD/MM/YYYY"
+                  format="YYYY-MM-DD"
                   name="date_retour"
+                  value={values.date_retour ? dayjs(values.date_retour) : null}
                   className="input-label "
-                  clearable
+                  onChange={(date: Dayjs | null) => {
+                    console.log(date?.format('YYYY-MM-DD'));
+                    handleChange(date?.format('YYYY-MM-DD'));
+                  }}
                   sx={{ width: 300 }}
                   slotProps={{
                     field: { clearable: true },
                   }}
-                  value={
-                    values.date_retour ? dayjs(values.date_retour) : undefined
-                  }
-                  onChange={(value: Date) => {
-                    setFieldValue(
-                      'date_retour',
-                      value?.toISOString().substring(0, 10) || ''
-                    );
-                  }}
+
                 />
               </Grid>
             </LocalizationProvider>
+
             <Grid item xs={12}>
               <Field
                 as={TextField}
@@ -289,23 +300,38 @@ const ActifForm = ({
                 name="note"
                 multiline
                 rows={4}
+                defaultValue=""
                 value={values.note}
                 onChange={handleChange}
                 sx={{ width: '100%' }}
               />
             </Grid>
+
             <Grid item xs={12}>
               <Button
                 className="my-5 mx-5 flex float-right"
                 variant="contained"
-                color="primary"
+                color="secondary"
                 size="medium"
                 type="submit"
                 disabled={!dirty}
               >
                 Sauvegarder
               </Button>
-            </Grid>
+
+              <Grid item xs={12}>
+                <Button
+                    className="my-5 mx-4 flex float-right"
+                    variant="contained"
+                    color="primary"
+                    size="medium"
+                    onClick={handleReception}
+                >
+                    Réception
+                </Button>
+                </Grid>
+
+          </Grid>
           </Grid>
         </Form>
       )}

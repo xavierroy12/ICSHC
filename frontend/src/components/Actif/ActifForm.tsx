@@ -1,15 +1,13 @@
 import { type SyntheticEvent } from 'react';
 import { Formik, Form, Field, FormikValues } from 'formik';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Actif_Type, SelectItem } from './type';
-import CustomSelect from '../CustomSelect';
-import { Grid } from '@mui/material';
+import { Grid, TextField, Button } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs, { Dayjs } from 'dayjs';
+import CustomSelect from '../CustomSelect';
 
 type Props = {
   id: string;
@@ -53,7 +51,6 @@ const ActifForm = ({
     date_retour: actif.date_retour,
     note: actif.note,
   };
-
 
   const handleSubmit = (values: FormikValues) => {
     // Map the form values to match the expected field names in your Laravel API
@@ -287,7 +284,6 @@ const ActifForm = ({
                   slotProps={{
                     field: { clearable: true },
                   }}
-
                 />
               </Grid>
             </LocalizationProvider>
@@ -323,7 +319,7 @@ const ActifForm = ({
                 variant="contained"
                 color="primary"
                 size="medium"
-                onClick={()=>handleReception(values)}
+                onClick={() => handleReception(values)}
               >
                 Reception
               </Button>

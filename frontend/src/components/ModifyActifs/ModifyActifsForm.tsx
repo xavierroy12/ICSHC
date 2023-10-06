@@ -16,7 +16,6 @@ type Props = {
   emplacements: SelectItem[];
   utilisations: SelectItem[];
   proprietaires: SelectItem[];
-  onActifUpdate: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const ModifyActifsForm = ({
@@ -27,7 +26,6 @@ const ModifyActifsForm = ({
   emplacements,
   utilisations,
   proprietaires,
-  onActifUpdate,
 }: Props) => {
   const navigate = useNavigate();
   const initialValues = {
@@ -45,7 +43,7 @@ const ModifyActifsForm = ({
 
   const handleUpdate = (values: FormikValues) => {
     console.log(selectedRows);
-   /* const updatedData = {
+    /* const updatedData = {
       ids: selectedRows,
       modele: values.modele?.id,
       categorie: values.categorie?.id,
@@ -60,72 +58,65 @@ const ModifyActifsForm = ({
     };*/
     console.log(values);
     fetch(`http://localhost:8000/api/actifs`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values), // Send the updated data with the mapped field names
-      })
-        .then((response) => {
-          if (response.ok) {
-            // Display a success message to the user
-            alert('Données sauvegardées avec succès');
-            console.log('Données sauvegardées avec succès: ', values);
-          onActifUpdate(true);
-            navigate('/actifs');
-          } else {
-            // Handle errors if the API request fails
-            console.error('Error saving data:', response.statusText);
-            console.log('CA NE FONCTIONNE PAS ', values);
-          }
-        })
-        .catch((error) => {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values), // Send the updated data with the mapped field names
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Display a success message to the user
+          alert('Données sauvegardées avec succès');
+          console.log('Données sauvegardées avec succès: ', values);
+          navigate('/actifs');
+        } else {
           // Handle errors if the API request fails
-          console.error('Error saving data:', error);
-        });
+          console.error('Error saving data:', response.statusText);
+          console.log('CA NE FONCTIONNE PAS ', values);
+        }
+      })
+      .catch((error) => {
+        // Handle errors if the API request fails
+        console.error('Error saving data:', error);
+      });
+  };
+
+  const handleSubmit = (values: FormikValues) => {
+    // Map the form values to match the expected field names in your Laravel API
+    const updatedData = {
+      ids: selectedRows,
+      modele: values.modele?.id,
+      categorie: values.categorie?.id,
+      statut: values.statut?.id,
+      desasignation: false,
+      //assigne_a: values.assigne_a?.id,
+      emplacement: values.emplacement?.id,
+      en_entrepot: values.en_entrepot,
+      utilisation: values.utilisation?.id,
+      proprietaire: values.proprietaire?.id,
+      date_retour: values.date_retour,
+      note: values.note,
     };
+    handleUpdate(updatedData);
+  };
 
-    const handleSubmit = (values: FormikValues) => {
-        // Map the form values to match the expected field names in your Laravel API
-        const updatedData = {
-            ids: selectedRows,
-            modele: values.modele?.id,
-            categorie: values.categorie?.id,
-            statut: values.statut?.id,
-            desasignation: false,
-            //assigne_a: values.assigne_a?.id,
-            emplacement: values.emplacement?.id,
-            en_entrepot: values.en_entrepot,
-            utilisation: values.utilisation?.id,
-            proprietaire: values.proprietaire?.id,
-            date_retour: values.date_retour,
-            note: values.note,
-        };
-        handleUpdate(updatedData);
+  const handleReception = (values: FormikValues) => {
+    const updatedData = {
+      ids: selectedRows,
+      modele: values.modele?.id,
+      categorie: values.categorie?.id,
+      statut: values.statut?.id,
+      desasignation: true,
+      emplacement: values.emplacement?.id,
+      en_entrepot: values.en_entrepot,
+      utilisation: values.utilisation?.id,
+      proprietaire: values.proprietaire?.id,
+      date_retour: values.date_retour,
+      note: values.note,
     };
-
-    const handleReception = (values: FormikValues) => {
-        const updatedData = {
-            ids: selectedRows,
-            modele: values.modele?.id,
-            categorie: values.categorie?.id,
-            statut: values.statut?.id,
-            desasignation: true,
-            emplacement: values.emplacement?.id,
-            en_entrepot: values.en_entrepot,
-            utilisation: values.utilisation?.id,
-            proprietaire: values.proprietaire?.id,
-            date_retour: values.date_retour,
-            note: values.note,
-        };
-        handleUpdate(updatedData);
-      };
-
-
-
-
-
-
+    handleUpdate(updatedData);
+  };
 
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
@@ -256,7 +247,7 @@ const ModifyActifsForm = ({
                 variant="contained"
                 color="primary"
                 size="medium"
-                onClick={()=>handleReception(values)}
+                onClick={() => handleReception(values)}
               >
                 Réception
               </Button>

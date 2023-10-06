@@ -132,7 +132,9 @@ const Actifs = () => {
               navigate('/actif/' + selectedRows[0]);
             } else {
               navigate('/actifs/modify', {
-                state: { selectedRows, setActifUpdated },
+                state: {
+                  selectedRows,
+                },
               });
             }
           }}

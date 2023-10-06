@@ -20,9 +20,7 @@ const Actif = () => {
   const [utilisations, setUtilisations] = useState<SelectItem[]>([]);
   const [proprietaires, setProprietaires] = useState<SelectItem[]>([]);
   const [actif, setActif] = useState<Actif_Type>();
-  const { setActifUpdated } = location.state as {
-    setActifUpdated: React.Dispatch<React.SetStateAction<boolean>>;
-  };
+
   useEffect(() => {
     Promise.all([
       fetch('http://localhost:8000/api/statuts/light'),
@@ -122,7 +120,6 @@ const Actif = () => {
                     locataires={locataires}
                     utilisations={utilisations}
                     proprietaires={proprietaires}
-                    onActifUpdate={setActifUpdated}
                   />
                 </div>
               </div>

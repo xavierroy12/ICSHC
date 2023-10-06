@@ -19,7 +19,6 @@ type Props = {
   locataires: SelectItem[];
   utilisations: SelectItem[];
   proprietaires: SelectItem[];
-  onActifUpdate: (actifUpdated: boolean) => void;
 };
 
 const ActifForm = ({
@@ -32,7 +31,6 @@ const ActifForm = ({
   locataires,
   utilisations,
   proprietaires,
-  onActifUpdate,
 }: Props) => {
   const navigate = useNavigate();
 
@@ -132,7 +130,6 @@ const ActifForm = ({
           if (response.ok) {
             alert('Données sauvegardées avec succès');
             console.log('Données sauvegardées avec succès: ', values);
-            onActifUpdate(true);
             navigate('/actifs');
           } else {
             console.error('Error saving data:', response.statusText);
@@ -358,15 +355,15 @@ const ActifForm = ({
                 Réception
               </Button>
 
-                <Button
-                    className="my-5 mx-5 flex float-right"
-                    variant="contained"
-                    color="error"
-                    size="medium"
-                    onClick={() => handleArchive(values)}
-                >
+              <Button
+                className="my-5 mx-5 flex float-right"
+                variant="contained"
+                color="error"
+                size="medium"
+                onClick={() => handleArchive(values)}
+              >
                 Archivé
-                </Button>
+              </Button>
             </Grid>
           </Grid>
         </Form>

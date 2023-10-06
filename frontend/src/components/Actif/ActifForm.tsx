@@ -157,7 +157,6 @@ const ActifForm = ({
                 label="Nom"
                 name="nom"
                 className="input-label "
-                disabled
                 sx={{ width: 300 }}
               />
             </Grid>

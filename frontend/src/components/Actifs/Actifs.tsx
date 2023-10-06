@@ -1,17 +1,37 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Actif } from './type';
-
 import { useNavigate } from 'react-router-dom';
 import MUIDataTable, { MUIDataTableProps } from 'mui-datatables';
-import { Button, CircularProgress } from '@mui/material';
+import { Button, CircularProgress, Checkbox, Typography } from '@mui/material';
 
 const Actifs = () => {
   const navigate = useNavigate();
 
+  const [checked, setChecked] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>();
   const [actifs, setActifs] = useState<Actif[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [actifUpdated, setActifUpdated] = useState<boolean>(false);
+  const [archivedActifs, setArchivedActifs] = useState<Actif[]>([]);
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+    if (event.target.checked) {
+      fetch('http://localhost:8000/api/actifs/archived')
+        .then((response) => response.json())
+        .then((actifs) => {
+          console.log(actifs);
+          setArchivedActifs(actifs);
+        })
+        .then(() => {
+          setIsLoading(false);
+        })
+        .catch((error) => console.error(error));
+    } else {
+      setArchivedActifs([]);
+    }
+  };
+
   const columns = [
     {
       name: 'numero_serie',
@@ -62,6 +82,7 @@ const Actifs = () => {
       },
     },
   ];
+
   const options = {
     filterType: 'dropdown',
     responsive: 'simple',
@@ -106,14 +127,25 @@ const Actifs = () => {
 
   return (
     <div className="w-11/12 mx-auto mt-10">
-      <div>
-        <MUIDataTable
-          title={'Actifs'}
-          data={actifs}
-          columns={columns}
-          options={options as MUIDataTableProps['options']}
-        />
-      </div>
+        <div>
+            <MUIDataTable
+            title={checked ? 'Actifs archivés' : 'Actifs'}
+            data={checked ? archivedActifs : actifs}
+            columns={columns}
+            options={options as MUIDataTableProps['options']}
+            />
+        </div>
+
+      <div className="flex float-left mt-4">
+          <Checkbox
+            checked={checked}
+            onChange={handleCheckboxChange}
+            color="primary"
+            inputProps={{ 'aria-label': 'Show archived actifs' }}
+          />
+          <Typography variant="body1">Voir les actifs archivés</Typography>
+        </div>
+
       <div className="float-right m-4 ">
         <Button
           className="ml-12"

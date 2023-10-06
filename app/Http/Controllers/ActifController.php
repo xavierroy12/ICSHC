@@ -302,5 +302,32 @@ class ActifController extends Controller
         return response()->json($actifs);
     }
 
+    public function archivedActifs()
+{
+    $archivedActifs = Actif::with(['modele.categorie', 'statut', 'client', 'emplacement'])
+        ->where('id_statut', 5)
+        ->get()
+        ->map(function ($actif) {
+            return [
+                'id' => $actif->id,
+                'numero_commande' => $actif->numero_commande,
+                'numero_serie' => $actif->numero_serie,
+                'nom' => $actif->nom,
+                'modele' => $actif->modele->nom,
+                'modele_id' => $actif->modele->id,
+                'categorie' => $actif->modele->categorie->nom,
+                'categorie_id' => $actif->modele->categorie->id,
+                'statut' => $actif->statut->nom,
+                'statut_id' => $actif->statut->id,
+                'client' => $actif->client->nom,
+                'client_id' => $actif->client->id,
+                'emplacement' => $actif->emplacement->nom,
+                'emplacement_id' => $actif->emplacement->id,
+            ];
+        });
+
+    return response()->json($archivedActifs);
+}
+
 
 }

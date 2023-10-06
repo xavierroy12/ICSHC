@@ -97,7 +97,11 @@ const Actifs = () => {
   }, [actifUpdated]);
 
   if (isLoading) {
-    return <CircularProgress className="m-auto mt-20" />;
+    return (
+      <div className="fixed inset-0 flex items-center justify-center">
+        <CircularProgress />
+      </div>
+    );
   }
 
   return (

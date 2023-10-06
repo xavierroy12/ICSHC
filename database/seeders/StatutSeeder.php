@@ -27,5 +27,9 @@ class StatutSeeder extends Seeder
         DB::table('statut')->insert([
             'nom' => 'Hors service',
         ]);
+
+        DB::table('statut')->insert([
+            'nom' => 'Archivé',
+        ]);
     }
 }

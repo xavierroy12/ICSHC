@@ -19,6 +19,7 @@ type Props = {
   locataires: SelectItem[];
   utilisations: SelectItem[];
   proprietaires: SelectItem[];
+  onActifUpdate: (actifUpdated: boolean) => void;
 };
 
 const ActifForm = ({
@@ -31,6 +32,7 @@ const ActifForm = ({
   locataires,
   utilisations,
   proprietaires,
+  onActifUpdate,
 }: Props) => {
   const navigate = useNavigate();
 
@@ -50,6 +52,37 @@ const ActifForm = ({
     date_creation: actif.date_creation,
     date_retour: actif.date_retour,
     note: actif.note,
+  };
+
+  const handleArchive = (values: FormikValues) => {
+    const confirmed = window.confirm(
+      'Attention! Si vous retirez un actif du trafic, il ne sera plus en fonction et accessible dans la liste des actifs. Êtes-vous certain de vouloir faire cette action?'
+    );
+
+    if (confirmed) {
+      // Set the statut of the actif to "Archivé"
+      const updatedActif = {
+        id_categorie: values.categorie.id || values.categorie,
+        en_entrepot: values.en_entrepot,
+        date_retour: values.date_retour,
+        note: values.note,
+        id_assigne_a: values.assigne_a?.id || values.assigne_a || '',
+        id_modele: values.modele.id || values.modele,
+        id_statut: 5,
+        id_emplacement: values.emplacement.id || values.emplacement,
+        id_proprietaire: values.proprietaire.id || values.proprietaire,
+        id_utilisation: values.utilisation.id || values.utilisation,
+      };
+
+      // Update the actif in the database
+      // ...
+      handleUpdate(updatedActif);
+
+      // Navigate back to the actifs page
+      navigate('/actifs');
+    } else {
+      // Cancel the action
+    }
   };
 
   const handleSubmit = (values: FormikValues) => {
@@ -99,6 +132,7 @@ const ActifForm = ({
           if (response.ok) {
             alert('Données sauvegardées avec succès');
             console.log('Données sauvegardées avec succès: ', values);
+            onActifUpdate(true);
             navigate('/actifs');
           } else {
             console.error('Error saving data:', response.statusText);
@@ -323,6 +357,16 @@ const ActifForm = ({
               >
                 Réception
               </Button>
+
+                <Button
+                    className="my-5 mx-5 flex float-right"
+                    variant="contained"
+                    color="error"
+                    size="medium"
+                    onClick={() => handleArchive(values)}
+                >
+                Archivé
+                </Button>
             </Grid>
           </Grid>
         </Form>

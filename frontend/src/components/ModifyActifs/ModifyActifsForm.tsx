@@ -17,6 +17,7 @@ type Props = {
   emplacements: SelectItem[];
   utilisations: SelectItem[];
   proprietaires: SelectItem[];
+  onActifUpdate: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const ModifyActifsForm = ({
@@ -28,6 +29,7 @@ const ModifyActifsForm = ({
   emplacements,
   utilisations,
   proprietaires,
+  onActifUpdate,
 }: Props) => {
   const navigate = useNavigate();
   const initialValues = {
@@ -71,6 +73,7 @@ const ModifyActifsForm = ({
             // Display a success message to the user
             alert('Données sauvegardées avec succès');
             console.log('Données sauvegardées avec succès: ', values);
+          onActifUpdate(true);
             navigate('/actifs');
           } else {
             // Handle errors if the API request fails

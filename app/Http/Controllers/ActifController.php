@@ -217,7 +217,7 @@ class ActifController extends Controller
 
     public function listShow()
     {
-        $actifs = Actif::with(['modele.categorie', 'statut', 'proprietaire', 'emplacement'])
+        $actifs = Actif::with(['modele.categorie', 'statut', 'client', 'emplacement'])
             ->whereHas('statut', function ($query) {
                 $query->where('nom', '!=', 'Archivé');
             })
@@ -234,8 +234,8 @@ class ActifController extends Controller
                     'categorie_id' => $actif->modele->categorie->id,
                     'statut' => $actif->statut->nom,
                     'statut_id' => $actif->statut->id,
-                    'proprietaire' => $actif->proprietaire->nom,
-                    'proprietaire_id' => $actif->proprietaire->id,
+                    'client' => $actif->client->nom,
+                    'client_id' => $actif->client->id,
                     'emplacement' => $actif->emplacement->nom,
                     'emplacement_id' => $actif->emplacement->id,
                 ];

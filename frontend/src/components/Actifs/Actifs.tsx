@@ -11,7 +11,7 @@ const Actifs = () => {
   const [isLoading, setIsLoading] = useState<boolean>();
   const [actifs, setActifs] = useState<Actif[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-
+  const [actifUpdated, setActifUpdated] = useState<boolean>(false);
   const columns = [
     {
       name: 'numero_serie',
@@ -46,8 +46,8 @@ const Actifs = () => {
       },
     },
     {
-      name: 'proprietaire',
-      label: 'Propriétaire',
+      name: 'client',
+      label: 'Assigné à',
       options: {
         filter: true,
         sort: true,
@@ -89,9 +89,12 @@ const Actifs = () => {
         console.log('actif', values);
         setActifs(values);
       })
-      .then(() => setIsLoading(false))
+      .then(() => {
+        setIsLoading(false);
+        setActifUpdated(false);
+      })
       .catch((error) => console.error(error));
-  }, []);
+  }, [actifUpdated]);
 
   if (isLoading) {
     return (
@@ -128,7 +131,9 @@ const Actifs = () => {
             if (selectedRows.length === 1) {
               navigate('/actif/' + selectedRows[0]);
             } else {
-              navigate('/actifs/modify', { state: { selectedRows } });
+              navigate('/actifs/modify', {
+                state: { selectedRows, setActifUpdated },
+              });
             }
           }}
         >

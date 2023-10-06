@@ -18,12 +18,14 @@ export type LightActif = {
 
 const ModifyActifs = () => {
   const location = useLocation();
-  const { selectedRows, setActifUpdated } = location.state as { selectedRows: number[], setActifUpdated: React.Dispatch<React.SetStateAction<boolean>> };
+  const { selectedRows, setActifUpdated } = location.state as {
+    selectedRows: number[];
+    setActifUpdated: React.Dispatch<React.SetStateAction<boolean>>;
+  };
   const [loading, setLoading] = useState(true);
   const [statuts, setStatuts] = useState<SelectItem[]>([]);
   const [modeles, setModeles] = useState<SelectItem[]>([]);
   const [emplacements, setEmplacements] = useState<SelectItem[]>([]);
-  const [locataires, setLocataires] = useState<SelectItem[]>([]);
   const [utilisations, setUtilisations] = useState<SelectItem[]>([]);
   const [proprietaires, setProprietaires] = useState<SelectItem[]>([]);
   const [categories, setCategories] = useState<SelectItem[]>([]);
@@ -36,7 +38,6 @@ const ModifyActifs = () => {
       fetch('http://localhost:8000/api/statuts/light'),
       fetch('http://localhost:8000/api/modeles/light'),
       fetch('http://localhost:8000/api/emplacements/light'),
-      fetch('http://localhost:8000/api/clients/light'),
       fetch('http://localhost:8000/api/utilisations/light'),
       fetch('http://localhost:8000/api/proprietaires/light'),
       fetch('http://localhost:8000/api/categories/light'),
@@ -50,7 +51,6 @@ const ModifyActifs = () => {
           statutsData,
           modelesData,
           emplacementsData,
-          locatairesData,
           utilisationsData,
           proprietairesData,
           categoriesData,
@@ -72,12 +72,6 @@ const ModifyActifs = () => {
             emplacementsData.map((emplacement: LightType) => ({
               id: emplacement.id,
               label: emplacement.nom,
-            }))
-          );
-          setLocataires(
-            locatairesData.map((locataire: LightType) => ({
-              id: locataire.id,
-              label: locataire.nom,
             }))
           );
           setUtilisations(
@@ -129,7 +123,6 @@ const ModifyActifs = () => {
             modeles={modeles}
             categories={categories}
             emplacements={emplacements}
-            locataires={locataires}
             utilisations={utilisations}
             proprietaires={proprietaires}
             onActifUpdate={setActifUpdated}

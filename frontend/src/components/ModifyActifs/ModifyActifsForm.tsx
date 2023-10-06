@@ -13,7 +13,6 @@ type Props = {
   modeles: SelectItem[];
   categories: SelectItem[];
   statuts: SelectItem[];
-  locataires: SelectItem[];
   emplacements: SelectItem[];
   utilisations: SelectItem[];
   proprietaires: SelectItem[];
@@ -25,7 +24,6 @@ const ModifyActifsForm = ({
   modeles,
   categories,
   statuts,
-  locataires,
   emplacements,
   utilisations,
   proprietaires,

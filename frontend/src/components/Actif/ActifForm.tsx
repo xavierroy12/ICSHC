@@ -348,6 +348,7 @@ const ActifForm = ({
               <Button
                 className="my-5 mx-5 flex float-right"
                 variant="contained"
+                style={{ marginRight: '1rem'}}
                 color="primary"
                 size="medium"
                 onClick={() => handleReception(values)}
@@ -357,6 +358,7 @@ const ActifForm = ({
 
               <Button
                 className="my-5 mx-5 flex float-right"
+                style={{ marginRight: '1rem'}}
                 variant="contained"
                 color="error"
                 size="medium"

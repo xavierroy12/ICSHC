@@ -235,6 +235,7 @@ const ModifyActifsForm = ({
               <Button
                 className="my-5 mx-5 flex float-right"
                 variant="contained"
+                style={{ marginRight: '1rem'}}
                 color="primary"
                 size="medium"
                 type="submit"
@@ -244,6 +245,7 @@ const ModifyActifsForm = ({
               </Button>
               <Button
                 className="my-5 mx-5 flex float-right"
+                style={{ marginRight: '1rem'}}
                 variant="contained"
                 color="primary"
                 size="medium"

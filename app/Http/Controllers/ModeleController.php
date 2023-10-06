@@ -57,7 +57,7 @@ class ModeleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
 
         $data = $request->all();

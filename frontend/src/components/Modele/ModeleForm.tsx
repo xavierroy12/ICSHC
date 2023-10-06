@@ -39,13 +39,9 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
       processeur: values.processeur,
       memoire_vive: values.memoire_vive,
       taille: values.taille,
-      /*tactile: values.tactile,
-            carte_graphique: values.carte_graphique,
-      clavier: values.clavier,
-      clavier_numerique: values.clavier_numerique,*/
     };
     console.log(values);
-    fetch(`http://localhost:8000/api/model/${id}`, {
+    fetch(`http://localhost:8000/api/model/${modele.id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

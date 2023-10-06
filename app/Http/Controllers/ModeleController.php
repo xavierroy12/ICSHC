@@ -15,6 +15,13 @@ class ModeleController extends Controller
         //
     }
 
+    public function get($id)
+    {
+        $modele = Modele::find($id);
+        return response()->json($modele);
+    }
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -50,9 +57,9 @@ class ModeleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Modele $modele)
+    public function update(Request $request, $id)
     {
-        //
+
     }
 
     /**

@@ -18,7 +18,7 @@ export type LightActif = {
 
 const ModifyActifs = () => {
   const location = useLocation();
-  const { selectedRows } = location.state as { selectedRows: number[] };
+  const { selectedRows, setActifUpdated } = location.state as { selectedRows: number[], setActifUpdated: React.Dispatch<React.SetStateAction<boolean>> };
   const [loading, setLoading] = useState(true);
   const [statuts, setStatuts] = useState<SelectItem[]>([]);
   const [modeles, setModeles] = useState<SelectItem[]>([]);
@@ -132,6 +132,7 @@ const ModifyActifs = () => {
             locataires={locataires}
             utilisations={utilisations}
             proprietaires={proprietaires}
+            onActifUpdate={setActifUpdated}
           />
         </div>
       </div>

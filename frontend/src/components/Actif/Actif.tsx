@@ -122,7 +122,6 @@ const Actif = () => {
               </div>
             </Fragment>
           )}
-          <hr />
         </div>
       )}
     </div>

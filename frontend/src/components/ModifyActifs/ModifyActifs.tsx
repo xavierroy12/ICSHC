@@ -1,12 +1,7 @@
-import React, { SyntheticEvent, useEffect, useState } from 'react';
-import { Button, CircularProgress, Grid, TextField } from '@mui/material';
-import { Field, Form, Formik, FormikValues } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { CircularProgress, Typography } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import SelectActifsList from '../SelectActifsList';
-import CustomSelect from '../CustomSelect';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
 import ModifyActifsForm from './ModifyActifsForm';
 import { SelectItem } from '../Actif/type';
 
@@ -21,9 +16,9 @@ export type LightActif = {
   numero_serie: string;
 };
 
-const ModifyActifs: React.FC = () => {
+const ModifyActifs = () => {
   const location = useLocation();
-  const { selectedRows } = location.state as { selectedRows: string[] };
+  const { selectedRows } = location.state as { selectedRows: number[] };
   const [loading, setLoading] = useState(true);
   const [statuts, setStatuts] = useState<SelectItem[]>([]);
   const [modeles, setModeles] = useState<SelectItem[]>([]);
@@ -104,16 +99,11 @@ const ModifyActifs: React.FC = () => {
             }))
           );
           setActifs(actifsData);
+          console.log(actifsData);
           setSelectedActifs(
-            selectedRows.map((selectedRow: string) => ({
-              id: parseInt(selectedRow),
-              nom: actifsData.find(
-                (actif: LightActif) => actif.id.toString() === selectedRow
-              )?.nom as string,
-              numero_serie: actifsData.find(
-                (actif: LightActif) => actif.id.toString() === selectedRow
-              )?.numero_serie as string,
-            }))
+            selectedRows.map((selectedRow) =>
+              actifsData.find((actif: LightActif) => actif.id === selectedRow)
+            )
           );
           setLoading(false);
         }
@@ -124,22 +114,28 @@ const ModifyActifs: React.FC = () => {
   if (loading) {
     return <CircularProgress className="m-auto mt-20" />;
   }
-
   return (
     <div className="flex h-fit">
       <div className="ml-12 mr-6 mt-20 w-2/3 h-full">
-        <h1 className="text-3xl mb-8">Modifier des actifs</h1>
-        <ModifyActifsForm
-          selectedRows={selectedRows}
-          statuts={statuts}
-          modeles={modeles}
-          categories={categories}
-          emplacements={emplacements}
-          locataires={locataires}
-          utilisations={utilisations}
-          proprietaires={proprietaires}
-        />
+        <div className="mb-8">
+          <Typography variant="h4">Modifier des actifs</Typography>
+        </div>
+        <hr />
+
+        <div className="p-4 my-4 bg-slate-100 w-full mx-auto h-full">
+          <ModifyActifsForm
+            selectedRows={selectedRows}
+            statuts={statuts}
+            modeles={modeles}
+            categories={categories}
+            emplacements={emplacements}
+            locataires={locataires}
+            utilisations={utilisations}
+            proprietaires={proprietaires}
+          />
+        </div>
       </div>
+
       <SelectActifsList
         selectedActifs={selectedActifs}
         setSelectedActifs={setSelectedActifs}

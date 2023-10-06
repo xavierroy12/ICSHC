@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { FieldProps, setIn } from 'formik';
+import { useState } from 'react';
+import { FieldProps } from 'formik';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { SelectItem } from '../Actif/type';
@@ -10,13 +10,13 @@ interface SearchableSelectProps extends FieldProps {
   isClearable?: boolean;
 }
 
-const CustomSelect: React.FC<SearchableSelectProps> = ({
+const CustomSelect = ({
   field,
   form: { touched, errors, setFieldValue },
   options,
   label,
   isClearable = false,
-}) => {
+}: SearchableSelectProps) => {
   const [inputValue, setInputValue] = useState<string>('');
 
   return (

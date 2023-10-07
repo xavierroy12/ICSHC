@@ -98,6 +98,10 @@ const Actifs = () => {
       );
       setSelectedRows(selectedIds);
     },
+    onDoubleClick: (row, data) => {
+      console.log(data, row);
+      navigate('/actif/' + actifs[data.dataIndex].id);
+    },
     print: false,
     download: false,
   };
@@ -127,29 +131,29 @@ const Actifs = () => {
 
   return (
     <div className="w-11/12 mx-auto mt-10">
-        <div>
-            <MUIDataTable
-            title={checked ? 'Actifs archivés' : 'Actifs'}
-            data={checked ? archivedActifs : actifs}
-            columns={columns}
-            options={options as MUIDataTableProps['options']}
-            />
-        </div>
+      <div>
+        <MUIDataTable
+          title={checked ? 'Actifs archivés' : 'Actifs'}
+          data={checked ? archivedActifs : actifs}
+          columns={columns}
+          options={options as MUIDataTableProps['options']}
+        />
+      </div>
 
       <div className="flex float-left mt-4">
-          <Checkbox
-            checked={checked}
-            onChange={handleCheckboxChange}
-            color="primary"
-            inputProps={{ 'aria-label': 'Show archived actifs' }}
-          />
-          <Typography variant="body1">Voir les actifs archivés</Typography>
-        </div>
+        <Checkbox
+          checked={checked}
+          onChange={handleCheckboxChange}
+          color="primary"
+          inputProps={{ 'aria-label': 'Show archived actifs' }}
+        />
+        <Typography variant="body1">Voir les actifs archivés</Typography>
+      </div>
 
       <div className="float-right m-4 ">
         <Button
           className="ml-12"
-          style={{ marginRight: '1rem'}}
+          style={{ marginRight: '1rem' }}
           color="primary"
           size="medium"
           onClick={() => navigate('/actif')}
@@ -159,7 +163,7 @@ const Actifs = () => {
         <Button
           color="secondary"
           size="medium"
-          style={{ marginRight: '1rem'}}
+          style={{ marginRight: '1rem' }}
           disabled={selectedRows.length === 0}
           onClick={() => {
             if (selectedRows.length === 1) {

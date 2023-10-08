@@ -6,5 +6,5 @@ export type Modele_Type = {
   memoire_vive: string;
   taille: string;
   id_type_modele: number;
-  favoris: boolean;
+  favoris: number;
 };

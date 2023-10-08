@@ -56,7 +56,7 @@ const NavBar = () => {
             >
               Client
             </Button>
-          </Link>
+          
           {user && (
             <div className="text-white">
 

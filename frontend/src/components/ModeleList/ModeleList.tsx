@@ -108,7 +108,7 @@ const ModeleList = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    Promise.all([fetch(window.name + 'api/modeles')]).then(
+    Promise.all([fetch(window.name + '/api/modeles')]).then(
       (responses) =>
         Promise.all(responses.map((response) => response.json()))
           .then(([fetchedModele]) => {

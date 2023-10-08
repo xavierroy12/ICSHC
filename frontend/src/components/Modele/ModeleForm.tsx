@@ -1,38 +1,43 @@
-import { Grid, TextField, Button, Typography } from '@mui/material';
+import { Grid, TextField, Button, Typography, Checkbox } from '@mui/material';
 import { FormikValues, Formik, Field, Form } from 'formik';
 import CustomSelect from '../CustomSelect';
 import { SelectItem } from '../Actif/type';
 import { Modele_Type } from './type';
+import { SyntheticEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   modele: Modele_Type;
   categories: SelectItem[];
-  handleClose: () => void;
 };
 
-const ModeleForm = ({ modele, categories, handleClose }: Props) => {
+const ModeleForm = ({ modele, categories }: Props) => {
+  const navigate = useNavigate();
+
   const initialValues = {
     nom: modele?.nom,
     id_type_modele: modele?.id_type_modele,
     stockage: modele?.stockage,
     processeur: modele?.processeur,
-
+    favoris: modele?.favoris,
     memoire_vive: modele?.memoire_vive,
     taille: modele?.taille,
-
   };
 
   const handleSubmit = (values: FormikValues) => {
     const updatedData = {
       id: modele.id,
       nom: values.nom,
-      id_type_modele: values.id_type_modele?.id,
+      id_type_modele: values.id_type_modele?.id || values.id_type_modele,
       stockage: values.stockage,
       processeur: values.processeur,
       memoire_vive: values.memoire_vive,
+      favoris: values.favoris,
       taille: values.taille,
     };
-    fetch(`http://localhost:8000/api/model/${modele.id}`, {
+    console.log('updatedData: ', updatedData);
+    console.log('values: ', values);
+    fetch(`http://localhost:8000/api/modele/${modele.id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -43,6 +48,7 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
         if (response.ok) {
           alert('Données sauvegardées avec succès');
           console.log('Données sauvegardées avec succès: ', values);
+          navigate('/modeles');
         } else {
           console.error('Error saving data:', response.statusText);
           console.log('CA NE FONCTIONNE PAS ', values);
@@ -51,12 +57,11 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
       .catch((error) => {
         console.error('Error saving data:', error);
       });
-    handleClose(true);
   };
   return (
     <div className="w-min bg-slate-100 m-auto mt-20 p-10">
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-        {({ values, dirty }) => (
+        {({ values, dirty, setFieldValue }) => (
           <Form>
             <div className="mb-8">
               <Typography variant="h4" className="my-8 ">
@@ -112,21 +117,26 @@ const ModeleForm = ({ modele, categories, handleClose }: Props) => {
                 <Field
                   as={TextField}
                   label="Taille écran"
-                  name="taille_ecran"
+                  name="taille"
                   sx={{ width: 300 }}
                   value={values.taille}
                 />
               </Grid>
               <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  color="error"
-                  size="medium"
-                  style={{ marginRight: '1rem' }}
-                  onClick={handleClose}
-                >
-                  Fermer
-                </Button>
+                <label htmlFor="favoris" className="ml-4">
+                  Favoris
+                </label>
+                <Field
+                  as={Checkbox}
+                  checked={values.favoris}
+                  name="favoris"
+                  onChange={(event: SyntheticEvent) => {
+                    const target = event.target as HTMLInputElement;
+                    setFieldValue('favoris', target.checked);
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
                 <Button
                   variant="contained"
                   color="secondary"

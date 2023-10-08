@@ -25,7 +25,7 @@ type Props = {
   handleReception: (values: FormikValues) => void;
 };
 
-const ModifyActifsForm = ({
+const ActifsForm = ({
   modeles,
   categories,
   statuts,
@@ -186,4 +186,4 @@ const ModifyActifsForm = ({
     </Fragment>
   );
 };
-export default ModifyActifsForm;
+export default ActifsForm;

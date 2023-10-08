@@ -14,7 +14,6 @@ const NavBar = () => {
           </Button>
         </Link>
         <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-          <Link to={`/dashboard`}>
             <Button
               component={Link}
               to={`/dashboard`}
@@ -23,8 +22,6 @@ const NavBar = () => {
             >
               Dashboard
             </Button>
-          </Link>
-          <Link to={`/actifs`}>
             <Button
               component={Link}
               to={`/actifs`}
@@ -33,8 +30,14 @@ const NavBar = () => {
             >
               Actifs
             </Button>
-          </Link>
-          <Link to={`/commande`}>
+            <Button
+              component={Link}
+              to={`/modeles`}
+              color="inherit"
+              className="mr-4"
+            >
+              Modeles
+            </Button>
             <Button
               component={Link}
               to={`/commande`}
@@ -43,8 +46,6 @@ const NavBar = () => {
             >
               Commande
             </Button>
-          </Link>
-          <Link to={`/client`}>
             <Button
               component={Link}
               to={`/client`}
@@ -53,7 +54,6 @@ const NavBar = () => {
             >
               Client
             </Button>
-          </Link>
         </div>
       </Toolbar>
     </AppBar>

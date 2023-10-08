@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import MUIDataTable, { MUIDataTableOptions } from 'mui-datatables';
 import { Button, CircularProgress, ToggleButton } from '@mui/material';
 
+
 const ActifsList = () => {
   const navigate = useNavigate();
 
@@ -108,8 +109,8 @@ const ActifsList = () => {
   useEffect(() => {
     setIsLoading(true);
     Promise.all([
-      fetch('http://localhost:8000/api/actifs'),
-      fetch('http://localhost:8000/api/actifs/archived'),
+      fetch(window.name + '/api/actifs'),
+      fetch(window.name + '/api/actifs/archived'),
     ]).then((responses) =>
       Promise.all(responses.map((response) => response.json()))
         .then(([fetchedActif, fetchedArchived]) => {

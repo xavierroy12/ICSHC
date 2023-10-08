@@ -12,8 +12,8 @@ const Modele = () => {
   const id = useParams<{ id: string }>().id;
   useEffect(() => {
     Promise.all([
-      fetch('http://localhost:8000/api/categories/light'),
-      fetch(`http://localhost:8000/api/modele/${id}`),
+      fetch(window.name +'/api/categories/light'),
+      fetch(window.name +`/api/modele/${id}`),
     ])
       .then((responses) =>
         Promise.all(responses.map((response) => response.json()))

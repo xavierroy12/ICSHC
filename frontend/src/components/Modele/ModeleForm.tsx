@@ -37,7 +37,7 @@ const ModeleForm = ({ modele, categories }: Props) => {
     };
     console.log('updatedData: ', updatedData);
     console.log('values: ', values);
-    fetch(`http://localhost:8000/api/modele/${modele.id}`, {
+    fetch(window.name + `/api/modele/${modele.id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

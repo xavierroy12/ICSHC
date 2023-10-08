@@ -129,7 +129,7 @@ const ActifForm = ({
 
   const handleUpdate = (values: FormikValues) => {
     try {
-      fetch(`http://localhost:8000/api/actif/${id}`, {
+      fetch(window.name + `/api/actif/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

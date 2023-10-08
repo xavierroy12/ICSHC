@@ -5,6 +5,7 @@ import Actifs from './components/Actifs';
 import Actif from './components/Actif';
 import Modele from './components/Modele';
 import ModeleList from './components/ModeleList/ModeleList';
+import Login from './components/Login/Login';
 
 //uncomment this line to use on local server
 window.name = "http://localhost:8000";
@@ -77,7 +78,7 @@ return (
 
             <Route path="*" element={<h1>Not Found</h1>} />
            
-    <Route path="/" element={<Home />} />
+
     <Route path="/login" element={<Login />} />
     </Routes>s
     </Layout>

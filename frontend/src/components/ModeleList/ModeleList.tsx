@@ -25,7 +25,7 @@ const ModeleList = () => {
     }
   };
   const updateFavoris = (updatedModele: Modele) => {
-    fetch('http://localhost:8000/api/modele/favoris/' + updatedModele.id, {
+    fetch(window.name + '/api/modele/favoris/' + updatedModele.id, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -108,7 +108,7 @@ const ModeleList = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    Promise.all([fetch('http://localhost:8000/api/modeles')]).then(
+    Promise.all([fetch(window.name + 'api/modeles')]).then(
       (responses) =>
         Promise.all(responses.map((response) => response.json()))
           .then(([fetchedModele]) => {

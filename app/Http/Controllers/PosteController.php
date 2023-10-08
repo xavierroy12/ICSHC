@@ -62,4 +62,19 @@ class PosteController extends Controller
     {
         //
     }
+    public function showAll()
+    {
+        $postes = Poste::all();
+        return response()->json($postes);
+    }
+    public function lightShow()
+    {
+        $postes = Poste::All()->map(function ($poste) {
+            return [
+                "id" => $poste->id,
+                "nom" => $poste->nom,
+            ];
+        });
+        return response()->json($postes);
+    }
 }

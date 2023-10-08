@@ -25,7 +25,6 @@ class DatabaseSeeder extends Seeder
             TypeClientSeeder::class,
             ModeleSeeder::class,
             UtilisateurSeeder::class,
-            ModeleCommandeSeeder::class,
             HistoriqueSeeder::class,
             CommandeSeeder::class,
             ActifSeeder::class,

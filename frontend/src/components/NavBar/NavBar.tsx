@@ -1,36 +1,58 @@
-import { Button } from '@mantine/core';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
 
 const NavBar = () => {
   const user = sessionStorage.getItem('user');
 
   return (
-    <div className="flex items-center justify-between flex-wrap bg-teal-500 p-6">
-      <div className="flex items-center flex-shrink-0 text-white mr-6">
+    <AppBar position="static">
+      <Toolbar>
         <Link to={`/`}>
-            <span className="font-semibold text-xl tracking-tight">ICSHC</span>
+          <Button color="inherit">
+            <span className="font-semibold text-xl tracking-tight">ICSSHC</span>
+          </Button>
         </Link>
-      </div>
-      <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-        <div className="text-sm lg:flex-grow">
-
+        <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
           <Link to={`/dashboard`}>
-            <Button variant="link" color="white" className="mr-4">
+            <Button
+              component={Link}
+              to={`/dashboard`}
+              color="inherit"
+              className="mr-4"
+            >
               Dashboard
             </Button>
           </Link>
           <Link to={`/actifs`}>
-            <Button variant="link" color="white" className="mr-4">
+            <Button
+              component={Link}
+              to={`/actifs`}
+              color="inherit"
+              className="mr-4"
+            >
               Actifs
             </Button>
           </Link>
           <Link to={`/commande`}>
-            <Button variant="link" color="white" className="mr-4">
+            <Button
+              component={Link}
+              to={`/commande`}
+              color="inherit"
+              className="mr-4"
+            >
               Commande
             </Button>
           </Link>
           <Link to={`/client`}>
-            <Button variant="link" color="white" className="mr-4">
+            <Button
+              component={Link}
+              to={`/client`}
+              color="inherit"
+              className="mr-4"
+            >
               Client
             </Button>
           </Link>
@@ -41,9 +63,8 @@ const NavBar = () => {
             </div>
           )}
         </div>
-      </div>
-    </div>
+      </Toolbar>
+    </AppBar>
   );
 };
-
 export default NavBar;

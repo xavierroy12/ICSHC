@@ -65,4 +65,19 @@ class EmplacementController extends Controller
     {
         //
     }
+    public function showAll()
+    {
+        $emplacements = Emplacement::all();
+        return response()->json($emplacements);
+    }
+    public function lightShow()
+    {
+        $emplacements = Emplacement::All()->map(function ($emplacement) {
+            return [
+                "id" => $emplacement->id,
+                "nom" => $emplacement->nom,
+            ];
+        });
+        return response()->json($emplacements);
+    }
 }

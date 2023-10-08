@@ -1,5 +1,9 @@
 import Layout from './Layout';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import Actifs from './components/Actifs';
+import ModifyActifs from './components/ModifyActifs';
+import Actif from './components/Actif';
+import Modele from './components/Modele';
 import Login from './components/Login';
 import Home from './components/Home';
 
@@ -51,6 +55,11 @@ return (
     <Router>
     <Layout>
     <Routes>
+    <Route path="/actifs" element={<Actifs />} />
+            <Route path="/actifs/modify" element={<ModifyActifs />} />
+            <Route path="/actif/:id" element={<Actif />} />
+            <Route path="*" element={<h1>Not Found</h1>} />
+            <Route path="/" element={<Modele id={'1'} />} />
     <Route path="/" element={<Home />} />
     <Route path="/login" element={<Login />} />
     </Routes>s
@@ -61,5 +70,4 @@ return (
 }
 //}
 
-export default App
-
+export default App;

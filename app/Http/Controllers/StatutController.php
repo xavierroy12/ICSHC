@@ -36,7 +36,7 @@ class StatutController extends Controller
      */
     public function show(Statut $statut)
     {
-        //
+
     }
 
     /**
@@ -61,5 +61,21 @@ class StatutController extends Controller
     public function destroy(Statut $statut)
     {
         //
+    }
+    public function showAll()
+    {
+        $statuts = Statut::all();
+        return response()->json($statuts);
+    }
+    public function lightShow()
+    {
+        $statuts = Statut::where('nom', '!=', 'Archivé')->get()->map(function ($statut) {
+            return [
+                "id" => $statut->id,
+                "nom" => $statut->nom,
+            ];
+        });
+
+        return response()->json($statuts);
     }
 }

@@ -62,4 +62,19 @@ class TypeModeleController extends Controller
     {
         //
     }
+    public function showAll()
+    {
+        $typeModeles = TypeModele::all();
+        return response()->json($typeModeles);
+    }
+    public function lightShow()
+    {
+        $typeModeles = TypeModele::All()->map(function ($typeModele) {
+            return [
+                "id" => $typeModele->id,
+                "nom" => $typeModele->nom,
+            ];
+        });
+        return response()->json($typeModeles);
+    }
 }

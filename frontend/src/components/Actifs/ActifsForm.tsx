@@ -6,7 +6,7 @@ import { Field, FormikValues, Form } from 'formik';
 import { Fragment, SyntheticEvent } from 'react';
 import CustomSelect from '../CustomSelect';
 import { SelectItem } from '../Actif/type';
-
+console.log(window.name);
 type Props = {
   modeles: SelectItem[];
   categories: SelectItem[];
@@ -25,7 +25,7 @@ type Props = {
   handleReception: (values: FormikValues) => void;
 };
 
-const ModifyActifsForm = ({
+const ActifsForm = ({
   modeles,
   categories,
   statuts,
@@ -186,4 +186,4 @@ const ModifyActifsForm = ({
     </Fragment>
   );
 };
-export default ModifyActifsForm;
+export default ActifsForm;

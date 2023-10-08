@@ -82,6 +82,29 @@ class ModeleController extends Controller
         }
 
     }
+    public function updateFavoris(Request $request, $id)
+    {
+        $modele = Modele::find($id);
+
+        $favoris = 0;
+        if($modele['favoris'] == 1){
+            $favoris = 0;
+        }
+        else{
+            $favoris = 1;
+        }
+
+
+        $modele->favoris = $favoris;
+        if($modele){
+            $modele->save();
+            return response()->json(['message' => 'Modèle mise à jour avec succès'], 200);
+        }
+        else{
+            return response()->json(['message' => 'Modèle non trouvé'], 404);
+        }
+
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -92,9 +115,21 @@ class ModeleController extends Controller
     }
     public function showAll()
     {
-        $modeles = Modele::all();
-        return response()->json($modeles);
+        $modeles = Modele::with('categorie')->get()->map(function ($modele) {
+            return [
+                "id" => $modele->id,
+                "nom" => $modele->nom,
+                "stockage" => $modele->stockage,
+                "processeur" => $modele->processeur,
+                "memoire_vive" => $modele->memoire_vive,
+                "taille" => $modele->taille,
+                "id_type_modele" => $modele->id_type_modele,
+                "favoris" => $modele->favoris ? true : false,
+                "categorie" => $modele->categorie->nom,
+            ];
+        });        return response()->json($modeles);
     }
+
     public function lightShow()
     {
         $modeles = Modele::All()->map(function ($modele) {

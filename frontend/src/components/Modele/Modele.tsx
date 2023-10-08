@@ -1,26 +1,19 @@
 import ModeleForm from './ModeleForm';
 import { useEffect, useState } from 'react';
 import { LightType, SelectItem } from '../Actif/type';
-import { Modal } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { Modele_Type } from './type';
+import { useParams } from 'react-router-dom';
 
-type Props = {
-  id: number;
-  setOpen: (isOpen: boolean) => void;
-  open: boolean;
-};
-
-const Modele = ({ id, setOpen, open }: Props) => {
+const Modele = () => {
   const [categories, setCategories] = useState<SelectItem[]>([]);
   const [modele, setModele] = useState<Modele_Type>();
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const id = useParams<{ id: string }>().id;
   useEffect(() => {
     Promise.all([
-      fetch('http://localhost:8000/api/categories/light'),
-      fetch(`http://localhost:8000/api/modele/${id}`),
+      fetch(window.name +'/api/categories/light'),
+      fetch(window.name +`/api/modele/${id}`),
     ])
       .then((responses) =>
         Promise.all(responses.map((response) => response.json()))
@@ -32,25 +25,22 @@ const Modele = ({ id, setOpen, open }: Props) => {
             label: statut.nom,
           }))
         );
+        console.log(fetchedModele);
         setModele(fetchedModele);
       });
   }, [id]);
 
   return (
     <div>
-      <Modal open={open} onClose={handleClose}>
-        <div>
-          {modele ? (
-            <ModeleForm
-              modele={modele}
-              categories={categories}
-              handleClose={handleClose}
-            />
-          ) : (
-            <div>loading...</div>
-          )}
+      {!modele ? (
+        <div className="fixed inset-0 flex items-center justify-center">
+          <CircularProgress />
         </div>
-      </Modal>
+      ) : (
+        <div>
+          <ModeleForm modele={modele} categories={categories} />
+        </div>
+      )}
     </div>
   );
 };

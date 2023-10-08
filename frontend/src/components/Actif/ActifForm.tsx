@@ -107,6 +107,8 @@ const ActifForm = ({
   };
 
   const handleReception = (values: FormikValues) => {
+    const statut = statuts.find((statut) => statut.label === 'Déployable');
+
     const updatedData = {
       nom: values.nom,
       numero_serie: values.numero_serie,
@@ -117,7 +119,7 @@ const ActifForm = ({
       note: values.note,
       id_assigne_a: '',
       id_modele: values.modele.id || values.modele,
-      id_statut: 1,
+      id_statut: statut?.id,
       id_emplacement: values.emplacement.id || values.emplacement,
       id_proprietaire: values.proprietaire.id || values.proprietaire,
       id_utilisation: values.utilisation.id || values.utilisation,
@@ -127,7 +129,7 @@ const ActifForm = ({
 
   const handleUpdate = (values: FormikValues) => {
     try {
-      fetch(`http://localhost:8000/api/actif/${id}`, {
+      fetch(window.name + `/api/actif/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -336,7 +338,6 @@ const ActifForm = ({
                 name="note"
                 multiline
                 rows={4}
-                defaultValue=""
                 value={values.note}
                 onChange={handleChange}
                 sx={{ width: '100%' }}

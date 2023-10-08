@@ -21,6 +21,8 @@ return new class extends Migration
             $table->unsignedBigInteger('id_type_modele');
 
             $table->foreign('id_type_modele')->references('id')->on('type_modele');
+            $table->boolean('favoris')->default(false);
+
             $table->timestamps();
         });
     }

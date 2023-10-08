@@ -20,14 +20,14 @@ const Actif = () => {
 
   useEffect(() => {
     Promise.all([
-      fetch('http://localhost:8000/api/statuts/light'),
-      fetch('http://localhost:8000/api/modeles/light'),
-      fetch('http://localhost:8000/api/categories/light'),
-      fetch('http://localhost:8000/api/emplacements/light'),
-      fetch('http://localhost:8000/api/clients/light'),
-      fetch('http://localhost:8000/api/utilisations/light'),
-      fetch('http://localhost:8000/api/proprietaires/light'),
-      fetch(`http://localhost:8000/api/actif/${id}`),
+      fetch(window.name + '/api/statuts/light'),
+      fetch(window.name + '/api/modeles/light'),
+      fetch(window.name + '/api/categories/light'),
+      fetch(window.name + '/api/emplacements/light'),
+      fetch(window.name + '/api/clients/light'),
+      fetch(window.name + '/api/utilisations/light'),
+      fetch(window.name + '/api/proprietaires/light'),
+      fetch(window.name + `/api/actif/${id}`),
     ])
       .then((responses) =>
         Promise.all(responses.map((response) => response.json()))

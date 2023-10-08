@@ -152,11 +152,12 @@ const Actifs = () => {
   };
 
   const handleReception = (values: FormikValues) => {
+    const statut = statuts.find((statut) => statut.label === 'Déployable');
     const updatedData = {
       ids: selectedRows,
       modele: values.modele?.id,
       categorie: values.categorie?.id,
-      statut: values.statut?.id,
+      statut: statut?.id,
       desasignation: true,
       emplacement: values.emplacement?.id,
       en_entrepot: values.en_entrepot,

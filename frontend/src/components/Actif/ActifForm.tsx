@@ -107,6 +107,8 @@ const ActifForm = ({
   };
 
   const handleReception = (values: FormikValues) => {
+    const statut = statuts.find((statut) => statut.label === 'Déployable');
+
     const updatedData = {
       nom: values.nom,
       numero_serie: values.numero_serie,
@@ -117,7 +119,7 @@ const ActifForm = ({
       note: values.note,
       id_assigne_a: '',
       id_modele: values.modele.id || values.modele,
-      id_statut: 1,
+      id_statut: statut?.id,
       id_emplacement: values.emplacement.id || values.emplacement,
       id_proprietaire: values.proprietaire.id || values.proprietaire,
       id_utilisation: values.utilisation.id || values.utilisation,

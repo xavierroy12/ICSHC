@@ -69,6 +69,7 @@ class ModeleController extends Controller
             'memoire_vive' => $data['memoire_vive'],
             'taille' => $data['taille'],
             'id_type_modele' => $data['id_type_modele'],
+            'favoris' => $data['favoris'],
         ];
 
         $modele = Modele::find($id);

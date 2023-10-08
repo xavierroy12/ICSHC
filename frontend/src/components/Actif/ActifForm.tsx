@@ -336,7 +336,6 @@ const ActifForm = ({
                 name="note"
                 multiline
                 rows={4}
-                defaultValue=""
                 value={values.note}
                 onChange={handleChange}
                 sx={{ width: '100%' }}

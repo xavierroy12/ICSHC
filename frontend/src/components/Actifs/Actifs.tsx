@@ -5,16 +5,7 @@ import SelectActifsList from '../SelectActifsList';
 import ActifsForm from './ActifsForm';
 import { SelectItem } from '../Actif/type';
 import { Formik, FormikValues } from 'formik';
-type LightType = {
-  id: number;
-  nom: string;
-};
-
-export type LightActif = {
-  id: number;
-  nom: string;
-  numero_serie: string;
-};
+import { LightActif, LightType } from './type';
 
 const Actifs = () => {
   const location = useLocation();

@@ -17,12 +17,7 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-
-type LightActif = {
-  id: number;
-  nom: string;
-  numero_serie: string;
-};
+import { LightActif } from './type';
 
 type Props = {
   selectedActifs: LightActif[];

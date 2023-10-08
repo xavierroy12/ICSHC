@@ -14,6 +14,7 @@ const Actifs = () => {
   const [actifUpdated, setActifUpdated] = useState<boolean>(false);
   const [archivedActifs, setArchivedActifs] = useState<Actif[]>([]);
 
+
   const columns = [
     {
       name: 'numero_serie',

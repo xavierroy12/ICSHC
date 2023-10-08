@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import  { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress'; // Import Material-UI CircularProgress
 import { Actif_Type, LightType, SelectItem } from './type';

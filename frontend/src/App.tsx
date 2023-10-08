@@ -1,19 +1,22 @@
 import Layout from './Layout';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, } from 'react-router-dom';
 import Actifs from './components/Actifs';
 import ModifyActifs from './components/ModifyActifs';
 import Actif from './components/Actif';
-import Modele from './components/Modele';
+//import Modele from './components/Modele';
 import Login from './components/Login';
 import Home from './components/Home';
+import process from 'process'
 
 function App() {
+
+    console.log(process.env.NODE_ENV);
     const cookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('CookieLogged=')); // Get the cookie
-    let authentified = false;
+    //let authentified = false;
     //Bypass Login for dev purposes, might want to remove that later
     if (cookie === 'Minou') {
         console.log('Bypassing login');
-        authentified = true;
+        //authentified = true;
         //doReturn();
     }
 
@@ -30,7 +33,7 @@ function App() {
             response.json().then(data => {
                 if (data.success === true) {
                     console.log('Token is valid');
-                    authentified = true;
+                    //authentified = true;
                     //doReturn();
 
                 } else {
@@ -48,7 +51,7 @@ else {
 
 
 console.log('Authentified');
-//function doReturn() {
+//function doReturn() {  <Route path="/" element={<Modele id={'1'} />} />
 return (
 
     <div className="App">
@@ -59,7 +62,7 @@ return (
             <Route path="/actifs/modify" element={<ModifyActifs />} />
             <Route path="/actif/:id" element={<Actif />} />
             <Route path="*" element={<h1>Not Found</h1>} />
-            <Route path="/" element={<Modele id={'1'} />} />
+           
     <Route path="/" element={<Home />} />
     <Route path="/login" element={<Login />} />
     </Routes>s

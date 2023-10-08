@@ -1,15 +1,10 @@
 import {
   Container,
-  Paper,
   TextField,
   Typography,
   Button,
   Avatar,
   CssBaseline,
-  FormControlLabel,
-  Checkbox,
-  Link,
-  Grid,
   Box,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -115,9 +110,15 @@ import './Login.scss';
                   autoComplete="current-password"
                   onChange={handlePasswordChange}
                 />
+                <Typography 
+                margin="normal"
+                color="error"
+                >
+                {loginStatus}
+                </Typography>
 
                 <Button
-                  type="submit"
+                  onClick={handleLogin}
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}

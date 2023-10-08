@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import MUIDataTable, { MUIDataTableOptions } from 'mui-datatables';
 import { Button, CircularProgress, ToggleButton } from '@mui/material';
 
-
 const ActifsList = () => {
   const navigate = useNavigate();
 
@@ -16,7 +15,7 @@ const ActifsList = () => {
   let lastClickTime = 0; // To track double-clicks
 
   const handleRowClick = (
-    rowData: string[],
+    _rowData: string[],
     rowMeta: { dataIndex: number; rowIndex: number }
   ) => {
     const clickTime = new Date().getTime();
@@ -92,7 +91,7 @@ const ActifsList = () => {
     selectToolbarPlacement: 'none',
     onRowSelectionChange: (
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      currentRowsSelected,
+      _currentRowsSelected,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       allRowsSelected
     ) => {

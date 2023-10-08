@@ -86,7 +86,6 @@ const ModeleForm = ({ categories, values, dirty, setFieldValue }: Props) => {
             name="favoris"
             onChange={(event: SyntheticEvent) => {
               const target = event.target as HTMLInputElement;
-              console.log(target.checked);
               setFieldValue('favoris', target.checked);
             }}
           />

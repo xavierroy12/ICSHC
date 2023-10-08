@@ -6,7 +6,6 @@ import ActifsForm from './ActifsForm';
 import { SelectItem } from '../Actif/type';
 import { Formik, FormikValues } from 'formik';
 import { LightActif, LightType } from './type';
-console.log(window.name);
 const Actifs = () => {
   const location = useLocation();
   const { selectedRows } = location.state;
@@ -92,7 +91,7 @@ const Actifs = () => {
         }
       )
       .catch((error) => console.error(error));
-  }, []);
+  });
 
   const initialValues = {
     modele: '',

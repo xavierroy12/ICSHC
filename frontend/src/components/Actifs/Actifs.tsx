@@ -25,13 +25,13 @@ const Actifs = () => {
   const navigate = useNavigate();
   useEffect(() => {
     Promise.all([
-      fetch(window.name + '/api/statuts/light'),
-      fetch(window.name + '/api/modeles/light'),
-      fetch(window.name + '/api/emplacements/light'),
-      fetch(window.name + '/api/utilisations/light'),
-      fetch(window.name + '/api/proprietaires/light'),
-      fetch(window.name + '/api/categories/light'),
-      fetch(window.name + '/api/actifs/light'),
+      fetch(window.name + 'api/statuts/light'),
+      fetch(window.name + 'api/modeles/light'),
+      fetch(window.name + 'api/emplacements/light'),
+      fetch(window.name + 'api/utilisations/light'),
+      fetch(window.name + 'api/proprietaires/light'),
+      fetch(window.name + 'api/categories/light'),
+      fetch(window.name + 'api/actifs/light'),
     ])
       .then((responses) =>
         Promise.all(responses.map((response) => response.json()))
@@ -108,7 +108,7 @@ const Actifs = () => {
   };
 
   const handleUpdate = (values: FormikValues) => {
-    fetch(window.name + `/api/actifs`, {
+    fetch(window.name + `api/actifs`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

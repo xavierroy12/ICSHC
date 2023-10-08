@@ -109,8 +109,8 @@ const ActifsList = () => {
   useEffect(() => {
     setIsLoading(true);
     Promise.all([
-      fetch(window.name + '/api/actifs'),
-      fetch(window.name + '/api/actifs/archived'),
+      fetch(window.name + 'api/actifs'),
+      fetch(window.name + 'api/actifs/archived'),
     ]).then((responses) =>
       Promise.all(responses.map((response) => response.json()))
         .then(([fetchedActif, fetchedArchived]) => {

@@ -13,8 +13,8 @@ const Modele = () => {
   const id = useParams<{ id: string }>().id;
   useEffect(() => {
     Promise.all([
-      fetch(window.name +'/api/categories/light'),
-      fetch(window.name +`/api/modele/${id}`),
+      fetch(window.name + 'api/categories/light'),
+      fetch(window.name + `api/modele/${id}`),
     ])
       .then((responses) =>
         Promise.all(responses.map((response) => response.json()))
@@ -52,7 +52,7 @@ const Modele = () => {
       favoris: values.favoris ? 1 : 0,
       taille: values.taille,
     };
-    fetch(`http://localhost:8000/api/modele/${values.id}`, {
+    fetch(window.name + `api/modele/${values.id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

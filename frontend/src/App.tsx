@@ -7,16 +7,11 @@ import Modele from './components/Modele';
 import ModeleList from './components/ModeleList/ModeleList';
 
 //uncomment this line to use on local server
-window.name = "http://localhost:8000";
+window.name = 'http://localhost:8000/';
 //uncomment this line to use on remote server
 //window.name = "http://10.0.22.24:5173";
 
-
 console.log(window.name);
-
-
-
-
 
 function App() {
   return (

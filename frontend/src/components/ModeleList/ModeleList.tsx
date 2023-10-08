@@ -25,7 +25,7 @@ const ModeleList = () => {
     }
   };
   const updateFavoris = (updatedModele: Modele) => {
-    fetch(window.name + '/api/modele/favoris/' + updatedModele.id, {
+    fetch(window.name + 'api/modele/favoris/' + updatedModele.id, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -108,16 +108,15 @@ const ModeleList = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    Promise.all([fetch(window.name + 'api/modeles')]).then(
-      (responses) =>
-        Promise.all(responses.map((response) => response.json()))
-          .then(([fetchedModele]) => {
-            setModeles(fetchedModele);
-          })
-          .then(() => {
-            setIsLoading(false);
-          })
-          .catch((error) => console.error(error))
+    Promise.all([fetch(window.name + 'api/modeles')]).then((responses) =>
+      Promise.all(responses.map((response) => response.json()))
+        .then(([fetchedModele]) => {
+          setModeles(fetchedModele);
+        })
+        .then(() => {
+          setIsLoading(false);
+        })
+        .catch((error) => console.error(error))
     );
   }, []);
 

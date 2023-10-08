@@ -1,36 +1,18 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, Fragment } from 'react';
 import { Actif } from './type';
 import { useNavigate } from 'react-router-dom';
 import MUIDataTable, { MUIDataTableProps } from 'mui-datatables';
-import { Button, CircularProgress, Checkbox, Typography } from '@mui/material';
+import { Button, CircularProgress, ToggleButton } from '@mui/material';
 
 const Actifs = () => {
   const navigate = useNavigate();
 
-  const [checked, setChecked] = useState(false);
+  const [showarchived, setShowArchived] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>();
   const [actifs, setActifs] = useState<Actif[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [actifUpdated, setActifUpdated] = useState<boolean>(false);
   const [archivedActifs, setArchivedActifs] = useState<Actif[]>([]);
-
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
-    if (event.target.checked) {
-      fetch('http://localhost:8000/api/actifs/archived')
-        .then((response) => response.json())
-        .then((actifs) => {
-          console.log(actifs);
-          setArchivedActifs(actifs);
-        })
-        .then(() => {
-          setIsLoading(false);
-        })
-        .catch((error) => console.error(error));
-    } else {
-      setArchivedActifs([]);
-    }
-  };
 
   const columns = [
     {
@@ -98,27 +80,76 @@ const Actifs = () => {
       );
       setSelectedRows(selectedIds);
     },
-    onDoubleClick: (row, data) => {
-      console.log(data, row);
+    onRowClick: (row, data) => {
       navigate('/actif/' + actifs[data.dataIndex].id);
     },
     print: false,
     download: false,
+    customFooter: () => {
+      return (
+        <Fragment>
+          <div className="flex float-left mt-4 ml-4">
+            <ToggleButton
+              selected={showarchived}
+              value={showarchived}
+              onChange={() => setShowArchived(!showarchived)}
+              size="small"
+              color="primary"
+            >
+              Voir Archiver
+            </ToggleButton>
+          </div>
+          <div className="float-right m-4 ">
+            <Button
+              className="ml-12"
+              style={{ marginRight: '1rem' }}
+              color="primary"
+              size="medium"
+              onClick={() => navigate('/actif')}
+            >
+              Ajouter
+            </Button>
+            <Button
+              color="secondary"
+              size="medium"
+              style={{ marginRight: '1rem' }}
+              disabled={selectedRows.length === 0}
+              onClick={() => {
+                if (selectedRows.length === 1) {
+                  navigate('/actif/' + selectedRows[0]);
+                } else {
+                  navigate('/actifs/modify', {
+                    state: {
+                      selectedRows,
+                    },
+                  });
+                }
+              }}
+            >
+              Modifier
+            </Button>
+          </div>
+        </Fragment>
+      );
+    },
   };
 
   useEffect(() => {
     setIsLoading(true);
-    fetch('http://localhost:8000/api/actifs')
-      .then((response) => response.json())
-      .then((values) => {
-        console.log('actif', values);
-        setActifs(values);
-      })
-      .then(() => {
-        setIsLoading(false);
-        setActifUpdated(false);
-      })
-      .catch((error) => console.error(error));
+    Promise.all([
+      fetch('http://localhost:8000/api/actifs'),
+      fetch('http://localhost:8000/api/actifs/archived'),
+    ]).then((responses) =>
+      Promise.all(responses.map((response) => response.json()))
+        .then(([fetchedActif, fetchedArchived]) => {
+          setActifs(fetchedActif);
+          setArchivedActifs(fetchedArchived);
+        })
+        .then(() => {
+          setIsLoading(false);
+        })
+        .catch((error) => console.error(error))
+    );
   }, [actifUpdated]);
 
   if (isLoading) {
@@ -131,55 +162,12 @@ const Actifs = () => {
 
   return (
     <div className="w-11/12 mx-auto mt-10">
-      <div>
-        <MUIDataTable
-          title={checked ? 'Actifs archivés' : 'Actifs'}
-          data={checked ? archivedActifs : actifs}
-          columns={columns}
-          options={options as MUIDataTableProps['options']}
-        />
-      </div>
-
-      <div className="flex float-left mt-4">
-        <Checkbox
-          checked={checked}
-          onChange={handleCheckboxChange}
-          color="primary"
-          inputProps={{ 'aria-label': 'Show archived actifs' }}
-        />
-        <Typography variant="body1">Voir les actifs archivés</Typography>
-      </div>
-
-      <div className="float-right m-4 ">
-        <Button
-          className="ml-12"
-          style={{ marginRight: '1rem' }}
-          color="primary"
-          size="medium"
-          onClick={() => navigate('/actif')}
-        >
-          Ajouter
-        </Button>
-        <Button
-          color="secondary"
-          size="medium"
-          style={{ marginRight: '1rem' }}
-          disabled={selectedRows.length === 0}
-          onClick={() => {
-            if (selectedRows.length === 1) {
-              navigate('/actif/' + selectedRows[0]);
-            } else {
-              navigate('/actifs/modify', {
-                state: {
-                  selectedRows,
-                },
-              });
-            }
-          }}
-        >
-          Modifier
-        </Button>
-      </div>
+      <MUIDataTable
+        title={showarchived ? 'Actifs archivés' : 'Actifs'}
+        data={showarchived ? archivedActifs : actifs}
+        columns={columns}
+        options={options as MUIDataTableProps['options']}
+      />
     </div>
   );
 };

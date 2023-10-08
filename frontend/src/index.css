@@ -1,7 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* Hide scrollbar for Firefox */
+* {
+  scrollbar-width: none;
+}
 
-button.my-btn {
-  -webkit-appearance: none !important;
+/* Hide scrollbar for IE 10+ */
+*::-ms-scrollbar {
+  width: 0;
+  height: 0;
 }

@@ -1,16 +1,12 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress'; // Import Material-UI CircularProgress
 import { Actif_Type, LightType, SelectItem } from './type';
 import ActifForm from './ActifForm';
-import { Modal, Typography } from '@mui/material';
-import Modele from '../Modele';
-
-// Import any other Material-UI components you might need.
+import { Typography } from '@mui/material';
 
 const Actif = () => {
   const { id } = useParams<{ id: string }>();
-  const [open, setOpen] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [statuts, setStatuts] = useState<SelectItem[]>([]);
@@ -104,29 +100,28 @@ const Actif = () => {
       ) : (
         <div className="mx-auto mt-8">
           {actif && id && (
-            <Fragment>
+            <div className="min-w-fit">
               <div className="mx-8 ">
                 <Typography variant="h2" className="my-8 mx-auto">
                   Actif: {actif.nom}
                 </Typography>
-                <hr />
-                <div className="p-4 my-4 bg-slate-100 w-2/3 mx-auto">
-                  <ActifForm
-                    id={id}
-                    actif={actif}
-                    statuts={statuts}
-                    modeles={modeles}
-                    categories={categories}
-                    emplacements={emplacements}
-                    locataires={locataires}
-                    utilisations={utilisations}
-                    proprietaires={proprietaires}
-                    setOpen={setOpen}
-                  />
+                <div className="flex justify-between w-fit bg-slate-100 min-w-fit mt-4">
+                  <div className="p-4 my-4   mx-auto">
+                    <ActifForm
+                      id={id}
+                      actif={actif}
+                      statuts={statuts}
+                      modeles={modeles}
+                      categories={categories}
+                      emplacements={emplacements}
+                      locataires={locataires}
+                      utilisations={utilisations}
+                      proprietaires={proprietaires}
+                    />
+                  </div>
                 </div>
               </div>
-              <Modele id={actif?.id_modele} open={open} setOpen={setOpen} />
-            </Fragment>
+            </div>
           )}
         </div>
       )}

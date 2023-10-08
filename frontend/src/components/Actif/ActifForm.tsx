@@ -19,7 +19,6 @@ type Props = {
   locataires: SelectItem[];
   utilisations: SelectItem[];
   proprietaires: SelectItem[];
-  setOpen: (isOpen: boolean) => void;
 };
 
 const ActifForm = ({
@@ -32,7 +31,6 @@ const ActifForm = ({
   locataires,
   utilisations,
   proprietaires,
-  setOpen,
 }: Props) => {
   const navigate = useNavigate();
 
@@ -131,7 +129,6 @@ const ActifForm = ({
         .then((response) => {
           if (response.ok) {
             alert('Données sauvegardées avec succès');
-            console.log('Données sauvegardées avec succès: ', values);
             navigate('/actifs');
           } else {
             console.error('Error saving data:', response.statusText);
@@ -150,8 +147,12 @@ const ActifForm = ({
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       {({ values, handleChange, dirty, setFieldValue }) => (
         <Form>
-          <Grid container spacing={3}>
-            <Grid item xs={6}>
+          <Grid
+            container
+            spacing={3}
+            className="max-w-screen-md p-4 w-full mx-auto"
+          >
+            <Grid item xs={12} sm={6}>
               <Field
                 as={TextField}
                 label="Nom"
@@ -161,7 +162,7 @@ const ActifForm = ({
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Field
                 as={TextField}
                 label="Numéro de commande"
@@ -172,7 +173,7 @@ const ActifForm = ({
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Field
                 as={TextField}
                 label="Numéro de série"
@@ -183,7 +184,7 @@ const ActifForm = ({
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Field
                 as={TextField}
                 label="Adresse MAC"
@@ -194,7 +195,7 @@ const ActifForm = ({
               />
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={6}>
               <Field
                 className="input-field"
                 name="modele"
@@ -203,19 +204,7 @@ const ActifForm = ({
                 label="Modèle"
               />
             </Grid>
-            <Grid item xs={2}>
-              <div className="my-3">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  onClick={() => setOpen(true)}
-                >
-                  Voir
-                </Button>
-              </div>
-            </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Field
                 className="input-field"
                 name="categorie"
@@ -225,7 +214,7 @@ const ActifForm = ({
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Field
                 className="input-field"
                 name="statut"
@@ -235,7 +224,7 @@ const ActifForm = ({
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Field
                 className="input-field"
                 name="assigne_a"
@@ -246,7 +235,7 @@ const ActifForm = ({
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Field
                 className="input-field"
                 name="emplacement"
@@ -256,7 +245,7 @@ const ActifForm = ({
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Field
                 type="checkbox"
                 name="en_entrepot"
@@ -273,7 +262,7 @@ const ActifForm = ({
               </label>
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Field
                 className="input-field"
                 name="utilisation"
@@ -283,7 +272,7 @@ const ActifForm = ({
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Field
                 className="input-field"
                 name="proprietaire"
@@ -294,7 +283,7 @@ const ActifForm = ({
             </Grid>
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Field
                   component={DatePicker}
                   label="Date de création"
@@ -311,7 +300,7 @@ const ActifForm = ({
             </LocalizationProvider>
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Field
                   component={DatePicker}
                   label="Date de retour"

@@ -10,7 +10,7 @@ import process from 'process'
 
 function App() {
 
-    console.log(process.env.NODE_ENV);
+
     const cookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('CookieLogged=')); // Get the cookie
     //let authentified = false;
     //Bypass Login for dev purposes, might want to remove that later

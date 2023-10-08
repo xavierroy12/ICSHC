@@ -18,6 +18,7 @@ const CustomSelect = ({
   isClearable = false,
 }: SearchableSelectProps) => {
   const [inputValue, setInputValue] = useState<string>('');
+  const [value, setValue] = useState<SelectItem | null>(options[0]);
 
   return (
     <Autocomplete
@@ -28,8 +29,10 @@ const CustomSelect = ({
       defaultValue={options[field.value - 1]}
       getOptionLabel={(option) => option.label}
       inputValue={inputValue}
+      value={value}
       onChange={(_, newValue) => {
         setFieldValue(field.name, newValue);
+        setValue(newValue);
       }}
       onInputChange={(_, newInputValue) => {
         setInputValue(newInputValue);

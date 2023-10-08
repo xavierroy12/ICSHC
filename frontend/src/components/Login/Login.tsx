@@ -124,6 +124,14 @@ import './Login.scss';
                 >
                   Se connecter
                 </Button>
+                <Button
+                  onClick={bypass}
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  bypass
+                </Button>
               </Box>
             </Box>
           </Container>

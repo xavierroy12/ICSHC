@@ -159,6 +159,8 @@ class ActifController extends Controller
 
         // Map the form data to match the expected field names in your Laravel API
         $updatedDataActif = [
+            'nom' => $data['nom'],
+            'numero_serie' => $data['numero_serie'],
             'en_entrepot' => $data['en_entrepot'],
             'date_retour' => $data['date_retour'],
             'note' => $data['note'],

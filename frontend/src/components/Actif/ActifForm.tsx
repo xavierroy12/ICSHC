@@ -60,6 +60,8 @@ const ActifForm = ({
     if (confirmed) {
       // Set the statut of the actif to "Archivé"
       const updatedActif = {
+        nom: values.nom,
+        numero_serie: values.numero_serie,
         id_categorie: values.categorie.id || values.categorie,
         en_entrepot: values.en_entrepot,
         date_retour: values.date_retour,
@@ -86,6 +88,9 @@ const ActifForm = ({
   const handleSubmit = (values: FormikValues) => {
     // Map the form values to match the expected field names in your Laravel API
     const updatedData = {
+      nom: values.nom,
+      numero_serie: values.numero_serie,
+
       id_categorie: values.categorie.id || values.categorie,
       en_entrepot: values.en_entrepot,
       date_retour: values.date_retour,
@@ -103,6 +108,9 @@ const ActifForm = ({
 
   const handleReception = (values: FormikValues) => {
     const updatedData = {
+      nom: values.nom,
+      numero_serie: values.numero_serie,
+
       id_categorie: values.categorie.id || values.categorie,
       en_entrepot: true,
       date_retour: values.date_retour,

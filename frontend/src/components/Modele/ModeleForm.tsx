@@ -33,8 +33,7 @@ const ModeleForm = ({
   reloadData,
 }: Props) => {
   const [open, setOpen] = useState(false);
-  console.log('values', values);
-  console.log('categories', categories);
+
   return (
     <div>
       <Form>

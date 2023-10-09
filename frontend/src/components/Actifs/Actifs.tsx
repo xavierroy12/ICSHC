@@ -91,7 +91,7 @@ const Actifs = () => {
         }
       )
       .catch((error) => console.error(error));
-  }, []);
+  }, [selectedRows]);
 
   const initialValues = {
     modele: '',

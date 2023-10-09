@@ -10,7 +10,7 @@ import Login from './components/Login/Login';
 if (process.env.NODE_ENV === 'development') {
   window.name = 'http://localhost:8000/';
 } else {
-  window.name = 'http://10.0.22.24:5173';
+  window.name = 'http://10.0.22.24:5173/';
 }
 
 function App() {

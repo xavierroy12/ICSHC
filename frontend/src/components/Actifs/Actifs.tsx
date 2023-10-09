@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { CircularProgress, Typography } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import SelectActifsList from '../SelectActifsList';
+import SelectActifsList from '../ActifsListSelect';
 import ActifsForm from './ActifsForm';
 import { SelectItem } from '../Actif/type';
 import { Formik, FormikValues } from 'formik';

@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Autocomplete,
   Button,
-  CircularProgress,
   FormControlLabel,
   Grid,
   IconButton,
@@ -25,11 +24,11 @@ type Props = {
   setSelectedActifs: (actifs: LightActif[]) => void;
 };
 
-const SelectActifsList: React.FC<Props> = ({
+const ActifsListSelect = ({
   selectedActifs,
   actifs,
   setSelectedActifs,
-}) => {
+}: Props) => {
   const [selectData, setSelectData] = useState<LightActif[]>([]);
   const [currentValue, setCurrentValue] = useState<LightActif>();
   const [isName, setIsName] = useState(true);
@@ -110,6 +109,7 @@ const SelectActifsList: React.FC<Props> = ({
             </div>
             <div>
               <FormControlLabel
+                label={isName ? 'Nom' : 'No'}
                 control={
                   <Switch
                     checked={isName}
@@ -119,51 +119,46 @@ const SelectActifsList: React.FC<Props> = ({
                     name="info"
                   />
                 }
-                label={isName ? 'Nom' : 'No'}
               />
             </div>
           </div>
         </Grid>
         <Grid item xs={12}>
-          {selectedActifs.length > 0 ? (
-            <TableContainer className=" max-h-[900px] overflow-scroll">
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Nom</TableCell>
-                    <TableCell>Numéro de série</TableCell>
-                    <TableCell>Action</TableCell>
+          <TableContainer className=" max-h-[900px] overflow-scroll">
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Nom</TableCell>
+                  <TableCell>Numéro de série</TableCell>
+                  <TableCell>Action</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {selectedActifs.map((actif) => (
+                  <TableRow key={actif.id}>
+                    <TableCell>{actif.nom}</TableCell>
+                    <TableCell>{actif.numero_serie}</TableCell>
+                    <TableCell>
+                      <Button
+                        color="error"
+                        variant="outlined"
+                        size="small"
+                        onClick={() => {
+                          onDeleteData(actif);
+                        }}
+                      >
+                        <DeleteIcon />
+                      </Button>
+                    </TableCell>
                   </TableRow>
-                </TableHead>
-                <TableBody>
-                  {selectedActifs.map((actif) => (
-                    <TableRow key={actif.id}>
-                      <TableCell>{actif.nom}</TableCell>
-                      <TableCell>{actif.numero_serie}</TableCell>
-                      <TableCell>
-                        <Button
-                          color="error"
-                          variant="outlined"
-                          size="small"
-                          onClick={() => {
-                            onDeleteData(actif);
-                          }}
-                        >
-                          <DeleteIcon />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          ) : (
-            <CircularProgress className="m-auto" />
-          )}
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Grid>
       </Grid>
     </div>
   );
 };
 
-export default SelectActifsList;
+export default ActifsListSelect;

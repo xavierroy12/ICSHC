@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Actif } from './type';
 import { useNavigate } from 'react-router-dom';
 import MUIDataTable, { MUIDataTableOptions } from 'mui-datatables';
-import { Button, CircularProgress, ToggleButton } from '@mui/material';
+import { Button, CircularProgress, Modal, ToggleButton } from '@mui/material';
+import { LightActif } from '../ActifsListSelect/type';
+import ActifsSelect from '../ActifsSelect/ActifsSelect';
 
 const ActifsList = () => {
   const navigate = useNavigate();
@@ -12,7 +14,11 @@ const ActifsList = () => {
   const [actifs, setActifs] = useState<Actif[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [archivedActifs, setArchivedActifs] = useState<Actif[]>([]);
+
+  const [showListSelect, setShowListSelect] = useState(false);
+  const [selectedActifs, setSelectedActifs] = useState<LightActif[]>([]);
   let lastClickTime = 0; // To track double-clicks
+  const ref = useRef(null);
 
   const handleRowClick = (
     _rowData: string[],
@@ -131,6 +137,24 @@ const ActifsList = () => {
     );
   }
 
+  const handleSubmit = () => {
+    setShowListSelect(false);
+    const selectedRows = selectedActifs.map((actif) => actif.id);
+    if (selectedRows.length === 1) {
+      navigate('/actif/' + selectedRows[0]);
+    } else {
+      navigate('/actifs/modify', {
+        state: {
+          selectedRows,
+        },
+      });
+    }
+  };
+  const handleCloseModal = () => {
+    setShowListSelect(false);
+    setSelectedActifs([]);
+  };
+
   return (
     <div className="w-11/12 mx-auto mt-10">
       <MUIDataTable
@@ -150,6 +174,15 @@ const ActifsList = () => {
           >
             Voir Archiver
           </ToggleButton>
+          <Button
+            className="ml-12"
+            style={{ marginRight: '1rem' }}
+            color="primary"
+            size="medium"
+            onClick={() => setShowListSelect(true)}
+          >
+            Sélectionner
+          </Button>
         </div>
         <div className="float-right m-4 ">
           <Button
@@ -182,6 +215,28 @@ const ActifsList = () => {
           </Button>
         </div>
       </div>
+      <Modal
+        ref={ref}
+        open={showListSelect}
+        onClose={handleCloseModal}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
+      >
+        <ActifsSelect
+          ref={ref}
+          selectedActifs={selectedActifs}
+          setSelectedActifs={setSelectedActifs}
+          actifs={actifs.map((actif: Actif) => ({
+            id: parseInt(actif.id),
+            nom: actif.nom,
+            numero_serie: actif.numero_serie,
+          }))}
+          handleSubmit={handleSubmit}
+        />
+      </Modal>
     </div>
   );
 };

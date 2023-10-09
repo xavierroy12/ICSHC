@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('utilisateur', function (Blueprint $table) {
             $table->id();
             $table->string('nom', 32);
-            $table->string('matricule', 64);
-            $table->unsignedBigInteger('id_emplacement');
-            $table->unsignedBigInteger('id_role');
-
+            $table->string('nom_utilisateur', 32);
+            $table->unsignedBigInteger('id_emplacement')->nullable();
+            $table->unsignedBigInteger('id_role')->nullable();
+            $table->string('token', 500)->nullable(); // Add token column
+            $table->timestamp('expiration')->nullable(); // Add expiration column
             $table->foreign('id_emplacement')->references('id')->on('emplacement');
             $table->foreign('id_role')->references('id')->on('role');
+            $table->timestamps();
         });
     }
 

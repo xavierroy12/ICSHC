@@ -15,14 +15,14 @@ class UtilisateurSeeder extends Seeder
     {
         DB::table('utilisateur')->insert([
             'nom' => 'Luc Grandchamps',
-            'matricule' => 'AD12345',
+            'nom_utilisateur' => 'lgrandchamps',
             'id_emplacement' => 1,
             'id_role' => 1,
         ]);
 
         DB::table('utilisateur')->insert([
-            'nom' => 'Xavier Roy',
-            'matricule' => 'BS67890',
+            'nom' => 'Nicolas Lachance',
+            'nom_utilisateur' => 'nlachance',
             'id_emplacement' => 1,
             'id_role' => 2,
         ]);

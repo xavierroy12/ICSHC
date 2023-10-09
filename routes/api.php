@@ -56,3 +56,7 @@ Route::middleware('throttle:200,1')->group(function () {
 
 
 
+
+Route::post('/login', [LoginController::class, 'checkLogin']);
+Route::post('/checkToken', [LoginController::class, 'checkToken']);
+Route::get('/utilisateur', [UtilisateurController::class, 'list_json']);

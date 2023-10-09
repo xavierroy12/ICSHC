@@ -20,6 +20,7 @@ class Modele extends Model
         'memoire_vive',
         'taille',
         'id_type_modele',
+        'favoris',
     ];
 
 

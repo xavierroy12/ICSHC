@@ -13,6 +13,9 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\EtatController;
 use App\Http\Controllers\ModeleController;
 use App\Http\Controllers\TypeModeleController;
+use App\Http\Controllers\UtilisateurController;
+use App\Http\Controllers\LoginController;
+
 Route::middleware('throttle:5000,1')->group(function () {
 
     Route::get('/emplacement/{id}', [EmplacementController::class, 'show']);
@@ -51,12 +54,13 @@ Route::middleware('throttle:5000,1')->group(function () {
 
     Route::get('/statuts', [StatutController::class, 'showAll']);
     Route::get('/statuts/light', [StatutController::class, 'lightShow']);
+
+    Route::post('/login', [LoginController::class, 'checkLogin']);
+    Route::post('/checkToken', [LoginController::class, 'checkToken']);
+    Route::get('/utilisateur', [UtilisateurController::class, 'list_json']);
+
 });
 
 
 
 
-
-Route::post('/login', [LoginController::class, 'checkLogin']);
-Route::post('/checkToken', [LoginController::class, 'checkToken']);
-Route::get('/utilisateur', [UtilisateurController::class, 'list_json']);

@@ -19,36 +19,36 @@ function App() {
     .find((cookie) => cookie.trim().startsWith('CookieLogged=')); // Get the cookie
   //let authentified = false;
   //Bypass Login for dev purposes, might want to remove that later
-  if (cookie === 'Minou') {
+  if (cookie === 'CookieLogged=Minou') {
     console.log('Bypassing login');
     //authentified = true;
     //doReturn();
-  }
-
-  if (cookie) {
-    const token = cookie.split('=')[1]; // Extract the token value
-    fetch('http://10.0.22.24:8080/api/checkToken', {
-      method: 'POST',
-      body: JSON.stringify({ token: token }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then((response) => {
-      if (response.ok) {
-        response.json().then((data) => {
-          if (data.success === true) {
-            console.log('Token is valid');
-            //authentified = true;
-            //doReturn();
-          } else {
-            console.log('Token is invalid');
-            return <Login />;
-          }
-        });
-      }
-    });
   } else {
-    return <Login />;
+    if (cookie) {
+      const token = cookie.split('=')[1]; // Extract the token value
+      fetch(window.name + 'api/checkToken', {
+        method: 'POST',
+        body: JSON.stringify({ token: token }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((response) => {
+        if (response.ok) {
+          response.json().then((data) => {
+            if (data.success === true) {
+              console.log('Token is valid');
+              //authentified = true;
+              //doReturn();
+            } else {
+              console.log('Token is invalid');
+              return <Login />;
+            }
+          });
+        }
+      });
+    } else {
+      return <Login />;
+    }
   }
 
   console.log('Authentified');

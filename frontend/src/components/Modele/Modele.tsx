@@ -29,8 +29,10 @@ const Modele = () => {
         setModele(fetchedModele);
       });
   }, [id]);
+
   const navigate = useNavigate();
-  const initialValues = {
+
+    const initialValues = {
     id: modele?.id,
     nom: modele?.nom,
     id_type_modele: modele?.id_type_modele,

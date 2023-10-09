@@ -18,7 +18,9 @@ const CustomSelect = ({
   isClearable = false,
 }: SearchableSelectProps) => {
   const [inputValue, setInputValue] = useState<string>('');
-  const [value, setValue] = useState<SelectItem | null>(options[0]);
+  const [value, setValue] = useState<SelectItem | null>(
+    options[field.value - 1]
+  );
 
   return (
     <Autocomplete

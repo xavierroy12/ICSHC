@@ -20,9 +20,15 @@ class TypeModeleController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
+    public function add(Request $request){
+        $typeModele = new TypeModele();
+        $typeModele->nom = $request->nom;
+        $typeModele->save();
+        return response()->json($typeModele);
+    }
     /**
      * Store a newly created resource in storage.
      */

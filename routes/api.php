@@ -41,6 +41,7 @@ Route::middleware('throttle:200,1')->group(function () {
 
     Route::get('/categories', [TypeModeleController::class, 'showAll']);
     Route::get('/categories/light', [TypeModeleController::class, 'lightShow']);
+    Route::post('/categorie', [TypeModeleController::class, 'add']);
 
     Route::get('/utilisations', [UtilisationController::class, 'showAll']);
     Route::get('/utilisations/light', [UtilisationController::class, 'lightShow']);

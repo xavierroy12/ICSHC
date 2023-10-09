@@ -73,6 +73,22 @@ const Modele = () => {
         console.error('Error saving data:', error);
       });
   };
+  const reloadData = () => {
+    console.log('reloadData');
+    setTimeout(() => {
+      fetch(window.name + 'api/categories/light')
+        .then((response) => response.json())
+        .then((data) => {
+          setCategories(
+            data.map((statut: LightType) => ({
+              id: statut.id,
+              label: statut.nom,
+            }))
+          );
+        });
+    }, 1000);
+  };
+
   return (
     <div>
       {!modele ? (
@@ -94,6 +110,7 @@ const Modele = () => {
                   values={values}
                   dirty={dirty}
                   setFieldValue={setFieldValue}
+                  reloadData={reloadData}
                 />
               </div>
             )}

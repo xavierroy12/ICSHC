@@ -14,7 +14,7 @@ const ActifsSelect = forwardRef(
   ({ actifs, selectedActifs, setSelectedActifs, handleSubmit }: Props, ref) => {
     return (
       <div
-        ref={ref}
+        ref={ref as React.RefObject<HTMLDivElement>}
         className="max-w-screen-md mx-auto mt-20 bg-white z-50 pb-10"
       >
         <div className="p-4 bg-white">

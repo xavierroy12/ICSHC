@@ -37,6 +37,7 @@ const CustomSelect = ({
       onInputChange={(_, newInputValue) => {
         setInputValue(newInputValue);
       }}
+      isOptionEqualToValue={(option, value) => option.id === value.id}
       renderInput={(params) => (
         <TextField
           {...params}

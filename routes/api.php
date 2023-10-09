@@ -13,7 +13,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\EtatController;
 use App\Http\Controllers\ModeleController;
 use App\Http\Controllers\TypeModeleController;
-Route::middleware('throttle:200,1')->group(function () {
+Route::middleware('throttle:5000,1')->group(function () {
 
     Route::get('/emplacement/{id}', [EmplacementController::class, 'show']);
     Route::get('/emplacements', [EmplacementController::class, 'showAll']);

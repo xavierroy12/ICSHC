@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use Illuminate\Http\Request;
-use App\Actif;
+use App\Http\Controllers\ActifController;
 class ClientController extends Controller
 {
     /**
@@ -99,14 +99,19 @@ class ClientController extends Controller
     public function updateActifs(Request $request, $id)
 {
     $client = Client::findOrFail($id);
+    $old_id_actifs = $client->id_actif;
 
     $data = $request->all();
+    $id_actifs = $data['selected_rows'];
 
-    $client->id_actif = $data['selected_rows'];
+    $client->id_actif = $id_actifs;
     $client->save();
 
-    $actifs = Actif::whereIn('id', $request->input('id_actif'))->get();
+    $actif_controller = new ActifController;
+    $actifs = $actif_controller->getActifs($id_actifs);
+
     foreach ($actifs as $actif) {
+
         $actif->client_id = $client->id;
         $actif->save();
     }

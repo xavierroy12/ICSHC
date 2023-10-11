@@ -8,7 +8,6 @@ use App\Models\Actif;
 use App\Models\Client;
 use App\Models\Modele;
 use Illuminate\Http\Request;
-use DB;
 
 class ActifController extends Controller
 {
@@ -131,8 +130,7 @@ class ActifController extends Controller
     public function show(int $idActif)
     {
         // Find the actif by ID
-        $actif = DB::table('actif')->where('id', $idActif)->first();
-
+        $actif = Actif::find($idActif);
         return $actif;
     }
 

@@ -37,7 +37,7 @@ class EmplacementController extends Controller
     public function show($id)
     {
          // Find the emplacement by ID
-         $emplacement = DB::table('emplacement')->where('id', $id)->first();
+         $emplacement = Emplacement::find($id);
 
         return $emplacement;
     }

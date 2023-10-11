@@ -47,7 +47,7 @@ const NavBar = () => {
           </Button>
           <Button
             component={Link}
-            to={`/client`}
+            to={`/clients`}
             color="inherit"
             className="mr-4"
           >

@@ -12,7 +12,6 @@ const ModeleList = () => {
   let lastClickTime = 0; // To track double-clicks
 
     const handleRowClick = (
-
     _rowData: string[],
     rowMeta: { dataIndex: number; rowIndex: number }
   ) => {

@@ -33,6 +33,7 @@ Route::middleware('throttle:5000,1')->group(function () {
     Route::get('/clients', [ClientController::class, 'showAll']);
     Route::get('/clients/light', [ClientController::class, 'lightShow']);
     Route::get('/clients/list', [ClientController::class, 'listShow']);
+    Route::post('/client/actifs/{id}', [ClientController::class, 'updateActifs']);
 
     Route::get('/etats', [EtatController::class, 'showAll']);
     Route::get('/etats/light', [EtatController::class, 'lightShow']);

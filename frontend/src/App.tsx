@@ -6,6 +6,8 @@ import Actif from './components/Actif';
 import Modele from './components/Modele';
 import ModeleList from './components/ModeleList/ModeleList';
 import Login from './components/Login/Login';
+import Client from './components/Client';
+import ClientsList from './components/ClientsList';
 
 if (process.env.NODE_ENV === 'development') {
   window.name = 'http://localhost:8000/';
@@ -52,7 +54,7 @@ function App() {
   }
 
   console.log('Authentified');
-  //function doReturn() {  <Route path="/" element={<Modele id={'1'} />} />
+
   return (
     <div className="App">
       <Router>
@@ -64,6 +66,9 @@ function App() {
 
             <Route path="/modeles" element={<ModeleList />} />
             <Route path="/modele/:id" element={<Modele />} />
+
+            <Route path="/client/:id" element={<Client />} />
+            <Route path="/clients" element={<ClientsList />} />
 
             <Route path="*" element={<h1>Not Found</h1>} />
 

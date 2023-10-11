@@ -30,8 +30,10 @@ Route::middleware('throttle:5000,1')->group(function () {
     Route::post('/actif', [ActifController::class, 'store']);
     Route::post('/actif/{id}', [ActifController::class, 'update']);
 
+    Route::get('/client/{id}', [ClientController::class, 'show']);
     Route::get('/clients', [ClientController::class, 'showAll']);
     Route::get('/clients/light', [ClientController::class, 'lightShow']);
+    Route::get('/clients/list', [ClientController::class, 'listShow']);
 
     Route::get('/etats', [EtatController::class, 'showAll']);
     Route::get('/etats/light', [EtatController::class, 'lightShow']);

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use Illuminate\Http\Request;
-
+use App\Actif;
 class ClientController extends Controller
 {
     /**
@@ -34,9 +34,11 @@ class ClientController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Client $client)
+    public function show($id)
     {
-        //
+        $client = Client::with(['actif', 'emplacement', 'poste', 'type_client'])->find($id);
+
+        return response()->json($client);
     }
 
     /**
@@ -77,4 +79,38 @@ class ClientController extends Controller
         });
         return response()->json($clients);
     }
+    public function listShow()
+    {
+        $client = Client::with(['actif', 'emplacement', 'poste', 'type_client'])->get()->map(
+            function ($client) {
+                return [
+                    "id" => $client->id,
+                    "nom" => $client->nom,
+                    'actif' => $client->actif->nom ?? 'Aucun',
+                    'emplacement' => $client->emplacement->nom ?? 'Aucun',
+                    'poste' => $client->poste->nom ?? 'Aucun',
+                    'type_client' => $client->type_client->nom ?? 'Aucun',
+
+                ];
+            }
+        );
+        return response()->json($client);
+    }
+    public function updateActifs(Request $request, $id)
+{
+    $client = Client::findOrFail($id);
+
+    $data = $request->all();
+
+    $client->id_actif = $data['selected_rows'];
+    $client->save();
+
+    $actifs = Actif::whereIn('id', $request->input('id_actif'))->get();
+    foreach ($actifs as $actif) {
+        $actif->client_id = $client->id;
+        $actif->save();
+    }
+
+    return response()->json($client);
+}
 }

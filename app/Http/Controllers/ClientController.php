@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActifController;
+use App\Models\Actif;
+
 class ClientController extends Controller
 {
     /**
@@ -36,7 +38,7 @@ class ClientController extends Controller
      */
     public function show($id)
     {
-        $client = Client::with(['actif', 'emplacement', 'poste', 'type_client'])->find($id);
+        $client = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])->find($id);
 
         return response()->json($client);
     }
@@ -69,6 +71,7 @@ class ClientController extends Controller
         $clients = Client::all();
         return response()->json($clients);
     }
+
     public function lightShow()
     {
         $clients = Client::All()->map(function ($client) {
@@ -76,46 +79,55 @@ class ClientController extends Controller
                 "id" => $client->id,
                 "nom" => $client->nom,
             ];
-        });
-        return response()->json($clients);
+        });        return response()->json($clients);
     }
+
     public function listShow()
     {
-        $client = Client::with(['actif', 'emplacement', 'poste', 'type_client'])->get()->map(
+        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])->get()
+        ->map(
             function ($client) {
                 return [
                     "id" => $client->id,
                     "nom" => $client->nom,
-                    'actif' => $client->actif->nom ?? 'Aucun',
+                    'actifs' =>  $client->actifs->pluck('nom')->implode(', '),
                     'emplacement' => $client->emplacement->nom ?? 'Aucun',
                     'poste' => $client->poste->nom ?? 'Aucun',
                     'type_client' => $client->type_client->nom ?? 'Aucun',
-
                 ];
             }
         );
+        return response()->json($clients);
+    }
+
+    public function updateActifs(Request $request, $id)
+    {
+        // Retrieve the parent model instance
+        $client = Client::with(['actifs'])->findOrFail($id);
+
+        // Retrieve the related models
+        $old_actifs = $client->actifs;
+
+        // Update the related models
+        foreach ($old_actifs as $old_actif) {
+            $old_actif->id_client = null;
+            $old_actif->save();
+        }
+
+        $data = $request->all();
+        $id_actifs = $data['actifs'];
+        $actif_controller = new ActifController;
+        $actifs = [];
+        foreach ($id_actifs as $id_actif) {
+            $actif = $actif_controller->show($id_actif);
+            $actifs[] = $actif;
+            $actif->id_client = $client->id; // Set the id_client field to the current client's id
+            $actif->save();
+        }
+
+        // Save the parent model instance
+        $client->actifs()->saveMany($actifs);
+
         return response()->json($client);
     }
-    public function updateActifs(Request $request, $id)
-{
-    $client = Client::findOrFail($id);
-    $old_id_actifs = $client->id_actif;
-
-    $data = $request->all();
-    $id_actifs = $data['selected_rows'];
-
-    $client->id_actif = $id_actifs;
-    $client->save();
-
-    $actif_controller = new ActifController;
-    $actifs = $actif_controller->getActifs($id_actifs);
-
-    foreach ($actifs as $actif) {
-
-        $actif->client_id = $client->id;
-        $actif->save();
-    }
-
-    return response()->json($client);
-}
 }

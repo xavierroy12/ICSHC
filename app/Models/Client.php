@@ -15,13 +15,13 @@ class Client extends Model
     protected $fillable = [
         'nom',
         'id_poste',
+        'actifs',
         'id_type_client',
-        'id_actif',
         'id_emplacement',
     ];
-    public function actif()
+    public function actifs()
     {
-        return $this->belongsTo(Actif::class, 'id_actif');
+        return $this->hasMany(Actif::class, 'id_client');
 
     }
     public function emplacement()

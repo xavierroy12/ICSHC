@@ -20,6 +20,7 @@ class Actif extends Model
         'note',
         'id_modele',
         'modele_descriptif',
+        'id_client',
         'id_statut',
         'id_emplacement',
         'id_proprietaire',
@@ -59,9 +60,7 @@ class Actif extends Model
 
     public function client()
     {
-        return $this->hasOne(Client::class, 'id_actif')->withDefault([
-            'nom' => 'Non assigné', // Définissez la valeur par défaut que vous souhaitez afficher
-        ]);
+        return $this->belongsTo(Client::class, 'id_client');
     }
 
 

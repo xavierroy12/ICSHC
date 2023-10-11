@@ -34,13 +34,12 @@ type Type_Client_Type = {
 type Client_Type = {
   id: number;
   nom: string;
-  actif: Actif;
+  actifs: Actif[];
   emplacement: Emplacement_Type;
   poste: Poste_Type;
   type_client: Type_Client_Type;
   id_poste: number;
   id_type_client: number;
-  id_actif: number;
   id_emplacement: number;
   created_at: string | null;
   updated_at: string | null;
@@ -61,23 +60,18 @@ const Client = () => {
     ]).then((responses) =>
       Promise.all(responses.map((response) => response.json()))
         .then(([fetchedActif, fetchedClient]) => {
+          console.log(fetchedClient);
           setActifs(fetchedActif);
           setClient(fetchedClient);
-          if (fetchedClient.actif)
-            setSelectedActifs([
-              {
-                id: fetchedClient.actif.id,
-                nom: fetchedClient.actif.nom,
-                numero_serie: fetchedClient.actif.numero_serie,
-              },
-            ]);
-          // setSelectedActifs(
-          //   fetchedClient.actif.map((actif: Actif) => ({
-          //     id: parseInt(actif.id),
-          //     nom: actif.nom,
-          //     numero_serie: actif.numero_serie,
-          //   }))
-          // );
+          if (fetchedClient.actifs)
+            setSelectedActifs(
+              fetchedClient.actifs.map((actif: Actif) => ({
+                id: actif.id,
+                nom: actif.nom,
+                numero_serie: actif.numero_serie,
+              }))
+            );
+          console.log(fetchedClient.actif);
         })
         .then(() => {
           setIsLoading(false);
@@ -87,7 +81,8 @@ const Client = () => {
   }, [id]);
   const handleSubmit = () => {
     const selectedRows = selectedActifs.map((actif) => actif.id);
-    fetch(window.name + `api/client/${id}`, {
+    console.log(selectedRows);
+    fetch(window.name + `api/client/actifs/${id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -102,13 +97,7 @@ const Client = () => {
         console.error('Error:', error);
       });
   };
-  if (isLoading) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <CircularProgress />
-      </div>
-    );
-  }
+
   return (
     <Fragment>
       {isLoading ? (

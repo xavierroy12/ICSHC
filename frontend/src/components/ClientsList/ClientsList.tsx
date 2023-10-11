@@ -3,6 +3,7 @@ import MUIDataTable, { MUIDataTableOptions } from 'mui-datatables';
 import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Client } from './type';
+
 const ClienList = () => {
   const [clients, setClients] = useState<Client[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -43,8 +44,8 @@ const ClienList = () => {
       },
     },
     {
-      name: 'actif',
-      label: 'Actif',
+      name: 'actifs',
+      label: 'Actifs',
       options: {
         filter: true,
         sort: true,

@@ -24,5 +24,17 @@ class Client extends Model
         return $this->belongsTo(Actif::class, 'id_actif');
 
     }
+    public function emplacement()
+    {
+        return $this->belongsTo(Emplacement::class, 'id_emplacement');
+    }
+    public function poste()
+    {
+        return $this->belongsTo(Poste::class, 'id_poste');
+    }
+    public function type_client()
+    {
+        return $this->belongsTo(TypeClient::class, 'id_type_client');
+    }
 
 }

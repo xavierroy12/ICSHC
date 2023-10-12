@@ -10,6 +10,6 @@ class TypeClient extends Model
 {
     use HasFactory, HasTimestamps;
 
-    protected $table = 'typeClient';
+    protected $table = 'type_client';
 
 }

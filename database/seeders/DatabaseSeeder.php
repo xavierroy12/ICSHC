@@ -27,8 +27,8 @@ class DatabaseSeeder extends Seeder
             UtilisateurSeeder::class,
             HistoriqueSeeder::class,
             CommandeSeeder::class,
-            ActifSeeder::class,
             ClientSeeder::class,
+            ActifSeeder::class,
         ]);
     }
 }

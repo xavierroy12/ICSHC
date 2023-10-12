@@ -4,8 +4,10 @@ import ActifsList from './components/ActifsList';
 import Actifs from './components/Actifs';
 import Actif from './components/Actif';
 import Modele from './components/Modele';
-import ModeleList from './components/ModeleList';
-import Login from './components/Login';
+import ModeleList from './components/ModeleList/ModeleList';
+import Login from './components/Login/Login';
+import Client from './components/Client';
+import ClientsList from './components/ClientsList';
 import UtilisateurList from './components/UtilisateurList';
 import Utilisateur from './components/Utilisateur';
 if (process.env.NODE_ENV === 'development') {
@@ -53,7 +55,7 @@ function App() {
   }
 
   console.log('Authentified');
-  //function doReturn() {  <Route path="/" element={<Modele id={'1'} />} />
+
   return (
     <div className="App">
       <Router>
@@ -65,6 +67,9 @@ function App() {
 
             <Route path="/modeles" element={<ModeleList />} />
             <Route path="/modele/:id" element={<Modele />} />
+
+            <Route path="/client/:id" element={<Client />} />
+            <Route path="/clients" element={<ClientsList />} />
 
             <Route path="/utilisateurs" element={<UtilisateurList />} />
             <Route path="/utilisateur/:id" element={<Utilisateur />} />

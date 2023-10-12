@@ -16,6 +16,7 @@ class ActifSeeder extends Seeder
     public function run(): void
     {
 
+        $clients = DB::table('client')->pluck('id'); // Assuming you have a 'clients' table
 
             DB::table('actif')->insert([
                 [
@@ -32,6 +33,7 @@ class ActifSeeder extends Seeder
                 'id_proprietaire' => 1,
                 'id_utilisation' => 1,
                 'numero_commande' => 69123456789,
+                'id_client' => $clients[1],
                 ],
                 [
                     'numero_serie' => 'SER000000000002',
@@ -47,6 +49,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[1],
                 ],
                 [
                     'numero_serie' => 'SER000000000003',
@@ -62,6 +65,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[2],
                 ],
                 [
                     'numero_serie' => 'SER000000000004',
@@ -77,6 +81,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[3],
                 ],
                 [
                     'numero_serie' => 'SER000000000005',
@@ -92,6 +97,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[4],
                 ],
                 [
                     'numero_serie' => 'SER000000000006',
@@ -107,6 +113,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[5],
                 ],
                 [
                     'numero_serie' => 'SER000000000007',
@@ -122,6 +129,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[6],
                 ],
                 [
                     'numero_serie' => 'SER000000000008',
@@ -137,6 +145,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[7],
                 ],
 
                 [
@@ -153,6 +162,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[8],
                 ],
                 [
                     'numero_serie' => 'SER000000000010',
@@ -168,6 +178,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[9],
                 ],
                 [
                     'numero_serie' => 'SER000000000011',
@@ -183,6 +194,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[10],
                 ],
                 [
                     'numero_serie' => 'SER000000000012',
@@ -198,6 +210,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[11],
                 ],
                 [
                     'numero_serie' => 'SER000000000013',
@@ -213,6 +226,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[12],
                 ],
                 [
                     'numero_serie' => 'SER000000000014',
@@ -228,6 +242,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[13],
                 ],
                 [
                     'numero_serie' => 'SER000000000015',
@@ -243,6 +258,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[14],
                 ],
                 [
                     'numero_serie' => 'SER000000000016',
@@ -258,6 +274,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[15],
                 ],
                 [
                     'numero_serie' => 'SER000000000017',
@@ -273,6 +290,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[16],
                 ],
                 [
                     'numero_serie' => 'SER000000000018',
@@ -288,6 +306,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[17],
                 ],
                 [
                     'numero_serie' => 'SER000000000019',
@@ -303,6 +322,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[18],
                 ],
                 [
                     'numero_serie' => 'SER000000000020',
@@ -318,6 +338,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[19],
                 ],
                 [
                     'numero_serie' => 'SER000000000021',
@@ -333,6 +354,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[0],
                 ],
                 [
                     'numero_serie' => 'SER000000000022',
@@ -348,6 +370,7 @@ class ActifSeeder extends Seeder
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
+                    'id_client' => $clients[0],
                 ],
             ]
 

@@ -8,7 +8,6 @@ use App\Models\Actif;
 use App\Models\Client;
 use App\Models\Modele;
 use Illuminate\Http\Request;
-use DB;
 
 class ActifController extends Controller
 {
@@ -131,8 +130,7 @@ class ActifController extends Controller
     public function show(int $idActif)
     {
         // Find the actif by ID
-        $actif = DB::table('actif')->where('id', $idActif)->first();
-
+        $actif = Actif::find($idActif);
         return $actif;
     }
 
@@ -169,26 +167,17 @@ class ActifController extends Controller
             'id_emplacement' => $data['id_emplacement'],
             'id_proprietaire' => $data['id_proprietaire'],
             'id_utilisation' => $data['id_utilisation'],
+            'id_client'=> $data['id_assigne_a']
             //'numero_commande' => $data['numero_commande'], //Todo add this to the form
         ];
 
         $updatedDataModele = [
             'id_type_modele' => $data['id_categorie'],
         ];
-        $updateDataClient = [
-            'id_actif' => $id,
-        ];
 
-
-        $client = Client::where('id_actif', $id);
-        //Remove assignation from previous client
-        if ($client) {
-            $client->update(['id_actif' => null]);
-        }
         // Update the Actif object with the updated data
         $actif->fill($updatedDataActif);
         Modele::where('id', $actif->id_modele)->update($updatedDataModele);
-        Client::where('id', $data['id_assigne_a'])->update($updateDataClient);
 
 
 
@@ -231,15 +220,11 @@ class ActifController extends Controller
                     'numero_serie' => $actif->numero_serie,
                     'nom' => $actif->nom,
                     'modele' => $actif->modele->nom,
-                    'modele_id' => $actif->modele->id,
                     'categorie' => $actif->modele->categorie->nom,
-                    'categorie_id' => $actif->modele->categorie->id,
                     'statut' => $actif->statut->nom,
-                    'statut_id' => $actif->statut->id,
-                    'client' => $actif->client->nom,
-                    'client_id' => $actif->client->id,
+                    'client' => $actif->client->nom ?? 'Aucun',
                     'emplacement' => $actif->emplacement->nom,
-                    'emplacement_id' => $actif->emplacement->id,
+
                 ];
             });
 
@@ -277,7 +262,7 @@ class ActifController extends Controller
             'id_utilisation' => $actif->utilisation->id,
             'id_proprietaire' => $actif->proprietaire->id,
             'id_emplacement' => $actif->emplacement->id,
-            'id_client' => $actif->client->id,
+            'id_client' => $actif->client->id ?? null,
             'en_entrepot' => $actif->en_entrepot,
             'date_retour' => $actif->date_retour,
             'note' => $actif->note,

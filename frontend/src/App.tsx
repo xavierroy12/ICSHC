@@ -8,7 +8,8 @@ import ModeleList from './components/ModeleList/ModeleList';
 import Login from './components/Login/Login';
 import Client from './components/Client';
 import ClientsList from './components/ClientsList';
-
+import UtilisateurList from './components/UtilisateurList';
+import Utilisateur from './components/Utilisateur';
 if (process.env.NODE_ENV === 'development') {
   window.name = 'http://localhost:8000/';
 } else {
@@ -69,6 +70,9 @@ function App() {
 
             <Route path="/client/:id" element={<Client />} />
             <Route path="/clients" element={<ClientsList />} />
+
+            <Route path="/utilisateurs" element={<UtilisateurList />} />
+            <Route path="/utilisateur/:id" element={<Utilisateur />} />
 
             <Route path="*" element={<h1>Not Found</h1>} />
 

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
+import { Divider } from '@mui/material';
 
 const NavBar = () => {
   return (
@@ -43,7 +44,7 @@ const NavBar = () => {
             color="inherit"
             className="mr-4"
           >
-            Commande
+            Commandes
           </Button>
           <Button
             component={Link}
@@ -51,7 +52,16 @@ const NavBar = () => {
             color="inherit"
             className="mr-4"
           >
-            Client
+            Clients
+          </Button>
+          <Divider orientation="vertical" flexItem color="white" />
+          <Button
+            component={Link}
+            to={`/utilisateurs`}
+            color="inherit"
+            className="mr-4"
+          >
+            Utilisateurs
           </Button>
         </div>
       </Toolbar>

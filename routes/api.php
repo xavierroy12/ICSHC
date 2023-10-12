@@ -14,6 +14,7 @@ use App\Http\Controllers\ModeleController;
 use App\Http\Controllers\TypeModeleController;
 use App\Http\Controllers\UtilisateurController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RoleController;
 
 Route::middleware('throttle:5000,1')->group(function () {
 
@@ -59,8 +60,14 @@ Route::middleware('throttle:5000,1')->group(function () {
 
     Route::post('/login', [LoginController::class, 'checkLogin']);
     Route::post('/checkToken', [LoginController::class, 'checkToken']);
+
     Route::get('/utilisateur', [UtilisateurController::class, 'list_json']);
 
+    Route::get('/utilisateur/{id}', [UtilisateurController::class, 'show']);
+    Route::post('/utilisateur/{id}', [UtilisateurController::class, 'update']);
+    Route::get('/utilisateurs/list', [UtilisateurController::class, 'showList']);
+
+    Route::get('/roles/light', [RoleController::class, 'lightShow']);
 });
 
 

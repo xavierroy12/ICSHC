@@ -95,9 +95,17 @@ class UtilisateurController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Utilisateur $utilisateur)
+    public function show($id)
     {
-        //
+        $data = Utilisateur::find($id);
+        $utilisateur = [
+            'id' => $data->id,
+            'nom' => $data->nom,
+            'id_emplacement' => $data->id_emplacement,
+            'id_role' => $data->id_role,
+        ];
+
+        return response()->json($utilisateur);
     }
 
     /**
@@ -111,9 +119,20 @@ class UtilisateurController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Utilisateur $utilisateur)
+    public function update(Request $request, $id)
     {
-        //
+        $utilisateur = Utilisateur::findOrFail($id);
+
+        $data = $request->all();
+
+        $utilisateur->update($data);
+        if ($utilisateur->save()) {
+            // Return a success response
+            return response()->json(['message' => 'Utilisateur mis à jour avec succès'], 200);
+        } else {
+            // Return an error response
+            return response()->json(['message' => "Erreur lors de la mise à jour de l'utilisateur"], 500);
+        }
     }
 
 
@@ -123,5 +142,17 @@ class UtilisateurController extends Controller
     public function destroy(Utilisateur $utilisateur)
     {
         //
+    }
+    public function showList()
+    {
+        $utilisateurs = Utilisateur::with(['emplacement', 'role'])->get()->map(function ($utilisateur) {
+            return [
+                'id' => $utilisateur->id,
+                'nom' => $utilisateur->nom,
+                'emplacement' => $utilisateur->emplacement->nom,
+                'role' => $utilisateur->role->nom,
+            ];
+        });
+        return response()->json($utilisateurs);
     }
 }

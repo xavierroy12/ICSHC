@@ -4,9 +4,10 @@ import ActifsList from './components/ActifsList';
 import Actifs from './components/Actifs';
 import Actif from './components/Actif';
 import Modele from './components/Modele';
-import ModeleList from './components/ModeleList/ModeleList';
-import Login from './components/Login/Login';
-
+import ModeleList from './components/ModeleList';
+import Login from './components/Login';
+import UtilisateurList from './components/UtilisateurList';
+import Utilisateur from './components/Utilisateur';
 if (process.env.NODE_ENV === 'development') {
   window.name = 'http://localhost:8000/';
 } else {
@@ -64,6 +65,9 @@ function App() {
 
             <Route path="/modeles" element={<ModeleList />} />
             <Route path="/modele/:id" element={<Modele />} />
+
+            <Route path="/utilisateurs" element={<UtilisateurList />} />
+            <Route path="/utilisateur/:id" element={<Utilisateur />} />
 
             <Route path="*" element={<h1>Not Found</h1>} />
 

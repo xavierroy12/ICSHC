@@ -15,6 +15,9 @@ const ActifsList = () => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [archivedActifs, setArchivedActifs] = useState<Actif[]>([]);
 
+  // New state to store selected filters
+  const [selectedFilters, setSelectedFilters] = useState<any>({});
+
   const [showListSelect, setShowListSelect] = useState(false);
   const [selectedActifs, setSelectedActifs] = useState<LightActif[]>([]);
   let lastClickTime = 0; // To track double-clicks
@@ -84,6 +87,7 @@ const ActifsList = () => {
     },
   ];
 
+
   const options: Partial<MUIDataTableOptions> = {
     filterType: 'dropdown',
     responsive: 'simple',
@@ -109,6 +113,21 @@ const ActifsList = () => {
     onRowClick: handleRowClick,
     print: false,
     download: false,
+
+
+    onFilterChange: (
+        changedColumnIndex: any,
+        displayData: any
+      ) => {
+        // Log the dropdown index (changedColumnIndex)
+        console.log('Dropdown Name:', changedColumnIndex);
+
+        // Store the selected filters in state
+        setSelectedFilters({
+          ...selectedFilters, displayData,
+        });
+      },
+
   };
 
   useEffect(() => {
@@ -125,8 +144,7 @@ const ActifsList = () => {
         .then(() => {
           setIsLoading(false);
         })
-        .catch((error) => console.error(error))
-    );
+        .catch((error) => console.error(error)));
   }, []);
 
   if (isLoading) {
@@ -150,6 +168,44 @@ const ActifsList = () => {
       });
     }
   };
+
+  const saveSelectedFilters = () => {
+    // Manually flatten the array of arrays
+    const flatData = selectedFilters.displayData.flat();
+    console.log('Display data flat:', flatData);
+
+    // Convert the flattenedFilters array to a JSON object
+    const formattedFiltersJSON = JSON.stringify({
+      filters: flatData,
+    });
+    console.log('Formatted filters JSON:', formattedFiltersJSON);
+
+    // Send the JSON data to the server to save in the database
+    fetch(window.name + 'api/filter/saveFilters', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: formattedFiltersJSON,
+    })
+      .then((response) => {
+        if (response.ok) {
+            alert('Selected filters saved!');
+          console.log('Selected filters saved to the database.');
+          // You can add further actions here, like showing a success message.
+        } else {
+          console.error('Failed to save selected filters.');
+          // Handle the error, show an error message, etc.
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
+
+
+
   const handleCloseModal = () => {
     setShowListSelect(false);
     setSelectedActifs([]);
@@ -157,6 +213,9 @@ const ActifsList = () => {
 
   return (
     <div className="w-11/12 mx-auto mt-10">
+      {/* Button to save selected filters */}
+      <Button onClick={saveSelectedFilters}>Sauvegarder les filtres sélectionnés</Button>
+
       <MUIDataTable
         title={showarchived ? 'Actifs archivés' : 'Actifs'}
         data={showarchived ? archivedActifs : actifs}
@@ -184,7 +243,7 @@ const ActifsList = () => {
             Sélectionner
           </Button>
         </div>
-        <div className="float-right m-4 ">
+        <div className="float-right m-4">
           <Button
             className="ml-12"
             style={{ marginRight: '1rem' }}

@@ -88,6 +88,8 @@ Route::middleware('throttle:5000,1')->group(function () {
     Route::get('/commande/{numero_commande}', [CommandeController::class, 'show']);
     Route::post('/commande/reception/{numero_commande}', [CommandeController::class, 'reception']);
 
+    Route::get('/clientJson', [ClientController::class, 'listClientScolago']);
+
 });
 
 

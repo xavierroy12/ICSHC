@@ -68,6 +68,8 @@ Route::middleware('throttle:5000,1')->group(function () {
     Route::get('/utilisateurs/list', [UtilisateurController::class, 'showList']);
 
     Route::get('/roles/light', [RoleController::class, 'lightShow']);
+    Route::get('/clientJson', [ClientController::class, 'listClientScolago']);
+
 });
 
 

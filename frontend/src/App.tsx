@@ -15,8 +15,9 @@ import Commande from './components/Commande';
 if (process.env.NODE_ENV === 'development') {
   window.name = 'http://localhost:8000/';
 } else {
-  window.name = 'http://10.0.22.24:5173/';
+  window.name = 'http://10.0.22.24:8080/';
 }
+
 
 function App() {
     //enlever pour le split 3
@@ -33,6 +34,7 @@ function App() {
   } else {
     if (cookie) {
       const token = cookie.split('=')[1]; // Extract the token value
+      console.log(window.name);
       fetch(window.name + 'api/checkToken', {
         method: 'POST',
         body: JSON.stringify({ token: token }),

@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Actif } from './type';
+import { Filtre } from '../Filtres/type';
 import { useNavigate } from 'react-router-dom';
 import MUIDataTable, { MUIDataTableOptions } from 'mui-datatables';
 import { Button, CircularProgress, Modal, ToggleButton } from '@mui/material';
 import { LightActif } from '../ActifsListSelect/type';
 import ActifsSelect from '../ActifsSelect/ActifsSelect';
+import { isEmptyArray } from 'formik';
 
 const ActifsList = () => {
   const navigate = useNavigate();
@@ -17,11 +19,14 @@ const ActifsList = () => {
 
   // New state to store selected filters
   const [selectedFilters, setSelectedFilters] = useState<any>({});
+  const [filterList, setFilterList] = useState<Filtre[]>([]);
 
   const [showListSelect, setShowListSelect] = useState(false);
   const [selectedActifs, setSelectedActifs] = useState<LightActif[]>([]);
   let lastClickTime = 0; // To track double-clicks
+
   const ref = useRef(null);
+  const saveButtonRef = useRef(null);
 
   const handleRowClick = (
     _rowData: string[],
@@ -135,11 +140,16 @@ const ActifsList = () => {
     Promise.all([
       fetch(window.name + 'api/actifs'),
       fetch(window.name + 'api/actifs/archived'),
+      fetch(window.name + 'api/filter/getFilters'),
     ]).then((responses) =>
       Promise.all(responses.map((response) => response.json()))
-        .then(([fetchedActif, fetchedArchived]) => {
-          setActifs(fetchedActif);
-          setArchivedActifs(fetchedArchived);
+        .then(([fetchedActif, fetchedArchived, filterList]) => {
+            console.log('Actifs:', fetchedActif);
+            console.log('Archived Actifs:', fetchedArchived);
+            console.log('Filter List:', filterList);
+            setActifs(fetchedActif);
+            setArchivedActifs(fetchedArchived);
+            setFilterList(filterList);
         })
         .then(() => {
           setIsLoading(false);
@@ -170,40 +180,49 @@ const ActifsList = () => {
   };
 
   const saveSelectedFilters = () => {
-    // Manually flatten the array of arrays
     const flatData = selectedFilters.displayData.flat();
-    console.log('Display data flat:', flatData);
+    const urlParts = window.location.pathname.split('/');
+    const from = urlParts[urlParts.length - 1];
 
-    // Convert the flattenedFilters array to a JSON object
-    const formattedFiltersJSON = JSON.stringify({
-      filters: flatData,
-    });
-    console.log('Formatted filters JSON:', formattedFiltersJSON);
+    // Create an object with 'filters' and 'from' properties
+    const filtersData = {
+        filters: flatData,
+        from: from,
+    };
+
+    console.log('Selected filters:', filtersData);
+
+    // Convert the object to a JSON string
+    const formattedFiltersJSON = JSON.stringify(filtersData);
+
+    if (Object.keys(flatData).length === 0) {
+        // selectedFilters is an empty object
+        alert('No filters selected. Please select filters before saving.');
+        return;
+    }
 
     // Send the JSON data to the server to save in the database
     fetch(window.name + 'api/filter/saveFilters', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: formattedFiltersJSON,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: formattedFiltersJSON,
     })
-      .then((response) => {
+    .then((response) => {
         if (response.ok) {
             alert('Selected filters saved!');
-          console.log('Selected filters saved to the database.');
-          // You can add further actions here, like showing a success message.
+            console.log('Selected filters saved to the database.');
+            // You can add further actions here, like showing a success message.
         } else {
-          console.error('Failed to save selected filters.');
-          // Handle the error, show an error message, etc.
+            console.error('Failed to save selected filters.');
+            // Handle the error, show an error message, etc.
         }
-      })
-      .catch((error) => {
+    })
+    .catch((error) => {
         console.error('Error:', error);
-      });
-  };
-
-
+    });
+};
 
 
   const handleCloseModal = () => {
@@ -213,8 +232,8 @@ const ActifsList = () => {
 
   return (
     <div className="w-11/12 mx-auto mt-10">
-      {/* Button to save selected filters */}
-      <Button onClick={saveSelectedFilters}>Sauvegarder les filtres sélectionnés</Button>
+
+        /* Display the filters */
 
       <MUIDataTable
         title={showarchived ? 'Actifs archivés' : 'Actifs'}
@@ -272,6 +291,13 @@ const ActifsList = () => {
           >
             Modifier
           </Button>
+
+          <Button
+            disabled={Object.keys(selectedFilters).length === 0}
+            ref={saveButtonRef}
+            onClick={saveSelectedFilters}>Sauvegarder filtre(s)
+          </Button>
+
         </div>
       </div>
       <Modal

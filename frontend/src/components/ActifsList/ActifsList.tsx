@@ -1,12 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { Actif } from './type';
-import { Filtre } from '../Filtres/type';
+import { FiltreGroup } from '../Filtres/type';
 import { useNavigate } from 'react-router-dom';
 import MUIDataTable, { MUIDataTableOptions } from 'mui-datatables';
-import { Button, CircularProgress, Modal, ToggleButton } from '@mui/material';
+import {
+  Autocomplete,
+  Button,
+  CircularProgress,
+  Modal,
+  TextField,
+  ToggleButton,
+} from '@mui/material';
 import { LightActif } from '../ActifsListSelect/type';
 import ActifsSelect from '../ActifsSelect/ActifsSelect';
-import { isEmptyArray } from 'formik';
 
 const ActifsList = () => {
   const navigate = useNavigate();
@@ -19,7 +25,11 @@ const ActifsList = () => {
 
   // New state to store selected filters
   const [selectedFilters, setSelectedFilters] = useState<any>({});
-  const [filterList, setFilterList] = useState<Filtre[]>([]);
+  const [filtersList, setFiltersList] = useState<FiltreGroup[]>([]);
+  const [filtersGroupSelect, setFiltersGroupSelect] = useState<
+    { value: number; label: string }[]
+  >([]);
+  const [currentFiltersGroup, setCurrentFiltersGroup] = useState<any>({});
 
   const [showListSelect, setShowListSelect] = useState(false);
   const [selectedActifs, setSelectedActifs] = useState<LightActif[]>([]);
@@ -47,9 +57,18 @@ const ActifsList = () => {
       label: 'Numéro de série',
       options: {
         sort: true,
+        filter: false,
       },
     },
-    { name: 'nom', header: 'Nom', enableColumnFilter: false },
+    {
+      name: 'nom',
+      header: 'Nom',
+      enableColumnFilter: false,
+      options: {
+        sort: true,
+        filter: false,
+      },
+    },
     {
       name: 'modele',
       label: 'Modèle',
@@ -92,7 +111,6 @@ const ActifsList = () => {
     },
   ];
 
-
   const options: Partial<MUIDataTableOptions> = {
     filterType: 'dropdown',
     responsive: 'simple',
@@ -119,20 +137,16 @@ const ActifsList = () => {
     print: false,
     download: false,
 
+    onFilterChange: (changedColumnIndex: any, displayData: any) => {
+      // Log the dropdown index (changedColumnIndex)
+      console.log('Dropdown Name:', changedColumnIndex);
 
-    onFilterChange: (
-        changedColumnIndex: any,
-        displayData: any
-      ) => {
-        // Log the dropdown index (changedColumnIndex)
-        console.log('Dropdown Name:', changedColumnIndex);
-
-        // Store the selected filters in state
-        setSelectedFilters({
-          ...selectedFilters, displayData,
-        });
-      },
-
+      // Store the selected filters in state
+      setSelectedFilters({
+        ...selectedFilters,
+        displayData,
+      });
+    },
   };
 
   useEffect(() => {
@@ -143,19 +157,29 @@ const ActifsList = () => {
       fetch(window.name + 'api/filter/getFilters'),
     ]).then((responses) =>
       Promise.all(responses.map((response) => response.json()))
-        .then(([fetchedActif, fetchedArchived, filterList]) => {
-            console.log('Actifs:', fetchedActif);
-            console.log('Archived Actifs:', fetchedArchived);
-            console.log('Filter List:', filterList);
-            setActifs(fetchedActif);
-            setArchivedActifs(fetchedArchived);
-            setFilterList(filterList);
+        .then(([fetchedActif, fetchedArchived, fetchedFiltersList]) => {
+          console.log('Actifs:', fetchedActif);
+          console.log('Archived Actifs:', fetchedArchived);
+          console.log('Filter List:', fetchedFiltersList);
+          setActifs(fetchedActif);
+          setArchivedActifs(fetchedArchived);
+          setFiltersList(fetchedFiltersList);
         })
         .then(() => {
           setIsLoading(false);
         })
-        .catch((error) => console.error(error)));
+        .catch((error) => console.error(error))
+    );
   }, []);
+  useEffect(() => {
+    if (filtersList.length) {
+      setFiltersGroupSelect(
+        filtersList.map((filter) => {
+          return { value: filter.id, label: filter.name || 'test' };
+        })
+      );
+    }
+  }, [filtersList]);
 
   if (isLoading) {
     return (
@@ -180,14 +204,15 @@ const ActifsList = () => {
   };
 
   const saveSelectedFilters = () => {
+    console.log('Selected filters:', selectedFilters);
     const flatData = selectedFilters.displayData.flat();
     const urlParts = window.location.pathname.split('/');
     const from = urlParts[urlParts.length - 1];
 
     // Create an object with 'filters' and 'from' properties
     const filtersData = {
-        filters: flatData,
-        from: from,
+      filters: flatData,
+      from: from,
     };
 
     console.log('Selected filters:', filtersData);
@@ -196,34 +221,33 @@ const ActifsList = () => {
     const formattedFiltersJSON = JSON.stringify(filtersData);
 
     if (Object.keys(flatData).length === 0) {
-        // selectedFilters is an empty object
-        alert('No filters selected. Please select filters before saving.');
-        return;
+      // selectedFilters is an empty object
+      alert('No filters selected. Please select filters before saving.');
+      return;
     }
 
     // Send the JSON data to the server to save in the database
     fetch(window.name + 'api/filter/saveFilters', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: formattedFiltersJSON,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: formattedFiltersJSON,
     })
-    .then((response) => {
+      .then((response) => {
         if (response.ok) {
-            alert('Selected filters saved!');
-            console.log('Selected filters saved to the database.');
-            // You can add further actions here, like showing a success message.
+          alert('Selected filters saved!');
+          console.log('Selected filters saved to the database.');
+          // You can add further actions here, like showing a success message.
         } else {
-            console.error('Failed to save selected filters.');
-            // Handle the error, show an error message, etc.
+          console.error('Failed to save selected filters.');
+          // Handle the error, show an error message, etc.
         }
-    })
-    .catch((error) => {
+      })
+      .catch((error) => {
         console.error('Error:', error);
-    });
-};
-
+      });
+  };
 
   const handleCloseModal = () => {
     setShowListSelect(false);
@@ -232,9 +256,7 @@ const ActifsList = () => {
 
   return (
     <div className="w-11/12 mx-auto mt-10">
-
-        /* Display the filters */
-
+      /* Display the filters */
       <MUIDataTable
         title={showarchived ? 'Actifs archivés' : 'Actifs'}
         data={showarchived ? archivedActifs : actifs}
@@ -291,13 +313,37 @@ const ActifsList = () => {
           >
             Modifier
           </Button>
+          <Autocomplete
+            placeholder={'Groupes de filtres'}
+            options={filtersGroupSelect}
+            value={currentFiltersGroup || null}
+            onChange={(_, newValue) => {
+              setCurrentFiltersGroup(newValue);
+            }}
+            onInputChange={(_, newInputValue) => {
+              setCurrentFiltersGroup(
+                filtersGroupSelect.find((filter) => {
+                  return filter.label === newInputValue;
+                })
+              );
+            }}
+            getOptionLabel={(option) => option.name}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={'Groupes de filtres'}
+                variant="outlined"
+              />
+            )}
+          />
 
           <Button
             disabled={Object.keys(selectedFilters).length === 0}
             ref={saveButtonRef}
-            onClick={saveSelectedFilters}>Sauvegarder filtre(s)
+            onClick={saveSelectedFilters}
+          >
+            Sauvegarder filtre(s)
           </Button>
-
         </div>
       </div>
       <Modal

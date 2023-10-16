@@ -69,6 +69,8 @@ Route::middleware('throttle:5000,1')->group(function () {
     Route::post('/utilisateur/{id}', [UtilisateurController::class, 'update']);
 
     Route::get('/roles/light', [RoleController::class, 'lightShow']);
+    Route::get('/clientJson', [ClientController::class, 'listClientScolago']);
+
     // Define routes for the SavedFiltersController
     Route::post('/filter/saveFilters', [FilterController::class, 'saveFilters']);
     Route::post('/filter/deleteFilterById', [FilterController::class, 'deleteFilterById']);

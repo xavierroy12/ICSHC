@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\ScolagoDbModel;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
@@ -12,7 +13,16 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        
+    }
+
+    public function listClientScolago()
+    {
+        
+        $scolagoDbModel = new ScolagoDbModel();
+        $clients = $scolagoDbModel->getEmployees();
+        return response()->json($clients);
+
     }
 
     /**

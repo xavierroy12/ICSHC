@@ -19,6 +19,11 @@ class ActifController extends Controller
     {
         //
     }
+    public function showall()
+    {
+        $actifs = Actif::all();
+        return response()->json($actifs);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -225,7 +230,9 @@ class ActifController extends Controller
             })
             ->get()
             ->map(function ($actif) {
+                error_log($actif->id);
                 return [
+
                     'id' => $actif->id,
                     'numero_commande' => $actif->numero_commande,
                     'numero_serie' => $actif->numero_serie,

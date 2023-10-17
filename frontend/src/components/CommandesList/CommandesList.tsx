@@ -75,7 +75,6 @@ const CommandeList = () => {
     fetch(window.name + 'api/commandes/list')
       .then((response) => response.json())
       .then((fetchedCommandes) => {
-        console.log(fetchedCommandes);
         setCommandes(fetchedCommandes);
       })
       .then(() => {
@@ -113,7 +112,7 @@ const CommandeList = () => {
       ) : (
         <Fragment>
           <MUIDataTable
-            title={'Utilisateurs'}
+            title={'Commandes'}
             data={commandes}
             columns={columns}
             options={options}

@@ -23,7 +23,7 @@ class UtilisateurSeeder extends Seeder
         DB::table('utilisateur')->insert([
             'nom' => 'Nicolas Lachance',
             'nom_utilisateur' => 'nlachance',
-            'id_emplacement' => 1,
+            'id_emplacement' => 3,
             'id_role' => 2,
         ]);
     }

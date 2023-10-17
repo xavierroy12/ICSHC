@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('modele_descriptif', 64)->nullable();
             $table->unsignedBigInteger('id_modele')->nullable();
             $table->unsignedBigInteger('id_statut');
-            $table->unsignedBigInteger('id_emplacement');
+            $table->unsignedBigInteger('id_emplacement')->nullable();
             $table->unsignedBigInteger('id_proprietaire');
             $table->unsignedBigInteger('id_utilisation');
             $table->unsignedBigInteger('numero_commande');

@@ -34,7 +34,7 @@ class LoginController extends Controller
     public function checkToken(Request $request)
     {
         $token = $request->input('token'); // Get the token from the request
-
+        
 
         $utilisateur = new UtilisateurController();
         $utilisateur = $utilisateur->tokenExists($token); // Get the user by the token

@@ -24,6 +24,7 @@ Route::middleware('throttle:5000,1')->group(function () {
     Route::get('/emplacements/light', [EmplacementController::class, 'lightShow']);
 
     Route::get('/actif/{id}', [ActifController::class, 'showActif']);
+    Route::get('/actifShow', [ActifController::class, 'showall']); //debug
     Route::get('/actifs', [ActifController::class, 'listShow']);
     Route::get('/actifs/light', [ActifController::class, 'lightShow']);
     Route::get('/actifs/archived', [ActifController::class, 'archivedActifs']);
@@ -56,6 +57,8 @@ Route::middleware('throttle:5000,1')->group(function () {
 
     Route::get('/proprietaires', [ProprietaireController::class, 'showAll']);
     Route::get('/proprietaires/light', [ProprietaireController::class, 'lightShow']);
+
+    Route::get('/utilisateurs', [UtilisateurController::class, 'showAll']);
 
     Route::get('/statuts', [StatutController::class, 'showAll']);
     Route::get('/statuts/light', [StatutController::class, 'lightShow']);

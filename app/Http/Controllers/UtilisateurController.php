@@ -108,6 +108,12 @@ class UtilisateurController extends Controller
         return response()->json($utilisateur);
     }
 
+    public function showall()
+    {
+        $utilisateurs = Utilisateur::all();
+        return response()->json($utilisateurs);
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

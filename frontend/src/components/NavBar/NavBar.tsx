@@ -40,7 +40,7 @@ const NavBar = () => {
           </Button>
           <Button
             component={Link}
-            to={`/commande`}
+            to={`/commandes`}
             color="inherit"
             className="mr-4"
           >

@@ -67,12 +67,16 @@ class CommandeController extends Controller
         $commandes = Commande::all();
         return response()->json($commandes);
     }
-    public function lightShow()
+
+    public function listShow()
     {
-        $commandes = Commande::All()->map(function ($commande) {
+        $commandes = Commande::with(['etat'])->get()->map(function ($commande) {
             return [
-                "id" => $commande->id,
-                "nom" => $commande->nom,
+                "numero_commande" => $commande->numero_commande,
+                "etat" => $commande->etat->nom,
+                "nb_actif"=> $commande->nb_actif,
+                "emplacement" => $commande->emplacement_prevu,
+                "date_commande" => $commande->date_commande,
             ];
         });
         return response()->json($commandes);

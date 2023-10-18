@@ -89,6 +89,7 @@ Route::middleware('throttle:5000,1')->group(function () {
     Route::post('/commande/reception/{numero_commande}', [CommandeController::class, 'reception']);
 
     Route::get('/clientJson', [ClientController::class, 'listClientScolago']);
+    Route::get('/clientJsonStore', [ClientController::class, 'storeListClientScolage']);
 
 });
 

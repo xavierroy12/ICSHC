@@ -12,7 +12,8 @@ class EmplacementController extends Controller
      */
     public function index()
     {
-        //
+        $emplacement = Emplacement::all();
+        return $emplacement;
     }
 
     /**
@@ -22,6 +23,13 @@ class EmplacementController extends Controller
     {
         //
     }
+
+    public function getEmplacement($matricule)
+    {
+        $emplacement = DB::table('emplacement')->where('matricule', $matricule)->first();
+        return $emplacement;
+    }
+
 
     /**
      * Store a newly created resource in storage.

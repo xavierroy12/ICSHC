@@ -63,6 +63,7 @@ Route::middleware('throttle:5000,1')->group(function () {
     Route::get('/utilisateur', [UtilisateurController::class, 'list_json']);
 
     Route::get('/clientJson', [ClientController::class, 'listClientScolago']);
+    Route::get('/clientJsonStore', [ClientController::class, 'storeListClientScolage']);
 
 });
 

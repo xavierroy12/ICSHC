@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\ScolagoDbModel;
+use App\Http\Controllers\EmplacementController;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
@@ -23,6 +24,43 @@ class ClientController extends Controller
         $clients = $scolagoDbModel->getEmployees();
         return response()->json($clients);
 
+    }
+
+    public function storeListClientScolage(){
+        $scolagoDbModel = new ScolagoDbModel();
+        $emplacementController = new EmplacementController();
+        $clients = $scolagoDbModel->getEmployees();
+
+
+        
+        foreach ($clients as $client) {
+            $matriculeLieu = $client['LIEU'];
+            //$arr = get_object_vars($client['LIEU']);
+
+            print_r('Matricule lieu '. $matriculeLieu);
+           $id_emplacement = $emplacementController->getEmplacement($matriculeLieu);
+            print_r('id_emplacement = ' . $id_emplacement);
+            $clientData = [
+                'matricule' => $client["MATR"],
+                'nom' => $client["NOM"],
+                'prenom' => $client["PRNOM"],
+
+                'id_type_client' => 1,
+            ];
+            if($client["UserPrincipalName"] != null){
+                $clientData['courriel'] = $client["UserPrincipalName"];
+            }
+            if($id_emplacement != NULL)
+            {
+                $clientData['id_emplacement'] = $id_emplacement;
+            }
+            if($client["UserPrincipalName"] != null){
+                $clientData['courriel'] = $client["UserPrincipalName"];
+            }
+            $client = Client::create($clientData);
+        }
+        
+        return response()->json($clients);
     }
 
     /**

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('saved_filters', function (Blueprint $table) {
             $table->id();
+            $table->string('label');
             $table->json('filters'); // JSON column for storing filters
             $table->string('from'); // JSON column for storing from
             $table->timestamps();

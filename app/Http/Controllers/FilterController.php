@@ -11,11 +11,13 @@ class FilterController extends Controller
     {
         $data = $request->input('filters');
         $from = $request->input('from'); // Get the 'from' information
+        $label = $request->input('label'); //Get the 'label' information
 
         // Assuming your database table has a JSON column named 'filters'
         $savedFilter = new Filter();
         $savedFilter->filters = json_encode($data);
         $savedFilter->from = $from; // Set the 'from' value
+        $savedFilter->label = $label; //Set the 'label' value
         $savedFilter->save();
 
         return response()->json(['message' => 'Filters saved successfully']);
@@ -25,9 +27,10 @@ class FilterController extends Controller
     {
         $filters = Filter::all();
 
-        // You can loop through the filters and add the 'from' information to each filter
+        // You can loop through the filters and add the 'from' and 'label' information to each filter
         foreach ($filters as $filter) {
             $filter->from = $filter->from;
+            $filter->label = $filter->label;
         }
 
         return response()->json(['filters' => $filters]);

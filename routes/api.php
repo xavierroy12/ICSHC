@@ -77,6 +77,8 @@ Route::middleware('throttle:5000,1')->group(function () {
     Route::get('/filter/checkLabelExists', [FilterController::class, 'checkLabelExists']);
 
     Route::get('/commandes/list', [CommandeController::class, 'listShow']);
+    Route::get('/commande/{numero_commande}', [CommandeController::class, 'show']);
+
 });
 
 

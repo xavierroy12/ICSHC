@@ -34,10 +34,19 @@ class CommandeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Commande $commande)
+    public function show($numero_commande)
     {
-        //
+        $c = Commande::where('numero_commande', $numero_commande)->first();
+        $commande = [
+            "numero_commande" => $c->numero_commande,
+            "etat" => $c->etat->nom,
+            "nb_actif"=> $c->nb_actif,
+            "emplacement" => $c->emplacement_prevu,
+            "date_commande" => $c->date_commande,
+        ];
+        return response()->json($commande);
     }
+
 
     /**
      * Show the form for editing the specified resource.

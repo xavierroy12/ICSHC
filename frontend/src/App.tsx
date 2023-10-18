@@ -11,6 +11,7 @@ import ClientsList from './components/ClientsList';
 import UtilisateurList from './components/UtilisateurList';
 import Utilisateur from './components/Utilisateur';
 import CommandesList from './components/CommandesList';
+import Commande from './components/Commande';
 if (process.env.NODE_ENV === 'development') {
   window.name = 'http://localhost:8000/';
 } else {
@@ -78,6 +79,7 @@ function App() {
             <Route path="/utilisateur/:id" element={<Utilisateur />} />
 
             <Route path="/commandes" element={<CommandesList />} />
+            <Route path="/commande/:numero_commande" element={<Commande />} />
 
             <Route path="*" element={<h1>Not Found</h1>} />
 

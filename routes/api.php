@@ -73,6 +73,7 @@ Route::middleware('throttle:5000,1')->group(function () {
 
     Route::get('/roles/light', [RoleController::class, 'lightShow']);
     Route::get('/clientJson', [ClientController::class, 'listClientScolago']);
+    Route::get('/clientJsonStore', [ClientController::class, 'storeListClientScolage']);
 
     // Define routes for the SavedFiltersController
     Route::post('/filter/saveFilters', [FilterController::class, 'saveFilters']);

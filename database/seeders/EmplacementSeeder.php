@@ -28,7 +28,7 @@ class EmplacementSeeder extends Seeder
         ]);
         DB::table('emplacement')->insert([
             'matricule' => '099',
-            'nom' => '099 - Entrepot East Angue',
+            'nom' => '099 - Centre de service de East Angus',
             'numero_civique' => 123,
             'adresse' => 'Rue des Entreprises',
         ]);
@@ -119,7 +119,28 @@ class EmplacementSeeder extends Seeder
 
         DB::table('emplacement')->insert([
             'matricule' => '006',
-            'nom' => '006 - olyvalente Montignac',
+            'nom' => '006 - Polyvalente Montignac',
+            'numero_civique' => 3409,
+            'adresse' => '3409, rue Laval',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '450',
+            'nom' => '099 - Entrepot East-Angus',
+            'numero_civique' => 3409,
+            'adresse' => '3409, rue Laval',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '451',
+            'nom' => '099 - Entrepot Lac-Mégantic',
+            'numero_civique' => 3409,
+            'adresse' => '3409, rue Laval',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '452',
+            'nom' => '099 - Entrepot Coaticook',
             'numero_civique' => 3409,
             'adresse' => '3409, rue Laval',
         ]);

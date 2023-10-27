@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Utilisateur;
+use App\Models\Client;
 use Illuminate\Http\Request;
+use App\Http\Controllers\ClientController;
 
 class UtilisateurController extends Controller
 {
@@ -28,6 +30,14 @@ class UtilisateurController extends Controller
         return Utilisateur::where('nom_utilisateur', $nom_utilisateur)->exists();
     }
 
+    public function getEmplacementFromClient($email)
+    {
+        $clientController = new ClientController();
+        $client = $clientController->getClientFromEmail($email);
+        $emplacement = $client->id_emplacement;
+        return $emplacement;
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -40,27 +50,34 @@ class UtilisateurController extends Controller
     /**
      * Store a newly created resource in storage. checks if user exists, if not creates it.
      */
-    public function store($nom_utilisateur, $nom, $token, $expiry)
+    public function store($nom_utilisateur, $nom, $token, $expiry, $email)
     {
+
         if ($this->userExists($nom_utilisateur)) {
             return FALSE;
         } else {
+            //$id_emplacement = getEmplacementFromClient($email);
+            error_log("Token is $token ");
+            $clientController = new ClientController();
+            $client = $clientController->getClientFromEmail($email);
+            $emplacement = $client->id_emplacement;
             $utilisateur = new Utilisateur();
             $utilisateur->nom_utilisateur = $nom_utilisateur;
             $utilisateur->nom = $nom;
             $utilisateur->token = $token;
             $utilisateur->expiration = $expiry;
+            $utilisateur->courriel = $email;
+            $utilisateur->id_emplacement = $emplacement;
             $utilisateur->save();
             return $utilisateur;
         }
     }
-
+    //Takes the username and the token and updates the token and expiry date
     public function updateToken($nom_utilisateur, $token, $expiry)
     {
         if ($this->userExists($nom_utilisateur)) {
-            $decryptedToken = Crypt::decryptString($token);
             $utilisateur = Utilisateur::where('nom_utilisateur', $nom_utilisateur)->first();
-            $utilisateur->token = $decryptedToken;
+            $utilisateur->token = $token;
             $utilisateur->expiration = $expiry;
             $utilisateur->save();
             return $utilisateur;
@@ -72,13 +89,8 @@ class UtilisateurController extends Controller
     public function tokenExists($token)
     {
         error_log("CookieTOken  $token");
-        $decryptedToken = Crypt::decryptString($token);
         $tokenWithChar =  $token . "==";
 
-
-
-
-        
         $utilisateur = Utilisateur::where('token', $tokenWithChar)->first();
 
         if ($utilisateur) {

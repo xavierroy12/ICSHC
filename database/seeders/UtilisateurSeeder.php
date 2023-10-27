@@ -17,6 +17,7 @@ class UtilisateurSeeder extends Seeder
             'nom' => 'Luc Grandchamps',
             'nom_utilisateur' => 'lgrandchamps',
             'id_emplacement' => 1,
+            'courriel' => 'lgrandchamps@cshc.qc.ca',
             'id_role' => 1,
         ]);
 
@@ -24,6 +25,7 @@ class UtilisateurSeeder extends Seeder
             'nom' => 'Nicolas Lachance',
             'nom_utilisateur' => 'nlachance',
             'id_emplacement' => 3,
+            'courriel' => 'nlachance@cshc.qc.ca',
             'id_role' => 2,
         ]);
     }

@@ -16,6 +16,7 @@ class Client extends Model
         'matricule',
         'nom',
         'prenom',
+        'courriel',
         'id_poste',
         'id_type_client',
         'id_actif',

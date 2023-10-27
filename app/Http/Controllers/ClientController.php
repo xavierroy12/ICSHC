@@ -17,6 +17,17 @@ class ClientController extends Controller
         
     }
 
+    public function getClientFromEmail($email)
+    {
+        $client = Client::where('courriel', $email)->first();
+
+    if ($client) {
+        return $client;
+    } else {
+        return FALSE;
+    }
+    }
+
     public function listClientScolago()
     {
         
@@ -45,7 +56,8 @@ class ClientController extends Controller
             ];
             //If client has email, set email.
             if($client["UserPrincipalName"] != null){
-                $clientData['courriel'] = $client["UserPrincipalName"];
+                $courriel = $client["UserPrincipalName"];
+                $clientData['courriel'] = $courriel;
             }
             //If client has emplacement, set emplacement.
             if($emplacement != NULL)
@@ -53,8 +65,9 @@ class ClientController extends Controller
                 $id_emplacement = $emplacement->id;
                 $clientData['id_emplacement'] = $id_emplacement;
             }
-
+            
             $client = Client::create($clientData);
+            
         }
         
         return response()->json($clients);

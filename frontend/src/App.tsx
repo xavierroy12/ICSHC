@@ -18,12 +18,10 @@ function App() {
   const cookie = document.cookie
     .split(';')
     .find((cookie) => cookie.trim().startsWith('CookieLogged=')); // Get the cookie
-  //let authentified = false;
+
   //Bypass Login for dev purposes, might want to remove that later
   if (cookie === 'CookieLogged=Minou') {
     console.log('Bypassing login');
-    //authentified = true;
-    //doReturn();
   } else {
     if (cookie) {
       const token = cookie.split('=')[1]; // Extract the token value
@@ -39,9 +37,10 @@ function App() {
           response.json().then((data) => {
             if (data.success === true) {
               console.log('Token is valid');
-              //authentified = true;
-              //doReturn();
-            } else {
+              console.log(data.utilisateur);
+
+            }
+            else {
               console.log('Token is invalid');
               return <Login />;
             }

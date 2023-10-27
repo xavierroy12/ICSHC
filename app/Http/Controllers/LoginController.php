@@ -41,6 +41,7 @@ class LoginController extends Controller
 
         if ($utilisateur) {
             // Token is valid, return the user information
+            error_log("Token $token is valid");
             return response()->json([
                 'success' => true,
                 'user' => $utilisateur

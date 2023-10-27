@@ -20,11 +20,14 @@ if (process.env.NODE_ENV === 'development') {
 
 
 function App() {
-    //enlever pour le split 3
-    localStorage.setItem('id_user', '2');
+
+  console.log('App.tsx');
+  //enlever pour le split 3
+  //localStorage.setItem('id_user', '2');
   const cookie = document.cookie
     .split(';')
     .find((cookie) => cookie.trim().startsWith('CookieLogged=')); // Get the cookie
+
 
   //Bypass Login for dev purposes, might want to remove that later
   if (cookie === 'CookieLogged=Minou') {
@@ -32,7 +35,9 @@ function App() {
   } else {
     if (cookie) {
       const token = cookie.split('=')[1]; // Extract the token value
+      console.log('Token:', token); // Add this line to log the token value
       console.log(window.name);
+
       fetch(window.name + 'api/checkToken', {
         method: 'POST',
         body: JSON.stringify({ token: token }),

@@ -71,11 +71,16 @@ class UtilisateurController extends Controller
     //Verifiy if the token exists in the database
     public function tokenExists($token)
     {
-        error_log("token in utilisateurcontroller $token");
+        error_log("CookieTOken  $token");
         $decryptedToken = Crypt::decryptString($token);
-        error_log($decryptedToken);
-        $utilisateur = Utilisateur::where('token', $decryptedToken)->first();
-        error_log("user : $utilisateur");
+        $tokenWithChar =  $token . "==";
+
+
+
+
+        
+        $utilisateur = Utilisateur::where('token', $tokenWithChar)->first();
+
         if ($utilisateur) {
             $expiry = strtotime($utilisateur->expiration);
             $now = time();

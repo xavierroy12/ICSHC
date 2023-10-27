@@ -37,28 +37,25 @@ class ClientController extends Controller
         
         foreach ($clients as $client) {
             $matriculeLieu = $client['LIEU'];
-            //$arr = get_object_vars($client['LIEU']);
-
-            print_r('Matricule lieu '. $matriculeLieu);
-           $id_emplacement = $emplacementController->getEmplacement($matriculeLieu);
-            print_r('id_emplacement = ' . $id_emplacement);
+           $emplacement = $emplacementController->getEmplacement($matriculeLieu);
+  
             $clientData = [
                 'matricule' => $client["MATR"],
                 'nom' => $client["NOM"],
                 'prenom' => $client["PRNOM"],
-
                 'id_type_client' => 1,
             ];
+            //If client has email, set email.
             if($client["UserPrincipalName"] != null){
                 $clientData['courriel'] = $client["UserPrincipalName"];
             }
-            if($id_emplacement != NULL)
+            //If client has emplacement, set emplacement.
+            if($emplacement != NULL)
             {
+                $id_emplacement = $emplacement->id;
                 $clientData['id_emplacement'] = $id_emplacement;
             }
-            if($client["UserPrincipalName"] != null){
-                $clientData['courriel'] = $client["UserPrincipalName"];
-            }
+
             $client = Client::create($clientData);
         }
         

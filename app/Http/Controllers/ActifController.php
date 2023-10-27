@@ -219,7 +219,6 @@ class ActifController extends Controller
             })
             ->get()
             ->map(function ($actif) {
-                error_log($actif->id);
                 return [
 
                     'id' => $actif->id,

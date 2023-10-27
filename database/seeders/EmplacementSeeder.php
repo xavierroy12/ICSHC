@@ -39,5 +39,95 @@ class EmplacementSeeder extends Seeder
             'numero_civique' => 215,
             'adresse' => 'Rue de l\'Aréna',
         ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' =>'021',
+            'nom' => '021 - Centre de formation professionnelle du Haut-Saint-François',
+            'numero_civique' => 188,
+            'adresse' => '188, rue Kennedy',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '011',
+            'nom' => '011 - Centre d’éducation des adultes de la CSHC',
+            'numero_civique' => 188,
+            'adresse' => '188, rue Kennedy',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '047',
+            'nom' => '047 - École du Parchemin – Côté Couvent',
+            'numero_civique' => 162,
+            'adresse' => '162, rue Saint-Jean Est',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '048',
+            'nom' => '048 - École du Parchemin – Côté Collège',
+            'numero_civique' => 96,
+            'adresse' => '96, rue Saint-Jacques',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '058',
+            'nom' => '058 - École des Trois-Cantons',
+            'numero_civique' => 25,
+            'adresse' => '25, rue de l’Église',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '051',
+            'nom' => '051 - École Saint-Camille',
+            'numero_civique' => 150,
+            'adresse' => '150, rue Bibeau',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '067',
+            'nom' => '067 - École Notre-Dame-du-Paradis',
+            'numero_civique' => 184,
+            'adresse' => '184, rue Principale E',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '068',
+            'nom' => '068 - École Notre-Dame-du-Sacré-Cœur',
+            'numero_civique' => 211,
+            'adresse' => '211, rue Saint-Janvier',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '063',
+            'nom' => '063 - École Notre-Dame-de-Lorette',
+            'numero_civique' => 44,
+            'adresse' => '44, rue Notre-Dame Ouest',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '055',
+            'nom' => '055 - École Saint-Paul',
+            'numero_civique' => 100,
+            'adresse' => '100, rue Saint-Jean-Baptiste',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '005',
+            'nom' => '005 - École La Frontalière',
+            'numero_civique' => 311,
+            'adresse' => '311, rue Saint-Paul Est',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '006',
+            'nom' => '006 - olyvalente Montignac',
+            'numero_civique' => 3409,
+            'adresse' => '3409, rue Laval',
+        ]);
+
+
+
+
+
+
     }
 }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nom', 32);
             $table->string('nom_utilisateur', 32);
+            $table->string('courriel', 64);
             $table->unsignedBigInteger('id_emplacement')->nullable();
             $table->unsignedBigInteger('id_role')->nullable();
             $table->string('token', 500)->nullable(); // Add token column

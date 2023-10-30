@@ -9,15 +9,20 @@ type Props = {
 
 const AddGroupeFiltres = ({ handleClose, saveFilters, selectedFilters }: Props) => {
   const [label, setLabel] = useState<string>('');
+  
+  // Add state for button disabled
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   const handleSubmit = () => {
     saveFilters(label);
     handleClose();
   };
 
-  // Update the button state whenever selectedFilters change
+  // Update the button state whenever the input value changes
   useEffect(() => {
-  }, [selectedFilters]);
+    // Enable the button if the label is not empty, disable it otherwise
+    setIsButtonDisabled(label.trim() === '');
+  }, [label]);
 
   return (
     <div className="max-h-52 overflow-y-auto p-8">
@@ -47,6 +52,7 @@ const AddGroupeFiltres = ({ handleClose, saveFilters, selectedFilters }: Props) 
           className="ml-4"
           variant="contained"
           onClick={handleSubmit}
+          disabled={isButtonDisabled} // Set the disabled state of the button
         >
           Enregistrer
         </Button>

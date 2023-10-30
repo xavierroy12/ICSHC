@@ -269,7 +269,7 @@ const ActifsList = () => {
 
     <div className='items-end justify-end flex pb-4'>
     <Autocomplete
-    className='w-1/5'
+    className='w-1/6'
     options={filtersGroupSelect}
     onChange={async (_, newValue) => {
     if (newValue) {

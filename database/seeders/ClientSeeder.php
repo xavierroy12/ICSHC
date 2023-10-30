@@ -13,6 +13,18 @@ class ClientSeeder extends Seeder
      */
     public function run(): void
     {
+        DB::table('client')->insert([
+            [
+                "matricule" => "000017328",
+                "nom" => "Roy",
+                "prenom" => "Test",
+                "emplacement_manuel" => True,
+                "id_poste"=> rand(1, 2),
+                "id_type_client"=> 1,
+                "id_actif"=> null,
+                "id_emplacement"=> 15,
+            ],
+        ]);
 
         DB::table('client')->insert([
             'matricule' => '10015517',
@@ -222,6 +234,7 @@ class ClientSeeder extends Seeder
                 'id_actif' => 22,
                 'id_emplacement' => 2,
             ],
+
         ]);
     }
 }

@@ -132,13 +132,16 @@ class LoginController extends Controller
             // If user in group, create cookie and return user info
             if ($entries['count'] > 0) {
                 $userFinal = addUserDb($ad, $userdn, $user, $usercn);
+                error_log($userFinal->id);
+
                     $cookie = $this->createCookie($user);
                     $response = response()->json([
                         'user' => $user,
                         'usercn' => $usercn,
                         'token' => $userFinal->token,
                         'emplacement' => $userFinal->id_emplacement,
-
+                        'id' => $userFinal->id,
+                        'id_role' => $userFinal->id_role,
                     ], 200);
                     $response->withCookie($cookie);
                     return $response;

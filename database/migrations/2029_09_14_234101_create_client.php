@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('client', function (Blueprint $table) {
             $table->id();
             $table->string('matricule', 9)->nullable();
-            $table->string('nom', 32)->nullable();;
-            $table->string('prenom', 32)->nullable();;
+            $table->string('nom', 32)->nullable();
+            $table->string('prenom', 32)->nullable();
             $table->string('courriel', 64)->nullable();
-            $table->unsignedBigInteger('id_poste')->nullable();;
+            $table->boolean('emplacement_manuel')->default(FALSE);
+            $table->unsignedBigInteger('id_poste')->nullable();
             $table->unsignedBigInteger('id_type_client');
             $table->unsignedBigInteger('id_actif')->nullable();
             $table->unsignedBigInteger('id_emplacement')->nullable();

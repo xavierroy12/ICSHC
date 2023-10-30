@@ -56,19 +56,32 @@ class ClientController extends Controller
                 'prenom' => $client["PRNOM"],
                 'id_type_client' => 1,
             ];
+
+            $existingClient = Client::where('matricule', $client["MATR"])->first();
+
             //If client has email, set email.
             if($client["UserPrincipalName"] != null){
                 $courriel = $client["UserPrincipalName"];
                 $clientData['courriel'] = $courriel;
             }
             //If client has emplacement, set emplacement.
-            if($emplacement != NULL)
-            {
-                $id_emplacement = $emplacement->id;
-                $clientData['id_emplacement'] = $id_emplacement;
+            error_log($existingClient);
+            if (isset($existingClient) && $existingClient->emplacement_manuel){
+                //skip the check
+            } else {
+                if ($emplacement !== null) {
+                    $id_emplacement = $emplacement->id;
+                    $clientData['id_emplacement'] = $id_emplacement;
+                }
             }
             
-            $client = Client::create($clientData);
+            
+
+            if ($existingClient) {
+                $existingClient->update($clientData);
+            } else {
+                Client::create($clientData);
+            }
             
         }
         

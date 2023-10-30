@@ -17,6 +17,7 @@ class Client extends Model
         'nom',
         'prenom',
         'courriel',
+        'emplacement_manuel',
         'id_poste',
         'actifs',
         'id_type_client',

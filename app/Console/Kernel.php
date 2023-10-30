@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Http\Controllers\ClientController;
 
 class Kernel extends ConsoleKernel
 {
@@ -12,7 +13,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        //We call the method that updates the list of client every day.
+        $schedule->call(function () {
+            $clientController = new ClientController();
+            error_log("Cron job running");
+            $result = $clientController->storeListClientScolage();
+            error_log("Result is $result");
+        })->everyMinute();
+
+        //To test, run php artisan schedule:run after changing daily() to everyMinute()
+
         
     }
 

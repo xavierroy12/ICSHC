@@ -30,7 +30,9 @@ const ActifsList = () => {
   // New state to store selected filters
   const [selectedFilters, setSelectedFilters] = useState<any>({});
   const [filtersList, setFiltersList] = useState<FiltreGroup[]>([]);
-  const [filtersGroupSelect, setFiltersGroupSelect] = useState<{ value: number; label: string }[]>([]);
+  const [filtersGroupSelect, setFiltersGroupSelect] = useState<
+    { value: number; label: string }[]
+  >([]);
   const [currentFiltersGroup, setCurrentFiltersGroup] = useState<any>({});
 
   const [showListSelect, setShowListSelect] = useState(false);
@@ -63,7 +65,9 @@ const ActifsList = () => {
       options: {
         filter: false,
         sort: true,
-        filterList: selectedFilters.numero_serie ? [selectedFilters.numero_serie] : [],
+        filterList: selectedFilters.numero_serie
+          ? [selectedFilters.numero_serie]
+          : [],
       },
     },
     {
@@ -90,7 +94,9 @@ const ActifsList = () => {
       options: {
         filter: true,
         sort: true,
-        filterList: selectedFilters.categorie ? [selectedFilters.categorie] : [], // Apply filter if 'client' is selected
+        filterList: selectedFilters.categorie
+          ? [selectedFilters.categorie]
+          : [], // Apply filter if 'client' is selected
       },
     },
     {
@@ -117,7 +123,9 @@ const ActifsList = () => {
       options: {
         filter: true,
         sort: true,
-        filterList: selectedFilters.emplacement ? [selectedFilters.emplacement] : [], // Apply filter if 'client' is selected
+        filterList: selectedFilters.emplacement
+          ? [selectedFilters.emplacement]
+          : [], // Apply filter if 'client' is selected
       },
     },
   ];
@@ -149,15 +157,14 @@ const ActifsList = () => {
     download: false,
 
     onFilterChange: (changedColumnIndex: any, displayData: string[][]) => {
-        setSelectedFilters({
-          'modele': displayData[2][0],
-          'categorie': displayData[3][0],
-          'statut': displayData[4][0],
-          'client': displayData[5][0],
-          'emplacement': displayData[6][0],
-        });
+      setSelectedFilters({
+        modele: displayData[2][0],
+        categorie: displayData[3][0],
+        statut: displayData[4][0],
+        client: displayData[5][0],
+        emplacement: displayData[6][0],
+      });
     },
-    
   };
 
   useEffect(() => {
@@ -184,14 +191,16 @@ const ActifsList = () => {
     if (filtersList.length !== 0) {
       setFiltersGroupSelect(
         filtersList.map((filter) => {
-          return { value: filter.id, label: filter.label};
+          return { value: filter.id, label: filter.label };
         })
       );
     }
-  },  [filtersList]);
+  }, [filtersList]);
 
   useEffect(() => {
-    const areAllFiltersNoSelection = Object.values(selectedFilters).every(filter => filter === undefined || filter === 'All');
+    const areAllFiltersNoSelection = Object.values(selectedFilters).every(
+      (filter) => filter === undefined || filter === 'All'
+    );
     setIsButtonDisabled(areAllFiltersNoSelection);
     console.log('Button is disabled:', areAllFiltersNoSelection);
     setActifs(cleanActifs);
@@ -220,7 +229,6 @@ const ActifsList = () => {
   };
 
   const saveFilters = (label: string) => {
-
     const urlParts = window.location.pathname.split('/');
     const from = urlParts[urlParts.length - 1];
 
@@ -232,8 +240,8 @@ const ActifsList = () => {
     };
 
     if (currentFiltersGroup === '' || currentFiltersGroup.length === 0) {
-        alert('No filter group selected!');
-        return;
+      alert('No filter group were selected...');
+      return;
     }
 
     // Send the JSON data to the server to save in the database
@@ -243,12 +251,36 @@ const ActifsList = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-
     })
       .then((response) => {
         if (response.ok) {
           alert('Selected filters saved!');
           setOpen(false);
+
+          // After the filters are saved successfully, fetch the updated filter list
+          fetch(window.name + 'api/filter/getFilters')
+            .then((response) => response.json())
+            .then((newFiltersData) => {
+              setFiltersList(newFiltersData.filters);
+
+              // Update the filtersGroupSelect state with the new filters
+              const updatedFilterOptions = newFiltersData.filters.map(
+                (filter: { id: any; label: any }) => ({
+                  value: filter.id,
+                  label: filter.label,
+                })
+              );
+
+              // Add the newly added filter to the options
+              if (label) {
+                updatedFilterOptions.push({ value: label, label });
+              }
+
+              setFiltersGroupSelect(updatedFilterOptions);
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
         } else {
           console.error('Failed to save selected filters.');
         }
@@ -266,72 +298,71 @@ const ActifsList = () => {
 
   return (
     <div className="w-11/12 mx-auto mt-10">
+      <div className="items-end justify-end flex pb-4">
+        <Autocomplete
+          className="w-1/6"
+          options={filtersGroupSelect}
+          getOptionLabel={(option) => option.label}
+          isOptionEqualToValue={(option, value) => option.value === value.value}
+          onChange={async (_, newValue) => {
+            if (newValue) {
+              try {
+                const selectedLabel = newValue.label;
+                setCurrentFiltersGroup(selectedLabel); // Set the currently selected filter group label
 
-    <div className='items-end justify-end flex pb-4'>
-    <Autocomplete
-    className='w-1/6'
-    options={filtersGroupSelect}
-    onChange={async (_, newValue) => {
-    if (newValue) {
-        try {
+                const response = await fetch(
+                  window.name +
+                    'api/filter/getFiltersByLabel?label=' +
+                    selectedLabel
+                );
 
-        const selectedLabel = newValue.label;
-        setCurrentFiltersGroup(selectedLabel); // Set the currently selected filter group label
+                if (response.ok) {
+                  const selectedFilterObject = await response.json();
 
-        const response = await fetch(window.name + 'api/filter/getFiltersByLabel?label=' + selectedLabel);
+                  // Filtrer vos données (actifs) en fonction des filtres sélectionnés
+                  const filteredActifs = actifs.filter((actif) => {
+                    // Vérifiez si l'actif correspond à tous les filtres sélectionnés
+                    return Object.keys(selectedFilterObject).every((key) => {
+                      const filterValue = selectedFilterObject[key] as string;
 
-        if (response.ok) {
+                      // Comparez la valeur de l'actif avec la valeur du filtre
+                      return (
+                        filterValue === 'All' ||
+                        actif[key as keyof Actif] === filterValue
+                      );
+                    });
+                  });
 
-          const selectedFilterObject = await response.json();
+                  // Mettez à jour les filtres sélectionnés et les données actives
+                  setSelectedFilters(selectedFilterObject);
+                  setActifs(filteredActifs);
+                } else {
+                  console.error('Failed to fetch filter data');
+                }
+              } catch (error) {
+                console.error('Error:', error);
+              }
+            }
+          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="outlined"
+              label="Mes filtres personnels"
+            />
+          )}
+        />
 
-          // Filtrer vos données (actifs) en fonction des filtres sélectionnés
-          const filteredActifs = actifs.filter((actif) => {
-
-            // Vérifiez si l'actif correspond à tous les filtres sélectionnés
-            return Object.keys(selectedFilterObject).every((key) => {
-
-              const filterValue = selectedFilterObject[key] as string;
-
-              // Comparez la valeur de l'actif avec la valeur du filtre
-              return filterValue === 'All' || actif[key as keyof Actif] === filterValue;
-
-            });
-          });
-
-          // Mettez à jour les filtres sélectionnés et les données actives
-          setSelectedFilters(selectedFilterObject);
-          setActifs(filteredActifs);
-
-        } else {
-          console.error('Failed to fetch filter data');
-        }
-
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
-  }}
-  getOptionLabel={(option) => option.label}
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      variant="outlined"
-      label='Mes filtres personnels'
-    />
-  )}
-/>
-
-             <Button
-  disabled={isButtonDisabled} // Disable the button based on the state
-  ref={saveButtonRef}
-  onClick={() => {
-    setOpen(true);
-  }}
->
-  Sauvegarder filtre(s)
-</Button>
-
-            </div>
+        <Button
+          disabled={isButtonDisabled} // Disable the button based on the state
+          ref={saveButtonRef}
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
+          Sauvegarder filtre(s)
+        </Button>
+      </div>
 
       <MUIDataTable
         title={showarchived ? 'Actifs archivés' : 'Actifs'}
@@ -416,11 +447,11 @@ const ActifsList = () => {
 
       <Modal open={open} onClose={() => setOpen(false)}>
         <div className="min-w-fit max-w-fit min-h-fit max-h-fit bg-white m-auto mt-20">
-        <AddGroupeFiltres
-        handleClose={handleCloseModal}
-        saveFilters={(label) => saveFilters(label)}
-        selectedFilters={selectedFilters}
-        />
+          <AddGroupeFiltres
+            handleClose={handleCloseModal}
+            saveFilters={(label) => saveFilters(label)}
+            selectedFilters={selectedFilters}
+          />
         </div>
       </Modal>
     </div>

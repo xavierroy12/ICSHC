@@ -7,9 +7,13 @@ type Props = {
   selectedFilters: Record<string, string | undefined>;
 };
 
-const AddGroupeFiltres = ({ handleClose, saveFilters, selectedFilters }: Props) => {
+const AddGroupeFiltres = ({
+  handleClose,
+  saveFilters,
+  selectedFilters,
+}: Props) => {
   const [label, setLabel] = useState<string>('');
-  
+
   // Add state for button disabled
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
@@ -18,16 +22,16 @@ const AddGroupeFiltres = ({ handleClose, saveFilters, selectedFilters }: Props) 
     handleClose();
   };
 
-  // Update the button state whenever the input value changes
   useEffect(() => {
-    // Enable the button if the label is not empty, disable it otherwise
     setIsButtonDisabled(label.trim() === '');
   }, [label]);
 
   return (
     <div className="max-h-52 overflow-y-auto p-8">
       <div className="mb-4">
-        <Typography variant="h4">Veuillez donner un nom au groupe de filtres:</Typography>
+        <Typography variant="h4">
+          Veuillez donner un nom au groupe de filtres:
+        </Typography>
       </div>
       <div>
         <Input
@@ -37,13 +41,15 @@ const AddGroupeFiltres = ({ handleClose, saveFilters, selectedFilters }: Props) 
           onChange={(e) => setLabel(e.target.value)}
         />
 
-        <div className='float-right'>
+        <div className="float-right">
           <h3>Selected Filters:</h3>
           <ul>
             {Object.keys(selectedFilters).map((filterCategory: string) => (
-                <ul>
-                    <li className='red font-bold'>{selectedFilters[filterCategory]}</li>
-                </ul>
+              <ul key={filterCategory}>
+                <li className="red font-bold">
+                  {selectedFilters[filterCategory]}
+                </li>
+              </ul>
             ))}
           </ul>
         </div>

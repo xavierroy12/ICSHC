@@ -36,4 +36,22 @@ class FilterController extends Controller
         return response()->json(['filters' => $filters]);
     }
 
+    public function getFiltersByLabel(Request $request)
+    {
+        $label = $request->input('label');
+
+        // Find the filter by label in your database
+        $filter = Filter::where('label', $label)->first();
+
+        if ($filter) {
+            // Parse the JSON data from the 'filters' column
+            $filterData = json_decode($filter->filters, true);
+
+            return response()->json($filterData);
+        } else {
+            return response()->json(['message' => 'Filter not found'], 404);
+        }
+    }
+
+
 }

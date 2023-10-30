@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Actif } from './type';
 import { FiltreGroup } from '../Filtres/type';
 import { useNavigate } from 'react-router-dom';
-import MUIDataTable, { MUIDataTableOptions, TableBodyRow } from 'mui-datatables';
+import MUIDataTable, { MUIDataTableOptions } from 'mui-datatables';
 import {
   Autocomplete,
   Button,
@@ -37,6 +37,15 @@ const ActifsList = () => {
   const ref = useRef(null);
   const saveButtonRef = useRef(null);
 
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true); // State to manage button disabled state
+
+  // Function to update the button state
+  const updateButtonState = () => {
+    const areAllFiltersAll = Object.values(selectedFilters).every(filter => filter === 'All');
+    setIsButtonDisabled(areAllFiltersAll);
+    console.log('Button disabled state:', areAllFiltersAll);
+  };
+
   const handleRowClick = (
     _rowData: string[],
     rowMeta: { dataIndex: number; rowIndex: number }
@@ -56,17 +65,18 @@ const ActifsList = () => {
       name: 'numero_serie',
       label: 'Numéro de série',
       options: {
-        sort: true,
         filter: false,
+        sort: true,
+        filterList: selectedFilters.numero_serie ? [selectedFilters.numero_serie] : [],
       },
     },
     {
       name: 'nom',
-      header: 'Nom',
-      enableColumnFilter: false,
+      label: 'Nom',
       options: {
-        sort: true,
         filter: false,
+        sort: true,
+        filterList: selectedFilters.nom ? [selectedFilters.nom] : [],
       },
     },
     {
@@ -75,6 +85,7 @@ const ActifsList = () => {
       options: {
         filter: true,
         sort: true,
+        filterList: selectedFilters.modele ? [selectedFilters.modele] : [], // Apply filter if 'client' is selected
       },
     },
     {
@@ -83,6 +94,7 @@ const ActifsList = () => {
       options: {
         filter: true,
         sort: true,
+        filterList: selectedFilters.categorie ? [selectedFilters.categorie] : [], // Apply filter if 'client' is selected
       },
     },
     {
@@ -91,6 +103,7 @@ const ActifsList = () => {
       options: {
         filter: true,
         sort: true,
+        filterList: selectedFilters.statut ? [selectedFilters.statut] : [], // Apply filter if 'client' is selected
       },
     },
     {
@@ -99,6 +112,7 @@ const ActifsList = () => {
       options: {
         filter: true,
         sort: true,
+        filterList: selectedFilters.client ? [selectedFilters.client] : [], // Apply filter if 'client' is selected
       },
     },
     {
@@ -107,6 +121,7 @@ const ActifsList = () => {
       options: {
         filter: true,
         sort: true,
+        filterList: selectedFilters.emplacement ? [selectedFilters.emplacement] : [], // Apply filter if 'client' is selected
       },
     },
   ];
@@ -137,11 +152,22 @@ const ActifsList = () => {
     print: false,
     download: false,
 
-    onFilterChange: (changedColumnIndex: any, displayData: any) => {
-      setSelectedFilters({
-        ...selectedFilters,
-        displayData,
-      });
+    onFilterChange: (changedColumnIndex: any, displayData: string[][]) => {
+        setSelectedFilters({
+          'modele': displayData[2][0],
+          'categorie': displayData[3][0],
+          'statut': displayData[4][0],
+          'client': displayData[5][0],
+          'emplacement': displayData[6][0],
+        });
+        updateButtonState(); // Update button state when filters change
+
+      console.log("Changed column index",changedColumnIndex);
+      console.log('modele :', displayData[2][0]);
+      console.log('categorie :', displayData[3][0]);
+      console.log('statut :', displayData[4][0]);
+      console.log('client :', displayData[5][0]);
+      console.log('emplacement :', displayData[6][0]);
     },
   };
 
@@ -156,10 +182,10 @@ const ActifsList = () => {
         .then(([fetchedActif, fetchedArchived, fetchedFiltersList]) => {
           console.log('Actifs:', fetchedActif);
           console.log('Archived Actifs:', fetchedArchived);
-          console.log('Filter List:', fetchedFiltersList);
+          console.log('Filters:', fetchedFiltersList);
           setActifs(fetchedActif);
           setArchivedActifs(fetchedArchived);
-          setFiltersList(fetchedFiltersList);
+          setFiltersList(fetchedFiltersList.filters);
         })
         .then(() => {
           setIsLoading(false);
@@ -168,17 +194,14 @@ const ActifsList = () => {
     );
   }, []);
   useEffect(() => {
-    if (filtersList.length > 0) {
+    if (filtersList.length !== 0) {
       setFiltersGroupSelect(
         filtersList.map((filter) => {
           return { value: filter.id, label: filter.label};
         })
       );
     }
-  }, [filtersList]);
-
-  //FIX THIS
-  console.log('Filters Group Select:', filtersGroupSelect);
+  },  [filtersList]);
 
   if (isLoading) {
     return (
@@ -204,29 +227,21 @@ const ActifsList = () => {
 
   const saveFilters = (label: string) => {
 
-    const flatData = selectedFilters.displayData.flat();
+    console.log(selectedFilters);
     const urlParts = window.location.pathname.split('/');
     const from = urlParts[urlParts.length - 1];
 
-    console.log("Set filters for: ", filtersList);
-
     // Create the data to send to the server
     const data = {
-      filters: flatData,
+      filters: selectedFilters,
       from: from,
       label: label,
     };
 
-    if(label === ''){
-        alert('No label entered!');
-      return;
+    if (currentFiltersGroup === '' || currentFiltersGroup.length === 0) {
+        alert('No filter group selected!');
+        return;
     }
-    //if flatData is empty, don't send the request
-    if (flatData.length === 0) {
-      alert('No filters selected!');
-      return;
-    }
-
 
     // Send the JSON data to the server to save in the database
     fetch(window.name + 'api/filter/saveFilters', {
@@ -260,10 +275,86 @@ const ActifsList = () => {
     setSelectedActifs([]);
   };
 
+  /*
+  const resetFilters = () => {
+    setSelectedFilters({
+      'modele': [],
+      'categorie': [],
+      'statut': [],
+      'client': [],
+      'emplacement': [],
+    });
+    setActifs([]);
+  };
+  */
 
   return (
     <div className="w-11/12 mx-auto mt-10">
 
+    <div className='items-end justify-end flex pb-4'>
+    <Autocomplete
+   className='w-1/5'
+  options={filtersGroupSelect}
+  value={filtersGroupSelect.find((option) => option.label  || null)}
+  onChange={async (_, newValue) => {
+    if (newValue) {
+        try {
+
+        //resetFilters(); // Réinitialise les filtres
+
+        const selectedLabel = newValue.label;
+        setCurrentFiltersGroup(selectedLabel); // Set the currently selected filter group label
+
+        const response = await fetch(window.name + 'api/filter/getFiltersByLabel?label=' + selectedLabel);
+
+        if (response.ok) {
+          const selectedFilterObject = await response.json();
+
+          // Filtrer vos données (actifs) en fonction des filtres sélectionnés
+          const filteredActifs = actifs.filter((actif) => {
+            // Vérifiez si l'actif correspond à tous les filtres sélectionnés
+            return Object.keys(selectedFilterObject).every((key) => {
+              const filterValue = selectedFilterObject[key] as string;
+              // Comparez la valeur de l'actif avec la valeur du filtre
+              return filterValue === 'All' || actif[key as keyof Actif] === filterValue;
+            });
+          });
+
+          // Mettez à jour les filtres sélectionnés et les données actives
+          setSelectedFilters(selectedFilterObject);
+          setActifs(filteredActifs);
+
+          console.log('actifs filtrés', filteredActifs);
+        } else {
+          console.error('Failed to fetch filter data');
+        }
+
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+  }}
+  getOptionLabel={(option) => option.label}
+  renderInput={(params) => (
+    <TextField
+      {...params}
+      variant="outlined"
+      label='Mes filtres personnels'
+    />
+  )}
+/>
+
+             <Button
+  disabled={isButtonDisabled} // Disable the button based on the state
+  ref={saveButtonRef}
+  onClick={() => {
+    setOpen(true);
+  }}
+>
+  Sauvegarder filtre(s)
+</Button>
+
+            </div>
 
       <MUIDataTable
         title={showarchived ? 'Actifs archivés' : 'Actifs'}
@@ -320,41 +411,6 @@ const ActifsList = () => {
             }}
           >
             Modifier
-          </Button>
-
-          <div className='flex'>
-          <Autocomplete
-          className='w-60'
-            placeholder={'Mes filtres'}
-            options={filtersGroupSelect}
-            value={currentFiltersGroup}
-            onChange={(_, newValue) => {
-              setCurrentFiltersGroup(newValue);
-            }}
-            onInputChange={(_, newInputValue) => {
-              setCurrentFiltersGroup(
-                filtersGroupSelect.find((filter) => {
-                  return filter.label === newInputValue;
-                })
-              );
-            }}
-            getOptionLabel={(option) => option.label || 'Aucun filtre'}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={'Groupes de filtres'}
-                variant="outlined"
-              />
-            )}
-          />
-          </div>
-
-          <Button
-            disabled={Object.keys(selectedFilters).length === 0}
-            ref={saveButtonRef}
-            onClick={() => setOpen(true)}
-          >
-            Sauvegarder filtre(s)
           </Button>
         </div>
       </div>

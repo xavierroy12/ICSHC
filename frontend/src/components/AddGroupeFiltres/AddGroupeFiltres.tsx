@@ -1,22 +1,23 @@
-// AddGroupeFiltres component
-
 import { Button, Input, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Props = {
-    handleClose: () => void;
-    saveFilters: (label: string) => void;
-    selectedFilters: string[];
+  handleClose: () => void;
+  saveFilters: (label: string) => void;
+  selectedFilters: Record<string, string | undefined>;
+};
+
+const AddGroupeFiltres = ({ handleClose, saveFilters, selectedFilters }: Props) => {
+  const [label, setLabel] = useState<string>('');
+
+  const handleSubmit = () => {
+    saveFilters(label);
+    handleClose();
   };
 
-  const AddGroupeFiltres = ({ handleClose, saveFilters, selectedFilters  }: Props) => {
-
-    const [label, setLabel] = useState<string>('');
-
-    const handleSubmit = () => {
-      saveFilters(label);
-      handleClose();
-    };
+  // Update the button state whenever selectedFilters change
+  useEffect(() => {
+  }, [selectedFilters]);
 
   return (
     <div className="max-h-52 overflow-y-auto p-8">
@@ -32,21 +33,21 @@ type Props = {
         />
 
         <div className='float-right'>
-        <h3>Selected Filters:</h3>
-        <ul>
-            {(selectedFilters as unknown as { displayData: string[][] }).displayData.map((filterGroup: any, index: number) => (
-            <div key={index}>
+          <h3>Selected Filters:</h3>
+          <ul>
+            {Object.keys(selectedFilters).map((filterCategory: string) => (
                 <ul>
-                {filterGroup.map((filter: any, filterIndex: number) => (
-                    <li className='red font-bold' key={filterIndex}>{filter}</li>
-                ))}
+                    <li className='red font-bold'>{selectedFilters[filterCategory]}</li>
                 </ul>
-            </div>
             ))}
-        </ul>
+          </ul>
         </div>
 
-        <Button className="ml-4" variant="contained" onClick={handleSubmit}>
+        <Button
+          className="ml-4"
+          variant="contained"
+          onClick={handleSubmit}
+        >
           Enregistrer
         </Button>
       </div>

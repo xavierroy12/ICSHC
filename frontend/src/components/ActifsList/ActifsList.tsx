@@ -42,13 +42,6 @@ const ActifsList = () => {
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(true); // State to manage button disabled state
 
-  // Function to update the button state
-  const updateButtonState = () => {
-    const areAllFiltersAll = Object.values(selectedFilters).every(filter => filter === 'All');
-    setIsButtonDisabled(areAllFiltersAll);
-    console.log('Button disabled state:', areAllFiltersAll);
-  };
-
   const handleRowClick = (
     _rowData: string[],
     rowMeta: { dataIndex: number; rowIndex: number }
@@ -163,8 +156,7 @@ const ActifsList = () => {
           'client': displayData[5][0],
           'emplacement': displayData[6][0],
         });
-        updateButtonState(); // Update button state when filters change
-
+       
       console.log("Changed column index",changedColumnIndex);
       console.log('modele :', displayData[2][0]);
       console.log('categorie :', displayData[3][0]);
@@ -172,6 +164,7 @@ const ActifsList = () => {
       console.log('client :', displayData[5][0]);
       console.log('emplacement :', displayData[6][0]);
     },
+    
   };
 
   useEffect(() => {
@@ -211,6 +204,14 @@ const ActifsList = () => {
     setActifs(cleanActifs);
   }, [selectedFilters]);
 
+  useEffect(() => {
+    const areAllFiltersNoSelection = Object.values(selectedFilters).every(filter => filter === undefined || filter === 'All');
+    setIsButtonDisabled(areAllFiltersNoSelection);
+    console.log('Button disabled state:', areAllFiltersNoSelection);
+  }, [selectedFilters]);
+  
+
+  
   if (isLoading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center">

@@ -20,7 +20,10 @@ const ActifsList = () => {
   const [open, setOpen] = useState(false);
   const [showarchived, setShowArchived] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>();
+
   const [actifs, setActifs] = useState<Actif[]>([]);
+  const [cleanActifs, setCleanActifs] = useState<Actif[]>([]);
+
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [archivedActifs, setArchivedActifs] = useState<Actif[]>([]);
 
@@ -184,6 +187,7 @@ const ActifsList = () => {
           console.log('Archived Actifs:', fetchedArchived);
           console.log('Filters:', fetchedFiltersList);
           setActifs(fetchedActif);
+          setCleanActifs(fetchedActif);
           setArchivedActifs(fetchedArchived);
           setFiltersList(fetchedFiltersList.filters);
         })
@@ -202,6 +206,10 @@ const ActifsList = () => {
       );
     }
   },  [filtersList]);
+
+  useEffect(() => {
+    setActifs(cleanActifs);
+  }, [selectedFilters]);
 
   if (isLoading) {
     return (
@@ -275,32 +283,17 @@ const ActifsList = () => {
     setSelectedActifs([]);
   };
 
-  /*
-  const resetFilters = () => {
-    setSelectedFilters({
-      'modele': [],
-      'categorie': [],
-      'statut': [],
-      'client': [],
-      'emplacement': [],
-    });
-    setActifs([]);
-  };
-  */
-
   return (
     <div className="w-11/12 mx-auto mt-10">
 
     <div className='items-end justify-end flex pb-4'>
     <Autocomplete
-   className='w-1/5'
-  options={filtersGroupSelect}
-  value={filtersGroupSelect.find((option) => option.label  || null)}
-  onChange={async (_, newValue) => {
+    className='w-1/5'
+    options={filtersGroupSelect}
+    value={filtersGroupSelect.find((option) => option.label  || null)}
+    onChange={async (_, newValue) => {
     if (newValue) {
         try {
-
-        //resetFilters(); // Réinitialise les filtres
 
         const selectedLabel = newValue.label;
         setCurrentFiltersGroup(selectedLabel); // Set the currently selected filter group label
@@ -308,15 +301,21 @@ const ActifsList = () => {
         const response = await fetch(window.name + 'api/filter/getFiltersByLabel?label=' + selectedLabel);
 
         if (response.ok) {
+
           const selectedFilterObject = await response.json();
 
           // Filtrer vos données (actifs) en fonction des filtres sélectionnés
           const filteredActifs = actifs.filter((actif) => {
+
             // Vérifiez si l'actif correspond à tous les filtres sélectionnés
             return Object.keys(selectedFilterObject).every((key) => {
+
               const filterValue = selectedFilterObject[key] as string;
+
+              console.log('filterValue',filterValue);
               // Comparez la valeur de l'actif avec la valeur du filtre
               return filterValue === 'All' || actif[key as keyof Actif] === filterValue;
+
             });
           });
 

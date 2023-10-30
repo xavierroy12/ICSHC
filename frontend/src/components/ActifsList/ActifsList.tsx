@@ -156,13 +156,6 @@ const ActifsList = () => {
           'client': displayData[5][0],
           'emplacement': displayData[6][0],
         });
-       
-      console.log("Changed column index",changedColumnIndex);
-      console.log('modele :', displayData[2][0]);
-      console.log('categorie :', displayData[3][0]);
-      console.log('statut :', displayData[4][0]);
-      console.log('client :', displayData[5][0]);
-      console.log('emplacement :', displayData[6][0]);
     },
     
   };
@@ -176,9 +169,6 @@ const ActifsList = () => {
     ]).then((responses) =>
       Promise.all(responses.map((response) => response.json()))
         .then(([fetchedActif, fetchedArchived, fetchedFiltersList]) => {
-          console.log('Actifs:', fetchedActif);
-          console.log('Archived Actifs:', fetchedArchived);
-          console.log('Filters:', fetchedFiltersList);
           setActifs(fetchedActif);
           setCleanActifs(fetchedActif);
           setArchivedActifs(fetchedArchived);
@@ -201,17 +191,12 @@ const ActifsList = () => {
   },  [filtersList]);
 
   useEffect(() => {
+    const areAllFiltersNoSelection = Object.values(selectedFilters).every(filter => filter === undefined || filter === 'All');
+    setIsButtonDisabled(areAllFiltersNoSelection);
+    console.log('Button is disabled:', areAllFiltersNoSelection);
     setActifs(cleanActifs);
   }, [selectedFilters]);
 
-  useEffect(() => {
-    const areAllFiltersNoSelection = Object.values(selectedFilters).every(filter => filter === undefined || filter === 'All');
-    setIsButtonDisabled(areAllFiltersNoSelection);
-    console.log('Button disabled state:', areAllFiltersNoSelection);
-  }, [selectedFilters]);
-  
-
-  
   if (isLoading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center">
@@ -236,7 +221,6 @@ const ActifsList = () => {
 
   const saveFilters = (label: string) => {
 
-    console.log(selectedFilters);
     const urlParts = window.location.pathname.split('/');
     const from = urlParts[urlParts.length - 1];
 
@@ -263,14 +247,10 @@ const ActifsList = () => {
     })
       .then((response) => {
         if (response.ok) {
-
           alert('Selected filters saved!');
           setOpen(false);
-          console.log('Selected filters saved to the database!');
-          // You can add further actions here, like showing a success message.
         } else {
           console.error('Failed to save selected filters.');
-          // Handle the error, show an error message, etc.
         }
       })
       .catch((error) => {
@@ -313,7 +293,6 @@ const ActifsList = () => {
 
               const filterValue = selectedFilterObject[key] as string;
 
-              console.log('filterValue',filterValue);
               // Comparez la valeur de l'actif avec la valeur du filtre
               return filterValue === 'All' || actif[key as keyof Actif] === filterValue;
 
@@ -323,8 +302,7 @@ const ActifsList = () => {
           // Mettez à jour les filtres sélectionnés et les données actives
           setSelectedFilters(selectedFilterObject);
           setActifs(filteredActifs);
-
-          console.log('actifs filtrés', filteredActifs);
+          
         } else {
           console.error('Failed to fetch filter data');
         }

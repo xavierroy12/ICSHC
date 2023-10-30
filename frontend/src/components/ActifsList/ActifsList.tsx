@@ -271,7 +271,6 @@ const ActifsList = () => {
     <Autocomplete
     className='w-1/5'
     options={filtersGroupSelect}
-    value={filtersGroupSelect.find((option) => option.label  || null)}
     onChange={async (_, newValue) => {
     if (newValue) {
         try {
@@ -302,7 +301,7 @@ const ActifsList = () => {
           // Mettez à jour les filtres sélectionnés et les données actives
           setSelectedFilters(selectedFilterObject);
           setActifs(filteredActifs);
-          
+
         } else {
           console.error('Failed to fetch filter data');
         }

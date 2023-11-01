@@ -115,6 +115,7 @@ class UtilisateurController extends Controller
     public function show($id)
     {
         $data = Utilisateur::find($id);
+
         $utilisateur = [
             'id' => $data->id,
             'nom' => $data->nom,
@@ -131,11 +132,6 @@ class UtilisateurController extends Controller
         return response()->json($utilisateurs);
     }
 
-    public function showall()
-    {
-        $utilisateurs = Utilisateur::all();
-        return response()->json($utilisateurs);
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -174,6 +170,7 @@ class UtilisateurController extends Controller
     }
     public function showList()
     {
+        error_log("showList");
         $utilisateurs = Utilisateur::with(['emplacement', 'role'])->get()->map(function ($utilisateur) {
             return [
                 'id' => $utilisateur->id,

@@ -324,7 +324,7 @@ class ActifSeeder extends Seeder
                     'numero_commande' => 69123456789,
                     'id_client' => $clients[18],
                 ],
-                [
+               /* [
                     'numero_serie' => 'SER000000000020',
                     'nom' => '03-LJohson-01',
                     'en_entrepot' => FALSE,
@@ -339,7 +339,7 @@ class ActifSeeder extends Seeder
                     'id_utilisation' => 1,
                     'numero_commande' => 69123456789,
                     'id_client' => $clients[19],
-                ],
+                ],*/
                 [
                     'numero_serie' => 'SER000000000021',
                     'nom' => '007-JWilson-01',

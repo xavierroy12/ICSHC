@@ -160,7 +160,7 @@ class ClientController extends Controller
             function ($client) {
                 return [
                     "id" => $client->id,
-                    "nom" => $client->nom,
+                    "nom" => $client->prenom . ' ' . $client->nom, // Concatenate prenom and nom
                     'actifs' =>  $client->actifs->pluck('nom')->implode(', '),
                     'emplacement' => $client->emplacement->nom ?? 'Aucun',
                     'poste' => $client->poste->nom ?? 'Aucun',

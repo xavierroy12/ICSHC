@@ -144,4 +144,12 @@ class CommandeController extends Controller
         });
         return response()->json($commandes);
     }
+
+    public function recepCommandeAchat(Request $request)
+    {
+        $commande = new Commande();
+        $commande->numero_commande = $request->nom;
+        $commande->save();
+        return response()->json($commande);
+    }
 }

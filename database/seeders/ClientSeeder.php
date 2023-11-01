@@ -18,7 +18,7 @@ class ClientSeeder extends Seeder
                 "matricule" => "000017328",
                 "nom" => "Roy",
                 "prenom" => "Test",
-                "emplacement_manuel" => True,
+                "emplacement_manuel" => False,
                 "id_poste"=> rand(1, 2),
                 "id_type_client"=> 1,
                 "id_actif"=> null,
@@ -85,14 +85,7 @@ class ClientSeeder extends Seeder
                 'id_actif' => 5,
                 'id_emplacement' => 4,
             ],
-            [
-                'matricule' => '10015512',
-                'nom' => 'Brown',
-                'prenom' => 'Mary',
-                'id_poste' => rand(1, 2),
-                'id_type_client' => 2,
-                'id_emplacement' => 4,
-            ],
+           
             [
                 'matricule' => '10015513',
                 'nom' => 'Davis',
@@ -111,14 +104,7 @@ class ClientSeeder extends Seeder
                 'id_actif' => 8,
                 'id_emplacement' => 4,
             ],
-            [
-                'matricule' => '10015515',
-                'nom' => 'Lee',
-                'prenom' => 'Robert',
-                'id_poste' => rand(1, 2),
-                'id_type_client' => 1,
-                'id_emplacement' => 4,
-            ],
+            
             [
                 'matricule' => '10015518',
                 'nom' => 'Kim',
@@ -137,14 +123,7 @@ class ClientSeeder extends Seeder
                 'id_actif' => 11,
                 'id_emplacement' => 3,
             ],
-            [
-                'matricule' => '10015521',
-                'nom' => 'Davis',
-                'prenom' => 'Elizabeth',
-                'id_poste' => rand(1, 2),
-                'id_type_client' => 2,
-                'id_emplacement' => 3,
-            ],
+           
             [
                 'matricule' => '10015522',
                 'nom' => 'Brown',
@@ -172,17 +151,9 @@ class ClientSeeder extends Seeder
                 'id_actif' => 15,
                 'id_emplacement' => 3,
             ],
-            [
-                'matricule' => '10015525',
-                'nom' => 'Lee',
-                'prenom' => 'Karen',
-                'id_poste' => rand(1, 2),
-                'id_type_client' => 2,
-                'id_emplacement' => 3,
-            ],
+            
             [
                 'matricule' => '10015527',
-                
                 'nom' => 'Kim',
                 'prenom' => 'Mark',
                 'id_poste' => rand(1, 2),
@@ -197,14 +168,6 @@ class ClientSeeder extends Seeder
                 'id_poste' => rand(1, 2),
                 'id_type_client' => 2,
                 'id_actif' => 18,
-                'id_emplacement' => 2,
-            ],
-            [
-                'matricule' => '10015529',
-                'nom' => 'Brown',
-                'prenom' => 'Thomas',
-                'id_poste' => rand(1, 2),
-                'id_type_client' => 1,
                 'id_emplacement' => 2,
             ],
             [

@@ -53,5 +53,20 @@ class FilterController extends Controller
         }
     }
 
+    public function deleteFilterById(Request $request)
+    {
+        $id = $request->input('id');
+
+        // Find the filter by id in your database
+        $filter = Filter::find($id);
+
+        if ($filter) {
+            $filter->delete();
+
+            return response()->json(['message' => 'Filter deleted successfully']);
+        } else {
+            return response()->json(['message' => 'Filter not found'], 404);
+        }
+    }
 
 }

@@ -3,6 +3,7 @@ import { Actif } from './type';
 import { FiltreGroup } from '../Filtres/type';
 import { useNavigate } from 'react-router-dom';
 import MUIDataTable, { MUIDataTableOptions } from 'mui-datatables';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {
   Autocomplete,
   Button,
@@ -30,9 +31,7 @@ const ActifsList = () => {
   // New state to store selected filters
   const [selectedFilters, setSelectedFilters] = useState<any>({});
   const [filtersList, setFiltersList] = useState<FiltreGroup[]>([]);
-  const [filtersGroupSelect, setFiltersGroupSelect] = useState<
-    { value: number; label: string }[]
-  >([]);
+  const [filtersGroupSelect, setFiltersGroupSelect] = useState<{ value: number; label: string }[]>([]);
   const [currentFiltersGroup, setCurrentFiltersGroup] = useState<any>({});
 
   const [showListSelect, setShowListSelect] = useState(false);
@@ -65,9 +64,7 @@ const ActifsList = () => {
       options: {
         filter: false,
         sort: true,
-        filterList: selectedFilters.numero_serie
-          ? [selectedFilters.numero_serie]
-          : [],
+        filterList: selectedFilters.numero_serie ? [selectedFilters.numero_serie]: [],
       },
     },
     {
@@ -94,9 +91,7 @@ const ActifsList = () => {
       options: {
         filter: true,
         sort: true,
-        filterList: selectedFilters.categorie
-          ? [selectedFilters.categorie]
-          : [], // Apply filter if 'client' is selected
+        filterList: selectedFilters.categorie ? [selectedFilters.categorie]: [],
       },
     },
     {
@@ -124,8 +119,7 @@ const ActifsList = () => {
         filter: true,
         sort: true,
         filterList: selectedFilters.emplacement
-          ? [selectedFilters.emplacement]
-          : [], // Apply filter if 'client' is selected
+          ? [selectedFilters.emplacement]: [],
       },
     },
   ];
@@ -228,6 +222,28 @@ const ActifsList = () => {
     }
   };
 
+type CustomOptionProps = {
+    option: { label: string, value: number },
+    onDelete: (value: number) => void
+}
+
+const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
+    <div className="flex justify-between">
+      <span>{option.label}</span>
+      <DeleteIcon
+        className='ml-2'
+        style={{color: 'red', cursor: 'pointer' }}
+        onClick={() => {
+          // Prompt the user for confirmation
+          if (window.confirm('Êtes-vous sûr de vouloir supprimer ce filtre?')) {
+            onDelete(option.value);
+          }
+        }}
+      />
+    </div>
+  );
+
+
   const saveFilters = (label: string) => {
     const urlParts = window.location.pathname.split('/');
     const from = urlParts[urlParts.length - 1];
@@ -283,6 +299,34 @@ const ActifsList = () => {
             });
         } else {
           console.error('Failed to save selected filters.');
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
+// Function to handle the deletion of a specific filter
+const deleteFilter = (filterId: number) => {
+    // Send a POST request to delete the filter
+    fetch(window.name + 'api/filter/deleteFilterById', {
+      method: 'POST', // Use POST method
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: filterId }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Filter deleted successfully, now update the filtersList
+          const updatedFiltersList = filtersList.filter((filter) => filter.id !== filterId);
+          setFiltersList(updatedFiltersList);
+          setSelectedFilters({});
+          setCurrentFiltersGroup(null); // Clear the currently selected filter group
+          //clear the input field
+
+        } else {
+          console.error('Failed to delete filter.');
         }
       })
       .catch((error) => {
@@ -351,6 +395,12 @@ const ActifsList = () => {
               label="Mes filtres personnels"
             />
           )}
+
+          renderOption={(props, option) => (
+            <li {...props}>
+              <CustomOption option={option} onDelete={deleteFilter} />
+            </li>
+          )}
         />
 
         <Button
@@ -362,8 +412,9 @@ const ActifsList = () => {
         >
           Sauvegarder filtre(s)
         </Button>
-      </div>
 
+
+    </div>
       <MUIDataTable
         title={showarchived ? 'Actifs archivés' : 'Actifs'}
         data={showarchived ? archivedActifs : actifs}

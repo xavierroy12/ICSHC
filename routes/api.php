@@ -70,9 +70,10 @@ Route::middleware('throttle:5000,1')->group(function () {
     Route::get('/roles/light', [RoleController::class, 'lightShow']);
     // Define routes for the SavedFiltersController
     Route::post('/filter/saveFilters', [FilterController::class, 'saveFilters']);
+    Route::post('/filter/deleteFilterById', [FilterController::class, 'deleteFilterById']);
+
     Route::get('/filter/getFilters', [FilterController::class, 'getFilters']);
     Route::get('/filter/getFiltersByLabel', [FilterController::class, 'getFiltersByLabel']);
-
 });
 
 

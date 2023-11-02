@@ -38,14 +38,11 @@ const ActifsList = () => {
   const [selectedActifs, setSelectedActifs] = useState<LightActif[]>([]);
   let lastClickTime = 0; // To track double-clicks
 
+  const id_user = localStorage.getItem('id_user');
   const ref = useRef(null);
   const saveButtonRef = useRef(null);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(true); // State to manage button disabled state
-
-  //test de l'id user
-  const mockUserId = localStorage.getItem('id_user');
-  const shouldShowFilters = mockUserId === '1';
 
   const handleRowClick = (
     _rowData: string[],
@@ -170,7 +167,7 @@ const ActifsList = () => {
     Promise.all([
       fetch(window.name + 'api/actifs'),
       fetch(window.name + 'api/actifs/archived'),
-      fetch(window.name + 'api/filter/getFilters'),
+      fetch(window.name + `api/filter/getFiltersById?id_user=${id_user}`),
     ]).then((responses) =>
       Promise.all(responses.map((response) => response.json()))
         .then(([fetchedActif, fetchedArchived, fetchedFiltersList]) => {
@@ -178,6 +175,7 @@ const ActifsList = () => {
           setCleanActifs(fetchedActif);
           setArchivedActifs(fetchedArchived);
           setFiltersList(fetchedFiltersList.filters);
+          console.log(fetchedFiltersList.filters);
         })
         .then(() => {
           setIsLoading(false);
@@ -252,6 +250,8 @@ const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
   );
 
   const saveFilters = (label: string) => {
+
+    const id_user = localStorage.getItem('id_user');
     const urlParts = window.location.pathname.split('/');
     const from = urlParts[urlParts.length - 1];
 
@@ -267,6 +267,7 @@ const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
         } else {
           // If the label is unique, proceed to save it
           const data = {
+            id_user: id_user,
             filters: selectedFilters,
             from: from,
             label: label,
@@ -286,7 +287,7 @@ const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
                 setOpen(false);
 
                 // After the filters are saved successfully, fetch the updated filter list
-                fetch(window.name + 'api/filter/getFilters')
+                fetch(window.name + `api/filter/getFiltersById?id_user=${id_user}`)
                   .then((response) => response.json())
                   .then((newFiltersData) => {
                     setFiltersList(newFiltersData.filters);
@@ -350,11 +351,8 @@ const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
 
   const deleteFilter = (filterId: number) => {
 
-    if (filterId === currentFiltersGroup.value) {
-        setCurrentFiltersGroup(null); // Reset the selected filter
-      }
     // Send a POST request to delete the filter
-    fetch(window.name + 'api/filter/deleteFilterById', {
+    fetch(window.name + 'api/filter/deleteFilterById?id=', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -399,7 +397,7 @@ const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
 
         <Autocomplete
           className="w-1/6"
-          options={shouldShowFilters ? filtersGroupSelect : []}
+          options={filtersGroupSelect}
           getOptionLabel={(option) => option.label}
           isOptionEqualToValue={(option, value) => option.label === value.label}
           onChange={async (_, newValue) => {

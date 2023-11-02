@@ -73,6 +73,7 @@ Route::middleware('throttle:5000,1')->group(function () {
     Route::post('/filter/deleteFilterById', [FilterController::class, 'deleteFilterById']);
 
     Route::get('/filter/getFilters', [FilterController::class, 'getFilters']);
+    Route::get('/filter/getFiltersById', [FilterController::class, 'getFiltersById']);
     Route::get('/filter/getFiltersByLabel', [FilterController::class, 'getFiltersByLabel']);
     Route::get('/filter/checkLabelExists', [FilterController::class, 'checkLabelExists']);
 });

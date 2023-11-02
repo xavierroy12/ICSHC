@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'development') {
 
 function App() {
     //enlever pour le split 3
-    localStorage.setItem('id_user', '1');
+    localStorage.setItem('id_user', '2');
   const cookie = document.cookie
     .split(';')
     .find((cookie) => cookie.trim().startsWith('CookieLogged=')); // Get the cookie

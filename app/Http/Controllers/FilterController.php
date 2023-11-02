@@ -9,15 +9,17 @@ class FilterController extends Controller
 {
     public function saveFilters(Request $request)
     {
+        $id_user = $request->input('id_user');
         $data = $request->input('filters');
         $from = $request->input('from'); // Get the 'from' information
-        $label = $request->input('label'); //Get the 'label' information
+        $label = $request->input('label'); // Get the 'label' information
 
         // Assuming your database table has a JSON column named 'filters'
         $savedFilter = new Filter();
+        $savedFilter->id_user = $id_user;
         $savedFilter->filters = json_encode($data);
         $savedFilter->from = $from; // Set the 'from' value
-        $savedFilter->label = $label; //Set the 'label' value
+        $savedFilter->label = $label; // Set the 'label' value
         $savedFilter->save();
 
         return response()->json(['message' => 'Filters saved successfully']);
@@ -35,6 +37,24 @@ class FilterController extends Controller
 
         return response()->json(['filters' => $filters]);
     }
+
+    public function getFiltersById()
+    {
+        // Retrieve the 'id_user' from local storage
+        $id_user = (int)request()->get('id_user'); // Convert it to an integer
+
+        // Fetch filters that match the 'id_user' from local storage
+        $filters = Filter::where('id_user', $id_user)->get();
+
+        // You can loop through the filters and add the 'from' and 'label' information to each filter
+        foreach ($filters as $filter) {
+            $filter->from = $filter->from;
+            $filter->label = $filter->label;
+        }
+
+        return response()->json(['filters' => $filters]);
+    }
+
 
     public function getFiltersByLabel(Request $request)
     {
@@ -69,15 +89,16 @@ class FilterController extends Controller
         }
     }
 
-
     public function checkLabelExists(Request $request)
     {
         $label = $request->input('label');
+        $id_user = $request->input('id_user');
 
-        // Check if a filter with the given label already exists
-        $filterExists = Filter::where('label', $label)->exists();
+        // Check if a filter with the given label already exists for the specific user
+        $filterExists = Filter::where('label', $label)
+            ->where('id_user', $id_user)
+            ->exists();
 
         return response()->json(['exists' => $filterExists]);
     }
-
 }

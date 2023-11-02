@@ -12,4 +12,8 @@ class Commande extends Model
 
     protected $table = 'commande';
 
+    public function etat()
+    {
+        return $this->belongsTo(Etat::class, 'id_etat');
+    }
 }

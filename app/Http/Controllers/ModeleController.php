@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\Modele;
 
@@ -26,8 +25,23 @@ class ModeleController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
+    {}
+    
+    public function createNew(Request $request)
     {
-        //
+        $data = $request->all();
+        $modele = new Modele();
+        $modele->nom = $data['nom'];
+        $modele->stockage = $data['stockage'] ?? "";
+        $modele->processeur = $data['processeur']?? "";
+        $modele->memoire_vive = $data['memoire_vive']?? "";
+        $modele->taille = $data['taille']?? "";
+        $modele->id_type_modele = $data['id_type_modele'];
+        $modele->favoris = $data['favoris']?? false;
+        $modele->save();
+
+        return response()->json(['message' => 'Modèle créé avec succès'], 200);
+
     }
 
     /**

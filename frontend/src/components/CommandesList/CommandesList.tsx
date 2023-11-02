@@ -2,15 +2,18 @@ import { CircularProgress } from '@mui/material';
 import MUIDataTable, { MUIDataTableOptions } from 'mui-datatables';
 import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-type utilisateur_type = {
-  id: number;
-  nom: string;
+type commande_type = {
+  numero_commande: string;
+  etat: string;
+  nb_actif: number;
+  emplacement: string;
+  date_commande: string;
 };
-const UtilisateurList = () => {
+const CommandeList = () => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState<boolean>();
-  const [utilisateurs, setUtilisateurs] = useState<utilisateur_type[]>([]);
+  const [commandes, setCommandes] = useState<commande_type[]>([]);
 
   let lastClickTime = 0;
 
@@ -24,12 +27,31 @@ const UtilisateurList = () => {
     lastClickTime = clickTime;
 
     if (isDoubleClick) {
-      navigate('/utilisateur/' + utilisateurs[rowMeta.dataIndex].id);
+      navigate('/commande/' + commandes[rowMeta.dataIndex].numero_commande);
     }
   };
   const columns = [
-    { name: 'id', label: 'Id', options: { display: false } },
-    { name: 'nom', header: 'Nom', enableColumnFilter: false },
+    {
+      name: 'numero_commande',
+      header: 'Numéro de commande',
+      enableColumnFilter: false,
+    },
+    {
+      name: 'etat',
+      label: 'État',
+      options: {
+        filter: true,
+        sort: true,
+      },
+    },
+    {
+      name: 'nb_actif',
+      label: 'Nombre actif',
+      options: {
+        filter: true,
+        sort: true,
+      },
+    },
     {
       name: 'emplacement',
       label: 'Emplacement',
@@ -39,8 +61,8 @@ const UtilisateurList = () => {
       },
     },
     {
-      name: 'role',
-      label: 'Role',
+      name: 'date_commande',
+      label: 'Date commande',
       options: {
         filter: true,
         sort: true,
@@ -50,10 +72,10 @@ const UtilisateurList = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(window.name + 'api/utilisateurs/list')
+    fetch(window.name + 'api/commandes/list')
       .then((response) => response.json())
-      .then((fetchedUtilisateurs) => {
-        setUtilisateurs(fetchedUtilisateurs);
+      .then((fetchedCommandes) => {
+        setCommandes(fetchedCommandes);
       })
       .then(() => {
         setIsLoading(false);
@@ -90,8 +112,8 @@ const UtilisateurList = () => {
       ) : (
         <Fragment>
           <MUIDataTable
-            title={'Utilisateurs'}
-            data={utilisateurs}
+            title={'Commandes'}
+            data={commandes}
             columns={columns}
             options={options}
           />
@@ -100,5 +122,4 @@ const UtilisateurList = () => {
     </div>
   );
 };
-
-export default UtilisateurList;
+export default CommandeList;

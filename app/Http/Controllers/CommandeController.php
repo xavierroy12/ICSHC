@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Actif;
 use App\Models\Commande;
+use App\Models\Modele;
+
 use Illuminate\Http\Request;
 
 class CommandeController extends Controller
@@ -34,10 +37,33 @@ class CommandeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Commande $commande)
+    public function show($numero_commande)
     {
-        //
+        $actif = Actif::where('numero_commande', $numero_commande)->get()->map(
+            function ($actif)
+            {
+                return[
+                    "id" => $actif->id,
+                    'numero_serie' => $actif->numero_serie,
+                    'adresse_mac' => $actif->adresse_mac,
+                    'modele' => $actif->modele->nom,
+                    'description_modele' => $actif->modele_descriptif
+                ];
+            }
+        );
+
+        $c = Commande::where('numero_commande', $numero_commande)->first();
+        $commande = [
+            "numero_commande" => $c->numero_commande,
+            "etat" => $c->etat->nom,
+            "nb_actif"=> $c->nb_actif,
+            "emplacement" => $c->emplacement_prevu,
+            "date_commande" => $c->date_commande,
+            "actifs" => $actif
+        ];
+        return response()->json($commande);
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -55,6 +81,43 @@ class CommandeController extends Controller
         //
     }
 
+    public function reception(Request $request, $numero_commande)
+    {
+        $actifs = $request->all();
+
+        foreach ($actifs as $actif) {
+            $modele = Modele::where('nom', $actif['modele'])->first();
+            $a = Actif::where('id', $actif['id'])->first();
+            $a->numero_serie = $actif['numero_serie'];
+            $a->id_modele= $modele->id;
+            $a->adresse_mac = $actif['adresse_mac'];
+            //$a->emplacement = $actif['emplacement'];
+            $a->id_statut = 2;
+            $a->save();
+        }
+
+        $commande = Commande::where('numero_commande', $numero_commande)->first();
+        $commande->id_etat = 3;
+        $this->updateRemote($commande->numero_commande, $commande->id_etat);
+        $commande->save();
+        return response()->json($commande);
+    }
+    public function updateRemote($numero_commande, $etat)
+    {
+        //change URL
+        $url = "http://localhost:8000/api/commandes/".$numero_commande;
+        $data = array('id_etat' => $etat);
+        $options = array(
+            'http' => array(
+                'header'  => "Content-type: application/json\r\n",
+                'method'  => 'PUT',
+                'content' => json_encode($data)
+            )
+        );
+        //verify how to put data in php
+        $context  = stream_context_create($options);
+        return file_get_contents($url, false, $context);
+    }
     /**
      * Remove the specified resource from storage.
      */
@@ -67,12 +130,16 @@ class CommandeController extends Controller
         $commandes = Commande::all();
         return response()->json($commandes);
     }
-    public function lightShow()
+
+    public function listShow()
     {
-        $commandes = Commande::All()->map(function ($commande) {
+        $commandes = Commande::with(['etat'])->get()->map(function ($commande) {
             return [
-                "id" => $commande->id,
-                "nom" => $commande->nom,
+                "numero_commande" => $commande->numero_commande,
+                "etat" => $commande->etat->nom,
+                "nb_actif"=> $commande->nb_actif,
+                "emplacement" => $commande->emplacement_prevu,
+                "date_commande" => $commande->date_commande,
             ];
         });
         return response()->json($commandes);

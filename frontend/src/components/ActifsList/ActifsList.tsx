@@ -31,7 +31,9 @@ const ActifsList = () => {
   // New state to store selected filters
   const [selectedFilters, setSelectedFilters] = useState<any>({});
   const [filtersList, setFiltersList] = useState<FiltreGroup[]>([]);
-  const [filtersGroupSelect, setFiltersGroupSelect] = useState<{ value: number; label: string }[]>([]);
+  const [filtersGroupSelect, setFiltersGroupSelect] = useState<
+    { value: number; label: string }[]
+  >([]);
   const [currentFiltersGroup, setCurrentFiltersGroup] = useState<any>({});
 
   const [showListSelect, setShowListSelect] = useState(false);
@@ -65,7 +67,9 @@ const ActifsList = () => {
       options: {
         filter: false,
         sort: true,
-        filterList: selectedFilters.numero_serie ? [selectedFilters.numero_serie]: [],
+        filterList: selectedFilters.numero_serie
+          ? [selectedFilters.numero_serie]
+          : [],
       },
     },
     {
@@ -83,7 +87,7 @@ const ActifsList = () => {
       options: {
         filter: true,
         sort: true,
-        filterList: selectedFilters.modele ? [selectedFilters.modele] : [], // Apply filter if 'client' is selected
+        filterList: selectedFilters.modele ? [selectedFilters.modele] : [],
       },
     },
     {
@@ -92,7 +96,9 @@ const ActifsList = () => {
       options: {
         filter: true,
         sort: true,
-        filterList: selectedFilters.categorie ? [selectedFilters.categorie]: [],
+        filterList: selectedFilters.categorie
+          ? [selectedFilters.categorie]
+          : [],
       },
     },
     {
@@ -101,7 +107,7 @@ const ActifsList = () => {
       options: {
         filter: true,
         sort: true,
-        filterList: selectedFilters.statut ? [selectedFilters.statut] : [], // Apply filter if 'client' is selected
+        filterList: selectedFilters.statut ? [selectedFilters.statut] : [],
       },
     },
     {
@@ -110,7 +116,7 @@ const ActifsList = () => {
       options: {
         filter: true,
         sort: true,
-        filterList: selectedFilters.client ? [selectedFilters.client] : [], // Apply filter if 'client' is selected
+        filterList: selectedFilters.client ? [selectedFilters.client] : [],
       },
     },
     {
@@ -120,7 +126,8 @@ const ActifsList = () => {
         filter: true,
         sort: true,
         filterList: selectedFilters.emplacement
-          ? [selectedFilters.emplacement]: [],
+          ? [selectedFilters.emplacement]
+          : [],
       },
     },
   ];
@@ -175,7 +182,6 @@ const ActifsList = () => {
           setCleanActifs(fetchedActif);
           setArchivedActifs(fetchedArchived);
           setFiltersList(fetchedFiltersList.filters);
-          console.log(fetchedFiltersList.filters);
         })
         .then(() => {
           setIsLoading(false);
@@ -198,7 +204,6 @@ const ActifsList = () => {
       (filter) => filter === undefined || filter === 'All'
     );
     setIsButtonDisabled(areAllFiltersNoSelection);
-    console.log('Button is disabled:', areAllFiltersNoSelection);
     setActifs(cleanActifs);
   }, [selectedFilters]);
 
@@ -224,25 +229,27 @@ const ActifsList = () => {
     }
   };
 
-type CustomOptionProps = {
-    option: { label: string, value: number },
-    onDelete: (value: number) => void
-}
+  type CustomOptionProps = {
+    option: { label: string; value: number };
+    onDelete: (value: number) => void;
+  };
 
-const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
+  const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
     <div className="flex justify-between">
       <span>{option.label}</span>
       <DeleteIcon
-        className='ml-2'
-        style={{color: 'red', cursor: 'pointer' }}
+        className="ml-4"
+        style={{ color: 'red', cursor: 'pointer' }}
         onClick={(e) => {
           e.stopPropagation(); // Stop the event propagation
           // Prompt the user for confirmation
           if (window.confirm('Êtes-vous sûr de vouloir supprimer ce filtre?')) {
             onDelete(option.value);
-            if (currentFiltersGroup && currentFiltersGroup.value === option.value) {
-                setCurrentFiltersGroup(null); // Reset the selected filter
-              }
+            if (
+              currentFiltersGroup && currentFiltersGroup.value === option.value
+            ) {
+              setCurrentFiltersGroup(null); // Reset the selected filter
+            }
           }
         }}
       />
@@ -250,21 +257,24 @@ const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
   );
 
   const saveFilters = (label: string) => {
-
     const id_user = localStorage.getItem('id_user');
     const urlParts = window.location.pathname.split('/');
     const from = urlParts[urlParts.length - 1];
 
     // First, check if a filter with the same label already exists
-    fetch(window.name + `api/filter/checkLabelExists?label=${label}`, {
-      method: 'GET',
+    fetch(window.name + `api/filter/checkLabelExists?label=${label}&id_user=${id_user}`, {
+        method: 'GET',
     })
       .then((response) => response.json())
       .then((result) => {
         if (result.exists) {
+            console.log('result', result);
+            console.log(label)
           // Alert the user that the label already exists
-          alert('Filter with the same label already exists. Please choose a unique label.');
+          alert('Un filtre portant ce nom existe déjà. Veuillez entrer un autre nom svp.');
         } else {
+            console.log('result', result);
+            console.log(label)
           // If the label is unique, proceed to save it
           const data = {
             id_user: id_user,
@@ -283,11 +293,13 @@ const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
           })
             .then((response) => {
               if (response.ok) {
-                alert('Selected filters saved!');
+                alert('Le(s) filtre(s) selectionné(s) ont été enregistrés avec succès!');
                 setOpen(false);
 
                 // After the filters are saved successfully, fetch the updated filter list
-                fetch(window.name + `api/filter/getFiltersById?id_user=${id_user}`)
+                fetch(
+                  window.name + `api/filter/getFiltersById?id_user=${id_user}`
+                )
                   .then((response) => response.json())
                   .then((newFiltersData) => {
                     setFiltersList(newFiltersData.filters);
@@ -300,16 +312,7 @@ const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
                       })
                     );
 
-                    console.log(label);
-
-                    // Add the newly added filter to the options
-                    if (label) {
-                      console.log('updatedFilterOptions:', updatedFilterOptions);
-                    }
-
                     setFiltersGroupSelect(updatedFilterOptions);
-
-                    console.log(setFiltersGroupSelect);
 
                     // Apply the newly created filter
                     if (label) {
@@ -318,13 +321,17 @@ const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
                       );
                       if (selectedFilterObject) {
                         const filteredActifs = actifs.filter((actif) => {
-                          return Object.keys(selectedFilterObject).every((key) => {
-                            const filterValue = selectedFilterObject[key] as string;
-                            return (
-                              filterValue === 'All' ||
-                              actif[key as keyof Actif] === filterValue
-                            );
-                          });
+                          return Object.keys(selectedFilterObject).every(
+                            (key) => {
+                              const filterValue = selectedFilterObject[
+                                key
+                              ] as string;
+                              return (
+                                filterValue === 'All' ||
+                                actif[key as keyof Actif] === filterValue
+                              );
+                            }
+                          );
                         });
                         setSelectedFilters(selectedFilterObject);
                         setActifs(filteredActifs);
@@ -348,9 +355,7 @@ const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
       });
   };
 
-
   const deleteFilter = (filterId: number) => {
-
     // Send a POST request to delete the filter
     fetch(window.name + 'api/filter/deleteFilterById?id=', {
       method: 'POST',
@@ -369,7 +374,7 @@ const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
           setFiltersList(updatedFiltersList);
 
           // Clear the input field or perform any other necessary actions
-          alert('Filter deleted successfully');
+          alert('Le filtre sélectionné a été supprimé avec succès!');
 
           // Reset the filters here
           setSelectedFilters({});
@@ -384,7 +389,6 @@ const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
       });
   };
 
-
   // Pass the saveFilters function to AddGroupeFiltres
   const handleCloseModal = () => {
     setShowListSelect(false);
@@ -394,7 +398,6 @@ const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
   return (
     <div className="w-11/12 mx-auto mt-10">
       <div className="items-end justify-end flex pb-4">
-
         <Autocomplete
           className="w-1/6"
           options={filtersGroupSelect}
@@ -402,18 +405,17 @@ const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
           isOptionEqualToValue={(option, value) => option.label === value.label}
           onChange={async (_, newValue) => {
             if (newValue) {
+              const newValueExists = filtersGroupSelect.some(
+                (option) => option.value === newValue.value
+              );
 
-                const newValueExists = filtersGroupSelect.some(
-                    (option) => option.value === newValue.value
-                );
-
-                            if (newValueExists) {
+              if (newValueExists) {
                 // The newValue is a valid option, so you can set it as the value.
                 setCurrentFiltersGroup(newValue);
-                } else {
+              } else {
                 // The newValue doesn't exist in the options, so clear the selected value.
                 setCurrentFiltersGroup(null);
-                }
+              }
 
               try {
                 const selectedLabel = newValue.label;
@@ -460,7 +462,6 @@ const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
               label="Mes filtres personnels"
             />
           )}
-
           renderOption={(props, option) => (
             <li {...props}>
               <CustomOption option={option} onDelete={deleteFilter} />
@@ -477,9 +478,7 @@ const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
         >
           Sauvegarder filtre(s)
         </Button>
-
-
-    </div>
+      </div>
       <MUIDataTable
         title={showarchived ? 'Actifs archivés' : 'Actifs'}
         data={showarchived ? archivedActifs : actifs}

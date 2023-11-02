@@ -22,6 +22,7 @@ const AddGroupeFiltres = ({
     handleClose();
   };
 
+
   useEffect(() => {
     setIsButtonDisabled(label.trim() === '');
   }, [label]);
@@ -42,7 +43,8 @@ const AddGroupeFiltres = ({
         />
 
         <div className="float-right">
-          <h3>Selected Filters:</h3>
+          <h3>Filtres sélectionnés:</h3>
+          <hr />
           <ul>
             {Object.keys(selectedFilters).map((filterCategory: string) => (
               <ul key={filterCategory}>

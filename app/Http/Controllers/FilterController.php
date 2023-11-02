@@ -91,14 +91,13 @@ class FilterController extends Controller
 
     public function checkLabelExists(Request $request)
     {
-        $label = $request->input('label');
+        $label = trim($request->input('label')); // Trim leading/trailing whitespace
         $id_user = $request->input('id_user');
 
         // Check if a filter with the given label already exists for the specific user
-        $filterExists = Filter::where('label', $label)
-            ->where('id_user', $id_user)
-            ->exists();
+        $filterExists = Filter::where('label', $label)->where('id_user', $id_user)->exists();
 
         return response()->json(['exists' => $filterExists]);
     }
+
 }

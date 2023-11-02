@@ -17,7 +17,6 @@ return new class extends Migration
             $table->date('date_commande')->nullable();
             $table->string('emplacement_prevu', 64)->nullable();
             $table->unsignedBigInteger('id_etat');
-
             $table->foreign('id_etat')->references('id')->on('etat');
             $table->timestamps();
         });

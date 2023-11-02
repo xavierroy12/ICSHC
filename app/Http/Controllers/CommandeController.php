@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Actif;
 use App\Models\Commande;
+use App\Models\Modele;
+
 use Illuminate\Http\Request;
 
 class CommandeController extends Controller
@@ -81,11 +83,22 @@ class CommandeController extends Controller
 
     public function reception(Request $request, $numero_commande)
     {
-        //loop sur les actifs et set le model, numero de serie, mac adress, localisation, status
+        $actifs = $request->all();
+
+        foreach ($actifs as $actif) {
+            $modele = Modele::where('nom', $actif['modele'])->first();
+            $a = Actif::where('id', $actif['id'])->first();
+            $a->numero_serie = $actif['numero_serie'];
+            $a->id_modele= $modele->id;
+            $a->adresse_mac = $actif['adresse_mac'];
+            //$a->emplacement = $actif['emplacement'];
+            $a->id_statut = 2;
+            $a->save();
+        }
 
         $commande = Commande::where('numero_commande', $numero_commande)->first();
-        $commande->etat_id = 2;
-        $this->updateRemote($commande->numero_commande, $commande->etat_id);
+        $commande->id_etat = 3;
+        $this->updateRemote($commande->numero_commande, $commande->id_etat);
         $commande->save();
         return response()->json($commande);
     }
@@ -93,7 +106,7 @@ class CommandeController extends Controller
     {
         //change URL
         $url = "http://localhost:8000/api/commandes/".$numero_commande;
-        $data = array('etat_id' => $etat);
+        $data = array('id_etat' => $etat);
         $options = array(
             'http' => array(
                 'header'  => "Content-type: application/json\r\n",

@@ -113,7 +113,6 @@ const Commande = () => {
     if (activeStep === 2) {
       let hasSerial = true;
       commande?.actifs.forEach((actif) => {
-        console.log(actif);
         if (actif.numero_serie === '') hasSerial = false;
         if (actif.adresse_mac === '') hasSerial = false;
       });
@@ -192,6 +191,7 @@ const Commande = () => {
       favoris: values.favoris ? 1 : 0,
       taille: values.taille,
     };
+    console.log('updatedData', updatedData);
     fetch(window.name + 'api/modele/new', {
       method: 'POST',
       headers: {
@@ -200,6 +200,7 @@ const Commande = () => {
       body: JSON.stringify(updatedData),
     })
       .then((response) => {
+        console.log('response', response);
         if (response.ok) {
           alert('Données sauvegardées avec succès');
           console.log('Données sauvegardées avec succès: ', values);
@@ -229,19 +230,31 @@ const Commande = () => {
   };
 
   const handleSubmit = () => {
-    fetch(window.name + `api/commande/${commande?.numero_commande}`, {
+    const updatedActifs = commande?.actifs.map((actif) => {
+      const modele = modeleCommande?.find(
+        (modele) => modele.description_modele === actif.description_modele
+      );
+      return {
+        id: actif.id,
+        adresse_mac: actif.adresse_mac,
+        numero_serie: actif.numero_serie,
+        modele: modele?.modele,
+      };
+    });
+
+    fetch(window.name + `api/commande/reception/${commande?.numero_commande}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(commande),
+      body: JSON.stringify(updatedActifs),
     })
       .then((response) => {
         if (response.ok) {
           alert('Données sauvegardées avec succès');
+          navigate('/commandes');
         } else {
           console.error('Error saving data:', response.statusText);
-          navigate('/commandes');
         }
       })
       .catch((error) => {
@@ -488,66 +501,79 @@ const Commande = () => {
                                 </TableHead>
                                 <TableBody>
                                   {commande.actifs &&
-                                    commande.actifs.map((row, index) => (
-                                      <TableRow
-                                        key={row.modele + '_' + index}
-                                        sx={{
-                                          '&:last-child td, &:last-child th': {
-                                            border: 0,
-                                          },
-                                        }}
-                                      >
-                                        <TableCell component="th" scope="row">
-                                          {row.modele}
-                                        </TableCell>
-                                        <TableCell align="left">
-                                          <TextField
-                                            onChange={(event) => {
-                                              const updatedActifs =
-                                                commande.actifs.map((actif) => {
-                                                  if (
-                                                    actif.modele === row.modele
-                                                  ) {
-                                                    return {
-                                                      ...actif,
-                                                      numero_serie:
-                                                        event.target.value,
-                                                    };
-                                                  }
-                                                  return actif;
-                                                });
-                                              const updatedCommand = commande;
-                                              updatedCommand.actifs =
-                                                updatedActifs;
-                                              setCommande(updatedCommand);
-                                            }}
-                                          />
-                                        </TableCell>
-                                        <TableCell align="right">
-                                          <TextField
-                                            onChange={(event) => {
-                                              const updatedActifs =
-                                                commande.actifs.map((actif) => {
-                                                  if (
-                                                    actif.modele === row.modele
-                                                  ) {
-                                                    return {
-                                                      ...actif,
-                                                      adresse_mac:
-                                                        event.target.value,
-                                                    };
-                                                  }
-                                                  return actif;
-                                                });
-                                              const updatedCommand = commande;
-                                              updatedCommand.actifs =
-                                                updatedActifs;
-                                              setCommande(updatedCommand);
-                                            }}
-                                          />
-                                        </TableCell>
-                                      </TableRow>
-                                    ))}
+                                    commande.actifs
+                                      .sort((a, b) =>
+                                        a.modele.localeCompare(b.modele)
+                                      )
+                                      .map((row, index) => (
+                                        <TableRow
+                                          key={row.modele + '_' + index}
+                                          sx={{
+                                            '&:last-child td, &:last-child th':
+                                              {
+                                                border: 0,
+                                              },
+                                          }}
+                                        >
+                                          <TableCell component="th" scope="row">
+                                            {row.modele}
+                                          </TableCell>
+                                          <TableCell align="left">
+                                            <TextField
+                                              defaultValue={row.numero_serie}
+                                              onChange={(event) => {
+                                                const updatedActifs =
+                                                  commande.actifs.map(
+                                                    (actif) => {
+                                                      if (
+                                                        actif.modele ===
+                                                        row.modele
+                                                      ) {
+                                                        return {
+                                                          ...actif,
+                                                          numero_serie:
+                                                            event.target.value,
+                                                        };
+                                                      }
+                                                      return actif;
+                                                    }
+                                                  );
+                                                const updatedCommand = commande;
+                                                updatedCommand.actifs =
+                                                  updatedActifs;
+                                                setCommande(updatedCommand);
+                                              }}
+                                            />
+                                          </TableCell>
+                                          <TableCell align="right">
+                                            <TextField
+                                              defaultValue={row.adresse_mac}
+                                              onChange={(event) => {
+                                                const updatedActifs =
+                                                  commande.actifs.map(
+                                                    (actif) => {
+                                                      if (
+                                                        actif.modele ===
+                                                        row.modele
+                                                      ) {
+                                                        return {
+                                                          ...actif,
+                                                          adresse_mac:
+                                                            event.target.value,
+                                                        };
+                                                      }
+                                                      return actif;
+                                                    }
+                                                  );
+                                                const updatedCommand = commande;
+                                                updatedCommand.actifs =
+                                                  updatedActifs;
+                                                setCommande(updatedCommand);
+                                              }}
+                                            />
+                                          </TableCell>
+                                        </TableRow>
+                                      ))}
                                 </TableBody>
                               </Table>
                             </TableContainer>

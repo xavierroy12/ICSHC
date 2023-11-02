@@ -44,6 +44,7 @@ Route::middleware('throttle:5000,1')->group(function () {
     Route::get('/modele/{id}', [ModeleController::class, 'get']);
     Route::post('/modele/favoris/{id}', [ModeleController::class, 'updateFavoris']);
     Route::post('/modele/{id}', [ModeleController::class, 'update']);
+    Route::post('/modele/new', [ModeleController::class, 'createNew']);
 
     Route::get('/categories', [TypeModeleController::class, 'showAll']);
     Route::get('/categories/light', [TypeModeleController::class, 'lightShow']);
@@ -78,6 +79,7 @@ Route::middleware('throttle:5000,1')->group(function () {
 
     Route::get('/commandes/list', [CommandeController::class, 'listShow']);
     Route::get('/commande/{numero_commande}', [CommandeController::class, 'show']);
+    Route::post('/commande/reception/{numero_commande}', [CommandeController::class, 'reception']);
 
 });
 

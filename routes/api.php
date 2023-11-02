@@ -74,6 +74,7 @@ Route::middleware('throttle:5000,1')->group(function () {
 
     Route::get('/filter/getFilters', [FilterController::class, 'getFilters']);
     Route::get('/filter/getFiltersByLabel', [FilterController::class, 'getFiltersByLabel']);
+    Route::get('/filter/checkLabelExists', [FilterController::class, 'checkLabelExists']);
 });
 
 

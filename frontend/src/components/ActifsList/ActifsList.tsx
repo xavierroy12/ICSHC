@@ -43,6 +43,10 @@ const ActifsList = () => {
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(true); // State to manage button disabled state
 
+  //test de l'id user
+  const mockUserId = localStorage.getItem('id_user');
+  const shouldShowFilters = mockUserId === '1';
+
   const handleRowClick = (
     _rowData: string[],
     rowMeta: { dataIndex: number; rowIndex: number }
@@ -233,84 +237,125 @@ const CustomOption = ({ option, onDelete }: CustomOptionProps) => (
       <DeleteIcon
         className='ml-2'
         style={{color: 'red', cursor: 'pointer' }}
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation(); // Stop the event propagation
           // Prompt the user for confirmation
           if (window.confirm('Êtes-vous sûr de vouloir supprimer ce filtre?')) {
             onDelete(option.value);
+            if (currentFiltersGroup && currentFiltersGroup.value === option.value) {
+                setCurrentFiltersGroup(null); // Reset the selected filter
+              }
           }
         }}
       />
     </div>
   );
 
-
   const saveFilters = (label: string) => {
     const urlParts = window.location.pathname.split('/');
     const from = urlParts[urlParts.length - 1];
 
-    // Create the data to send to the server
-    const data = {
-      filters: selectedFilters,
-      from: from,
-      label: label,
-    };
-
-    if (currentFiltersGroup === '' || currentFiltersGroup.length === 0) {
-      alert('No filter group were selected...');
-      return;
-    }
-
-    // Send the JSON data to the server to save in the database
-    fetch(window.name + 'api/filter/saveFilters', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
+    // First, check if a filter with the same label already exists
+    fetch(window.name + `api/filter/checkLabelExists?label=${label}`, {
+      method: 'GET',
     })
-      .then((response) => {
-        if (response.ok) {
-          alert('Selected filters saved!');
-          setOpen(false);
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.exists) {
+          // Alert the user that the label already exists
+          alert('Filter with the same label already exists. Please choose a unique label.');
+        } else {
+          // If the label is unique, proceed to save it
+          const data = {
+            filters: selectedFilters,
+            from: from,
+            label: label,
+          };
 
-          // After the filters are saved successfully, fetch the updated filter list
-          fetch(window.name + 'api/filter/getFilters')
-            .then((response) => response.json())
-            .then((newFiltersData) => {
-              setFiltersList(newFiltersData.filters);
+          // Send the JSON data to the server to save in the database
+          fetch(window.name + 'api/filter/saveFilters', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => {
+              if (response.ok) {
+                alert('Selected filters saved!');
+                setOpen(false);
 
-              // Update the filtersGroupSelect state with the new filters
-              const updatedFilterOptions = newFiltersData.filters.map(
-                (filter: { id: any; label: any }) => ({
-                  value: filter.id,
-                  label: filter.label,
-                })
-              );
+                // After the filters are saved successfully, fetch the updated filter list
+                fetch(window.name + 'api/filter/getFilters')
+                  .then((response) => response.json())
+                  .then((newFiltersData) => {
+                    setFiltersList(newFiltersData.filters);
 
-              // Add the newly added filter to the options
-              if (label) {
-                updatedFilterOptions.push({ value: label, label });
+                    // Update the filtersGroupSelect state with the new filters
+                    const updatedFilterOptions = newFiltersData.filters.map(
+                      (filter: { id: any; label: any }) => ({
+                        value: filter.id,
+                        label: filter.label,
+                      })
+                    );
+
+                    console.log(label);
+
+                    // Add the newly added filter to the options
+                    if (label) {
+                      console.log('updatedFilterOptions:', updatedFilterOptions);
+                    }
+
+                    setFiltersGroupSelect(updatedFilterOptions);
+
+                    console.log(setFiltersGroupSelect);
+
+                    // Apply the newly created filter
+                    if (label) {
+                      const selectedFilterObject = newFiltersData.filters.find(
+                        (filter: { label: string }) => filter.label === label
+                      );
+                      if (selectedFilterObject) {
+                        const filteredActifs = actifs.filter((actif) => {
+                          return Object.keys(selectedFilterObject).every((key) => {
+                            const filterValue = selectedFilterObject[key] as string;
+                            return (
+                              filterValue === 'All' ||
+                              actif[key as keyof Actif] === filterValue
+                            );
+                          });
+                        });
+                        setSelectedFilters(selectedFilterObject);
+                        setActifs(filteredActifs);
+                      }
+                    }
+                  })
+                  .catch((error) => {
+                    console.error('Error:', error);
+                  });
+              } else {
+                console.error('Failed to save selected filters.');
               }
-
-              setFiltersGroupSelect(updatedFilterOptions);
             })
             .catch((error) => {
               console.error('Error:', error);
             });
-        } else {
-          console.error('Failed to save selected filters.');
         }
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error('Error checking label existence:', error);
       });
   };
 
-// Function to handle the deletion of a specific filter
-const deleteFilter = (filterId: number) => {
+
+  const deleteFilter = (filterId: number) => {
+
+    if (filterId === currentFiltersGroup.value) {
+        setCurrentFiltersGroup(null); // Reset the selected filter
+      }
     // Send a POST request to delete the filter
     fetch(window.name + 'api/filter/deleteFilterById', {
-      method: 'POST', // Use POST method
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -319,20 +364,28 @@ const deleteFilter = (filterId: number) => {
       .then((response) => {
         if (response.ok) {
           // Filter deleted successfully, now update the filtersList
-          const updatedFiltersList = filtersList.filter((filter) => filter.id !== filterId);
-          setFiltersList(updatedFiltersList);
-          setSelectedFilters({});
-          setCurrentFiltersGroup(null); // Clear the currently selected filter group
-          //clear the input field
+          const updatedFiltersList = filtersList.filter(
+            (filter) => filter.id !== filterId
+          );
 
+          setFiltersList(updatedFiltersList);
+
+          // Clear the input field or perform any other necessary actions
+          alert('Filter deleted successfully');
+
+          // Reset the filters here
+          setSelectedFilters({});
+          setCurrentFiltersGroup(null); // Reset the selected filter label to empty string
+          setActifs(cleanActifs);
         } else {
-          console.error('Failed to delete filter.');
+          console.error('Failed to delete filter');
         }
       })
       .catch((error) => {
         console.error('Error:', error);
       });
   };
+
 
   // Pass the saveFilters function to AddGroupeFiltres
   const handleCloseModal = () => {
@@ -343,13 +396,27 @@ const deleteFilter = (filterId: number) => {
   return (
     <div className="w-11/12 mx-auto mt-10">
       <div className="items-end justify-end flex pb-4">
+
         <Autocomplete
           className="w-1/6"
-          options={filtersGroupSelect}
+          options={shouldShowFilters ? filtersGroupSelect : []}
           getOptionLabel={(option) => option.label}
-          isOptionEqualToValue={(option, value) => option.value === value.value}
+          isOptionEqualToValue={(option, value) => option.label === value.label}
           onChange={async (_, newValue) => {
             if (newValue) {
+
+                const newValueExists = filtersGroupSelect.some(
+                    (option) => option.value === newValue.value
+                );
+
+                            if (newValueExists) {
+                // The newValue is a valid option, so you can set it as the value.
+                setCurrentFiltersGroup(newValue);
+                } else {
+                // The newValue doesn't exist in the options, so clear the selected value.
+                setCurrentFiltersGroup(null);
+                }
+
               try {
                 const selectedLabel = newValue.label;
                 setCurrentFiltersGroup(selectedLabel); // Set the currently selected filter group label

@@ -323,4 +323,42 @@ class ActifController extends Controller
 }
 
 
+
+    Public function createActifsCommande($produit, $no_commande)
+    {
+        $modele_descriptif = $produit['description'];
+        $id_modele = $this->findModele($modele_descriptif);
+        $quantite = $produit['quantite_produit'];
+        
+
+        for ($i = 0; $i < $quantite; $i++) {
+            $actif = new Actif;
+            $actif->modele_descriptif = $modele_descriptif;
+            $actif->numero_commande = $no_commande;
+            $actif->en_entrepot = FALSE;
+            $actif->id_statut = 2; // Always 2 in this instance, en attente de reception
+            $actif->id_utilisation = 3; // 3 veut dire Autre
+            if ($id_modele) {
+                $actif->id_modele = $id_modele;
+            }
+    
+            $actif->save();
+        }
+        
+    }
+
+    public function findModele($modele_descriptif)
+    {
+        $actifs = Actif::where('modele_descriptif', $modele_descriptif)->get();
+    
+        foreach ($actifs as $actif) {
+            if ($actif->id_modele) {
+                return $actif->id_modele;
+            }
+        }
+    
+        return null;
+    }
+
+
 }

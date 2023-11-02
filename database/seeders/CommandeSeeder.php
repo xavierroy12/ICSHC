@@ -20,7 +20,7 @@ class CommandeSeeder extends Seeder
             'numero_commande' => 69123456789,
             'nb_actif' => 10,
             'date_commande' => '2023-09-20',
-            'emplacement_prevu' => 'École de la Source',
+            'id_emplacement_prevu' => 1,
             'id_etat' => 1,
         ]);
         $numero_commande_2 = rand(1000, 9999);
@@ -29,7 +29,7 @@ class CommandeSeeder extends Seeder
             'numero_commande' => 42012345678,
             'nb_actif' => 5,
             'date_commande' => '2023-09-21',
-            'emplacement_prevu' => 'École de Sainte-Edwidge',
+            'id_emplacement_prevu' => 2,
             'id_etat' => 2,
         ]);
     }

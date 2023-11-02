@@ -15,17 +15,17 @@ return new class extends Migration
     {
         Schema::create('actif', function (Blueprint $table) {
             $table->id();
-            $table->string('numero_serie', 32);
-            $table->string('nom', 32);
+            $table->string('numero_serie', 32)->nullable();
+            $table->string('nom', 32)->default('Sans nom');
             $table->boolean('en_entrepot');
             $table->string('adresse_mac', 32)->nullable();
             $table->date('date_retour')->nullable();
             $table->string('note', 512)->nullable();
-            $table->string('modele_descriptif', 64)->nullable();
+            $table->string('modele_descriptif', 1000)->nullable();
             $table->unsignedBigInteger('id_modele')->nullable();
             $table->unsignedBigInteger('id_statut');
             $table->unsignedBigInteger('id_emplacement')->nullable();
-            $table->unsignedBigInteger('id_proprietaire');
+            $table->unsignedBigInteger('id_proprietaire')->nullable();
             $table->unsignedBigInteger('id_utilisation');
             $table->unsignedBigInteger('numero_commande');
             $table->unsignedBigInteger('id_client')->nullable();

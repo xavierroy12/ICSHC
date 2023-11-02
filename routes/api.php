@@ -15,6 +15,7 @@ use App\Http\Controllers\TypeModeleController;
 use App\Http\Controllers\UtilisateurController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\CommandeController;
 
 Route::middleware('throttle:5000,1')->group(function () {
 
@@ -71,6 +72,7 @@ Route::middleware('throttle:5000,1')->group(function () {
     Route::get('/utilisateurs/list', [UtilisateurController::class, 'showList']);
 
     Route::post('/commandeAchat', [CommandeController::class, 'recepCommandeAchat']);
+    Route::get('/commandes', [CommandeController::class, 'showAll']);
     Route::get('/roles/light', [RoleController::class, 'lightShow']);
     Route::get('/clientJson', [ClientController::class, 'listClientScolago']);
     Route::get('/clientJsonStore', [ClientController::class, 'storeListClientScolage']);

@@ -372,6 +372,23 @@ class ActifSeeder extends Seeder
                     'numero_commande' => 69123456789,
                     'id_client' => $clients[0],
                 ],
+                [
+                    'numero_serie' => 'SER000000000023',
+                    'nom' => '069-Test-01',
+                    'en_entrepot' => FALSE,
+                    'adresse_mac' => '00:1A:2B:3C:4D:5E',
+                    'date_retour' => '2023-09-18',
+                    'note' => 'Cet actif est en bon état.',
+                    'modele_descriptif' => "Ceci est un modele descriptif test utiliser pour tester si le code est capable de detecter qu'un actif avec cette meme description existe deja. si cest le cas, il devrais automatiquement lui associer le modele avec un id = 1",
+                    'id_modele' => 1,
+                    'id_statut' => rand(1, 3),
+                    'id_emplacement' => 2,
+                    'id_proprietaire' => 1,
+                    'id_utilisation' => 1,
+                    'numero_commande' => 69123456789,
+                    'id_client' => $clients[5],
+                ],
+
             ]
 
 

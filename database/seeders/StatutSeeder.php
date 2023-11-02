@@ -18,6 +18,10 @@ class StatutSeeder extends Seeder
         ]);
 
         DB::table('statut')->insert([
+            'nom' => 'Commandé',
+        ]);
+
+        DB::table('statut')->insert([
             'nom' => 'Déployable',
         ]);
 

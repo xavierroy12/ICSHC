@@ -15,10 +15,12 @@ return new class extends Migration
             $table->unsignedBigInteger('numero_commande')->unsigned()->primary();
             $table->integer('nb_actif')->nullable();
             $table->date('date_commande')->nullable();
-            $table->string('emplacement_prevu', 64)->nullable();
             $table->unsignedBigInteger('id_etat');
-
+            $table->unsignedBigInteger('id_emplacement_prevu')->nullable();
             $table->foreign('id_etat')->references('id')->on('etat');
+            $table->foreign('id_emplacement_prevu')->references('id')->on('emplacement');
+
+            
             $table->timestamps();
         });
     }

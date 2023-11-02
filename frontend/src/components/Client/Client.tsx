@@ -71,7 +71,6 @@ const Client = () => {
                 numero_serie: actif.numero_serie,
               }))
             );
-          console.log(fetchedClient.actif);
         })
         .then(() => {
           setIsLoading(false);

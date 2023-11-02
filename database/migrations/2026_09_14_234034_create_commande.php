@@ -19,8 +19,6 @@ return new class extends Migration
             $table->unsignedBigInteger('id_emplacement_prevu')->nullable();
             $table->foreign('id_etat')->references('id')->on('etat');
             $table->foreign('id_emplacement_prevu')->references('id')->on('emplacement');
-
-            
             $table->timestamps();
         });
     }

@@ -215,12 +215,13 @@ class ActifController extends Controller
     {
         $actifs = Actif::with(['modele.categorie', 'statut', 'client', 'emplacement'])
             ->whereHas('statut', function ($query) {
-                $query->where('nom', '!=', 'Archivé');
+                $query->where('nom', '!=', 'Archivé')
+                      ->where('id_statut', '!=', 2);
+
             })
             ->get()
             ->map(function ($actif) {
                 return [
-
                     'id' => $actif->id,
                     'numero_commande' => $actif->numero_commande,
                     'numero_serie' => $actif->numero_serie,

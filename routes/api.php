@@ -15,6 +15,7 @@ use App\Http\Controllers\UtilisateurController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\FilterController;
 
 Route::middleware('throttle:5000,1')->group(function () {
 

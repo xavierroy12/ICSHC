@@ -73,9 +73,12 @@ Route::middleware('throttle:5000,1')->group(function () {
 
     Route::post('/commandeAchat', [CommandeController::class, 'recepCommandeAchat']);
     Route::get('/commandes', [CommandeController::class, 'showAll']);
+
     Route::get('/roles/light', [RoleController::class, 'lightShow']);
+
     Route::get('/clientJson', [ClientController::class, 'listClientScolago']);
     Route::get('/clientJsonStore', [ClientController::class, 'storeListClientScolage']);
+    Route::get('/EleveJson', [ClientController::class, 'listClientEleve']);
 
 });
 

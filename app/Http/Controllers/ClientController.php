@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\ScolagoDbModel;
+use App\Models\EleveDbModel;
 use App\Http\Controllers\EmplacementController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActifController;
@@ -88,7 +89,12 @@ class ClientController extends Controller
         return response()->json($clients);
     }
 
-    public function 
+    public function listClientEleve()
+    {
+        $eleveDbModel = new EleveDbModel();
+        $eleves = $eleveDbModel->getEleve();
+        return response()->json($eleves);
+    }
 
     /**
      * Show the form for creating a new resource.

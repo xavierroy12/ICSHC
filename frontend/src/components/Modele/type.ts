@@ -8,3 +8,10 @@ export type Modele_Type = {
   id_type_modele: number;
   favoris: number;
 };
+
+
+export type LightModele = {
+    id: number;
+    nom: string;
+    id_type_modele: number;
+};

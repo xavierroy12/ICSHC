@@ -192,7 +192,7 @@ const Commande = () => {
       taille: values.taille,
     };
     console.log('updatedData', updatedData);
-    fetch(window.name + 'api/modele/new', {
+    fetch(window.name + 'api/modele', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -212,8 +212,22 @@ const Commande = () => {
       .catch((error) => {
         console.error('Error saving data:', error);
       });
+    reloadModeles();
   };
-
+  const reloadModeles = () => {
+    setTimeout(() => {
+      fetch(window.name + 'api/modeles/light')
+        .then((response) => response.json())
+        .then((data) => {
+          setModeles(
+            data.map((modele: LightType) => ({
+              id: modele.id,
+              label: modele.nom,
+            }))
+          );
+        });
+    }, 1000);
+  };
   const reloadData = () => {
     setTimeout(() => {
       fetch(window.name + 'api/categories/light')

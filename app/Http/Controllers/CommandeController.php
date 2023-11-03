@@ -26,7 +26,7 @@ class CommandeController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -56,7 +56,7 @@ class CommandeController extends Controller
         );
 
         $c = Commande::with('emplacement')->where('numero_commande', $numero_commande)->first();
- 
+
         $commande = [
             "numero_commande" => $c->numero_commande,
             "etat" => $c->etat->nom,
@@ -96,7 +96,7 @@ class CommandeController extends Controller
             $a->id_modele= $modele->id;
             $a->adresse_mac = $actif['adresse_mac'];
             //$a->emplacement = $actif['emplacement'];
-            $a->id_statut = 2;
+            $a->id_statut = 3;
             $a->save();
         }
 
@@ -198,9 +198,9 @@ class CommandeController extends Controller
         }
 
         return response()->json(['success' => 'Commande d\'achat reçue'], 200);
-       
 
 
-        
+
+
     }
 }

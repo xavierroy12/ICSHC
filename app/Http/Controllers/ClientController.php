@@ -17,7 +17,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        
+
     }
 
     public function getClientFromEmail($email)
@@ -33,7 +33,7 @@ class ClientController extends Controller
 
     public function listClientScolago()
     {
-        
+
         $scolagoDbModel = new ScolagoDbModel();
         $clients = $scolagoDbModel->getEmployees();
         return response()->json($clients);
@@ -46,11 +46,11 @@ class ClientController extends Controller
         $clients = $scolagoDbModel->getEmployees();
 
 
-        
+
         foreach ($clients as $client) {
             $matriculeLieu = $client['LIEU'];
            $emplacement = $emplacementController->getEmplacement($matriculeLieu);
-  
+
             $clientData = [
                 'matricule' => $client["MATR"],
                 'nom' => $client["NOM"],
@@ -75,17 +75,17 @@ class ClientController extends Controller
                     $clientData['id_emplacement'] = $id_emplacement;
                 }
             }
-            
-            
+
+
 
             if ($existingClient) {
                 $existingClient->update($clientData);
             } else {
                 Client::create($clientData);
             }
-            
+
         }
-        
+
         return response()->json($clients);
     }
 
@@ -119,7 +119,7 @@ class ClientController extends Controller
     {
         $client = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])->find($id);
         $client->setAttribute('nom', $client->prenom . ' ' . $client->nom);
-        
+
 
         return response()->json($client);
     }
@@ -158,7 +158,7 @@ class ClientController extends Controller
         $clients = Client::All()->map(function ($client) {
             return [
                 "id" => $client->id,
-                "nom" => $client->nom,
+                "nom" => $client->prenom . ' ' . $client->nom,
             ];
         });        return response()->json($clients);
     }

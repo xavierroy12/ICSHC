@@ -8,10 +8,20 @@ type Props = {
   selectedActifs: LightActif[];
   setSelectedActifs: (actifs: LightActif[]) => void;
   handleSubmit: () => void;
+  buttonLabel?: string;
 };
 
 const ActifsSelect = forwardRef(
-  ({ actifs, selectedActifs, setSelectedActifs, handleSubmit }: Props, ref) => {
+  (
+    {
+      actifs,
+      selectedActifs,
+      setSelectedActifs,
+      handleSubmit,
+      buttonLabel = 'Modifier',
+    }: Props,
+    ref
+  ) => {
     return (
       <div
         ref={ref as React.RefObject<HTMLDivElement>}
@@ -29,7 +39,7 @@ const ActifsSelect = forwardRef(
             onClick={handleSubmit}
             className="mt-4 float-right "
           >
-            Modifier
+            {buttonLabel}
           </Button>
         </div>
       </div>

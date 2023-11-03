@@ -185,6 +185,7 @@ const Client = () => {
                             numero_serie: actif.numero_serie,
                           }))}
                           handleSubmit={handleSubmit}
+                          buttonLabel="Sauvegarder"
                         />
                       </Grid>
                     </Grid>

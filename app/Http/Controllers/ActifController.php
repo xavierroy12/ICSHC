@@ -218,6 +218,7 @@ class ActifController extends Controller
                 $query->where('nom', '!=', 'Archivé')
                       ->where('id_statut', '!=', 2);
 
+
             })
             ->get()
             ->map(function ($actif) {
@@ -229,12 +230,12 @@ class ActifController extends Controller
                     'modele' => $actif->modele->nom,
                     'categorie' => $actif->modele->categorie->nom,
                     'statut' => $actif->statut->nom,
-                    'client' => $actif->client->nom ?? 'Aucun',
+                    'client' => $actif->client->prenom . ' ' . $actif->client->nom ?? 'Aucun',
                     'emplacement' => $actif->emplacement->nom,
 
                 ];
             });
-
+            error_log($actifs);
         return response()->json($actifs);
     }
 
@@ -313,7 +314,7 @@ class ActifController extends Controller
                 'categorie_id' => $actif->modele->categorie->id,
                 'statut' => $actif->statut->nom,
                 'statut_id' => $actif->statut->id,
-                'client' => $actif->client->nom,
+                'client' => $actif->client->prenom . ' ' . $actif->client->nom ?? 'Aucun',
                 'client_id' => $actif->client->id,
                 'emplacement' => $actif->emplacement->nom,
                 'emplacement_id' => $actif->emplacement->id,
@@ -330,7 +331,7 @@ class ActifController extends Controller
         $modele_descriptif = $produit['description'];
         $id_modele = $this->findModele($modele_descriptif);
         $quantite = $produit['quantite_produit'];
-        
+
 
         for ($i = 0; $i < $quantite; $i++) {
             $actif = new Actif;
@@ -342,22 +343,22 @@ class ActifController extends Controller
             if ($id_modele) {
                 $actif->id_modele = $id_modele;
             }
-    
+
             $actif->save();
         }
-        
+
     }
 
     public function findModele($modele_descriptif)
     {
         $actifs = Actif::where('modele_descriptif', $modele_descriptif)->get();
-    
+
         foreach ($actifs as $actif) {
             if ($actif->id_modele) {
                 return $actif->id_modele;
             }
         }
-    
+
         return null;
     }
 

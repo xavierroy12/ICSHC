@@ -16,6 +16,20 @@ import { LightActif } from '../ActifsListSelect/type';
 import ActifsSelect from '../ActifsSelect/ActifsSelect';
 import AddGroupeFiltres from '../AddGroupeFiltres';
 
+type selectedFiltersType = {
+  nom?: string;
+  numero_serie?: string;
+  modele?: string;
+  categorie?: string;
+  statut?: string;
+  client?: string;
+  emplacement?: string;
+};
+type currentFiltersGroupType = {
+  value: number;
+  label: string;
+};
+
 const ActifsList = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -29,12 +43,15 @@ const ActifsList = () => {
   const [archivedActifs, setArchivedActifs] = useState<Actif[]>([]);
 
   // New state to store selected filters
-  const [selectedFilters, setSelectedFilters] = useState<any>({});
+  const [selectedFilters, setSelectedFilters] = useState<selectedFiltersType>(
+    {}
+  );
   const [filtersList, setFiltersList] = useState<FiltreGroup[]>([]);
   const [filtersGroupSelect, setFiltersGroupSelect] = useState<
     { value: number; label: string }[]
   >([]);
-  const [currentFiltersGroup, setCurrentFiltersGroup] = useState<any>({});
+  const [currentFiltersGroup, setCurrentFiltersGroup] =
+    useState<currentFiltersGroupType>();
 
   const [showListSelect, setShowListSelect] = useState(false);
   const [selectedActifs, setSelectedActifs] = useState<LightActif[]>([]);
@@ -188,7 +205,7 @@ const ActifsList = () => {
         })
         .catch((error) => console.error(error))
     );
-  }, []);
+  }, [id_user]);
   useEffect(() => {
     if (filtersList.length !== 0) {
       setFiltersGroupSelect(
@@ -205,7 +222,7 @@ const ActifsList = () => {
     );
     setIsButtonDisabled(areAllFiltersNoSelection);
     setActifs(cleanActifs);
-  }, [selectedFilters]);
+  }, [selectedFilters, cleanActifs]);
 
   if (isLoading) {
     return (
@@ -246,9 +263,10 @@ const ActifsList = () => {
           if (window.confirm('Êtes-vous sûr de vouloir supprimer ce filtre?')) {
             onDelete(option.value);
             if (
-              currentFiltersGroup && currentFiltersGroup.value === option.value
+              currentFiltersGroup &&
+              currentFiltersGroup.value === option.value
             ) {
-              setCurrentFiltersGroup(null); // Reset the selected filter
+              setCurrentFiltersGroup(undefined); // Reset the selected filter
             }
           }
         }}
@@ -262,19 +280,25 @@ const ActifsList = () => {
     const from = urlParts[urlParts.length - 1];
 
     // First, check if a filter with the same label already exists
-    fetch(window.name + `api/filter/checkLabelExists?label=${label}&id_user=${id_user}`, {
-      method: 'GET',
-    })
+    fetch(
+      window.name +
+        `api/filter/checkLabelExists?label=${label}&id_user=${id_user}`,
+      {
+        method: 'GET',
+      }
+    )
       .then((response) => response.json())
       .then((result) => {
         if (result.exists) {
           console.log('result', result);
-          console.log(label)
+          console.log(label);
           // Alert the user that the label already exists
-          alert('Un filtre portant ce nom existe déjà. Veuillez entrer un autre nom svp.');
+          alert(
+            'Un filtre portant ce nom existe déjà. Veuillez entrer un autre nom svp.'
+          );
         } else {
           console.log('result', result);
-          console.log(label)
+          console.log(label);
           // If the label is unique, proceed to save it
           const data = {
             id_user: id_user,
@@ -293,7 +317,9 @@ const ActifsList = () => {
           })
             .then((response) => {
               if (response.ok) {
-                alert('Le(s) filtre(s) selectionné(s) ont été enregistrés avec succès!');
+                alert(
+                  'Le(s) filtre(s) selectionné(s) ont été enregistrés avec succès!'
+                );
                 setOpen(false);
 
                 // After the filters are saved successfully, fetch the updated filter list
@@ -305,6 +331,7 @@ const ActifsList = () => {
                     setFiltersList(newFiltersData.filters);
 
                     // Update the filtersGroupSelect state with the new filters
+                    console.log(newFiltersData);
                     const updatedFilterOptions = newFiltersData.filters.map(
                       (filter: { id: any; label: any }) => ({
                         value: filter.id,
@@ -397,6 +424,26 @@ const ActifsList = () => {
 
   return (
     <div className="w-11/12 mx-auto mt-10">
+      <div className="flex float-left mt-4 ml-4">
+        <ToggleButton
+          selected={showarchived}
+          value={showarchived}
+          onChange={() => setShowArchived(!showarchived)}
+          size="small"
+          color="primary"
+        >
+          Voir Archiver
+        </ToggleButton>
+        <Button
+          className="ml-12"
+          style={{ marginRight: '1rem' }}
+          color="primary"
+          size="medium"
+          onClick={() => setShowListSelect(true)}
+        >
+          Sélectionner
+        </Button>
+      </div>
       <div className="items-end justify-end flex pb-4">
         <Autocomplete
           className="w-1/6"
@@ -414,7 +461,7 @@ const ActifsList = () => {
                 setCurrentFiltersGroup(newValue);
               } else {
                 // The newValue doesn't exist in the options, so clear the selected value.
-                setCurrentFiltersGroup(null);
+                setCurrentFiltersGroup(undefined);
               }
 
               try {
@@ -423,8 +470,8 @@ const ActifsList = () => {
 
                 const response = await fetch(
                   window.name +
-                  'api/filter/getFiltersByLabel?label=' +
-                  selectedLabel
+                    'api/filter/getFiltersByLabel?label=' +
+                    selectedLabel
                 );
 
                 if (response.ok) {
@@ -486,26 +533,6 @@ const ActifsList = () => {
         options={options}
       />
       <div>
-        <div className="flex float-left mt-4 ml-4">
-          <ToggleButton
-            selected={showarchived}
-            value={showarchived}
-            onChange={() => setShowArchived(!showarchived)}
-            size="small"
-            color="primary"
-          >
-            Voir Archiver
-          </ToggleButton>
-          <Button
-            className="ml-12"
-            style={{ marginRight: '1rem' }}
-            color="primary"
-            size="medium"
-            onClick={() => setShowListSelect(true)}
-          >
-            Sélectionner
-          </Button>
-        </div>
         <div className="float-right m-4">
           <Button
             className="ml-12"

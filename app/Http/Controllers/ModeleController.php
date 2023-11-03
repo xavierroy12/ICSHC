@@ -26,7 +26,7 @@ class ModeleController extends Controller
      */
     public function create()
     {}
-    
+
     public function createNew(Request $request)
     {
         $data = $request->all();
@@ -148,6 +148,16 @@ class ModeleController extends Controller
     public function lightShow()
     {
         $modeles = Modele::All()->map(function ($modele) {
+            return [
+                "id" => $modele->id,
+                "nom" => $modele->nom,
+            ];
+        });
+        return response()->json($modeles);
+    }
+    public function lightShowFavorite()
+    {
+        $modeles = Modele::where("favoris", true)->get()->map(function ($modele) {
             return [
                 "id" => $modele->id,
                 "nom" => $modele->nom,

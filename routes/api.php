@@ -43,6 +43,7 @@ Route::middleware('throttle:5000,1')->group(function () {
 
     Route::get('/modeles', [ModeleController::class, 'showAll']);
     Route::get('/modeles/light', [ModeleController::class, 'lightShow']);
+    Route::get('/modeles/light/favorite', [ModeleController::class, 'lightShowFavorite']);
     Route::get('/modele/{id}', [ModeleController::class, 'get']);
     Route::post('/modele/favoris/{id}', [ModeleController::class, 'updateFavoris']);
     Route::post('/modele/{id}', [ModeleController::class, 'update']);

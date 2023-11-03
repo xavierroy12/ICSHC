@@ -62,7 +62,7 @@ const CommandeModels = ({
                       {row.nombre}
                     </TableCell>
                     <TableCell align="left">{row.description_modele}</TableCell>
-                    <TableCell align="right">
+                    <TableCell align="right" width={'300px'}>
                       <div className="flex w-full">
                         <Autocomplete
                           className="right-0 w-full"

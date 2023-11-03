@@ -23,7 +23,7 @@ import {
   Actif_Commande_Type,
 } from './type';
 
-const steps = ['Information', 'Modèle', 'Article'];
+const steps = ['Informations', 'Modèles', 'Actifs'];
 
 const Commande = () => {
   const { numero_commande } = useParams<{ numero_commande: string }>();
@@ -102,7 +102,7 @@ const Commande = () => {
   useEffect(() => {
     Promise.all([
       fetch(window.name + `api/commande/${numero_commande}`),
-      fetch(window.name + 'api/modeles/light'),
+      fetch(window.name + 'api/modeles/light/favorite'),
       fetch(window.name + 'api/categories/light'),
     ]).then((responses) =>
       Promise.all(responses.map((response) => response.json()))
@@ -190,72 +190,74 @@ const Commande = () => {
               </Typography>
             </div>
 
-            <Box sx={{ width: '100%' }}>
-              <Stepper nonLinear activeStep={activeStep}>
-                <Step key="step1" completed={completed[1]}>
-                  <StepLabel>Section 1</StepLabel>
-                </Step>
-                <Step key="step2" completed={completed[2]}>
-                  <StepLabel>Section 2</StepLabel>
-                </Step>
-                <Step key="step3" completed={completed[3]}>
-                  <StepLabel>Section 3</StepLabel>
-                </Step>
-              </Stepper>
-              <div>
-                <Fragment>
-                  {commande && (
-                    <Fragment>
-                      {activeStep === 0 && (
-                        <CommandeInformation commande={commande} />
-                      )}
-                      {activeStep === 1 && modeleCommande && (
-                        <CommandeModels
-                          modeleCommande={modeleCommande}
-                          setModeleCommande={setModeleCommande}
-                          modeles={modeles}
-                          addModele={addModele}
-                          commande={commande}
-                          setCommande={setCommande}
-                        />
-                      )}
-                      {activeStep === 2 && (
-                        <CommandeTableauActifs
-                          commande={commande}
-                          setCommande={setCommande}
-                        />
-                      )}
-                    </Fragment>
-                  )}
-                  <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                    <Button
-                      color="inherit"
-                      disabled={activeStep === 0}
-                      onClick={handleBack}
-                      sx={{ mr: 1 }}
-                    >
-                      Retour
-                    </Button>
-                    <Box sx={{ flex: '1 1 auto' }} />
-                    <Button
-                      onClick={handleNext}
-                      sx={{ mr: 1 }}
-                      disabled={activeStep === 2}
-                    >
-                      Prochaine étape
-                    </Button>
-                    {activeStep !== steps.length && (
-                      <Button
-                        onClick={handleComplete}
-                        disabled={completed[activeStep]}
-                      >
-                        {completedSteps() === totalSteps() - 1
-                          ? 'Recevoir'
-                          : 'Compléter étape'}
-                      </Button>
+            <Box sx={{ width: '100' }}>
+              <div className="w-10/12 m-auto">
+                <Stepper nonLinear activeStep={activeStep}>
+                  <Step key="step1" completed={completed[1]}>
+                    <StepLabel>{steps[0]}</StepLabel>
+                  </Step>
+                  <Step key="step2" completed={completed[2]}>
+                    <StepLabel>{steps[1]}</StepLabel>
+                  </Step>
+                  <Step key="step3" completed={completed[3]}>
+                    <StepLabel>{steps[2]}</StepLabel>
+                  </Step>
+                </Stepper>
+                <div>
+                  <Fragment>
+                    {commande && (
+                      <Fragment>
+                        {activeStep === 0 && (
+                          <CommandeInformation commande={commande} />
+                        )}
+                        {activeStep === 1 && modeleCommande && (
+                          <CommandeModels
+                            modeleCommande={modeleCommande}
+                            setModeleCommande={setModeleCommande}
+                            modeles={modeles}
+                            addModele={addModele}
+                            commande={commande}
+                            setCommande={setCommande}
+                          />
+                        )}
+                        {activeStep === 2 && (
+                          <CommandeTableauActifs
+                            commande={commande}
+                            setCommande={setCommande}
+                          />
+                        )}
+                      </Fragment>
                     )}
-                  </Box>
-                </Fragment>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                      <Button
+                        color="inherit"
+                        disabled={activeStep === 0}
+                        onClick={handleBack}
+                        sx={{ mr: 1 }}
+                      >
+                        Retour
+                      </Button>
+                      <Box sx={{ flex: '1 1 auto' }} />
+                      <Button
+                        onClick={handleNext}
+                        sx={{ mr: 1 }}
+                        disabled={activeStep === 2}
+                      >
+                        Prochaine étape
+                      </Button>
+                      {activeStep !== steps.length && (
+                        <Button
+                          onClick={handleComplete}
+                          disabled={completed[activeStep]}
+                        >
+                          {completedSteps() === totalSteps() - 1
+                            ? 'Recevoir'
+                            : 'Compléter étape'}
+                        </Button>
+                      )}
+                    </Box>
+                  </Fragment>
+                </div>
               </div>
             </Box>
           </div>

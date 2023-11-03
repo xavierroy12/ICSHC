@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   CircularProgress,
-  Modal,
   Step,
   StepLabel,
   Stepper,
@@ -10,14 +9,18 @@ import {
 } from '@mui/material';
 import { Fragment, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import ModeleForm from '../Modele/ModeleForm';
-import { Formik, FormikValues } from 'formik';
+
 import CommandeInformation from './CommandeInformation';
 import CommandeModels from './CommandeModels';
 import CommandeTableauActifs from './CommandeTableauActifs';
-import { Commande_Type, Model_Type,LightType, SelectItem, Actif_Commande_Type } from './type';
-
-
+import {
+  Commande_Type,
+  Model_Type,
+  LightType,
+  SelectItem,
+  Actif_Commande_Type,
+} from './type';
+import AddModelModal from './addModelModal';
 
 const steps = ['Information', 'Modèle', 'Article'];
 
@@ -138,78 +141,6 @@ const Commande = () => {
     );
   }, [numero_commande]);
 
-  const initialValues = {
-    nom: '',
-    id_type_modele: '',
-    stockage: '',
-    processeur: '',
-    favoris: false,
-    memoire_vive: '',
-    taille: '',
-  };
-
-  const handleSubmitModele = (values: FormikValues) => {
-    const updatedData = {
-      nom: values.nom,
-      id_type_modele: values.id_type_modele?.id || values.id_type_modele,
-      stockage: values.stockage,
-      processeur: values.processeur,
-      memoire_vive: values.memoire_vive,
-      favoris: values.favoris ? 1 : 0,
-      taille: values.taille,
-    };
-    console.log('updatedData', updatedData);
-    fetch(window.name + 'api/modele', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedData),
-    })
-      .then((response) => {
-        console.log('response', response);
-        if (response.ok) {
-          alert('Données sauvegardées avec succès');
-          console.log('Données sauvegardées avec succès: ', values);
-        } else {
-          console.error('Error saving data:', response.statusText);
-          console.log('CA NE FONCTIONNE PAS ', values);
-        }
-      })
-      .catch((error) => {
-        console.error('Error saving data:', error);
-      });
-    reloadModeles();
-  };
-  const reloadModeles = () => {
-    setTimeout(() => {
-      fetch(window.name + 'api/modeles/light')
-        .then((response) => response.json())
-        .then((data) => {
-          setModeles(
-            data.map((modele: LightType) => ({
-              id: modele.id,
-              label: modele.nom,
-            }))
-          );
-        });
-    }, 1000);
-  };
-  const reloadData = () => {
-    setTimeout(() => {
-      fetch(window.name + 'api/categories/light')
-        .then((response) => response.json())
-        .then((data) => {
-          setCategories(
-            data.map((statut: LightType) => ({
-              id: statut.id,
-              label: statut.nom,
-            }))
-          );
-        });
-    }, 1000);
-  };
-
   const handleSubmit = () => {
     const updatedActifs = commande?.actifs.map((actif) => {
       const modele = modeleCommande?.find(
@@ -312,21 +243,16 @@ const Commande = () => {
                     >
                       Prochaine étape
                     </Button>
-                    {activeStep !== steps.length &&
-                      (completed[activeStep] ? (
-                        <Typography
-                          variant="caption"
-                          sx={{ display: 'inline-block' }}
-                        >
-                          Étape {activeStep + 1} complétée
-                        </Typography>
-                      ) : (
-                        <Button onClick={handleComplete}>
-                          {completedSteps() === totalSteps() - 1
-                            ? 'Finir'
-                            : 'Compléter étape'}
-                        </Button>
-                      ))}
+                    {activeStep !== steps.length && (
+                      <Button
+                        onClick={handleComplete}
+                        disabled={completed[activeStep]}
+                      >
+                        {completedSteps() === totalSteps() - 1
+                          ? 'Recevoir'
+                          : 'Compléter étape'}
+                      </Button>
+                    )}
                   </Box>
                 </Fragment>
               </div>
@@ -334,34 +260,14 @@ const Commande = () => {
           </div>
         </div>
       )}
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <div className="flex ">
-          <div className=" bg-slate-100 m-10 p-8">
-            <div className="mb-8">
-              <Typography variant="h4">Nouveau Model</Typography>
-            </div>
-            <Formik initialValues={initialValues} onSubmit={handleSubmitModele}>
-              {({ values, dirty, setFieldValue }) => (
-                <div className="max-w-fit bg-slate-100 p-4">
-                  <ModeleForm
-                    categories={categories}
-                    values={values}
-                    dirty={dirty}
-                    setFieldValue={setFieldValue}
-                    reloadData={reloadData}
-                  />
-                </div>
-              )}
-            </Formik>
-            <div>
-              <div className="mb-8 mt-20">
-                <Typography variant="h4">Description Model</Typography>
-              </div>
-              {currentModele}
-            </div>
-          </div>
-        </div>
-      </Modal>
+      <AddModelModal
+        setModeles={setModeles}
+        setCategories={setCategories}
+        open={open}
+        setOpen={setOpen}
+        currentModele={currentModele}
+        categories={categories}
+      />
     </Fragment>
   );
 };

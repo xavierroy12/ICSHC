@@ -13,6 +13,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import CommandeInformation from './CommandeInformation';
 import CommandeModels from './CommandeModels';
 import CommandeTableauActifs from './CommandeTableauActifs';
+import AddModelModal from './AddModelModal';
+
 import {
   Commande_Type,
   Model_Type,
@@ -20,7 +22,6 @@ import {
   SelectItem,
   Actif_Commande_Type,
 } from './type';
-import AddModelModal from './AddModelModal';
 
 const steps = ['Information', 'Modèle', 'Article'];
 

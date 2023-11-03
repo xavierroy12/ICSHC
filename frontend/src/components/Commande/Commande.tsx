@@ -20,7 +20,7 @@ import {
   SelectItem,
   Actif_Commande_Type,
 } from './type';
-import AddModelModal from './addModelModal';
+import AddModelModal from './AddModelModal';
 
 const steps = ['Information', 'Modèle', 'Article'];
 

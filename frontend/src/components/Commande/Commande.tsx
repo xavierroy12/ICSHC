@@ -1,56 +1,23 @@
 import {
-  Autocomplete,
   Box,
   Button,
   CircularProgress,
-  Grid,
-  IconButton,
   Modal,
-  Paper,
   Step,
   StepLabel,
   Stepper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
   Typography,
 } from '@mui/material';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
 import { Fragment, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { LightType, SelectItem } from '../Actif/type';
-import AddIcon from '@mui/icons-material/Add';
 import ModeleForm from '../Modele/ModeleForm';
 import { Formik, FormikValues } from 'formik';
+import CommandeInformation from './CommandeInformation';
+import CommandeModels from './CommandeModels';
+import CommandeTableauActifs from './CommandeTableauActifs';
+import { Commande_Type, Model_Type,LightType, SelectItem, Actif_Commande_Type } from './type';
 
-type Actif_Commande_Type = {
-  id: string;
-  modele: string;
-  description_modele: string;
-  adresse_mac: string;
-  numero_serie: string;
-};
 
-type Model_Type = {
-  nombre: number;
-  modele: string;
-  description_modele: string;
-};
-
-type Commande_Type = {
-  numero_commande: string;
-  etat: string;
-  nb_actif: number;
-  emplacement: string;
-  date_commande: string;
-  actifs: Actif_Commande_Type[];
-};
 
 const steps = ['Information', 'Modèle', 'Article'];
 
@@ -308,308 +275,23 @@ const Commande = () => {
                   {commande && (
                     <Fragment>
                       {activeStep === 0 && (
-                        <Box width={'100%'}>
-                          <div className="w-fit min-w-fit my-8 mx-auto h-[900px] max-h-[900px] overflow-hidden">
-                            <div className="p-4 my-4 bg-slate-100 mx-auto">
-                              <Grid
-                                container
-                                spacing={3}
-                                className="max-w-screen-md p-4 w-full mx-auto"
-                                width={'w-full'}
-                              >
-                                <Grid item xs={12} sm={6}>
-                                  <TextField
-                                    label="Numero commande"
-                                    name="numero_commande"
-                                    className="input-label "
-                                    disabled
-                                    sx={{ width: 300 }}
-                                    value={commande.numero_commande}
-                                  />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                  <TextField
-                                    label="emplacement"
-                                    name="emplacement"
-                                    className="input-label "
-                                    disabled
-                                    sx={{ width: 300 }}
-                                    value={commande.emplacement}
-                                  />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                  <TextField
-                                    label="État"
-                                    name="etat"
-                                    className="input-label "
-                                    disabled
-                                    sx={{ width: 300 }}
-                                    value={commande.etat}
-                                  />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                  <TextField
-                                    label="Nombre actif"
-                                    name="nb_actif"
-                                    className="input-label "
-                                    disabled
-                                    sx={{ width: 300 }}
-                                    value={commande.nb_actif}
-                                  />
-                                </Grid>
-                                <Grid item xs={12} sm={12}>
-                                  <LocalizationProvider
-                                    dateAdapter={AdapterDayjs}
-                                  >
-                                    <DatePicker
-                                      label="Date de commande"
-                                      format="YYYY-MM-DD"
-                                      className="input-label "
-                                      value={
-                                        commande.date_commande
-                                          ? dayjs(commande.date_commande)
-                                          : null
-                                      }
-                                      disabled
-                                      sx={{ width: 300 }}
-                                    />
-                                  </LocalizationProvider>
-                                </Grid>
-                              </Grid>
-                            </div>
-                          </div>
-                        </Box>
+                        <CommandeInformation commande={commande} />
                       )}
-                      {activeStep === 1 && (
-                        <Box width={'100%'}>
-                          <div className="mx-auto my-8 w-10/12 h-[900px] max-h-[900px] overflow-scroll">
-                            <TableContainer component={Paper}>
-                              <Table
-                                sx={{ minWidth: 650, width: '100%' }}
-                                aria-label="simple table"
-                              >
-                                <TableHead>
-                                  <TableRow>
-                                    <TableCell>Nombre</TableCell>
-                                    <TableCell align="left">
-                                      Description modèle
-                                    </TableCell>
-                                    <TableCell align="right">Modèle</TableCell>
-                                  </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                  {modeleCommande &&
-                                    modeleCommande.map((row, index) => (
-                                      <TableRow
-                                        key={row.modele + '_' + index}
-                                        sx={{
-                                          '&:last-child td, &:last-child th': {
-                                            border: 0,
-                                          },
-                                        }}
-                                      >
-                                        <TableCell component="th" scope="row">
-                                          {row.nombre}
-                                        </TableCell>
-                                        <TableCell align="left">
-                                          {row.description_modele}
-                                        </TableCell>
-                                        <TableCell align="right">
-                                          <div className="flex w-full">
-                                            <Autocomplete
-                                              className="right-0 w-full"
-                                              placeholder={'Modele'}
-                                              options={modeles}
-                                              value={modeles.find(
-                                                (modele) =>
-                                                  modele.label === row.modele
-                                              )}
-                                              onChange={(_, newValue) => {
-                                                const updatedModeleCommande = [
-                                                  ...modeleCommande,
-                                                ];
-                                                const rowIndex =
-                                                  updatedModeleCommande.findIndex(
-                                                    (item) =>
-                                                      item.modele === row.modele
-                                                  );
-                                                updatedModeleCommande[
-                                                  rowIndex
-                                                ].modele = newValue
-                                                    ? newValue.label
-                                                    : '';
-                                                setModeleCommande(
-                                                  updatedModeleCommande
-                                                );
-                                                const updatedActifs = commande.actifs.map(actif => {
-                                                  if (actif.description_modele === row.description_modele) {
-                                                    return {
-                                                      ...actif,
-                                                      modele: newValue
-                                                        ? newValue.label
-                                                        : '',
-                                                    };
-                                                  }
-                                                  return actif;
-                                                }
-                                                );
-                                                const updatedCommand = {
-                                                  ...commande,
-                                                  actifs: updatedActifs,
-                                                };
-                                                setCommande(updatedCommand);
-                                              }}
-                                              onInputChange={(
-                                                _,
-                                                newInputValue
-                                              ) => {
-                                                const updatedModeleCommande = [
-                                                  ...modeleCommande,
-                                                ];
-                                                const rowIndex =
-                                                  updatedModeleCommande.findIndex(
-                                                    (item) =>
-                                                      item.modele === row.modele
-                                                  );
-                                                updatedModeleCommande[
-                                                  rowIndex
-                                                ].modele = newInputValue
-                                                    ? newInputValue
-                                                    : '';
-                                                setModeleCommande(
-                                                  updatedModeleCommande
-                                                );
-                                              }}
-                                              getOptionLabel={(option) =>
-                                                option.label
-                                              }
-                                              renderInput={(params) => (
-                                                <TextField
-                                                  {...params}
-                                                  label={'Modele'}
-                                                  variant="outlined"
-                                                />
-                                              )}
-                                            />
-                                            <IconButton
-                                              aria-label="Ajouter"
-                                              onClick={() => {
-                                                addModele(
-                                                  row.description_modele
-                                                );
-                                              }}
-                                            >
-                                              <AddIcon />
-                                            </IconButton>
-                                          </div>
-                                        </TableCell>
-                                      </TableRow>
-                                    ))}
-                                </TableBody>
-                              </Table>
-                            </TableContainer>
-                          </div>
-                        </Box>
+                      {activeStep === 1 && modeleCommande && (
+                        <CommandeModels
+                          modeleCommande={modeleCommande}
+                          setModeleCommande={setModeleCommande}
+                          modeles={modeles}
+                          addModele={addModele}
+                          commande={commande}
+                          setCommande={setCommande}
+                        />
                       )}
                       {activeStep === 2 && (
-                        <Box width={'100%'}>
-                          <div className="mx-auto my-8 w-10/12 h-[900px] max-h-[900px] overflow-scroll">
-                            <TableContainer component={Paper}>
-                              <Table
-                                sx={{ minWidth: 650, width: '100%' }}
-                                aria-label="simple table"
-                              >
-                                <TableHead>
-                                  <TableRow>
-                                    <TableCell>Modèle</TableCell>
-                                    <TableCell align="left">
-                                      Numéro de série
-                                    </TableCell>
-                                    <TableCell align="right">
-                                      Adresse MAC
-                                    </TableCell>
-                                  </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                  {commande.actifs &&
-                                    commande.actifs
-                                      .sort((a, b) =>
-                                        a.modele.localeCompare(b.modele)
-                                      )
-                                      .map((row, index) => (
-                                        <TableRow
-                                          key={row.modele + '_' + index}
-                                          sx={{
-                                            '&:last-child td, &:last-child th':
-                                            {
-                                              border: 0,
-                                            },
-                                          }}
-                                        >
-                                          <TableCell component="th" scope="row">
-                                            {row.modele}
-                                          </TableCell>
-                                          <TableCell align="left">
-                                            <TextField
-                                              defaultValue={row.numero_serie}
-                                              onChange={(event) => {
-                                                const updatedActifs =
-                                                  commande.actifs.map(
-                                                    (actif) => {
-                                                      if (
-                                                        actif.modele ===
-                                                        row.modele
-                                                      ) {
-                                                        return {
-                                                          ...actif,
-                                                          numero_serie:
-                                                            event.target.value,
-                                                        };
-                                                      }
-                                                      return actif;
-                                                    }
-                                                  );
-                                                const updatedCommand = commande;
-                                                updatedCommand.actifs =
-                                                  updatedActifs;
-                                                setCommande(updatedCommand);
-                                              }}
-                                            />
-                                          </TableCell>
-                                          <TableCell align="right">
-                                            <TextField
-                                              defaultValue={row.adresse_mac}
-                                              onChange={(event) => {
-                                                const updatedActifs =
-                                                  commande.actifs.map(
-                                                    (actif) => {
-                                                      if (
-                                                        actif.modele ===
-                                                        row.modele
-                                                      ) {
-                                                        return {
-                                                          ...actif,
-                                                          adresse_mac:
-                                                            event.target.value,
-                                                        };
-                                                      }
-                                                      return actif;
-                                                    }
-                                                  );
-                                                const updatedCommand = commande;
-                                                updatedCommand.actifs =
-                                                  updatedActifs;
-                                                setCommande(updatedCommand);
-                                              }}
-                                            />
-                                          </TableCell>
-                                        </TableRow>
-                                      ))}
-                                </TableBody>
-                              </Table>
-                            </TableContainer>
-                          </div>
-                        </Box>
+                        <CommandeTableauActifs
+                          commande={commande}
+                          setCommande={setCommande}
+                        />
                       )}
                     </Fragment>
                   )}

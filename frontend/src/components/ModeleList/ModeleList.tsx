@@ -11,7 +11,7 @@ const ModeleList = () => {
 
   let lastClickTime = 0; // To track double-clicks
 
-    const handleRowClick = (
+  const handleRowClick = (
     _rowData: string[],
     rowMeta: { dataIndex: number; rowIndex: number }
   ) => {
@@ -39,7 +39,7 @@ const ModeleList = () => {
   };
   const columns = [
     { name: 'id', label: 'Id', options: { display: false } },
-    { name: 'nom', header: 'Nom', enableColumnFilter: false },
+    { name: 'nom', label: 'Nom', enableColumnFilter: false },
     {
       name: 'categorie',
       label: 'Catégorie',

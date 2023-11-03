@@ -35,6 +35,15 @@ class ClientSeeder extends Seeder
             'id_actif' => 1,
             'id_emplacement' => 3,
         ]);
+        DB::table('client')->insert([
+            'matricule' => '10011111',
+            'nom' => 'Gagnon',
+            'prenom' => 'Julie',
+            'id_poste' => 1,
+            'id_type_client' => 1,
+            'id_actif' => 1,
+            'id_emplacement' => 3,
+        ]);
 
         DB::table('client')->insert([
             'matricule' => '10015519',
@@ -85,7 +94,7 @@ class ClientSeeder extends Seeder
                 'id_actif' => 5,
                 'id_emplacement' => 4,
             ],
-           
+
             [
                 'matricule' => '10015513',
                 'nom' => 'Davis',
@@ -104,7 +113,7 @@ class ClientSeeder extends Seeder
                 'id_actif' => 8,
                 'id_emplacement' => 4,
             ],
-            
+
             [
                 'matricule' => '10015518',
                 'nom' => 'Kim',
@@ -123,7 +132,7 @@ class ClientSeeder extends Seeder
                 'id_actif' => 11,
                 'id_emplacement' => 3,
             ],
-           
+
             [
                 'matricule' => '10015522',
                 'nom' => 'Brown',
@@ -151,7 +160,7 @@ class ClientSeeder extends Seeder
                 'id_actif' => 15,
                 'id_emplacement' => 3,
             ],
-            
+
             [
                 'matricule' => '10015527',
                 'nom' => 'Kim',

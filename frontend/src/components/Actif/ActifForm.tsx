@@ -128,6 +128,7 @@ const ActifForm = ({
             name="assigne_a"
             component={CustomSelect}
             options={locataires}
+            needsId={true}
             label="Assigné à"
             isClearable={true}
           />

@@ -8,6 +8,7 @@ interface SearchableSelectProps extends FieldProps {
   options: SelectItem[];
   label: string;
   isClearable?: boolean;
+  needsId?: boolean;
 }
 
 const CustomSelect = ({
@@ -16,6 +17,7 @@ const CustomSelect = ({
   options,
   label,
   isClearable = false,
+  needsId = false,
 }: SearchableSelectProps) => {
   const [inputValue, setInputValue] = useState<string>('');
   const [value, setValue] = useState<SelectItem | null>(
@@ -29,7 +31,10 @@ const CustomSelect = ({
       sx={{ width: 300 }}
       disableClearable={!isClearable}
       defaultValue={options[field.value - 1]}
-      getOptionLabel={(option) => option.label}
+      getOptionLabel={(option) => {
+        if (needsId) return option.id + ' - ' + option.label;
+        return option.label;
+      }}
       inputValue={inputValue}
       value={value}
       onChange={(_, newValue) => {

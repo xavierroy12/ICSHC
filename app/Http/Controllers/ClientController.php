@@ -157,7 +157,7 @@ class ClientController extends Controller
     {
         $clients = Client::All()->map(function ($client) {
             return [
-                "id" => $client->id,
+                "id" => $client->matricule,
                 "nom" => $client->prenom . ' ' . $client->nom,
             ];
         });        return response()->json($clients);
@@ -170,6 +170,7 @@ class ClientController extends Controller
             function ($client) {
                 return [
                     "id" => $client->id,
+                    "matricule" => $client->matricule,
                     "nom" => $client->prenom . ' ' . $client->nom, // Concatenate prenom and nom
                     'actifs' =>  $client->actifs->pluck('nom')->implode(', '),
                     'emplacement' => $client->emplacement->nom ?? 'Aucun',

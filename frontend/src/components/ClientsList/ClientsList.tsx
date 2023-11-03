@@ -36,6 +36,14 @@ const ClienList = () => {
 
   const columns = [
     {
+      name: 'matricule',
+      label: 'Matricule',
+      options: {
+        filter: false,
+        sort: true,
+      },
+    },
+    {
       name: 'nom',
       label: 'Nom',
       options: {

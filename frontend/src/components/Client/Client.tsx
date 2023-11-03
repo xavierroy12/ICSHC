@@ -35,6 +35,7 @@ type Client_Type = {
   id: number;
   nom: string;
   actifs: Actif[];
+  matricule: string;
   emplacement: Emplacement_Type;
   poste: Poste_Type;
   type_client: Type_Client_Type;
@@ -130,6 +131,16 @@ const Client = () => {
                       </Grid>
                       <Grid item xs={12} sm={6}>
                         <TextField
+                          label="Matricule"
+                          name="matricule"
+                          className="input-label "
+                          disabled
+                          sx={{ width: 300 }}
+                          value={client.matricule}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
                           label="emplacement"
                           name="emplacement"
                           className="input-label "
@@ -158,7 +169,7 @@ const Client = () => {
                           value={client.type_client.nom}
                         />
                       </Grid>
-                      <Grid item xs={12} sm={12}>
+                      <Grid item xs={12} sm={6}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DatePicker
                             label="Date de création"

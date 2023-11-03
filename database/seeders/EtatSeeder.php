@@ -22,7 +22,7 @@ class EtatSeeder extends Seeder
         ]);
 
         DB::table('etat')->insert([
-            'nom' => 'Annulée',
+            'nom' => 'Reçu',
         ]);
     }
 }

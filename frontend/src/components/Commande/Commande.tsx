@@ -91,7 +91,7 @@ const Commande = () => {
     if (allStepsCompleted()) handleSubmit();
     let newActiveStep =
       isLastStep() && !allStepsCompleted()
-        ? steps.findIndex((step, i) => !(i in completed))
+        ? steps.findIndex((_step, i) => !(i in completed))
         : activeStep + 1;
     if (newActiveStep > 2) newActiveStep = 0;
     setActiveStep(newActiveStep);
@@ -436,11 +436,28 @@ const Commande = () => {
                                                 updatedModeleCommande[
                                                   rowIndex
                                                 ].modele = newValue
-                                                  ? newValue.label
-                                                  : '';
+                                                    ? newValue.label
+                                                    : '';
                                                 setModeleCommande(
                                                   updatedModeleCommande
                                                 );
+                                                const updatedActifs = commande.actifs.map(actif => {
+                                                  if (actif.description_modele === row.description_modele) {
+                                                    return {
+                                                      ...actif,
+                                                      modele: newValue
+                                                        ? newValue.label
+                                                        : '',
+                                                    };
+                                                  }
+                                                  return actif;
+                                                }
+                                                );
+                                                const updatedCommand = {
+                                                  ...commande,
+                                                  actifs: updatedActifs,
+                                                };
+                                                setCommande(updatedCommand);
                                               }}
                                               onInputChange={(
                                                 _,
@@ -457,8 +474,8 @@ const Commande = () => {
                                                 updatedModeleCommande[
                                                   rowIndex
                                                 ].modele = newInputValue
-                                                  ? newInputValue
-                                                  : '';
+                                                    ? newInputValue
+                                                    : '';
                                                 setModeleCommande(
                                                   updatedModeleCommande
                                                 );
@@ -524,9 +541,9 @@ const Commande = () => {
                                           key={row.modele + '_' + index}
                                           sx={{
                                             '&:last-child td, &:last-child th':
-                                              {
-                                                border: 0,
-                                              },
+                                            {
+                                              border: 0,
+                                            },
                                           }}
                                         >
                                           <TableCell component="th" scope="row">

@@ -49,18 +49,19 @@ class CommandeController extends Controller
                     "id" => $actif->id,
                     'numero_serie' => $actif->numero_serie,
                     'adresse_mac' => $actif->adresse_mac,
-                    'modele' => $actif->modele->nom,
+                    'modele' => $actif->modele->nom ?? '',
                     'description_modele' => $actif->modele_descriptif
                 ];
             }
         );
 
-        $c = Commande::where('numero_commande', $numero_commande)->first();
+        $c = Commande::with('emplacement')->where('numero_commande', $numero_commande)->first();
+ 
         $commande = [
             "numero_commande" => $c->numero_commande,
             "etat" => $c->etat->nom,
             "nb_actif"=> $c->nb_actif,
-            "emplacement" => $c->emplacement_prevu,
+            "emplacement" => $c->emplacement->nom,
             "date_commande" => $c->date_commande,
             "actifs" => $actif
         ];
@@ -101,11 +102,11 @@ class CommandeController extends Controller
 
         $commande = Commande::where('numero_commande', $numero_commande)->first();
         $commande->id_etat = 3;
-        $this->updateRemote($commande->numero_commande, $commande->id_etat);
+        //$this->updateRemote($commande->numero_commande, $commande->id_etat);
         $commande->save();
         return response()->json($commande);
     }
-    public function updateRemote($numero_commande, $etat)
+    /*public function updateRemote($numero_commande, $etat)
     {
         //change URL
         $url = "http://localhost:8000/api/commandes/".$numero_commande;
@@ -120,7 +121,7 @@ class CommandeController extends Controller
         //verify how to put data in php
         $context  = stream_context_create($options);
         return file_get_contents($url, false, $context);
-    }
+    }*/
     /**
      * Remove the specified resource from storage.
      */
@@ -136,12 +137,12 @@ class CommandeController extends Controller
 
     public function listShow()
     {
-        $commandes = Commande::with(['etat'])->get()->map(function ($commande) {
+        $commandes = Commande::with(['etat', 'emplacement'])->get()->map(function ($commande) {
             return [
                 "numero_commande" => $commande->numero_commande,
                 "etat" => $commande->etat->nom,
                 "nb_actif"=> $commande->nb_actif,
-                "emplacement" => $commande->emplacement_prevu,
+                "emplacement" => $commande->emplacement->nom,
                 "date_commande" => $commande->date_commande,
             ];
         });

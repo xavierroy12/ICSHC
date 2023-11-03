@@ -29,7 +29,7 @@ const UtilisateurList = () => {
   };
   const columns = [
     { name: 'id', label: 'Id', options: { display: false } },
-    { name: 'nom', header: 'Nom', enableColumnFilter: false },
+    { name: 'nom', label: 'Nom', enableColumnFilter: false },
     {
       name: 'emplacement',
       label: 'Emplacement',
@@ -40,7 +40,7 @@ const UtilisateurList = () => {
     },
     {
       name: 'role',
-      label: 'Role',
+      label: 'Rôle',
       options: {
         filter: true,
         sort: true,

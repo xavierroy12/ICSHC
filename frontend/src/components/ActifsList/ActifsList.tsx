@@ -158,7 +158,7 @@ const ActifsList = () => {
     print: false,
     download: false,
 
-    onFilterChange: (changedColumnIndex: any, displayData: string[][]) => {
+    onFilterChange: (_changedColumnIndex: any, displayData: string[][]) => {
       setSelectedFilters({
         modele: displayData[2][0],
         categorie: displayData[3][0],
@@ -263,18 +263,18 @@ const ActifsList = () => {
 
     // First, check if a filter with the same label already exists
     fetch(window.name + `api/filter/checkLabelExists?label=${label}&id_user=${id_user}`, {
-        method: 'GET',
+      method: 'GET',
     })
       .then((response) => response.json())
       .then((result) => {
         if (result.exists) {
-            console.log('result', result);
-            console.log(label)
+          console.log('result', result);
+          console.log(label)
           // Alert the user that the label already exists
           alert('Un filtre portant ce nom existe déjà. Veuillez entrer un autre nom svp.');
         } else {
-            console.log('result', result);
-            console.log(label)
+          console.log('result', result);
+          console.log(label)
           // If the label is unique, proceed to save it
           const data = {
             id_user: id_user,
@@ -423,8 +423,8 @@ const ActifsList = () => {
 
                 const response = await fetch(
                   window.name +
-                    'api/filter/getFiltersByLabel?label=' +
-                    selectedLabel
+                  'api/filter/getFiltersByLabel?label=' +
+                  selectedLabel
                 );
 
                 if (response.ok) {

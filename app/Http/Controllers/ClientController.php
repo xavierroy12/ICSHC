@@ -118,6 +118,8 @@ class ClientController extends Controller
     public function show($id)
     {
         $client = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])->find($id);
+        $client->setAttribute('nom', $client->prenom . ' ' . $client->nom);
+        
 
         return response()->json($client);
     }

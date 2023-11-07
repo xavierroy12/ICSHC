@@ -4,29 +4,34 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import { Divider } from '@mui/material';
 
+import Logo from '../../../../resources/img/Logo.png';
+
 const NavBar = () => {
   return (
     <AppBar position="static">
       <Toolbar>
+      <img src={Logo} alt="Logo" className="mr-16 w-64 h-24" />
         <Link to={`/`}>
           <Button color="inherit">
-            <span className="font-semibold text-xl tracking-tight">ICSSHC</span>
+            <span className="hover:text-blue-900 font-semibold text-xl tracking-tight">ICSSHC</span>
           </Button>
         </Link>
         <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+        <Divider orientation="vertical" flexItem color="white" />
           <Button
             component={Link}
             to={`/dashboard`}
             color="inherit"
-            className="mr-4"
+            className="hover:text-blue-900 mr-4"
           >
-            Dashboard
+            Tableau de bord
           </Button>
+
           <Button
             component={Link}
             to={`/actifs`}
             color="inherit"
-            className="mr-4"
+            className="hover:text-blue-900 mr-4"
           >
             Actifs
           </Button>
@@ -34,7 +39,7 @@ const NavBar = () => {
             component={Link}
             to={`/modeles`}
             color="inherit"
-            className="mr-4"
+            className="hover:text-blue-900 mr-4"
           >
             Modeles
           </Button>
@@ -42,7 +47,7 @@ const NavBar = () => {
             component={Link}
             to={`/commandes`}
             color="inherit"
-            className="mr-4"
+            className="hover:text-blue-900 mr-4"
           >
             Commandes
           </Button>
@@ -50,7 +55,7 @@ const NavBar = () => {
             component={Link}
             to={`/clients`}
             color="inherit"
-            className="mr-4"
+            className="hover:text-blue-900 mr-4"
           >
             Clients
           </Button>
@@ -59,7 +64,7 @@ const NavBar = () => {
             component={Link}
             to={`/utilisateurs`}
             color="inherit"
-            className="mr-4"
+            className="hover:text-blue-900 mr-4"
           >
             Utilisateurs
           </Button>
@@ -76,7 +81,7 @@ const NavBar = () => {
             component={Link}
             to={`/dashboard`}
             color="inherit"
-            className="mr-4"
+            className="hover:text-blue-900 mr-4"
           >
             Sync
           </Button>

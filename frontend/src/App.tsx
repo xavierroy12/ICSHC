@@ -12,23 +12,20 @@ import UtilisateurList from './components/UtilisateurList';
 import Utilisateur from './components/Utilisateur';
 import CommandesList from './components/CommandesList';
 import Commande from './components/Commande';
+import ActifAdd from './components/ActifAdd/ActifAdd';
 if (process.env.NODE_ENV === 'development') {
   window.name = 'http://localhost:8000/';
 } else {
   window.name = 'http://10.0.22.24:8080/';
 }
 
-
-
 function App() {
-
   console.log('App.tsx');
   //enlever pour le split 3
   //localStorage.setItem('id_user', '2');
   const cookie = document.cookie
     .split(';')
     .find((cookie) => cookie.trim().startsWith('CookieLogged=')); // Get the cookie
-
 
   //Bypass Login for dev purposes, might want to remove that later
   if (cookie === 'CookieLogged=Minou') {
@@ -51,9 +48,7 @@ function App() {
             if (data.success === true) {
               console.log('Token is valid');
               console.log(data.utilisateur);
-
-            }
-            else {
+            } else {
               console.log('Token is invalid');
               return <Login />;
             }
@@ -75,6 +70,7 @@ function App() {
             <Route path="/actifs" element={<ActifsList />} />
             <Route path="/actifs/modify" element={<Actifs />} />
             <Route path="/actif/:id" element={<Actif />} />
+            <Route path="/actif" element={<ActifAdd />} />
 
             <Route path="/modeles" element={<ModeleList />} />
             <Route path="/modele/:id" element={<Modele />} />

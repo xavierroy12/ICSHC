@@ -26,8 +26,8 @@ return new class extends Migration
             $table->unsignedBigInteger('id_statut');
             $table->unsignedBigInteger('id_emplacement')->nullable();
             $table->unsignedBigInteger('id_proprietaire')->nullable();
-            $table->unsignedBigInteger('id_utilisation');
-            $table->unsignedBigInteger('numero_commande');
+            $table->unsignedBigInteger('id_utilisation')->nullable();
+            $table->unsignedBigInteger('numero_commande')->nullable();
             $table->unsignedBigInteger('id_client')->nullable();
             $table->foreign('numero_commande')->references('numero_commande')->on('commande');
             $table->foreign('id_modele')->references('id')->on('modele');

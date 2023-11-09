@@ -31,6 +31,8 @@ Route::middleware('throttle:5000,1')->group(function () {
     Route::post('/actifs', [ActifController::class, 'updateMultiple']);
     Route::post('/actif', [ActifController::class, 'store']);
     Route::post('/actif/{id}', [ActifController::class, 'update']);
+    Route::post('/actifs/create', [ActifController::class, 'createMultiple']);
+
 
     Route::get('/client/{id}', [ClientController::class, 'show']);
     Route::get('/clients', [ClientController::class, 'showAll']);

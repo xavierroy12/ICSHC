@@ -230,7 +230,7 @@ class ActifController extends Controller
                     'modele' => $actif->modele->nom,
                     'categorie' => $actif->modele->categorie->nom,
                     'statut' => $actif->statut->nom,
-                    'client' => $actif->client->prenom . ' ' . $actif->client->nom ?? 'Aucun',
+                    'client' => $actif->client ? ($actif->client->prenom . ' ' . $actif->client->nom) : 'Aucun',
                     'emplacement' => $actif->emplacement->nom,
 
                 ];
@@ -267,14 +267,14 @@ class ActifController extends Controller
             'id_modele' => $actif->modele->id,
             'id_categorie' => $actif->modele->categorie->id,
             'id_statut' => $actif->statut->id,
-            'id_utilisation' => $actif->utilisation->id,
-            'id_proprietaire' => $actif->proprietaire->id,
+            'id_utilisation' => $actif->utilisation->id ?? "Aucun",
+            'id_proprietaire' => $actif->proprietaire->id ?? "Aucun",
             'id_emplacement' => $actif->emplacement->id,
-            'id_client' => $actif->client->id ?? null,
+            'id_client' => $actif->client->id ?? "Aucun",
             'en_entrepot' => $actif->en_entrepot,
             'date_retour' => $actif->date_retour,
             'note' => $actif->note,
-            'numero_commande' => $actif->numero_commande,
+            'numero_commande' => $actif->numero_commande?? "Aucun",
         ];
         return response()->json($data);
     }
@@ -361,6 +361,21 @@ class ActifController extends Controller
 
         return null;
     }
-
+    Public function createMultiple(Request $request)
+    {
+        $data = $request->all();
+        $id_modele = Modele::where('nom', $data[0]['modele'])->first()->id;
+        foreach($data as $newActif)
+        {
+            $actif = new Actif;
+            $actif->numero_serie = $newActif['numero_serie'];
+            $actif->adresse_mac = $newActif['adresse_mac'];
+            $actif->id_modele = $id_modele;
+            $actif->en_entrepot = true;
+            $actif->id_statut = 3;
+            $actif->id_emplacement = 1;
+            $actif->save();
+        }
+    }
 
 }

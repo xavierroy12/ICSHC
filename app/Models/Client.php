@@ -22,6 +22,7 @@ class Client extends Model
         'actifs',
         'id_type_client',
         'id_emplacement',
+        'inactif',
     ];
     public function actifs()
     {

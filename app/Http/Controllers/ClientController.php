@@ -71,8 +71,15 @@ class ClientController extends Controller
                 //skip the check
             } else {
                 if ($emplacement !== null) {
-                    $id_emplacement = $emplacement->id;
-                    $clientData['id_emplacement'] = $id_emplacement;
+                    if(¢client["LIEU"] == "---"	){
+                        $clientData['id_emplacement'] = null;
+                        $clientData['inactif'] = true;
+                    }
+                    else{
+                        $id_emplacement = $emplacement->id;
+                        $clientData['id_emplacement'] = $id_emplacement;
+                    }
+
                 }
             }
 

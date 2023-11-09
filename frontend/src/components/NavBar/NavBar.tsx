@@ -13,7 +13,7 @@ const NavBar = () => {
       <img src={Logo} alt="Logo" className="mr-16 w-64 h-24" />
         <Link to={`/`}>
           <Button color="inherit">
-            <span className="hover:text-blue-900 font-semibold text-xl tracking-tight">ICSSHC</span>
+            <span className=" font-semibold text-xl tracking-tight">ICSSHC</span>
           </Button>
         </Link>
         <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
@@ -22,7 +22,7 @@ const NavBar = () => {
             component={Link}
             to={`/dashboard`}
             color="inherit"
-            className="hover:text-blue-900 mr-4"
+            className=" mr-4"
           >
             Tableau de bord
           </Button>
@@ -31,7 +31,7 @@ const NavBar = () => {
             component={Link}
             to={`/actifs`}
             color="inherit"
-            className="hover:text-blue-900 mr-4"
+            className=" mr-4"
           >
             Actifs
           </Button>
@@ -39,7 +39,7 @@ const NavBar = () => {
             component={Link}
             to={`/modeles`}
             color="inherit"
-            className="hover:text-blue-900 mr-4"
+            className=" mr-4"
           >
             Modeles
           </Button>
@@ -47,7 +47,7 @@ const NavBar = () => {
             component={Link}
             to={`/commandes`}
             color="inherit"
-            className="hover:text-blue-900 mr-4"
+            className=" mr-4"
           >
             Commandes
           </Button>
@@ -55,7 +55,7 @@ const NavBar = () => {
             component={Link}
             to={`/clients`}
             color="inherit"
-            className="hover:text-blue-900 mr-4"
+            className=" mr-4"
           >
             Clients
           </Button>
@@ -64,7 +64,7 @@ const NavBar = () => {
             component={Link}
             to={`/utilisateurs`}
             color="inherit"
-            className="hover:text-blue-900 mr-4"
+            className=" mr-4"
           >
             Utilisateurs
           </Button>
@@ -81,7 +81,7 @@ const NavBar = () => {
             component={Link}
             to={`/dashboard`}
             color="inherit"
-            className="hover:text-blue-900 mr-4"
+            className=" mr-4"
           >
             Sync
           </Button>

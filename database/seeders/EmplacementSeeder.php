@@ -14,6 +14,13 @@ class EmplacementSeeder extends Seeder
     public function run(): void
     {
         DB::table('emplacement')->insert([
+            'matricule' => '000',
+            'nom' => 'Lieu à déterminer',
+            'numero_civique' => 000,
+            'adresse' => 'Non-applicable',
+        ]);
+
+        DB::table('emplacement')->insert([
             'matricule' => '068',
             'nom' => '068 - École Du Parchemin',
             'numero_civique' => 162,

@@ -71,15 +71,8 @@ class ClientController extends Controller
                 //skip the check
             } else {
                 if ($emplacement !== null) {
-                    if(¢client["LIEU"] == "---"	){
-                        $clientData['id_emplacement'] = null;
-                        $clientData['inactif'] = true;
-                    }
-                    else{
-                        $id_emplacement = $emplacement->id;
-                        $clientData['id_emplacement'] = $id_emplacement;
-                    }
-
+                    $id_emplacement = $emplacement->id;
+                    $clientData['id_emplacement'] = $id_emplacement;
                 }
             }
 
@@ -126,7 +119,6 @@ class ClientController extends Controller
     {
         $client = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])->find($id);
         $client->setAttribute('nom', $client->prenom . ' ' . $client->nom);
-
 
         return response()->json($client);
     }
@@ -219,4 +211,75 @@ class ClientController extends Controller
 
         return response()->json($client);
     }
+
+    // Matériel trop vieux attribué à un client
+    private function getOlderActifs()
+    {
+        $fiveYearsAgo = now()->subYears(5);
+
+        return Client::whereHas('actifs', function ($query) use ($fiveYearsAgo) {
+            $query->whereDate('actif.created_at', '<', $fiveYearsAgo);
+        })->get();
+    }
+
+    // Personne ayant plus de 1 appareil
+    private function getMoreThanOneActifs()
+    {
+        return Client::has('actifs', '>', 1)->get();
+    }
+
+
+    // Personne que le lieu d’attribution ne concorde pas avec l’appareil
+    private function getMismatchedActifs()
+    {
+        return Client::whereHas('actifs', function ($query) {
+            $query->whereColumn('actif.id_emplacement', '!=', 'client.id_emplacement');
+        })->get();
+    }
+
+    // Personne ayant des appareils et ne travaillant plus pour vous
+    private function getInnactiveActifs()
+    {
+        return Client::where('inactif', true)->whereHas('actifs')->get();
+    }
+
+
+    public function getAllAlerts()
+    {
+        error_log('getAllAlerts');
+        $alerts = [];
+
+        // Matériel trop vieux attribué à un client (alerte jaune)
+        $olderActifs = $this->getOlderActifs();
+        if (!$olderActifs->isEmpty()) {
+            $alerts[] = ['type' => 'warning', 'message' => 'Matériel trop vieux attribué à un client', 'data' => $olderActifs];
+        }
+
+        // Personne ayant plus de 1 appareil (alerte jaune)
+        $moreThanOneActifs = $this->getMoreThanOneActifs();
+        if (!$moreThanOneActifs->isEmpty()) {
+            $alerts[] = ['type' => 'warning', 'message' => 'Client ayant plus d\'un appareil', 'data' => $moreThanOneActifs];
+        }
+
+        // Personne que le lieu d’attribution ne concorde pas avec l’appareil (alerte rouge)
+        $mismatchedActifs = $this->getMismatchedActifs();
+        if (!$mismatchedActifs->isEmpty()) {
+            $alerts[] = ['type' => 'error', 'message' => 'Client que le lieu d\'attribution ne concorde pas avec l\'appareil', 'data' => $mismatchedActifs];
+        }
+
+        // Personne ayant des appareils et ne travaillant plus pour vous (alerte rouge)
+        $innactiveActifs = $this->getInnactiveActifs();
+        if (!$innactiveActifs->isEmpty()) {
+            $alerts[] = ['type' => 'error', 'message' => 'Client innactif dans le système ayant des appareils', 'data' => $innactiveActifs];
+        }
+
+        // If no alerts, return success message
+        if (empty($alerts)) {
+            $alerts[] = ['type' => 'success', 'message' => 'Aucun problème détecté!', 'data' => []];
+        }
+
+        return response()->json($alerts);
+    }
+
+
 }

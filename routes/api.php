@@ -97,6 +97,9 @@ Route::middleware('throttle:5000,1')->group(function () {
     Route::get('/clientJson', [ClientController::class, 'listClientScolago']);
     Route::get('/clientJsonStore', [ClientController::class, 'storeListClientScolage']);
 
+
+
+    Route::get('/getAllAlerts', [ClientController::class, 'getAllAlerts']);
 });
 
 

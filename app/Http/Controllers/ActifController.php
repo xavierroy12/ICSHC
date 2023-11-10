@@ -230,7 +230,7 @@ class ActifController extends Controller
                     'modele' => $actif->modele->nom,
                     'categorie' => $actif->modele->categorie->nom,
                     'statut' => $actif->statut->nom,
-                    'client' => $actif->client->prenom . ' ' . $actif->client->nom ?? 'Aucun',
+                    'client' => $actif->client ? ($actif->client->prenom . ' ' . $actif->client->nom) : 'Aucun',
                     'emplacement' => $actif->emplacement->nom,
 
                 ];

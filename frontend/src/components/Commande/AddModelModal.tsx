@@ -31,6 +31,8 @@ const AddModelModal = ({
   };
 
   const handleSubmitModele = (values: FormikValues) => {
+    const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
+
     const updatedData = {
       nom: values.nom,
       id_type_modele: values.id_type_modele?.id || values.id_type_modele,
@@ -44,6 +46,8 @@ const AddModelModal = ({
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-User-Action-Id': id_user // send the user id in a custom header
+
       },
       body: JSON.stringify(updatedData),
     })

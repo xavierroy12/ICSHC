@@ -15,9 +15,12 @@ class Log extends Model
         'url',
         'method',
         'action',
-        'user',
-        'client',
-        'actif',
-        'location',
+        'field',
+        'old_value',
+        'new_value',
+        'id_user',
+        'id_client',
+        'id_actif',
+        'id_emplacement',
     ];
 }

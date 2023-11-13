@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Cookie;
 use App\Models\Utilisateur;
 use App\Models\Client;
 use Illuminate\Http\Request;
@@ -85,11 +87,13 @@ class UtilisateurController extends Controller
             return FALSE;
         }
     }
-    //Verifiy if the token exists in the database
+
+
+
     public function tokenExists($token)
     {
         error_log("CookieTOken  $token");
-        $tokenWithChar =  $token . "==";
+        $tokenWithChar = $token . "==";
 
         $utilisateur = Utilisateur::where('token', $tokenWithChar)->first();
 

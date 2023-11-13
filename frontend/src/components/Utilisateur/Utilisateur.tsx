@@ -54,13 +54,18 @@ const Utilisateur = () => {
     id_emplacement: utilisateur?.id_emplacement,
   };
   const handleSubmit = (values: FormikValues) => {
+    const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
+
     const data = {
       id_role: values.id_role.id || values.id_role,
       id_emplacement: values.id_emplacement.id || values.id_emplacement,
     };
     fetch(window.name + `api/utilisateur/${id}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-User-Action-Id': id_user // send the user id in a custom header
+      },
       body: JSON.stringify(data),
     })
       .then((response) => response.json())

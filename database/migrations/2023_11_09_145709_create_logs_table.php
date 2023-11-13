@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -16,10 +15,13 @@ return new class extends Migration
             $table->string('url');
             $table->string('method');
             $table->string('action');
-            $table->string('user')->nullable();
-            $table->string('client')->nullable();
-            $table->string('actif')->nullable();
-            $table->string('location')->nullable();
+            $table->string('field')->nullable();
+            $table->string('old_value')->nullable();
+            $table->string('new_value')->nullable();
+            $table->string('id_user')->nullable();
+            $table->string('id_client')->nullable();
+            $table->string('id_actif')->nullable();
+            $table->string('id_emplacement')->nullable();
             $table->timestamps();
         });
     }

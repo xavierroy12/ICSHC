@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { ButtonBase } from '@mui/material';
 
 const Dashboard = () => {
   const [allAlerts, setAllAlerts] = useState<any[]>([]);
@@ -50,11 +51,11 @@ const Dashboard = () => {
   const getAlertTitle = (type: string) => {
     switch (type) {
       case 'error':
-        return 'Erreur';
+        return 'Erreur!';
       case 'warning':
-        return 'Attention';
+        return 'Attention!';
       case 'success':
-        return 'Succès';
+        return 'Succès!';
       default:
         return '';
     }
@@ -68,30 +69,30 @@ const Dashboard = () => {
         </Typography>
       </div>
       {allAlerts.map((alert, index) => (
+        <ButtonBase className="w-2/5 mt-4">
         <Alert
           key={index}
           variant="filled"
           severity={alert.type}
-          className="w-2/5 mt-4"
+          className="w-full mt-4"
         >
-          <AlertTitle className="flex items-center">
-            <strong>{getAlertTitle(alert.type)}!</strong>
+          <AlertTitle className="flex items-start">
+            <strong>{getAlertTitle(alert.type)}</strong>
             <IconButton
               aria-label="expand"
               size="small"
               onClick={() => handleClick(index)}
-              className="ml-auto"
               color="inherit"
             >
               <ExpandMoreIcon />
             </IconButton>
           </AlertTitle>
-        <Typography variant="body1">
+        <Typography className='flex'>
             {`${alert.message}: ${alert.data.length}`}
         </Typography>
-          <Collapse in={open[index]}>
+          <Collapse  in={open[index]}>
             {alert.data.map((item: any) => (
-              <Typography key={item.matricule} className="mb-2">
+              <Typography className='flex' key={item.matricule}>
                 {`${item.matricule} - ${item.prenom} ${item.nom} - ${
                   item.courriel || 'courriel@bidon.ca'
                 }`}
@@ -99,6 +100,7 @@ const Dashboard = () => {
             ))}
           </Collapse>
         </Alert>
+        </ButtonBase>
       ))}
     </Box>
   );

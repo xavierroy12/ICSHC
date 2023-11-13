@@ -218,7 +218,7 @@ class ClientController extends Controller
         $fiveYearsAgo = now()->subYears(5);
 
         return Client::whereHas('actifs', function ($query) use ($fiveYearsAgo) {
-            $query->whereDate('actif.created_at', '<', $fiveYearsAgo);
+            $query->whereDate('actif.created_at', '<=', $fiveYearsAgo);
         })->get();
     }
 
@@ -249,6 +249,18 @@ class ClientController extends Controller
         error_log('getAllAlerts');
         $alerts = [];
 
+        // Personne que le lieu d’attribution ne concorde pas avec l’appareil (alerte rouge)
+        $mismatchedActifs = $this->getMismatchedActifs();
+        if (!$mismatchedActifs->isEmpty()) {
+            $alerts[] = ['type' => 'error', 'message' => 'Client que le lieu d\'attribution ne concorde pas avec celui de l\'appareil', 'data' => $mismatchedActifs];
+        }
+
+        // Personne ayant des appareils et ne travaillant plus pour vous (alerte rouge)
+        $innactiveActifs = $this->getInnactiveActifs();
+        if (!$innactiveActifs->isEmpty()) {
+            $alerts[] = ['type' => 'error', 'message' => 'Client innactif dans le système ayant un ou des appareils', 'data' => $innactiveActifs];
+        }
+
         // Matériel trop vieux attribué à un client (alerte jaune)
         $olderActifs = $this->getOlderActifs();
         if (!$olderActifs->isEmpty()) {
@@ -259,18 +271,6 @@ class ClientController extends Controller
         $moreThanOneActifs = $this->getMoreThanOneActifs();
         if (!$moreThanOneActifs->isEmpty()) {
             $alerts[] = ['type' => 'warning', 'message' => 'Client ayant plus d\'un appareil', 'data' => $moreThanOneActifs];
-        }
-
-        // Personne que le lieu d’attribution ne concorde pas avec l’appareil (alerte rouge)
-        $mismatchedActifs = $this->getMismatchedActifs();
-        if (!$mismatchedActifs->isEmpty()) {
-            $alerts[] = ['type' => 'error', 'message' => 'Client que le lieu d\'attribution ne concorde pas avec l\'appareil', 'data' => $mismatchedActifs];
-        }
-
-        // Personne ayant des appareils et ne travaillant plus pour vous (alerte rouge)
-        $innactiveActifs = $this->getInnactiveActifs();
-        if (!$innactiveActifs->isEmpty()) {
-            $alerts[] = ['type' => 'error', 'message' => 'Client innactif dans le système ayant des appareils', 'data' => $innactiveActifs];
         }
 
         // If no alerts, return success message

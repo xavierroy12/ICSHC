@@ -3,19 +3,26 @@ import MUIDataTable, { MUIDataTableOptions } from 'mui-datatables';
 import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Client } from './type';
+import ToggleButton from '@mui/material/ToggleButton';
 
 const ClienList = () => {
   const [clients, setClients] = useState<Client[]>([]);
+  const [showInactif, setShowInactif] = useState(false);
+  const [inactifClients, setInactifClients] = useState<Client[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   let lastClickTime = 0; // To track double-clicks
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(window.name + 'api/clients/list')
-      .then((response) => response.json())
-      .then((fetchedClients) => {
+    Promise.all([
+      fetch(window.name + 'api/clients/list'),
+      fetch(window.name + 'api/clients/inactif')
+    ])
+      .then((responses) => Promise.all(responses.map((res) => res.json())))
+      .then(([fetchedClients, fetchedInactif]) => {
         setClients(fetchedClients);
+        setInactifClients(fetchedInactif);
         setIsLoading(false);
       });
   }, []);
@@ -112,9 +119,21 @@ const ClienList = () => {
         </div>
       ) : (
         <div className="w-11/12 mx-auto mt-10">
+
+    <div className="mt-14 mb-4 ml-4">
+        <ToggleButton
+          selected={showInactif}
+          value={showInactif}
+          onChange={() => setShowInactif(!showInactif)}
+          size="small"
+          color="primary"
+        >
+          Voir Inactif
+        </ToggleButton>
+        </div>
           <MUIDataTable
             title={'Clients'}
-            data={clients}
+            data={showInactif ? inactifClients : clients}
             columns={columns}
             options={options}
           />

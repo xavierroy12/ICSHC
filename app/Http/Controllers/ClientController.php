@@ -164,7 +164,9 @@ class ClientController extends Controller
 
     public function listShow()
     {
-        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])->get()
+        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
+        ->where('inactif', false)
+        ->get()
         ->map(
             function ($client) {
                 return [
@@ -212,8 +214,31 @@ class ClientController extends Controller
         return response()->json($client);
     }
 
+    //Personne inactif dans le système
+    public function getInactifClients()
+    {
+        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
+        ->where('inactif', true)
+        ->get()
+        ->map(
+            function ($client) {
+                return [
+                    "id" => $client->id,
+                    "matricule" => $client->matricule,
+                    "nom" => $client->prenom . ' ' . $client->nom, // Concatenate prenom and nom
+                    'actifs' =>  $client->actifs->pluck('nom')->implode(', '),
+                    'emplacement' => $client->emplacement->nom ?? 'Aucun',
+                    'poste' => $client->poste->nom ?? 'Aucun',
+                    'type_client' => $client->type_client->nom ?? 'Aucun',
+                ];
+            }
+        );
+        return response()->json($clients);
+    }
+
+
     // Matériel trop vieux attribué à un client
-    private function getOlderActifs()
+    public function getOlderActifs()
     {
         $fiveYearsAgo = now()->subYears(5);
 
@@ -223,14 +248,14 @@ class ClientController extends Controller
     }
 
     // Personne ayant plus de 1 appareil
-    private function getMoreThanOneActifs()
+    public function getMoreThanOneActifs()
     {
         return Client::has('actifs', '>', 1)->get();
     }
 
 
     // Personne que le lieu d’attribution ne concorde pas avec l’appareil
-    private function getMismatchedActifs()
+    public function getMismatchedActifs()
     {
         return Client::whereHas('actifs', function ($query) {
             $query->whereColumn('actif.id_emplacement', '!=', 'client.id_emplacement');
@@ -238,7 +263,7 @@ class ClientController extends Controller
     }
 
     // Personne ayant des appareils et ne travaillant plus pour vous
-    private function getInnactiveActifs()
+    public function getInnactiveActifs()
     {
         return Client::where('inactif', true)->whereHas('actifs')->get();
     }
@@ -258,7 +283,7 @@ class ClientController extends Controller
         // Personne ayant des appareils et ne travaillant plus pour vous (alerte rouge)
         $innactiveActifs = $this->getInnactiveActifs();
         if (!$innactiveActifs->isEmpty()) {
-            $alerts[] = ['type' => 'error', 'message' => 'Client innactif dans le système ayant un ou des appareils', 'data' => $innactiveActifs];
+            $alerts[] = ['type' => 'error', 'message' => 'Client inactif dans le système ayant un ou des appareils', 'data' => $innactiveActifs];
         }
 
         // Matériel trop vieux attribué à un client (alerte jaune)

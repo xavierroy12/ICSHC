@@ -22,20 +22,27 @@ class LogRequestMiddleware
         if ($request->isMethod('post')) {
             $path = str_replace('api/', '', $request->path());
             $actionName = $request->route()->getActionName();
-
+            // Check if path ends with a number
+            if (preg_match('/\d+$/', $path)) {
+                // Replace the ending number with 'id'
+                $path = preg_replace('/\d+$/', 'id', $path);
+            }
             error_log('Path: ' . $path . ', Action: ' . $actionName);
             switch ($path) {
                 case 'actifs':
+                    //Handle post request multiple actifs
                     error_log('in actifs');
                     $this->logController->logActifs($request);
                     break;
                 case 'actif':
-                    // Handle POST request for /actif
+                    // Handle POST request for actif wich is store
                     error_log('in actif');
                     break;
-                case 'actif/':
+                case 'actif/id':
                     // Handle POST request for /actif/{id}
-                    error_log('in actif/');
+                    error_log('in actif/id');
+                    $this->logController->logActif($request);
+
                     break;
                 case '/client/actifs/':
                     // Handle POST request for /client/actifs/{id}
@@ -49,7 +56,7 @@ class LogRequestMiddleware
                     // Handle POST request for /modele/{id} and /modele
                     error_log('in modele');
                     break;
-                case 'modele/':
+                case 'modele/id':
                     // Handle POST request for /modele/{id} and /modele
                     break;
                 case 'categorie':

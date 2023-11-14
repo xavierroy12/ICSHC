@@ -1,4 +1,4 @@
-import { CircularProgress } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import MUIDataTable, { MUIDataTableOptions } from 'mui-datatables';
 import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -35,7 +35,7 @@ const EmplacementList = () => {
     lastClickTime = clickTime;
 
     if (isDoubleClick) {
-      navigate('/client/' + emplacements[rowMeta.dataIndex].id);
+      navigate('/emplacement/' + emplacements[rowMeta.dataIndex].id);
     }
   };
 
@@ -101,6 +101,19 @@ const EmplacementList = () => {
           />
         </div>
       )}
+      <div>
+        <div className="float-right m-4">
+          <Button
+            className="ml-12"
+            style={{ marginRight: '1rem' }}
+            color="primary"
+            size="medium"
+            onClick={() => navigate('/emplacement/new')}
+          >
+            Ajouter
+          </Button>
+        </div>
+      </div>
     </Fragment>
   );
 };

@@ -63,47 +63,45 @@ const Dashboard = () => {
 
   return (
     <Box className="flex flex-col items-center space-y-2">
-      <div className="mt-12 mb-4">
+      <div className="mt-12 mb-2">
         <Typography className="font-bold" variant="h5" component="h1">
           Bienvenue <br /> {user?.nom}!
         </Typography>
       </div>
       {allAlerts.map((alert, index) => (
-        <ButtonBase className="w-2/5 mt-4">
-        <Alert
-          key={index}
-          variant="filled"
-          severity={alert.type}
-          className="w-full mt-4"
-        >
-          <AlertTitle className="flex items-start">
-            <strong>{getAlertTitle(alert.type)}</strong>
-            <IconButton
-              aria-label="expand"
-              size="small"
-              onClick={() => handleClick(index)}
-              color="inherit"
-            >
-              <ExpandMoreIcon />
-            </IconButton>
-          </AlertTitle>
-        <Typography className='flex'>
-            {`${alert.message}: ${alert.data.length}`}
-        </Typography>
-          <Collapse  in={open[index]}>
-            {alert.data.map((item: any) => (
-              <Typography className='flex' key={item.matricule}>
-                {`${item.matricule} - ${item.prenom} ${item.nom} - ${
-                  item.courriel || 'courriel@bidon.ca'
-                }`}
+        <Box key={index} className="w-2/5">
+          <ButtonBase className="w-full">
+            <Alert variant="filled" severity={alert.type} className="w-full">
+              <AlertTitle className="flex items-start">
+                <strong>{getAlertTitle(alert.type)}</strong>
+              </AlertTitle>
+              <Typography className='flex'>
+                {`${alert.message}: ${alert.data.length}`}
               </Typography>
-            ))}
-          </Collapse>
-        </Alert>
-        </ButtonBase>
+              <Collapse in={open[index]}>
+                {alert.data.map((item: any) => (
+                  <Typography className='flex' key={item.matricule}>
+                    {`${item.matricule} - ${item.prenom} ${item.nom} - ${
+                      item.courriel || 'courriel@bidon.ca'
+                    }`}
+                  </Typography>
+                ))}
+              </Collapse>
+            </Alert>
+          </ButtonBase>
+          <IconButton
+            aria-label="expand"
+            size="small"
+            onClick={() => handleClick(index)}
+            color="inherit"
+            className='float-right'
+          >
+            <ExpandMoreIcon />
+          </IconButton>
+        </Box>
       ))}
     </Box>
   );
-};
+}
 
 export default Dashboard;

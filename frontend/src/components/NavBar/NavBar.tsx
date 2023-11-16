@@ -64,6 +64,14 @@ const NavBar = () => {
             Utilisateurs
           </Button>
           <Button
+            component={Link}
+            to={`/emplacements`}
+            color="inherit"
+            className="mr-4"
+          >
+            Emplacements
+          </Button>
+          <Button
             onClick={async () => {
               try {
                 const response = await fetch(

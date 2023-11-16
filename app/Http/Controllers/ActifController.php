@@ -235,7 +235,6 @@ class ActifController extends Controller
 
                 ];
             });
-            error_log($actifs);
         return response()->json($actifs);
     }
 

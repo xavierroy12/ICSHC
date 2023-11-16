@@ -61,7 +61,6 @@ const Client = () => {
     ]).then((responses) =>
       Promise.all(responses.map((response) => response.json()))
         .then(([fetchedActif, fetchedClient]) => {
-          console.log(fetchedClient);
           setActifs(fetchedActif);
           setClient(fetchedClient);
           if (fetchedClient.actifs)

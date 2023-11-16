@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Emplacement;
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
 class EmplacementController extends Controller
 {
     /**
@@ -66,6 +66,20 @@ class EmplacementController extends Controller
         //
     }
 
+    public function createUpdate($id, Request $request)
+    {
+        $emplacement = Emplacement::find($id);
+        if ($emplacement == null) {
+            $emplacement = new Emplacement();
+        }
+        $emplacement->nom = $request->nom;
+        $emplacement->matricule = $request->matricule;
+        $emplacement->adresse = $request->adresse;
+        $emplacement->numero_civique = $request->numero_civique;
+        $emplacement->save();
+        return $emplacement;
+    }
+
     /**
      * Remove the specified resource from storage.
      */
@@ -84,6 +98,19 @@ class EmplacementController extends Controller
             return [
                 "id" => $emplacement->id,
                 "nom" => $emplacement->nom,
+            ];
+        });
+        return response()->json($emplacements);
+    }
+
+    public function listShow()
+    {
+        $emplacements = Emplacement::All()->map(function ($emplacement) {
+            return [
+                "id" => $emplacement->id,
+                "nom" => $emplacement->nom,
+                "matricule" => $emplacement->matricule,
+                "adresse" => strval($emplacement->numero_civique) . " " . $emplacement->adresse,
             ];
         });
         return response()->json($emplacements);

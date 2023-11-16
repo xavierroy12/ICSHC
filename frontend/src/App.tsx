@@ -13,7 +13,10 @@ import Utilisateur from './components/Utilisateur';
 import CommandesList from './components/CommandesList';
 import Commande from './components/Commande';
 import ActifAdd from './components/ActifAdd/ActifAdd';
+import EmplacementList from './components/EmplacementList';
+import Emplacement from './components/Emplacement';
 import Profil from './components/Profil/Profil';
+
 if (process.env.NODE_ENV === 'development') {
   window.name = 'http://localhost:8000/';
 } else {
@@ -86,6 +89,9 @@ function App() {
 
             <Route path="/commandes" element={<CommandesList />} />
             <Route path="/commande/:numero_commande" element={<Commande />} />
+
+            <Route path="/emplacements" element={<EmplacementList />} />
+            <Route path="/emplacement/:id" element={<Emplacement />} />
 
             <Route path="*" element={<h1>Not Found</h1>} />
 

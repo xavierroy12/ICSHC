@@ -7,9 +7,15 @@ type Props = {
   dirty: boolean;
   emplacements: SelectItem[];
   roles: SelectItem[];
+  isProfil: boolean;
 };
 
-const UtilisateurForm = ({ dirty, emplacements, roles }: Props) => {
+const ProfileUtilisateurForm = ({
+  dirty,
+  emplacements,
+  roles,
+  isProfil,
+}: Props) => {
   return (
     <Form>
       <Grid
@@ -34,6 +40,7 @@ const UtilisateurForm = ({ dirty, emplacements, roles }: Props) => {
             component={CustomSelect}
             options={roles}
             label="Roles"
+            disabled={isProfil}
           />
         </Grid>
         <Grid item xs={12} sm={12}>
@@ -61,4 +68,4 @@ const UtilisateurForm = ({ dirty, emplacements, roles }: Props) => {
     </Form>
   );
 };
-export default UtilisateurForm;
+export default ProfileUtilisateurForm;

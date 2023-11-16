@@ -91,6 +91,16 @@ const NavBar = () => {
             Sync
           </Button>
         </div>
+        <div>
+          <Button
+            component={Link}
+            to={`/profil`}
+            color="inherit"
+            className="mr-4"
+          >
+            Profil
+          </Button>
+        </div>
       </Toolbar>
     </AppBar>
   );

@@ -388,7 +388,7 @@ class ActifController extends Controller
             case("ActifsEcole"):
                 $data =  DB::table('emplacement')
                 ->leftJoin('actif', 'actif.id_emplacement', '=', 'emplacement.id')
-                ->select('emplacement.id', 'emplacement.nom', DB::raw('count(actif.id) as nbActifs'))
+                ->select('emplacement.matricule as id', 'emplacement.nom', DB::raw('count(actif.id) as nbActifs'))
                 ->groupBy('emplacement.id', 'emplacement.nom')
                 ->get();
             break;
@@ -410,7 +410,7 @@ class ActifController extends Controller
             case("ActifsFinVieEcole"):
                 $data =  DB::table('emplacement')
                 ->leftJoin('actif', 'actif.id_emplacement', '=', 'emplacement.id')
-                ->select('emplacement.id', 'emplacement.nom', DB::raw('count(actif.id) as nbActifs'))
+                ->select('emplacement.matricule  as id', 'emplacement.nom', DB::raw('count(actif.id) as nbActifs'))
                 ->where('actif.created_at', '<=', now()->subYears(5))
                 ->groupBy('emplacement.id', 'emplacement.nom')
                 ->get();

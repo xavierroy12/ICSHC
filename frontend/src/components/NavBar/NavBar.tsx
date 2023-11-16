@@ -66,7 +66,9 @@ const NavBar = () => {
           <Button
             onClick={async () => {
               try {
-                const response = await fetch('http://10.0.22.24:8080/api/clientJsonStore');
+                const response = await fetch(
+                  'http://10.0.22.24:8080/api/clientJsonStore'
+                );
                 const data = await response.json();
                 console.log(data);
               } catch (error) {
@@ -80,7 +82,16 @@ const NavBar = () => {
           >
             Sync
           </Button>
-
+        </div>
+        <div>
+          <Button
+            component={Link}
+            to={`/profil`}
+            color="inherit"
+            className="mr-4"
+          >
+            Profil
+          </Button>
         </div>
       </Toolbar>
     </AppBar>

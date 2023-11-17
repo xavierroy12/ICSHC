@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Box from '@mui/material/Box';
@@ -13,7 +13,6 @@ const Dashboard = () => {
   const [allAlerts, setAllAlerts] = useState<any[]>([]);
   const [user, setUser] = useState<any>(null);
   const [open, setOpen] = useState<boolean[]>([]);
-  const [clicked, setClicked] = useState<boolean[]>([]);
 
   useEffect(() => {
     fetchConnectedUser();
@@ -55,11 +54,6 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const handleButtonBaseClick = (index: number) => {
-    setClicked((prevClicked) => {
-      const newClicked = [...prevClicked];
-      newClicked[index] = !newClicked[index];
-      return newClicked;
-    });
 
     const clickedAlertData = allAlerts[index].data;
     const alertType = allAlerts[index].type;

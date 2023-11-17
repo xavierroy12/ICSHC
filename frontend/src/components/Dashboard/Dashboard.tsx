@@ -17,7 +17,6 @@ const Dashboard = () => {
   useEffect(() => {
     fetchConnectedUser();
     fetchAllAlerts();
-    console.log(allAlerts);
   }, []);
 
   const fetchConnectedUser = async () => {

@@ -90,6 +90,7 @@ function App() {
             <Route path="/commande/:numero_commande" element={<Commande />} />
 
             <Route path="/dashboard" element={<Dashboard/>} />
+            <Route path="/clients/:alertType/:alertName" element={<ClientsList key={window.location.pathname} />} />
 
             <Route path="*" element={<h1>Not Found</h1>} />
 

@@ -237,37 +237,71 @@ class ClientController extends Controller
     }
 
 
-    // Matériel trop vieux attribué à un client
     public function getOlderActifs()
     {
         $fiveYearsAgo = now()->subYears(5);
 
-        return Client::whereHas('actifs', function ($query) use ($fiveYearsAgo) {
-            $query->whereDate('actif.created_at', '<=', $fiveYearsAgo);
-        })->get();
+        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
+        ->where('inactif', false)
+        ->whereHas('actifs', function ($query) use ($fiveYearsAgo) {
+            $query->whereDate('created_at', '<=', $fiveYearsAgo);
+        })
+        ->get()
+        ->map($this->clientMapFunction());
+
+        return response()->json($clients);
     }
 
     // Personne ayant plus de 1 appareil
     public function getMoreThanOneActifs()
     {
-        return Client::has('actifs', '>', 1)->get();
-    }
+        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
+        ->has('actifs', '>', 1)
+        ->get()
+        ->map($this->clientMapFunction());
 
+        return response()->json($clients);
+    }
 
     // Personne que le lieu d’attribution ne concorde pas avec l’appareil
     public function getMismatchedActifs()
     {
-        return Client::whereHas('actifs', function ($query) {
+        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
+        ->whereHas('actifs', function ($query) {
             $query->whereColumn('actif.id_emplacement', '!=', 'client.id_emplacement');
-        })->get();
+        })
+        ->get()
+        ->map($this->clientMapFunction());
+
+        return response()->json($clients);
     }
 
     // Personne ayant des appareils et ne travaillant plus pour vous
     public function getInnactiveActifs()
     {
-        return Client::where('inactif', true)->whereHas('actifs')->get();
+        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
+        ->where('inactif', true)
+        ->whereHas('actifs')
+        ->get()
+        ->map($this->clientMapFunction());
+
+        return response()->json($clients);
     }
 
+    private function clientMapFunction()
+    {
+        return function ($client) {
+            return [
+                "id" => $client->id,
+                "matricule" => $client->matricule,
+                "nom" => $client->prenom . ' ' . $client->nom, // Concatenate prenom and nom
+                'actifs' =>  $client->actifs->pluck('nom')->implode(', '),
+                'emplacement' => $client->emplacement->nom ?? 'Aucun',
+                'poste' => $client->poste->nom ?? 'Aucun',
+                'type_client' => $client->type_client->nom ?? 'Aucun',
+            ];
+        };
+    }
 
     public function getAllAlerts()
     {
@@ -275,26 +309,26 @@ class ClientController extends Controller
         $alerts = [];
 
         // Personne que le lieu d’attribution ne concorde pas avec l’appareil (alerte rouge)
-        $mismatchedActifs = $this->getMismatchedActifs();
-        if (!$mismatchedActifs->isEmpty()) {
+        $mismatchedActifs = $this->getMismatchedActifs()->original;
+        if (!empty($mismatchedActifs)) {
             $alerts[] = ['type' => 'error', 'message' => 'Client que le lieu d\'attribution ne concorde pas avec celui de l\'appareil', 'data' => $mismatchedActifs];
         }
 
         // Personne ayant des appareils et ne travaillant plus pour vous (alerte rouge)
-        $innactiveActifs = $this->getInnactiveActifs();
-        if (!$innactiveActifs->isEmpty()) {
+        $innactiveActifs = $this->getInnactiveActifs()->original;
+        if (!empty($innactiveActifs)) {
             $alerts[] = ['type' => 'error', 'message' => 'Client inactif dans le système ayant un ou des appareils', 'data' => $innactiveActifs];
         }
 
         // Matériel trop vieux attribué à un client (alerte jaune)
-        $olderActifs = $this->getOlderActifs();
-        if (!$olderActifs->isEmpty()) {
+        $olderActifs = $this->getOlderActifs()->original;
+        if (!empty($olderActifs)) {
             $alerts[] = ['type' => 'warning', 'message' => 'Matériel trop vieux attribué à un client', 'data' => $olderActifs];
         }
 
         // Personne ayant plus de 1 appareil (alerte jaune)
-        $moreThanOneActifs = $this->getMoreThanOneActifs();
-        if (!$moreThanOneActifs->isEmpty()) {
+        $moreThanOneActifs = $this->getMoreThanOneActifs()->original;
+        if (!empty($moreThanOneActifs)) {
             $alerts[] = ['type' => 'warning', 'message' => 'Client ayant plus d\'un appareil', 'data' => $moreThanOneActifs];
         }
 

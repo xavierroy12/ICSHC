@@ -4,13 +4,19 @@ import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Client } from './type';
 import ToggleButton from '@mui/material/ToggleButton';
+import { useLocation } from 'react-router-dom';
 
 const ClienList = () => {
   const [clients, setClients] = useState<Client[]>([]);
   const [showInactif, setShowInactif] = useState(false);
   const [inactifClients, setInactifClients] = useState<Client[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const navigate = useNavigate();
+  const location = useLocation();
+  const filter = location.state?.filter;
+  console.log(filter);
+
   let lastClickTime = 0; // To track double-clicks
 
   useEffect(() => {
@@ -21,11 +27,18 @@ const ClienList = () => {
     ])
       .then((responses) => Promise.all(responses.map((res) => res.json())))
       .then(([fetchedClients, fetchedInactif]) => {
-        setClients(fetchedClients);
-        setInactifClients(fetchedInactif);
+        if (filter) {
+          const flatFilter = Array.isArray(filter[0]) ? filter.flat() : filter.map((item: { matricule: any; }) => item.matricule);
+          const filteredClients = fetchedClients.filter((client: { matricule: any; }) => flatFilter.includes(client.matricule));
+          const filteredInactif = fetchedInactif.filter((client: { matricule: any; }) => flatFilter.includes(client.matricule));
+          setClients([...filteredClients, ...filteredInactif]);
+        } else {
+          setClients(fetchedClients);
+          setInactifClients(fetchedInactif);
+        }
         setIsLoading(false);
       });
-  }, []);
+  }, [filter]);
 
   const handleRowClick = (
     _rowData: string[],

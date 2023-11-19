@@ -1,12 +1,13 @@
 import { Fragment, useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Actif } from '../ActifsList/type';
-import { CircularProgress, Grid, TextField, Typography } from '@mui/material';
+import { CircularProgress, Grid, TextField } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import ActifsSelect from '../ActifsSelect/ActifsSelect';
 import { LightActif } from '../Actifs/type';
+import FormLayout from '../FormLayout';
 
 type Emplacement_Type = {
   id: number;
@@ -105,105 +106,98 @@ const Client = () => {
         </div>
       ) : (
         <div className="mx-auto mt-8">
-          <div className="min-w-fit">
-            <div className="mx-8">
-              <Typography variant="h2" className="text-3xl font-semibold">
-                Client
-              </Typography>
-              {client && (
-                <div className="flex justify-between w-fit bg-slate-100 min-w-fit mt-4">
-                  <div className="p-4 my-4   mx-auto">
-                    <Grid
-                      container
-                      spacing={3}
-                      className="max-w-screen-md p-4 w-full mx-auto"
-                    >
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Nom"
-                          name="nom"
-                          className="input-label "
-                          disabled
-                          sx={{ width: 300 }}
-                          value={client.nom}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Matricule"
-                          name="matricule"
-                          className="input-label "
-                          disabled
-                          sx={{ width: 300 }}
-                          value={client.matricule}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="emplacement"
-                          name="emplacement"
-                          className="input-label "
-                          disabled
-                          sx={{ width: 300 }}
-                          value={client.emplacement.nom}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="poste"
-                          name="poste"
-                          className="input-label "
-                          disabled
-                          sx={{ width: 300 }}
-                          value={client.poste.nom}
-                        />
-                      </Grid>{' '}
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Type Client"
-                          name="type_client"
-                          className="input-label "
-                          disabled
-                          sx={{ width: 300 }}
-                          value={client.type_client.nom}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DatePicker
-                            label="Date de création"
-                            format="YYYY-MM-DD"
-                            className="input-label "
-                            value={
-                              client.updated_at
-                                ? dayjs(client.updated_at)
-                                : null
-                            }
-                            disabled
-                            sx={{ width: 300 }}
-                          />
-                        </LocalizationProvider>
-                      </Grid>
-                      <Grid item xs={12} sm={12}>
-                        <ActifsSelect
-                          ref={ref}
-                          selectedActifs={selectedActifs}
-                          setSelectedActifs={setSelectedActifs}
-                          actifs={actifs.map((actif: Actif) => ({
-                            id: parseInt(actif.id),
-                            nom: actif.nom,
-                            numero_serie: actif.numero_serie,
-                          }))}
-                          handleSubmit={handleSubmit}
-                          buttonLabel="Sauvegarder"
-                        />
-                      </Grid>
+          {client && (
+            <FormLayout title={client.nom} dirty={false}>
+              <div className="flex justify-between w-fit bg-slate-100 min-w-fit mt-4">
+                <div className="p-4 my-4   mx-auto">
+                  <Grid
+                    container
+                    spacing={3}
+                    className="max-w-screen-md p-4 w-full mx-auto"
+                  >
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="Nom"
+                        name="nom"
+                        className="input-label "
+                        disabled
+                        sx={{ width: 300 }}
+                        value={client.nom}
+                      />
                     </Grid>
-                  </div>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="Matricule"
+                        name="matricule"
+                        className="input-label "
+                        disabled
+                        sx={{ width: 300 }}
+                        value={client.matricule}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="emplacement"
+                        name="emplacement"
+                        className="input-label "
+                        disabled
+                        sx={{ width: 300 }}
+                        value={client.emplacement.nom}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="poste"
+                        name="poste"
+                        className="input-label "
+                        disabled
+                        sx={{ width: 300 }}
+                        value={client.poste.nom}
+                      />
+                    </Grid>{' '}
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="Type Client"
+                        name="type_client"
+                        className="input-label "
+                        disabled
+                        sx={{ width: 300 }}
+                        value={client.type_client.nom}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="Date de création"
+                          format="YYYY-MM-DD"
+                          className="input-label "
+                          value={
+                            client.updated_at ? dayjs(client.updated_at) : null
+                          }
+                          disabled
+                          sx={{ width: 300 }}
+                        />
+                      </LocalizationProvider>
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                      <ActifsSelect
+                        ref={ref}
+                        selectedActifs={selectedActifs}
+                        setSelectedActifs={setSelectedActifs}
+                        actifs={actifs.map((actif: Actif) => ({
+                          id: parseInt(actif.id),
+                          nom: actif.nom,
+                          numero_serie: actif.numero_serie,
+                        }))}
+                        handleSubmit={handleSubmit}
+                        buttonLabel="Sauvegarder"
+                      />
+                    </Grid>
+                  </Grid>
                 </div>
-              )}
-            </div>
-          </div>
+              </div>
+            </FormLayout>
+          )}
         </div>
       )}
     </Fragment>

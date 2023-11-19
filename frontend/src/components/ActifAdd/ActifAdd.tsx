@@ -1,9 +1,9 @@
-import { Typography } from '@mui/material';
 import { Formik } from 'formik';
 import { Fragment, useEffect, useState } from 'react';
 import ActifAddForm, { light_Actif } from './ActifAddForm';
 import { useNavigate } from 'react-router';
 import { LightType, SelectItem } from '../Actif/type';
+import FormLayout from '../FormLayout';
 
 const ActifAdd = () => {
   const navigate = useNavigate();
@@ -58,26 +58,19 @@ const ActifAdd = () => {
   return (
     <Fragment>
       <div className="mx-auto mt-8">
-        <div className="min-w-fit">
-          <div className="mx-8 ">
-            <Typography variant="h2" className="my-8 mx-auto">
-              Création d'actifs
-            </Typography>
-            <div className="flex justify-between w-full min-w-fit mt-4">
-              <div className="my-4 w-full">
-                <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-                  {() => (
-                    <ActifAddForm
-                      modeles={modeles}
-                      actifs={actifs}
-                      setActifs={setActifs}
-                    />
-                  )}
-                </Formik>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+          {({ dirty }) => (
+            <FormLayout title="Ajouter des actifs" dirty={dirty}>
+              <div className="w-fit">
+                <ActifAddForm
+                  modeles={modeles}
+                  actifs={actifs}
+                  setActifs={setActifs}
+                />
               </div>
-            </div>
-          </div>
-        </div>
+            </FormLayout>
+          )}
+        </Formik>
       </div>
     </Fragment>
   );

@@ -22,6 +22,8 @@ import {
   SelectItem,
   Actif_Commande_Type,
 } from './type';
+import BackButton from '../BackButton';
+import ConfirmDialog from '../ConfirmationDialog';
 
 const steps = ['Informations', 'Modèles', 'Actifs'];
 
@@ -174,7 +176,24 @@ const Commande = () => {
         console.error('Error saving data:', error);
       });
   };
+  const [isDialogOpen, setDialogOpen] = useState(false);
 
+  const handleHistoryBack = (dirty: boolean) => {
+    if (dirty) {
+      setDialogOpen(true);
+    } else {
+      history.back();
+    }
+  };
+
+  const handleClose = () => {
+    setDialogOpen(false);
+  };
+
+  const handleConfirm = () => {
+    setDialogOpen(false);
+    history.back();
+  };
   return (
     <Fragment>
       {isLoading ? (
@@ -184,7 +203,11 @@ const Commande = () => {
       ) : (
         <div className="mx-auto mt-8">
           <div className="min-w-fit">
-            <div className="mx-8">
+            <div className="m-8 flex">
+              <BackButton
+                onclick={() => handleHistoryBack(completedSteps() !== 0)}
+              />
+
               <Typography variant="h2" className="text-3xl font-semibold">
                 Commande: {numero_commande}
               </Typography>
@@ -206,27 +229,30 @@ const Commande = () => {
                 <div>
                   <Fragment>
                     {commande && (
-                      <Fragment>
-                        {activeStep === 0 && (
-                          <CommandeInformation commande={commande} />
-                        )}
-                        {activeStep === 1 && modeleCommande && (
-                          <CommandeModels
-                            modeleCommande={modeleCommande}
-                            setModeleCommande={setModeleCommande}
-                            modeles={modeles}
-                            addModele={addModele}
-                            commande={commande}
-                            setCommande={setCommande}
-                          />
-                        )}
-                        {activeStep === 2 && (
-                          <CommandeTableauActifs
-                            commande={commande}
-                            setCommande={setCommande}
-                          />
-                        )}
-                      </Fragment>
+                      <div className="w-fit min-w-fit my-8 mx-auto h-[600px] max-h-[900px] overflow-scroll">
+                        <div className="p-4 my-4 bg-slate-100 mx-auto">
+                          {' '}
+                          {activeStep === 0 && (
+                            <CommandeInformation commande={commande} />
+                          )}
+                          {activeStep === 1 && modeleCommande && (
+                            <CommandeModels
+                              modeleCommande={modeleCommande}
+                              setModeleCommande={setModeleCommande}
+                              modeles={modeles}
+                              addModele={addModele}
+                              commande={commande}
+                              setCommande={setCommande}
+                            />
+                          )}
+                          {activeStep === 2 && (
+                            <CommandeTableauActifs
+                              commande={commande}
+                              setCommande={setCommande}
+                            />
+                          )}
+                        </div>
+                      </div>
                     )}
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                       <Button
@@ -270,6 +296,11 @@ const Commande = () => {
         setOpen={setOpen}
         currentModele={currentModele}
         categories={categories}
+      />
+      <ConfirmDialog
+        open={isDialogOpen}
+        onClose={handleClose}
+        onConfirm={handleConfirm}
       />
     </Fragment>
   );

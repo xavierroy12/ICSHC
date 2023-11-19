@@ -6,6 +6,7 @@ import ActifsForm from './ActifsForm';
 import { SelectItem } from '../Actif/type';
 import { Formik, FormikValues } from 'formik';
 import { LightActif, LightType } from './type';
+import FormLayout from '../FormLayout';
 const Actifs = () => {
   const location = useLocation();
   const { selectedRows } = location.state;
@@ -176,12 +177,9 @@ const Actifs = () => {
       ) : (
         <>
           <div className="md:w-2/3 md:ml-20 md:mr-6 mt-8 min-w-fit h-full">
-            <div className="mb-8">
-              <Typography variant="h4">Modifier des actifs</Typography>
-            </div>
-            <div className="mt-14 ">
-              <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-                {({ values, handleChange, dirty, setFieldValue }) => (
+            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+              {({ values, handleChange, dirty, setFieldValue }) => (
+                <FormLayout title="Ajouter des actifs" dirty={dirty}>
                   <ActifsForm
                     statuts={statuts}
                     modeles={modeles}
@@ -195,14 +193,16 @@ const Actifs = () => {
                     setFieldValue={setFieldValue}
                     handleReception={handleReception}
                   />
-                )}
-              </Formik>
-            </div>
+                </FormLayout>
+              )}
+            </Formik>
           </div>
-          <div className="md:w-1/3 mt-8 md:mr-20">
-            <div className="w-full">
+          <div className="md:w-1/3  md:mr-20">
+            <div className="w-full my-12">
               <div className="mb-8">
-                <Typography variant="h4">Actifs sélectionnés</Typography>
+                <Typography variant="h4" className="mx-auto">
+                  Actifs sélectionnés
+                </Typography>
               </div>
               <div className=" bg-slate-100 w-full mx-auto h-full overflow-hidden">
                 <SelectActifsList

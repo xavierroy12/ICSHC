@@ -1,8 +1,9 @@
-import { CircularProgress, Typography } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { Formik, FormikValues } from 'formik';
 import { Fragment, useEffect, useState } from 'react';
 import EmplacementForm from './EmplacementForm';
 import { useNavigate, useParams } from 'react-router-dom';
+import FormLayout from '../FormLayout';
 
 type Emplacement_Type = {
   id: number;
@@ -59,23 +60,16 @@ const Emplacement = () => {
       ) : (
         <div className="mx-auto mt-8">
           {id && (
-            <div className="min-w-fit">
-              <div className="mx-8 ">
-                <Typography variant="h2" className="my-8 mx-auto">
-                  {emplacement?.nom || 'Nouveau emplacement'}
-                </Typography>
-                <div className="flex justify-between w-fit bg-slate-100 min-w-fit mt-4">
-                  <div className="p-4 my-4   mx-auto">
-                    <Formik
-                      initialValues={initialValues}
-                      onSubmit={handleSubmit}
-                    >
-                      {({ dirty }) => <EmplacementForm dirty={dirty} />}
-                    </Formik>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+              {({ dirty }) => (
+                <FormLayout
+                  title={emplacement?.nom || 'Nouveau emplacement'}
+                  dirty={dirty}
+                >
+                  <EmplacementForm dirty={dirty} />
+                </FormLayout>
+              )}
+            </Formik>
           )}
         </div>
       )}

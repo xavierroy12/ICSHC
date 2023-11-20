@@ -16,6 +16,7 @@ import Utilisateur from './components/Utilisateur';
 import CommandesList from './components/CommandesList';
 import Commande from './components/Commande';
 import ActifAdd from './components/ActifAdd/ActifAdd';
+import Rapport from './components/Rapport';
 import EmplacementList from './components/EmplacementList';
 import Emplacement from './components/Emplacement';
 import Profil from './components/Profil/Profil';
@@ -93,6 +94,8 @@ function App() {
 
             <Route path="/commandes" element={<CommandesList />} />
             <Route path="/commande/:numero_commande" element={<Commande />} />
+
+            <Route path="/rapport" element={<Rapport />} />
 
             <Route path="/emplacements" element={<EmplacementList />} />
             <Route path="/emplacement/:id" element={<Emplacement />} />

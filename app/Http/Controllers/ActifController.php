@@ -8,6 +8,8 @@ use App\Models\Actif;
 use App\Models\Client;
 use App\Models\Modele;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ActifController extends Controller
 {
@@ -360,7 +362,7 @@ class ActifController extends Controller
 
         return null;
     }
-    Public function createMultiple(Request $request)
+    public function createMultiple(Request $request)
     {
         $data = $request->all();
         $id_modele = Modele::where('nom', $data[0]['modele'])->first()->id;
@@ -375,6 +377,66 @@ class ActifController extends Controller
             $actif->id_emplacement = 1;
             $actif->save();
         }
+    }
+    public function showRapport($rapportName)
+    {
+
+        Log::info('showRapport function called with rapportName: '.$rapportName);
+        $data = null;
+        switch($rapportName){
+            case("ActifsEcole"):
+                $data =  DB::table('emplacement')
+                ->leftJoin('actif', 'actif.id_emplacement', '=', 'emplacement.id')
+                ->select('emplacement.matricule as id', 'emplacement.nom', DB::raw('count(actif.id) as nbActifs'))
+                ->groupBy('emplacement.id', 'emplacement.nom')
+                ->get();
+            break;
+            case("ActifsProprietaire"):
+                $data =  DB::table('proprietaire')
+                ->leftJoin('actif', 'actif.id_proprietaire', '=', 'proprietaire.id')
+                ->select('proprietaire.id', 'proprietaire.nom', DB::raw('count(actif.id) as nbActifs'))
+                ->groupBy('proprietaire.id', 'proprietaire.nom')
+                ->get();
+            break;
+            case("ActifsType"):
+                $data =  DB::table('actif')
+                ->join('modele', 'actif.id_modele', '=', 'modele.id')
+                ->join('type_modele', 'modele.id_type_modele', '=', 'type_modele.id')
+                ->select('type_modele.id', 'type_modele.nom', DB::raw('count(actif.id) as nbActifs'))
+                ->groupBy('type_modele.id', 'type_modele.nom')
+                ->get();
+            break;
+            case("ActifsFinVieEcole"):
+                $data =  DB::table('emplacement')
+                ->leftJoin('actif', 'actif.id_emplacement', '=', 'emplacement.id')
+                ->select('emplacement.matricule  as id', 'emplacement.nom', DB::raw('count(actif.id) as nbActifs'))
+                ->where('actif.created_at', '<=', now()->subYears(5))
+                ->groupBy('emplacement.id', 'emplacement.nom')
+                ->get();
+            break;
+            case("ActifsFinVieProprietaire"):
+                $data =  DB::table('proprietaire')
+                ->leftJoin('actif', 'actif.id_proprietaire', '=', 'proprietaire.id')
+                ->select('proprietaire.id', 'proprietaire.nom', DB::raw('count(actif.id) as nbActifs'))
+                ->where('actif.created_at', '<=', now()->subYears(5))
+                ->groupBy('proprietaire.id', 'proprietaire.nom')
+                ->get();
+            break;
+            case("ActifsFinVieType"):
+                $data =  DB::table('actif')
+                ->join('modele', 'actif.id_modele', '=', 'modele.id')
+                ->join('type_modele', 'modele.id_type_modele', '=', 'type_modele.id')
+                ->select('type_modele.id', 'type_modele.nom', DB::raw('count(actif.id) as nbActifs'))
+                ->where('actif.created_at', '<=', now()->subYears(5))
+                ->groupBy('type_modele.id', 'type_modele.nom')
+                ->get();
+            break;
+
+
+        }
+
+        return response()->json($data);
+
     }
 
 }

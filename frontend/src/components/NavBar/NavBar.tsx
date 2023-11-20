@@ -65,6 +65,16 @@ const NavBar = () => {
           </Button>
           <Button
             component={Link}
+            to={`/rapport`}
+            color="inherit"
+            className="mr-4"
+          >
+            Rapports
+
+          </Button>
+              <Button
+            component={Link}
+
             to={`/emplacements`}
             color="inherit"
             className="mr-4"
@@ -90,6 +100,7 @@ const NavBar = () => {
           >
             Sync
           </Button>
+
         </div>
         <div>
           <Button

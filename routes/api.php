@@ -45,6 +45,7 @@ Route::middleware('throttle:5000,1')->group(function () {
     Route::get('/etats', [EtatController::class, 'showAll']);
     Route::get('/etats/light', [EtatController::class, 'lightShow']);
 
+
     Route::get('/modeles', [ModeleController::class, 'showAll']);
     Route::get('/modeles/light', [ModeleController::class, 'lightShow']);
     Route::get('/modeles/light/favorite', [ModeleController::class, 'lightShowFavorite']);
@@ -100,6 +101,10 @@ Route::middleware('throttle:5000,1')->group(function () {
 
     Route::get('/clientJson', [ClientController::class, 'listClientScolago']);
     Route::get('/clientJsonStore', [ClientController::class, 'storeListClientScolage']);
+
+    Route::get('/emplacements/list', [EmplacementController::class, 'listShow']);
+    Route::get('/emplacement/{id}', [EmplacementController::class, 'show']);
+    Route::post('/emplacement/{id}', [EmplacementController::class, 'createUpdate']);
 
 });
 

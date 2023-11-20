@@ -9,6 +9,7 @@ interface SearchableSelectProps extends FieldProps {
   label: string;
   isClearable?: boolean;
   needsId?: boolean;
+  disabled?: boolean;
 }
 
 const CustomSelect = ({
@@ -18,6 +19,7 @@ const CustomSelect = ({
   label,
   isClearable = false,
   needsId = false,
+  disabled = false,
 }: SearchableSelectProps) => {
   const [inputValue, setInputValue] = useState<string>('');
   const [value, setValue] = useState<SelectItem | null>(
@@ -26,6 +28,7 @@ const CustomSelect = ({
 
   return (
     <Autocomplete
+      disabled={disabled}
       placeholder={label}
       options={options}
       sx={{ width: 300 }}
@@ -49,6 +52,7 @@ const CustomSelect = ({
         <TextField
           {...params}
           label={label}
+          disabled={disabled}
           variant="outlined"
           error={touched[field.name] && Boolean(errors[field.name])}
         />

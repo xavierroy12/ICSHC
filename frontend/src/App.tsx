@@ -1,5 +1,8 @@
 import Layout from './Layout';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import ActifsList from './components/ActifsList';
 import Actifs from './components/Actifs';
 import Actif from './components/Actif';
@@ -14,6 +17,10 @@ import CommandesList from './components/CommandesList';
 import Commande from './components/Commande';
 import ActifAdd from './components/ActifAdd/ActifAdd';
 import Rapport from './components/Rapport';
+import EmplacementList from './components/EmplacementList';
+import Emplacement from './components/Emplacement';
+import Profil from './components/Profil/Profil';
+
 if (process.env.NODE_ENV === 'development') {
   window.name = 'http://localhost:8000/';
 } else {
@@ -67,6 +74,7 @@ function App() {
     <div className="App">
       <Router>
         <Layout>
+          <ToastContainer />
           <Routes>
             <Route path="/actifs" element={<ActifsList />} />
             <Route path="/actifs/modify" element={<Actifs />} />
@@ -82,10 +90,15 @@ function App() {
             <Route path="/utilisateurs" element={<UtilisateurList />} />
             <Route path="/utilisateur/:id" element={<Utilisateur />} />
 
+            <Route path="/profil" element={<Profil />} />
+
             <Route path="/commandes" element={<CommandesList />} />
             <Route path="/commande/:numero_commande" element={<Commande />} />
 
             <Route path="/rapport" element={<Rapport />} />
+
+            <Route path="/emplacements" element={<EmplacementList />} />
+            <Route path="/emplacement/:id" element={<Emplacement />} />
 
             <Route path="*" element={<h1>Not Found</h1>} />
 

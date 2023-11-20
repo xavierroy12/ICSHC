@@ -1,15 +1,11 @@
-import { Field, Form } from 'formik';
-import { SelectItem } from '../Actif/type';
 import { Button, Grid, TextField } from '@mui/material';
-import CustomSelect from '../CustomSelect';
+import { Field, Form } from 'formik';
 
-type Props = {
+interface Props {
   dirty: boolean;
-  emplacements: SelectItem[];
-  roles: SelectItem[];
-};
+}
 
-const UtilisateurForm = ({ dirty, emplacements, roles }: Props) => {
+const EmplacementForm = ({ dirty }: Props) => {
   return (
     <Form>
       <Grid
@@ -17,32 +13,40 @@ const UtilisateurForm = ({ dirty, emplacements, roles }: Props) => {
         spacing={3}
         className="max-w-screen-md p-4 w-full mx-auto"
       >
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={6}>
           <Field
             as={TextField}
             label="Nom"
             name="nom"
             className="input-label "
-            disabled
             sx={{ width: 300 }}
           />
         </Grid>
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={6}>
           <Field
-            className="input-field"
-            name="id_role"
-            component={CustomSelect}
-            options={roles}
-            label="Roles"
+            as={TextField}
+            label="Matricule"
+            name="matricule"
+            className="input-label "
+            sx={{ width: 300 }}
           />
         </Grid>
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={6}>
           <Field
-            className="input-field"
-            name="id_emplacement"
-            component={CustomSelect}
-            options={emplacements}
-            label="Emplacement"
+            as={TextField}
+            label="Numéro civique"
+            name="numero_civique"
+            className="input-label "
+            sx={{ width: 300 }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Field
+            as={TextField}
+            label="Adresse"
+            name="adresse"
+            className="input-label "
+            sx={{ width: 300 }}
           />
         </Grid>
         <Grid item xs={12}>
@@ -61,4 +65,5 @@ const UtilisateurForm = ({ dirty, emplacements, roles }: Props) => {
     </Form>
   );
 };
-export default UtilisateurForm;
+
+export default EmplacementForm;

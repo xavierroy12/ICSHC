@@ -1,10 +1,12 @@
 import ModeleForm from './ModeleForm';
 import { useEffect, useState } from 'react';
 import { LightType, SelectItem } from '../Actif/type';
-import { CircularProgress, Typography } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { Modele_Type } from './type';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Formik, FormikValues } from 'formik';
+import FormLayout from '../FormLayout';
+import { toast } from 'react-toastify';
 
 const Modele = () => {
   const [categories, setCategories] = useState<SelectItem[]>([]);
@@ -32,7 +34,7 @@ const Modele = () => {
 
   const navigate = useNavigate();
 
-    const initialValues = {
+  const initialValues = {
     id: modele?.id,
     nom: modele?.nom,
     id_type_modele: modele?.id_type_modele,
@@ -63,16 +65,14 @@ const Modele = () => {
     })
       .then((response) => {
         if (response.ok) {
-          alert('Données sauvegardées avec succès');
-          console.log('Données sauvegardées avec succès: ', values);
+          toast.success('Données sauvegardées avec succès');
           navigate('/modeles');
         } else {
-          console.error('Error saving data:', response.statusText);
-          console.log('CA NE FONCTIONNE PAS ', values);
+          toast.error('Une erreur est survenue');
         }
       })
-      .catch((error) => {
-        console.error('Error saving data:', error);
+      .catch(() => {
+        toast.error('Une erreur est survenue');
       });
   };
   const reloadData = () => {
@@ -92,32 +92,25 @@ const Modele = () => {
   };
 
   return (
-    <div>
+    <div className="mt-8">
       {!modele ? (
         <div className="fixed inset-0 flex items-center justify-center">
           <CircularProgress />
         </div>
       ) : (
-        <div className="w-full m-10">
-          <div className="mb-8 mt-20">
-            <Typography variant="h4" className="my-8 ">
-              Modele: {modele.nom}
-            </Typography>
-          </div>
-          <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-            {({ values, dirty, setFieldValue }) => (
-              <div className="max-w-fit bg-slate-100 p-10">
-                <ModeleForm
-                  categories={categories}
-                  values={values}
-                  dirty={dirty}
-                  setFieldValue={setFieldValue}
-                  reloadData={reloadData}
-                />
-              </div>
-            )}
-          </Formik>
-        </div>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+          {({ values, dirty, setFieldValue }) => (
+            <FormLayout title={'Modele: ' + modele.nom} dirty={dirty}>
+              <ModeleForm
+                categories={categories}
+                values={values}
+                dirty={dirty}
+                setFieldValue={setFieldValue}
+                reloadData={reloadData}
+              />
+            </FormLayout>
+          )}
+        </Formik>
       )}
     </div>
   );

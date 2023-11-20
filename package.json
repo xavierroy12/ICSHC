@@ -22,6 +22,7 @@
     "@fontsource/roboto": "^5.0.8",
     "@mui/icons-material": "^5.14.12",
     "@mui/material": "^5.14.12",
-    "react-hook-form": "^7.47.0"
+    "react-hook-form": "^7.47.0",
+    "react-toastify": "^9.1.3"
   }
 }

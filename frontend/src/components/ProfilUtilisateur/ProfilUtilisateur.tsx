@@ -1,10 +1,12 @@
-import { CircularProgress, Typography } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { FormikValues, Formik } from 'formik';
 import { useState, useEffect, Fragment } from 'react';
 import { useNavigate } from 'react-router';
 import { SelectItem } from '../Actif/type';
 import { LightType } from '../Actifs/type';
 import ProfileUtilisateurForm from './ProfilUtilisateurForm';
+import FormLayout from '../FormLayout';
+import { toast } from 'react-toastify';
 
 type Utilisateur_Type = {
   id: number;
@@ -66,11 +68,14 @@ const ProfilUtilisateur = ({ id, isProfil }: Props) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then(() => {
+    }).then((response) => {
+      if (response.ok) {
+        toast.success('Données sauvegardées avec succès');
         navigate('/utilisateurs');
-      });
+      } else {
+        toast.error('Une erreur est survenue');
+      }
+    });
   };
   return (
     <Fragment>
@@ -81,30 +86,23 @@ const ProfilUtilisateur = ({ id, isProfil }: Props) => {
       ) : (
         <div className="mx-auto mt-8">
           {utilisateur && id && (
-            <div className="min-w-fit">
-              <div className="mx-8 ">
-                <Typography variant="h2" className="my-8 mx-auto">
-                  {isProfil ? 'Mon Profil' : 'Utilisateur: ' + utilisateur.nom}
-                </Typography>
-                <div className="flex justify-between w-fit bg-slate-100 min-w-fit mt-4">
-                  <div className="p-4 my-4   mx-auto">
-                    <Formik
-                      initialValues={initialValues}
-                      onSubmit={handleSubmit}
-                    >
-                      {({ dirty }) => (
-                        <ProfileUtilisateurForm
-                          dirty={dirty}
-                          emplacements={emplacements}
-                          roles={roles}
-                          isProfil={isProfil}
-                        />
-                      )}
-                    </Formik>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+              {({ dirty }) => (
+                <FormLayout
+                  title={
+                    isProfil ? 'Mon Profil' : 'Utilisateur: ' + utilisateur.nom
+                  }
+                  dirty={dirty}
+                >
+                  <ProfileUtilisateurForm
+                    dirty={dirty}
+                    emplacements={emplacements}
+                    roles={roles}
+                    isProfil={isProfil}
+                  />
+                </FormLayout>
+              )}
+            </Formik>
           )}
         </div>
       )}

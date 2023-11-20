@@ -18,6 +18,7 @@ import {
 import { LightActif } from '../ActifsListSelect/type';
 import ActifsSelect from '../ActifsSelect/ActifsSelect';
 import AddGroupeFiltres from '../AddGroupeFiltres';
+import { toast } from 'react-toastify';
 
 type selectedFiltersType = {
   nom?: string;
@@ -297,7 +298,7 @@ const ActifsList = () => {
       .then((result) => {
         if (result.exists) {
           // Alert the user that the label already exists
-          alert(
+          toast.error(
             'Un filtre portant ce nom existe déjà. Veuillez entrer un autre nom svp.'
           );
         } else {
@@ -319,7 +320,7 @@ const ActifsList = () => {
           })
             .then((response) => {
               if (response.ok) {
-                alert(
+                toast.success(
                   'Le(s) filtre(s) selectionné(s) ont été enregistrés avec succès!'
                 );
                 setOpen(false);
@@ -402,14 +403,14 @@ const ActifsList = () => {
           setFiltersList(updatedFiltersList);
 
           // Clear the input field or perform any other necessary actions
-          alert('Le filtre sélectionné a été supprimé avec succès!');
+          toast.success('Le filtre sélectionné a été supprimé avec succès!');
 
           // Reset the filters here
           setSelectedFilters({});
           setCurrentFiltersGroup(undefined); // Reset the selected filter label to empty string
           setActifs(cleanActifs);
         } else {
-          console.error('Failed to delete filter');
+          toast.error('Une erreur est survenue');
         }
       })
       .catch((error) => {

@@ -4,6 +4,7 @@ import { Fragment, useEffect, useState } from 'react';
 import EmplacementForm from './EmplacementForm';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormLayout from '../FormLayout';
+import { toast } from 'react-toastify';
 
 type Emplacement_Type = {
   id: number;
@@ -48,7 +49,14 @@ const Emplacement = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(values),
-    }).then(() => navigate('/emplacements'));
+    }).then((response) => {
+      if (response.ok) {
+        toast.success('Données sauvegardées avec succès');
+        navigate('/emplacements');
+      } else {
+        toast.error('Une erreur est survenue');
+      }
+    });
   };
 
   return (

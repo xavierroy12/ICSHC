@@ -1,5 +1,8 @@
 import Layout from './Layout';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import ActifsList from './components/ActifsList';
 import Actifs from './components/Actifs';
 import Actif from './components/Actif';
@@ -70,6 +73,7 @@ function App() {
     <div className="App">
       <Router>
         <Layout>
+          <ToastContainer />
           <Routes>
             <Route path="/actifs" element={<ActifsList />} />
             <Route path="/actifs/modify" element={<Actifs />} />

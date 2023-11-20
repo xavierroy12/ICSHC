@@ -8,6 +8,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import ActifsSelect from '../ActifsSelect/ActifsSelect';
 import { LightActif } from '../Actifs/type';
 import FormLayout from '../FormLayout';
+import { toast } from 'react-toastify';
 
 type Emplacement_Type = {
   id: number;
@@ -90,11 +91,11 @@ const Client = () => {
       body: JSON.stringify({ actifs: selectedRows }),
     })
       .then((response) => response.json())
-      .then((data) => {
-        console.log('Success:', data);
+      .then(() => {
+        toast.success('Données sauvegardées avec succès');
       })
-      .catch((error) => {
-        console.error('Error:', error);
+      .catch(() => {
+        toast.error('Une erreur est survenue');
       });
   };
 

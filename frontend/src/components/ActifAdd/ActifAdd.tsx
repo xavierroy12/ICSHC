@@ -4,6 +4,7 @@ import ActifAddForm, { light_Actif } from './ActifAddForm';
 import { useNavigate } from 'react-router';
 import { LightType, SelectItem } from '../Actif/type';
 import FormLayout from '../FormLayout';
+import { toast } from 'react-toastify';
 
 const ActifAdd = () => {
   const navigate = useNavigate();
@@ -37,21 +38,16 @@ const ActifAdd = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(actifs),
-      })
-        .then((response) => {
-          if (response.ok) {
-            alert('Données sauvegardées avec succès');
-            navigate('/actifs');
-          } else {
-            console.error('Error saving data:', response.statusText);
-            console.log('CA NE FONCTIONNE PAS ', actifs);
-          }
-        })
-        .catch((error) => {
-          console.error('Error saving data:', error);
-        });
+      }).then((response) => {
+        if (response.ok) {
+          toast.success('Données sauvegardées avec succès');
+          navigate('/actifs');
+        } else {
+          toast.error('Une erreur est survenue');
+        }
+      });
     } catch (error) {
-      console.error('Error saving data:', error);
+      toast.error('Une erreur est survenue');
     }
   };
 

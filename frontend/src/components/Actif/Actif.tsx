@@ -5,6 +5,7 @@ import { Actif_Type, LightType, SelectItem } from './type';
 import ActifForm from './ActifForm';
 import { Formik, FormikValues } from 'formik';
 import FormLayout from '../FormLayout';
+import { toast } from 'react-toastify';
 
 const Actif = () => {
   const { id } = useParams<{ id: string }>();
@@ -194,23 +195,19 @@ const Actif = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(values),
-      })
-        .then((response) => {
-          if (response.ok) {
-            alert('Données sauvegardées avec succès');
-            navigate('/actifs');
-          } else {
-            console.error('Error saving data:', response.statusText);
-            console.log('CA NE FONCTIONNE PAS ', values);
-          }
-        })
-        .catch((error) => {
-          console.error('Error saving data:', error);
-        });
+      }).then((response) => {
+        if (response.ok) {
+          toast.success('Données sauvegardées avec succès');
+          navigate('/actifs');
+        } else {
+          toast.error('Une erreur est survenue');
+        }
+      });
     } catch (error) {
-      console.error('Error saving data:', error);
+      toast.error('Une erreur est survenue');
     }
   };
+
   return (
     <Fragment>
       {loading ? (

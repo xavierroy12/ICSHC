@@ -6,6 +6,7 @@ import { SelectItem } from '../Actif/type';
 import { LightType } from '../Actifs/type';
 import ProfileUtilisateurForm from './ProfilUtilisateurForm';
 import FormLayout from '../FormLayout';
+import { toast } from 'react-toastify';
 
 type Utilisateur_Type = {
   id: number;
@@ -67,11 +68,14 @@ const ProfilUtilisateur = ({ id, isProfil }: Props) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then(() => {
+    }).then((response) => {
+      if (response.ok) {
+        toast.success('Données sauvegardées avec succès');
         navigate('/utilisateurs');
-      });
+      } else {
+        toast.error('Une erreur est survenue');
+      }
+    });
   };
   return (
     <Fragment>

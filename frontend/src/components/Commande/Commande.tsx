@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { Fragment, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import CommandeInformation from './CommandeInformation';
 import CommandeModels from './CommandeModels';
@@ -166,14 +167,14 @@ const Commande = () => {
     })
       .then((response) => {
         if (response.ok) {
-          alert('Données sauvegardées avec succès');
+          toast.success('Données sauvegardées avec succès');
           navigate('/commandes');
         } else {
-          console.error('Error saving data:', response.statusText);
+          toast.error('Une erreur est survenue');
         }
       })
-      .catch((error) => {
-        console.error('Error saving data:', error);
+      .catch(() => {
+        toast.error('Une erreur est survenue');
       });
   };
   const [isDialogOpen, setDialogOpen] = useState(false);

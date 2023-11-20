@@ -7,6 +7,8 @@ import { SelectItem } from '../Actif/type';
 import { Formik, FormikValues } from 'formik';
 import { LightActif, LightType } from './type';
 import FormLayout from '../FormLayout';
+import { toast } from 'react-toastify';
+
 const Actifs = () => {
   const location = useLocation();
   const { selectedRows } = location.state;
@@ -114,23 +116,16 @@ const Actifs = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(values), // Send the updated data with the mapped field names
-    })
-      .then((response) => {
-        if (response.ok) {
-          // Display a success message to the user
-          alert('Données sauvegardées avec succès');
-          console.log('Données sauvegardées avec succès: ', values);
-          navigate('/actifs');
-        } else {
-          // Handle errors if the API request fails
-          console.error('Error saving data:', response.statusText);
-          console.log('CA NE FONCTIONNE PAS ', values);
-        }
-      })
-      .catch((error) => {
+    }).then((response) => {
+      if (response.ok) {
+        // Display a success message to the user
+        toast.success('Données sauvegardées avec succès');
+        navigate('/actifs');
+      } else {
         // Handle errors if the API request fails
-        console.error('Error saving data:', error);
-      });
+        toast.error('Une erreur est survenue');
+      }
+    });
   };
 
   const handleSubmit = (values: FormikValues) => {

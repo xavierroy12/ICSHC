@@ -1,12 +1,13 @@
 import { Button, Input, Typography } from '@mui/material';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 type Props = {
-    handleClose: () => void;
-    reloadData: () => void;
+  handleClose: () => void;
+  reloadData: () => void;
 };
 
-const AddCategorie = ({ handleClose,reloadData }: Props) => {
+const AddCategorie = ({ handleClose, reloadData }: Props) => {
   const [categorie, setCategorie] = useState<string>('');
   const handleSubmit = () => {
     try {
@@ -19,11 +20,18 @@ const AddCategorie = ({ handleClose,reloadData }: Props) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(value),
+      }).then((response) => {
+        if (response.ok) {
+          toast.success('Données sauvegardées avec succès');
+        } else {
+          toast.error('Une erreur est survenue');
+        }
       });
-        reloadData();
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      toast.error('Une erreur est survenue');
     }
+    reloadData();
+
     handleClose();
   };
   return (

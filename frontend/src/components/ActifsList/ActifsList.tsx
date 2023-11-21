@@ -11,6 +11,7 @@ import {
   Autocomplete,
   Button,
   CircularProgress,
+  IconButton,
   Modal,
   TextField,
   ToggleButton,
@@ -19,6 +20,7 @@ import { LightActif } from '../ActifsListSelect/type';
 import ActifsSelect from '../ActifsSelect/ActifsSelect';
 import AddGroupeFiltres from '../AddGroupeFiltres';
 import { toast } from 'react-toastify';
+import CloseIcon from '@mui/icons-material/Close';
 
 type selectedFiltersType = {
   nom?: string;
@@ -576,21 +578,38 @@ const ActifsList = () => {
           },
         }}
       >
-        <ActifsSelect
-          ref={ref}
-          selectedActifs={selectedActifs}
-          setSelectedActifs={setSelectedActifs}
-          actifs={actifs.map((actif: Actif) => ({
-            id: parseInt(actif.id),
-            nom: actif.nom,
-            numero_serie: actif.numero_serie,
-          }))}
-          handleSubmit={handleSubmit}
-        />
+        <div className="m-auto p-4 my-20 w-fit align-right bg-slate-400">
+          <IconButton
+            tabIndex={0}
+            onClick={handleCloseModal}
+            className="float-right"
+          >
+            <CloseIcon />
+          </IconButton>
+          <div className="p-12">
+            <ActifsSelect
+              ref={ref}
+              selectedActifs={selectedActifs}
+              setSelectedActifs={setSelectedActifs}
+              actifs={actifs.map((actif: Actif) => ({
+                id: parseInt(actif.id),
+                nom: actif.nom,
+                numero_serie: actif.numero_serie,
+              }))}
+              handleSubmit={handleSubmit}
+            />
+          </div>
+        </div>
       </Modal>
-
       <Modal open={open} onClose={() => setOpen(false)}>
-        <div className="min-w-fit max-w-fit min-h-fit max-h-fit bg-white m-auto mt-20">
+        <div className="min-w-fit max-w-fit min-h-fit max-h-fit bg-slate-400 m-auto mt-20">
+          <IconButton
+            tabIndex={0}
+            onClick={() => setOpen(false)}
+            className="float-right"
+          >
+            <CloseIcon />
+          </IconButton>
           <AddGroupeFiltres
             handleClose={handleCloseModal}
             saveFilters={(label) => saveFilters(label)}

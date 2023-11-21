@@ -51,7 +51,6 @@ function App() {
   const handleThemeChange = () => {
     setDarkMode(!darkMode);
   };
-
   //enlever pour le split 3
   //localStorage.setItem('id_user', '2');
   const cookie = document.cookie

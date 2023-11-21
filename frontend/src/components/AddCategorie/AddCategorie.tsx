@@ -35,7 +35,7 @@ const AddCategorie = ({ handleClose, reloadData }: Props) => {
     handleClose();
   };
   return (
-    <div className="p-8">
+    <div className="p-8 bg-slate-400">
       <div className="mb-4">
         <Typography variant="h4">Ajouter une catégorie</Typography>
       </div>

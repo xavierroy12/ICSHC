@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('matricule', 3);
             $table->string('nom', 64);
-            $table->integer('numero_civique');
+            $table->string('numero_civique');
             $table->string('adresse', 64);
+            $table->boolean('est_proprietaire')->default(false);
             $table->timestamps();
 
         });

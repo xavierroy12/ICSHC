@@ -1,4 +1,4 @@
-import { type SyntheticEvent } from 'react';
+import { useContext, type SyntheticEvent } from 'react';
 import { Form, Field, FormikValues } from 'formik';
 import { SelectItem } from './type';
 import { Grid, TextField, Button } from '@mui/material';
@@ -7,6 +7,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import CustomSelect from '../CustomSelect';
+import { AdminContext } from '../../App';
 
 type Props = {
   values: FormikValues;
@@ -43,6 +44,8 @@ const ActifForm = ({
   handleReception,
   handleArchive,
 }: Props) => {
+  const isAdmin = useContext(AdminContext);
+
   return (
     <Form>
       <Grid
@@ -66,7 +69,7 @@ const ActifForm = ({
             label="Numéro de commande"
             name="numero_commande"
             className="input-label "
-            disabled
+            disabled={!isAdmin}
             sx={{ width: 300 }}
           />
         </Grid>
@@ -77,7 +80,7 @@ const ActifForm = ({
             label="Numéro de série"
             name="numero_serie"
             className="input-field"
-            disabled
+            disabled={!isAdmin}
             sx={{ width: 300 }}
           />
         </Grid>
@@ -88,7 +91,7 @@ const ActifForm = ({
             label="Adresse MAC"
             name="adresse_mac"
             className="input-label "
-            disabled
+            disabled={!isAdmin}
             sx={{ width: 300 }}
           />
         </Grid>
@@ -128,7 +131,6 @@ const ActifForm = ({
             name="assigne_a"
             component={CustomSelect}
             options={locataires}
-            needsId={true}
             label="Assigné à"
             isClearable={true}
           />
@@ -190,7 +192,7 @@ const ActifForm = ({
               name="date_creation"
               className="input-label "
               value={values.date_creation ? dayjs(values.date_creation) : null}
-              disabled={!values.date_creation}
+              disabled={!isAdmin}
               sx={{ width: 300 }}
             />
           </Grid>
@@ -256,7 +258,7 @@ const ActifForm = ({
           </Button>
 
           <Button
-            className="my-5 mx-5 flex float-right"
+            className="my-5 mx-5 flex float-left"
             style={{ marginRight: '1rem' }}
             variant="contained"
             color="error"

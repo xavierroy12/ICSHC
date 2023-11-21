@@ -44,7 +44,7 @@ const ActifsForm = ({
         <Grid
           container
           spacing={3}
-          className="max-w-screen-md p-4 bg-slate-100 w-full mx-auto"
+          className="max-w-screen-md p-4  w-full mx-auto"
         >
           <Grid item xs={12} sm={6}>
             <Field

@@ -33,7 +33,7 @@ const CommandeList = () => {
   const columns = [
     {
       name: 'numero_commande',
-      header: 'Numéro de commande',
+      label: 'Numéro de commande',
       enableColumnFilter: false,
     },
     {

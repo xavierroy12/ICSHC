@@ -38,7 +38,7 @@ class LoginController extends Controller
         $utilisateur = new UtilisateurController();
         $utilisateur = $utilisateur->tokenExists($token); // Get the user by the token
 
-        if ($utilisateur) {
+        if ($utilisateur["valid_token"]){
             // Token is valid, return the user information
             error_log("Token $token is valid");
             return response()->json([

@@ -40,7 +40,7 @@ const FormLayout = ({ children, title, dirty }: Props) => {
               {title}
             </Typography>
           </div>
-          <div className="flex justify-between w-fit bg-slate-100 min-w-fit mt-4">
+          <div className="flex justify-between w-fit bg-slate-100 dark:bg-slate-800 min-w-fit mt-4">
             <div className="p-4 my-4 mx-auto">{children}</div>
           </div>
         </div>

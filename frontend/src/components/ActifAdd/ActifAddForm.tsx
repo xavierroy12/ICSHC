@@ -57,7 +57,7 @@ const ActifAddForm = ({ modeles, actifs, setActifs }: Props) => {
   return (
     <Form>
       <Fragment>
-        <div className="w-[800px] p-6 bg-slate-100">
+        <div className="w-[800px] p-6 bg-slate-100 dark:bg-slate-800">
           <Typography variant="h6" className="my-8 mx-auto">
             Sélectionnez un modèle
           </Typography>

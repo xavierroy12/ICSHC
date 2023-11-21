@@ -199,7 +199,7 @@ const Actifs = () => {
                   Actifs sélectionnés
                 </Typography>
               </div>
-              <div className=" bg-slate-100 w-full mx-auto h-full overflow-hidden">
+              <div className=" bg-slate-100 dark:bg-slate-800 w-full mx-auto h-full overflow-hidden">
                 <SelectActifsList
                   selectedActifs={selectedActifs}
                   setSelectedActifs={setSelectedActifs}

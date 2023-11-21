@@ -109,7 +109,7 @@ const Client = () => {
         <div className="mx-auto mt-8">
           {client && (
             <FormLayout title={client.nom} dirty={false}>
-              <div className="flex justify-between w-fit bg-slate-100 min-w-fit mt-4">
+              <div className="flex justify-between w-fit bg-slate-100 dark:bg-slate-800 min-w-fit mt-4">
                 <div className="p-4 my-4   mx-auto">
                   <Grid
                     container

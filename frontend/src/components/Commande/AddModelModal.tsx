@@ -95,13 +95,13 @@ const AddModelModal = ({
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
       <div className="flex ">
-        <div className=" bg-slate-100 m-10 p-8">
+        <div className=" bg-slate-100 dark:bg-slate-800 m-10 p-8">
           <div className="mb-8">
             <Typography variant="h4">Nouveau Model</Typography>
           </div>
           <Formik initialValues={initialValues} onSubmit={handleSubmitModele}>
             {({ values, dirty, setFieldValue }) => (
-              <div className="max-w-fit bg-slate-100 p-4">
+              <div className="max-w-fit bg-slate-100 dark:bg-slate-800 p-4">
                 <ModeleForm
                   categories={categories}
                   values={values}

@@ -2,9 +2,15 @@ import { Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
-import { Divider } from '@mui/material';
+import { Divider, IconButton } from '@mui/material';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+type Props = {
+  darkMode: boolean;
+  handleThemeChange: () => void;
+};
 
-const NavBar = () => {
+const NavBar = ({ darkMode, handleThemeChange }: Props) => {
   return (
     <AppBar position="static">
       <Toolbar>
@@ -70,11 +76,9 @@ const NavBar = () => {
             className="mr-4"
           >
             Rapports
-
           </Button>
-              <Button
+          <Button
             component={Link}
-
             to={`/emplacements`}
             color="inherit"
             className="mr-4"
@@ -100,7 +104,6 @@ const NavBar = () => {
           >
             Sync
           </Button>
-
         </div>
         <div>
           <Button
@@ -111,6 +114,9 @@ const NavBar = () => {
           >
             Profil
           </Button>
+          <IconButton onClick={handleThemeChange}>
+            {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
         </div>
       </Toolbar>
     </AppBar>

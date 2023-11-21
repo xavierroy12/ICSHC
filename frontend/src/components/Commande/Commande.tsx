@@ -231,7 +231,7 @@ const Commande = () => {
                   <Fragment>
                     {commande && (
                       <div className="w-fit min-w-fit my-8 mx-auto h-[600px] max-h-[900px] overflow-scroll">
-                        <div className="p-4 my-4 bg-slate-100 mx-auto">
+                        <div className="p-4 my-4  mx-auto">
                           {' '}
                           {activeStep === 0 && (
                             <CommandeInformation commande={commande} />

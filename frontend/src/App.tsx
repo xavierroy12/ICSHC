@@ -20,6 +20,8 @@ import Rapport from './components/Rapport';
 import EmplacementList from './components/EmplacementList';
 import Emplacement from './components/Emplacement';
 import Profil from './components/Profil/Profil';
+import { useEffect, useState } from 'react';
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 
 if (process.env.NODE_ENV === 'development') {
   window.name = 'http://localhost:8000/';
@@ -28,6 +30,24 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 function App() {
+  const [darkMode, setDarkMode] = useState(() => {
+    const localDarkMode = window.localStorage.getItem('darkMode');
+    return localDarkMode ? JSON.parse(localDarkMode) : false;
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem('darkMode', JSON.stringify(darkMode));
+  }, [darkMode]);
+  const theme = createTheme({
+    palette: {
+      mode: darkMode ? 'dark' : 'light',
+    },
+  });
+
+  const handleThemeChange = () => {
+    setDarkMode(!darkMode);
+  };
+
   console.log('App.tsx');
   //enlever pour le split 3
   //localStorage.setItem('id_user', '2');
@@ -71,42 +91,50 @@ function App() {
   console.log('Authentified');
 
   return (
-    <div className="App">
-      <Router>
-        <Layout>
-          <ToastContainer />
-          <Routes>
-            <Route path="/actifs" element={<ActifsList />} />
-            <Route path="/actifs/modify" element={<Actifs />} />
-            <Route path="/actif/:id" element={<Actif />} />
-            <Route path="/actif" element={<ActifAdd />} />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <div className="App">
+        <div className={darkMode ? 'dark' : ''}>
+          <Router>
+            <Layout darkMode={darkMode} handleThemeChange={handleThemeChange}>
+              <ToastContainer />
+              <Routes>
+                <Route path="/actifs" element={<ActifsList />} />
+                <Route path="/actifs/modify" element={<Actifs />} />
+                <Route path="/actif/:id" element={<Actif />} />
+                <Route path="/actif" element={<ActifAdd />} />
 
-            <Route path="/modeles" element={<ModeleList />} />
-            <Route path="/modele/:id" element={<Modele />} />
+                <Route path="/modeles" element={<ModeleList />} />
+                <Route path="/modele/:id" element={<Modele />} />
 
-            <Route path="/client/:id" element={<Client />} />
-            <Route path="/clients" element={<ClientsList />} />
+                <Route path="/client/:id" element={<Client />} />
+                <Route path="/clients" element={<ClientsList />} />
 
-            <Route path="/utilisateurs" element={<UtilisateurList />} />
-            <Route path="/utilisateur/:id" element={<Utilisateur />} />
+                <Route path="/utilisateurs" element={<UtilisateurList />} />
+                <Route path="/utilisateur/:id" element={<Utilisateur />} />
 
-            <Route path="/profil" element={<Profil />} />
+                <Route path="/profil" element={<Profil />} />
 
-            <Route path="/commandes" element={<CommandesList />} />
-            <Route path="/commande/:numero_commande" element={<Commande />} />
+                <Route path="/commandes" element={<CommandesList />} />
+                <Route
+                  path="/commande/:numero_commande"
+                  element={<Commande />}
+                />
 
-            <Route path="/rapport" element={<Rapport />} />
+                <Route path="/rapport" element={<Rapport />} />
 
-            <Route path="/emplacements" element={<EmplacementList />} />
-            <Route path="/emplacement/:id" element={<Emplacement />} />
+                <Route path="/emplacements" element={<EmplacementList />} />
+                <Route path="/emplacement/:id" element={<Emplacement />} />
 
-            <Route path="*" element={<h1>Not Found</h1>} />
+                <Route path="*" element={<h1>Not Found</h1>} />
 
-            <Route path="/login" element={<Login />} />
-          </Routes>
-        </Layout>
-      </Router>
-    </div>
+                <Route path="/login" element={<Login />} />
+              </Routes>
+            </Layout>
+          </Router>
+        </div>
+      </div>
+    </ThemeProvider>
   );
 }
 //}

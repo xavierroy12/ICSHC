@@ -21,12 +21,9 @@ const CustomSelect = ({
   const [inputValue, setInputValue] = useState<string>('');
   const [value, setValue] = useState<SelectItem | null>(null);
   useEffect(() => {
-    console.log('field.value:', field.value);
-    console.log('options:', options);
-
     if (field.value !== undefined && field.value !== null) {
       const matchingOption = options.find(
-        (option) => option.id === field.value
+        (option) => option.id === Number(field.value)
       );
       console.log('matchingOption:', matchingOption);
       if (matchingOption) {

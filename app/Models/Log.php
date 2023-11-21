@@ -21,6 +21,7 @@ class Log extends Model
         'id_user',
         'id_client',
         'id_actif',
+        'id_modele',
         'id_emplacement',
     ];
 }

@@ -36,31 +36,36 @@ class LogRequestMiddleware
                     break;
                 case 'actif':
                     // Handle POST request for actif wich is store
-                    error_log('in actif');
+                    error_log('in actif canty figure out wich one');
                     break;
                 case 'actif/id':
                     // Handle POST request for /actif/{id}
                     error_log('in actif/id');
                     $this->logController->logActif($request);
-
                     break;
-                case '/client/actifs/':
-                    // Handle POST request for /client/actifs/{id}
-                    error_log('in /client/actifs/');
+                case 'client/actifs/id':
+                    error_log('in /client/actifs/id');
+                    $this->logController->logAssignation($request);
                     break;
-                case 'modele/favoris':
+                case 'modele/favoris/id':
                     // Handle POST request for /modele/favoris/{id}
+
                     error_log('in modele/favoris');
+                    $this->logController->logFavoris($request);
                     break;
                 case 'modele':
                     // Handle POST request for /modele/{id} and /modele
                     error_log('in modele');
                     break;
                 case 'modele/id':
-                    // Handle POST request for /modele/{id} and /modele
+                    error_log('in modele/id');
+                    $this->logController->logModele($request);
+
                     break;
                 case 'categorie':
                     // Handle POST request for /categorie
+                    error_log('in categoirie');
+                    $this->logController->logCategorie($request);
                     break;
                 case 'utilisateur':
                     // Handle POST request for /utilisateur/{id}

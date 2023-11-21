@@ -7,6 +7,7 @@ use App\Models\Log;
 use App\Models\User;
 use App\Models\Actif;
 use App\Models\Client;
+use App\Models\Modele;
 
 
 class LogController extends Controller
@@ -95,7 +96,7 @@ class LogController extends Controller
         //set the variable needed
         $modificateur = $request->header('X-User-Action-Id');
         $path = $request->path();
-        $id = substr($path, -1);
+        $id = basename($path);
         $actif = Actif::find($id);
         $data = $request->all();
         //set the data to be logged
@@ -116,7 +117,7 @@ class LogController extends Controller
         //for each field in the request, check if it is different from the current value and if it is, log it
         foreach ($requestData as $field => $newValue) {
             if ($actif->$field != $newValue && $newValue != null) {
-                error_log('field is ' . $field . ' and newValue is ' . $newValue);
+                error_log('field is ' . $field . ' and newValue is ' . $newValue . ' and oldValue is ' . $actif->$field);
                 $log = new Log([
                     'url' => $request->fullUrl(),
                     'method' => $request->method(),
@@ -135,18 +136,159 @@ class LogController extends Controller
                     $log->old_value = $actif->modele->categorie->id;
                 }
                 if ($field == 'id_client') {
+                    error_log('id_client');
                     //To-do: call the logClient for a desasignation and assignation log. Here we are just creating the log for the actif
                     $client = Client::where('matricule', $requestData['id_client'])->first();
                     //to-do: check why the assignation wont save.
+                    error_log('client id ' . $client->id);
                     $log->new_value = $client->id;
+                    error_log('log is : ' . $log);
 
+                    $logAssignation = new Log([
+                        'url' => $request->fullUrl(),
+                        'method' => $request->method(),
+                        'action' => 'assignation',
+                        'field' => 'id_client',
+                        'old_value' => null,
+                        'new_value' => $client->id,
+                        'id_user' => $modificateur,
+                        'id_actif' => $id,
+                    ]);
+                    $logDesassignation = new Log([
+                        'url' => $request->fullUrl(),
+                        'method' => $request->method(),
+                        'action' => 'desassignation',
+                        'field' => 'id_client',
+                        'old_value' => $actif->client->id,
+                        'new_value' => null,
+                        'id_user' => $modificateur,
+                        'id_actif' => $id,
+                    ]);
+                    $logAssignation->save();
+                    $logDesassignation->save();
                 }
                 $log->save();
             }
         }
+    }
 
 
 
+    public function logAssignation(Request $request)
+    {
+        $modificateur = $request->header('X-User-Action-Id');
+        $path = $request->path();
+        $idClient = basename($path);
+        //$client = Client::find($idClient);
+        $actifClients = $actifs = Actif::where('id_client', $idClient)->get();
+        $actifsRequestIds = $request->input('actifs');
+        $actifClientsIds = $actifClients->pluck('id')->toArray();
+
+        $addedIds = array_diff($actifsRequestIds, $actifClientsIds);
+        $removedIds = array_diff($actifClientsIds, $actifsRequestIds);
+
+        foreach ($addedIds as $id) {
+            $log = new Log([
+                'url' => $request->fullUrl(),
+                'method' => $request->method(),
+                'action' => 'assignation',
+                'field' => 'id_client',
+                'old_value' => null,
+                'new_value' => $idClient,
+                'id_user' => $modificateur,
+                'id_actif' => $id,
+            ]);
+            $log->save();
+        }
+
+        foreach ($removedIds as $id) {
+            $log = new Log([
+                'url' => $request->fullUrl(),
+                'method' => $request->method(),
+                'action' => 'desassignation',
+                'field' => 'id_client',
+                'old_value' => $idClient,
+                'new_value' => null,
+                'id_user' => $modificateur,
+                'id_actif' => $id,
+            ]);
+            $log->save();
+        }
+    }
+
+    public function logFavoris(Request $request)
+    {
+        error_log($request);
+        $modificateur = $request->header('X-User-Action-Id');
+        $path = $request->path();
+        $idModele = basename($path);
+        $modele = Modele::find($idModele);
+
+        error_log($modele);
+        $log = new Log([
+            'url' => $request->fullUrl(),
+            'method' => $request->method(),
+            'action' => 'ajoutFavoris',
+            'field' => 'favoris',
+            'old_value' => False,
+            'new_value' => True,
+            'id_user' => $modificateur,
+            'id_modele' => $idModele,
+        ]);
+        if ($modele->favoris == True) {
+            $log->action = 'retraitFavoris';
+            $log->new_value = False;
+            $log->old_value = True;
+        }
+
+        $log->save();
+    }
+
+    public function logModele(Request $request)
+    {
+        $modificateur = $request->header('X-User-Action-Id');
+        $path = $request->path();
+        $idModele = basename($path);
+        $modele = Modele::find($idModele);
+        error_log($request);
+
+        $data = $request->all();
+        //set the data to be logged
+        $requestData = [
+            'id' => isset($data['id']) ? $data['id'] : null,
+            'nom' => isset($data['nom']) ? $data['nom'] : null,
+            'id_type_modele' => isset($data['id_type_modele']) ? $data['id_type_modele'] : null,
+            'stockage' => isset($data['stockage']) ? $data['stockage'] : null,
+            'processeur' => isset($data['processeur']) ? $data['processeur'] : null,
+            'memoire_vive' => isset($data['memoire_vive']) ? $data['memoire_vive'] : null,
+            'favoris' => isset($data['favoris']) ? $data['favoris'] : null,
+            'taille' => isset($data['taille']) ? $data['taille'] : null,
+        ];
+
+        foreach ($requestData as $field => $newValue) {
+            if ($modele->$field != $newValue && $newValue != null) {
+                error_log('field is ' . $field . ' and newValue is ' . $newValue . ' and oldValue is ' . $modele->$field);
+                $log = new Log([
+                    'url' => $request->fullUrl(),
+                    'method' => $request->method(),
+                    'action' => 'modifier',
+                    'field' => $field,
+                    'old_value' => $modele->$field,
+                    'new_value' => $newValue,
+                    'id_user' => $modificateur,
+                    'id_modele' => $idModele,
+                ]);
+                $log->save();
+            }
+        }
+    }
+
+    public function logCategorie(Request $request){
+        /*$modificateur = $request->header('X-User-Action-Id');
+        $path = $request->path();
+        $log = new Log([
+             
+        ])*/
     }
 
     /**

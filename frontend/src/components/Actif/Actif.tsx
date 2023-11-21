@@ -119,6 +119,7 @@ const Actif = () => {
 
     if (confirmed) {
       // Set the statut of the actif to "Archivé"
+
       const updatedActif = {
         nom: values.nom,
         numero_serie: values.numero_serie,
@@ -162,6 +163,7 @@ const Actif = () => {
       id_proprietaire: values.proprietaire.id || values.proprietaire,
       id_utilisation: values.utilisation.id || values.utilisation,
     };
+    console.log(updatedData);
 
     handleUpdate(updatedData);
   };

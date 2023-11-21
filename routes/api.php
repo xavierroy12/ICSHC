@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmplacementController;
 use App\Http\Controllers\StatutController;
 use App\Http\Controllers\UtilisationController;
-use App\Http\Controllers\ProprietaireController;
 use App\Http\Controllers\ActifController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\EtatController;
@@ -61,8 +60,7 @@ Route::middleware('throttle:5000,1')->group(function () {
     Route::get('/utilisations', [UtilisationController::class, 'showAll']);
     Route::get('/utilisations/light', [UtilisationController::class, 'lightShow']);
 
-    Route::get('/proprietaires', [ProprietaireController::class, 'showAll']);
-    Route::get('/proprietaires/light', [ProprietaireController::class, 'lightShow']);
+    Route::get('/proprietaires/light', [EmplacementController::class, 'lightShowProprietaire']);
 
     Route::get('/utilisateurs', [UtilisateurController::class, 'showAll']);
 

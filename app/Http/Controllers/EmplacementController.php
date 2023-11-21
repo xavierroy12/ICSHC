@@ -76,6 +76,7 @@ class EmplacementController extends Controller
         $emplacement->matricule = $request->matricule;
         $emplacement->adresse = $request->adresse;
         $emplacement->numero_civique = $request->numero_civique;
+        $emplacement->est_proprietaire = $request->est_proprietaire;
         $emplacement->save();
         return $emplacement;
     }
@@ -97,11 +98,22 @@ class EmplacementController extends Controller
         $emplacements = Emplacement::All()->map(function ($emplacement) {
             return [
                 "id" => $emplacement->id,
-                "nom" => $emplacement->nom,
+                "nom" => $emplacement->matricule. " - " .$emplacement->nom,
             ];
         });
         return response()->json($emplacements);
     }
+    public function lightShowProprietaire()
+    {
+        $emplacements = Emplacement::where("est_proprietaire", true)->get()->map(function ($emplacement) {
+            return [
+                "id" => $emplacement->id,
+                "nom" => $emplacement->matricule. " - " .$emplacement->nom,
+            ];
+        });
+        return response()->json($emplacements);
+    }
+
 
     public function listShow()
     {

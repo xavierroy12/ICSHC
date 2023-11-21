@@ -233,7 +233,7 @@ class ActifController extends Controller
                     'categorie' => $actif->modele->categorie->nom,
                     'statut' => $actif->statut->nom,
                     'client' => $actif->client ? ($actif->client->prenom . ' ' . $actif->client->nom) : 'Aucun',
-                    'emplacement' => $actif->emplacement->nom,
+                    'emplacement' => $actif->emplacement->matricule. " - " .$actif->emplacement->nom,
 
                 ];
             });
@@ -317,7 +317,7 @@ class ActifController extends Controller
                 'statut_id' => $actif->statut->id,
                 'client' => $actif->client->prenom . ' ' . $actif->client->nom ?? 'Aucun',
                 'client_id' => $actif->client->id,
-                'emplacement' => $actif->emplacement->nom,
+                'emplacement' => $actif->emplacement->matricule. " - " .$actif->emplacement->nom,
                 'emplacement_id' => $actif->emplacement->id,
             ];
         });

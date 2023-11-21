@@ -15,78 +15,81 @@ class EmplacementSeeder extends Seeder
     {
         DB::table('emplacement')->insert([
             'matricule' => '068',
-            'nom' => '068 - École Du Parchemin',
-            'numero_civique' => 162,
+            'nom' => 'École Du Parchemin',
+            'numero_civique' => "162",
             'adresse' => 'Rue Saint-Jean Est',
+            "est_proprietaire" => true,
         ]);
 
         DB::table('emplacement')->insert([
             'matricule' => '069',
-            'nom' => '069 - École Ligugé',
-            'numero_civique' => 194,
+            'nom' => 'École Ligugé',
+            'numero_civique' => "194",
             'adresse' => 'Rue de l\'Église',
         ]);
         DB::table('emplacement')->insert([
             'matricule' => '099',
-            'nom' => '099 - Centre de service de East Angus',
-            'numero_civique' => 123,
+            'nom' => ' Centre de service de East Angus',
+            'numero_civique' => "123",
             'adresse' => 'Rue des Entreprises',
+            "est_proprietaire" => true,
         ]);
 
         DB::table('emplacement')->insert([
             'matricule' => '007',
-            'nom' => '007 - Polyvalente Louis Saint-Laurent',
-            'numero_civique' => 215,
+            'nom' => ' Polyvalente Louis Saint-Laurent',
+            'numero_civique' => "215",
             'adresse' => 'Rue de l\'Aréna',
         ]);
 
         DB::table('emplacement')->insert([
             'matricule' =>'021',
-            'nom' => '021 - Centre de formation professionnelle du Haut-Saint-François',
-            'numero_civique' => 188,
-            'adresse' => '188, rue Kennedy',
+            'nom' => 'Centre de formation professionnelle du Haut-Saint-François',
+            'numero_civique' => "188",
+            'adresse' => 'rue Kennedy',
+            "est_proprietaire" => true,
         ]);
 
         DB::table('emplacement')->insert([
             'matricule' => '011',
-            'nom' => '011 - Centre d’éducation des adultes de la CSHC',
-            'numero_civique' => 188,
-            'adresse' => '188, rue Kennedy',
+            'nom' => 'Centre d’éducation des adultes de la CSHC',
+            'numero_civique' => "188",
+            'adresse' => 'rue Kennedy',
         ]);
 
         DB::table('emplacement')->insert([
             'matricule' => '047',
-            'nom' => '047 - École du Parchemin – Côté Couvent',
-            'numero_civique' => 162,
-            'adresse' => '162, rue Saint-Jean Est',
+            'nom' => 'École du Parchemin – Côté Couvent',
+            'numero_civique' => "162",
+            'adresse' => 'rue Saint-Jean Est',
         ]);
 
         DB::table('emplacement')->insert([
             'matricule' => '048',
-            'nom' => '048 - École du Parchemin – Côté Collège',
-            'numero_civique' => 96,
-            'adresse' => '96, rue Saint-Jacques',
+            'nom' => 'École du Parchemin – Côté Collège',
+            'numero_civique' => "96",
+            'adresse' => 'rue Saint-Jacques',
         ]);
 
         DB::table('emplacement')->insert([
             'matricule' => '058',
-            'nom' => '058 - École des Trois-Cantons',
-            'numero_civique' => 25,
-            'adresse' => '25, rue de l’Église',
+            'nom' => 'École des Trois-Cantons',
+            'numero_civique' => "25",
+            'adresse' => 'rue de l’Église',
         ]);
 
         DB::table('emplacement')->insert([
             'matricule' => '051',
-            'nom' => '051 - École Saint-Camille',
-            'numero_civique' => 150,
-            'adresse' => '150, rue Bibeau',
+            'nom' => 'École Saint-Camille',
+            'numero_civique' => "150",
+            'adresse' => 'rue Bibeau',
         ]);
 
         DB::table('emplacement')->insert([
             'matricule' => '067',
-            'nom' => '067 - École Notre-Dame-du-Paradis',
-            'numero_civique' => 184,
-            'adresse' => '184, rue Principale E',
+            'nom' => 'École Notre-Dame-du-Paradis',
+            'numero_civique' => "184",
+            'adresse' => 'rue Principale E',
         ]);
 
         DB::table('emplacement')->insert([

@@ -12,6 +12,7 @@ type Emplacement_Type = {
   nom: string;
   adresse: string;
   numero_civique: string;
+  est_proprietaire: boolean;
 };
 
 const Emplacement = () => {
@@ -40,6 +41,7 @@ const Emplacement = () => {
     adresse: emplacement?.adresse,
     matricule: emplacement?.matricule,
     numero_civique: emplacement?.numero_civique,
+    est_proprietaire: emplacement?.est_proprietaire,
   };
 
   const handleSubmit = (values: FormikValues) => {
@@ -69,12 +71,16 @@ const Emplacement = () => {
         <div className="mx-auto mt-8">
           {id && (
             <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-              {({ dirty }) => (
+              {({ values, dirty, setFieldValue }) => (
                 <FormLayout
                   title={emplacement?.nom || 'Nouveau emplacement'}
                   dirty={dirty}
                 >
-                  <EmplacementForm dirty={dirty} />
+                  <EmplacementForm
+                    values={values}
+                    dirty={dirty}
+                    setFieldValue={setFieldValue}
+                  />
                 </FormLayout>
               )}
             </Formik>

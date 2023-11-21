@@ -61,7 +61,7 @@ class CommandeController extends Controller
             "numero_commande" => $c->numero_commande,
             "etat" => $c->etat->nom,
             "nb_actif"=> $c->nb_actif,
-            "emplacement" => $c->emplacement->nom,
+            'emplacement' => $c->emplacement->matricule. " - " .$c->emplacement->nom,
             "date_commande" => $c->date_commande,
             "actifs" => $actif
         ];

@@ -106,8 +106,7 @@ Route::middleware(['logrequest', 'throttle:5000,1'])->group(function () {
 
     Route::get('/logsJson', [LogController::class, 'listJson']);
 
-    Route::get('historique/actif/{id}', [LogController::class, 'showLogs']);
-    Route::get('historique/client/{id}', [LogController::class, 'showLogs']);
+    Route::get('historique/{typeItem}/{id_item}', [LogController::class, 'showLogs']);
 
 
     Route::get('/emplacements/list', [EmplacementController::class, 'listShow']);

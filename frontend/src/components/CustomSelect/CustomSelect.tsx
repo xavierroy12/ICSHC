@@ -25,7 +25,6 @@ const CustomSelect = ({
       const matchingOption = options.find(
         (option) => option.id === Number(field.value)
       );
-      console.log('matchingOption:', matchingOption);
       if (matchingOption) {
         setValue(matchingOption);
       }

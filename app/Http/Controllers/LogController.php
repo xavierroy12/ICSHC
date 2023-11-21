@@ -138,7 +138,7 @@ class LogController extends Controller
                 if ($field == 'id_client') {
                     error_log('id_client');
                     //To-do: call the logClient for a desasignation and assignation log. Here we are just creating the log for the actif
-                    $client = Client::where('matricule', $requestData['id_client'])->first();
+                    $client = Client::where('id', $requestData['id_client'])->first();
                     //to-do: check why the assignation wont save.
                     error_log('client id ' . $client->id);
                     $log->new_value = $client->id;
@@ -167,6 +167,7 @@ class LogController extends Controller
                     $logAssignation->save();
                     $logDesassignation->save();
                 }
+                error_log('log is : ' . $log);
                 $log->save();
             }
         }
@@ -293,33 +294,30 @@ class LogController extends Controller
     }
 
 
-    public function showLogs(Request $request)
+    public function showLogs($typeItem, $id_item)
     {
-        $typeItem = $request->input('type');
-        $id_item = $request->input('id_item');
+
         $logs = [];
         $logsReturned = [];
         $relationships = ['actif', 'client', 'modele', 'user'];
 
+
+
         // Return all actif logs
         if ($typeItem == 'actif') {
             $logs = Log::where('id_actif', $id_item)->with($relationships)->get();
-            return response()->json($logs);
         }
         // Return all client logs
         if ($typeItem == 'client') {
             $logs = Log::where('id_client', $id_item)->with($relationships)->get();
-            return response()->json($logs);
         }
         // Return all modele logs
         if ($typeItem == 'modele') {
             $logs = Log::where('id_modele', $id_item)->with($relationships)->get();
-            return response()->json($logs);
         }
         // Return all user logs
         if ($typeItem == 'user') {
             $logs = Log::where('id_user', $id_item)->with($relationships)->get();
-            return response()->json($logs);
         }
 
         foreach($logs as $log){
@@ -334,14 +332,19 @@ class LogController extends Controller
             $old_value = $log->old_value !== null ? $log->old_value : 'rien';
             $new_value = $log->new_value !== null ? $log->new_value : 'rien';
 
-            $description = $log->action . ' ' . $champ . ' de ' . $log->old_value . ' à ' . $log->new_value;
-            $utilisateur = $log->user->nom;
+            $description = $log->action . ' ' . $champ . ' de ' . $old_value . ' à ' . $new_value;
+            //todo: read the user fr fr no cap
+            //$utilisateur = $log->user->nom !== null ? $log->user->nom : 'Utilisateur introuvable';
+            $utilisateur = 'personne';
+
 
             $data = [
                 'date' => $log->created_at,
                 'description' => $description,
                 'utilisateur' =>$utilisateur,
             ];
+
+
 
             array_push($logsReturned, $data);
         }

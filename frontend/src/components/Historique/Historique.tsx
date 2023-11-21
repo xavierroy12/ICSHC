@@ -26,7 +26,10 @@ const Historique = ({ id, type }: Props) => {
   useEffect(() => {
     fetch(window.name + `api/historique/${type}/${id}`)
       .then((response) => response.json())
-      .then((data) => setHistoriques(data));
+      .then((data) => {
+        console.log(data);
+        setHistoriques(data);
+      });
   }, [id, type]);
 
   return (

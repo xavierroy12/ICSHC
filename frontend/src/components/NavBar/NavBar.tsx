@@ -113,23 +113,27 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
                 >
                   Sync
                 </MenuItem>
+                <MenuItem
+                  onClick={async () => {
+                    try {
+                      const response = await fetch(
+                        'http://10.0.22.24:8080/api/utilisateursCookie'
+                      );
+                      const data = await response.json();
+                      console.log(data);
+                    } catch (error) {
+                      console.error('Error:', error);
+                    }
+                  }}
+                >
+                  testIdparcookie
+                </MenuItem>
               </Menu>
             </Fragment>
           )}
         </div>
         <div>
           <Button
-            onClick={async () => {
-              try {
-                const response = await fetch(
-                  'http://10.0.22.24:8080/api/syncAllClients'
-                );
-                const data = await response.json();
-                console.log(data);
-              } catch (error) {
-                console.error('Error:', error);
-              }
-            }}
             component={Link}
             to={`/profil`}
             color="inherit"
@@ -137,26 +141,6 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
           >
             Profil
           </Button>
-          <Button
-            onClick={async () => {
-              try {
-                const response = await fetch(
-                  'http://10.0.22.24:8080/api/utilisateursCookie'
-                );
-                const data = await response.json();
-                console.log(data);
-              } catch (error) {
-                console.error('Error:', error);
-              }
-            }}
-            component={Link}
-            to={`/dashboard`}
-            color="inherit"
-            className="mr-4"
-          >
-            testIdparcookie
-          </Button>
-
           <IconButton onClick={handleThemeChange}>
             {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>

@@ -7,6 +7,7 @@ type Props = {
 };
 
 const Layout = ({ darkMode, handleThemeChange, children }: Props) => {
+    
   return (
     <div className="layout">
       <NavBar darkMode={darkMode} handleThemeChange={handleThemeChange} />

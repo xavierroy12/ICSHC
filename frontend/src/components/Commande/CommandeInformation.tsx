@@ -3,12 +3,16 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { Commande_Type } from './type';
+import { AdminContext } from '../../App';
+import { useContext } from 'react';
 
 type Props = {
   commande: Commande_Type;
 };
 
 const CommandeInformation = ({ commande }: Props) => {
+  const isAdmin = useContext(AdminContext);
+
   return (
     <Box width={'100%'}>
       <Grid
@@ -22,7 +26,7 @@ const CommandeInformation = ({ commande }: Props) => {
             label="Numero commande"
             name="numero_commande"
             className="input-label"
-            disabled
+            disabled={!isAdmin}
             sx={{ width: 300 }}
             value={commande.numero_commande}
           />
@@ -32,7 +36,7 @@ const CommandeInformation = ({ commande }: Props) => {
             label="emplacement"
             name="emplacement"
             className="input-label "
-            disabled
+            disabled={!isAdmin}
             sx={{ width: 300 }}
             value={commande.emplacement}
           />
@@ -42,7 +46,7 @@ const CommandeInformation = ({ commande }: Props) => {
             label="État"
             name="etat"
             className="input-label "
-            disabled
+            disabled={!isAdmin}
             sx={{ width: 300 }}
             value={commande.etat}
           />
@@ -52,7 +56,7 @@ const CommandeInformation = ({ commande }: Props) => {
             label="Nombre actif"
             name="nb_actif"
             className="input-label "
-            disabled
+            disabled={!isAdmin}
             sx={{ width: 300 }}
             value={commande.nb_actif}
           />
@@ -66,7 +70,7 @@ const CommandeInformation = ({ commande }: Props) => {
               value={
                 commande.date_commande ? dayjs(commande.date_commande) : null
               }
-              disabled
+              disabled={!isAdmin}
               sx={{ width: 300 }}
             />
           </LocalizationProvider>

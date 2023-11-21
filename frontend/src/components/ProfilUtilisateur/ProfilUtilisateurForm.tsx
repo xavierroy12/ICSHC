@@ -2,6 +2,8 @@ import { Field, Form } from 'formik';
 import { SelectItem } from '../Actif/type';
 import { Button, Grid, TextField } from '@mui/material';
 import CustomSelect from '../CustomSelect';
+import { AdminContext } from '../../App';
+import { useContext } from 'react';
 
 type Props = {
   dirty: boolean;
@@ -16,6 +18,8 @@ const ProfileUtilisateurForm = ({
   roles,
   isProfil,
 }: Props) => {
+  const isAdmin = useContext(AdminContext);
+
   return (
     <Form>
       <Grid
@@ -29,7 +33,7 @@ const ProfileUtilisateurForm = ({
             label="Nom"
             name="nom"
             className="input-label "
-            disabled
+            disabled={!isAdmin}
             sx={{ width: 300 }}
           />
         </Grid>
@@ -40,7 +44,7 @@ const ProfileUtilisateurForm = ({
             component={CustomSelect}
             options={roles}
             label="Roles"
-            disabled={isProfil}
+            disabled={isProfil || !isAdmin}
           />
         </Grid>
         <Grid item xs={12} sm={12}>

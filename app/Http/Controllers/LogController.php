@@ -288,41 +288,91 @@ class LogController extends Controller
         /*$modificateur = $request->header('X-User-Action-Id');
         $path = $request->path();
         $log = new Log([
-             
+
         ])*/
     }
 
+
     public function showLogs(Request $request)
     {
-        $typeLogs = $request->input('type');
+        $typeItem = $request->input('type');
         $id_item = $request->input('id_item');
-
+        $logs = [];
+        $logsReturned = [];
         $relationships = ['actif', 'client', 'modele', 'user'];
 
         // Return all actif logs
-        if ($typeLogs == 'actif') {
+        if ($typeItem == 'actif') {
             $logs = Log::where('id_actif', $id_item)->with($relationships)->get();
             return response()->json($logs);
         }
         // Return all client logs
-        if ($typeLogs == 'client') {
+        if ($typeItem == 'client') {
             $logs = Log::where('id_client', $id_item)->with($relationships)->get();
             return response()->json($logs);
         }
         // Return all modele logs
-        if ($typeLogs == 'modele') {
+        if ($typeItem == 'modele') {
             $logs = Log::where('id_modele', $id_item)->with($relationships)->get();
             return response()->json($logs);
         }
         // Return all user logs
-        if ($typeLogs == 'user') {
+        if ($typeItem == 'user') {
             $logs = Log::where('id_user', $id_item)->with($relationships)->get();
             return response()->json($logs);
         }
 
+        foreach($logs as $log){
+            if($this->isForeignKey($log->field)){
+                $log->old_value = $this->getFieldValue($log->old_value, $log->field);
+                $log->new_value = $this->getFieldValue($log->new_value, $log->field);
+                $champ = substr($log->field, 3);
+            }
+            else{
+                $champ = $log->field;
+            }
+            $old_value = $log->old_value !== null ? $log->old_value : 'rien';
+            $new_value = $log->new_value !== null ? $log->new_value : 'rien';
 
+            $description = $log->action . ' ' . $champ . ' de ' . $log->old_value . ' à ' . $log->new_value;
+            $utilisateur = $log->user->nom;
 
+            $data = [
+                'date' => $log->created_at,
+                'description' => $description,
+                'utilisateur' =>$utilisateur,
+            ];
+
+            array_push($logsReturned, $data);
+        }
+
+        return response()->json($logsReturned);
     }
+
+    public function isForeignKey($field){
+        return substr($field, 0, 2) == 'id';
+    }
+
+    public function getFieldValue($value, $typeItem){
+        if($typeItem == 'actif'){
+            $actif = Actif::find($value);
+            return $actif->nom;
+        }
+        if($typeItem == 'client'){
+            $client = Client::find($value);
+            return $client->nom;
+        }
+        if($typeItem == 'modele'){
+            $modele = Modele::find($value);
+            return $modele->nom;
+        }
+        if($typeItem == 'user'){
+            $user = User::find($value);
+            return $user->name;
+        }
+    }
+
+
 
     /**
      * Store a newly created resource in storage.

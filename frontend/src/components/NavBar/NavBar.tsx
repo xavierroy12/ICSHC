@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
-import { Divider, IconButton } from '@mui/material';
+import { Divider, IconButton, Menu, MenuItem } from '@mui/material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-import { Fragment, useContext } from 'react';
+import { Fragment, useContext, useState } from 'react';
 import { AdminContext } from '../../App';
 
 type Props = {
@@ -15,7 +15,15 @@ type Props = {
 
 const NavBar = ({ darkMode, handleThemeChange }: Props) => {
   const isAdmin = useContext(AdminContext);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <AppBar position="static">
       <Toolbar>
@@ -68,49 +76,44 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
           {isAdmin && (
             <Fragment>
               <Divider orientation="vertical" flexItem color="white" />
-              <Button
-                component={Link}
-                to={`/utilisateurs`}
-                color="inherit"
-                className="mr-4"
-              >
-                Utilisateurs
+              <Button color="inherit" className="mr-4" onClick={handleClick}>
+                Admin
               </Button>
-              <Button
-                component={Link}
-                to={`/rapport`}
-                color="inherit"
-                className="mr-4"
+              <Menu
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
               >
-                Rapports
-              </Button>
-              <Button
-                component={Link}
-                to={`/emplacements`}
-                color="inherit"
-                className="mr-4"
-              >
-                Emplacements
-              </Button>
-              <Button
-                onClick={async () => {
-                  try {
-                    const response = await fetch(
-                      'http://10.0.22.24:8080/api/clientJsonStore'
-                    );
-                    const data = await response.json();
-                    console.log(data);
-                  } catch (error) {
-                    console.error('Error:', error);
-                  }
-                }}
-                component={Link}
-                to={`/dashboard`}
-                color="inherit"
-                className="mr-4"
-              >
-                Sync
-              </Button>
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to={`/utilisateurs`}
+                >
+                  Utilisateurs
+                </MenuItem>
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to={`/rapport`}
+                >
+                  Rapports
+                </MenuItem>
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to={`/emplacements`}
+                >
+                  Emplacements
+                </MenuItem>
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to={`/dashboard`}
+                >
+                  Sync
+                </MenuItem>
+              </Menu>
             </Fragment>
           )}
         </div>
@@ -118,14 +121,15 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
           <Button
             onClick={async () => {
               try {
-                const response = await fetch('http://10.0.22.24:8080/api/syncAllClients');
+                const response = await fetch(
+                  'http://10.0.22.24:8080/api/syncAllClients'
+                );
                 const data = await response.json();
                 console.log(data);
               } catch (error) {
                 console.error('Error:', error);
               }
             }}
-
             component={Link}
             to={`/profil`}
             color="inherit"
@@ -136,7 +140,9 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
           <Button
             onClick={async () => {
               try {
-                const response = await fetch('http://10.0.22.24:8080/api/utilisateursCookie');
+                const response = await fetch(
+                  'http://10.0.22.24:8080/api/utilisateursCookie'
+                );
                 const data = await response.json();
                 console.log(data);
               } catch (error) {

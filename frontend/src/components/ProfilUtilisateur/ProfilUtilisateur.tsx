@@ -7,6 +7,7 @@ import { LightType } from '../Actifs/type';
 import ProfileUtilisateurForm from './ProfilUtilisateurForm';
 import FormLayout from '../FormLayout';
 import { toast } from 'react-toastify';
+import Historique from '../Historique';
 
 type Utilisateur_Type = {
   id: number;
@@ -86,23 +87,30 @@ const ProfilUtilisateur = ({ id, isProfil }: Props) => {
       ) : (
         <div className="mx-auto mt-8">
           {utilisateur && id && (
-            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-              {({ dirty }) => (
-                <FormLayout
-                  title={
-                    isProfil ? 'Mon Profil' : 'Utilisateur: ' + utilisateur.nom
-                  }
-                  dirty={dirty}
-                >
-                  <ProfileUtilisateurForm
+            <div className="flex flex-col sm:flex-row justify-evenly items-start">
+              <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+                {({ dirty }) => (
+                  <FormLayout
+                    title={
+                      isProfil
+                        ? 'Mon Profil'
+                        : 'Utilisateur: ' + utilisateur.nom
+                    }
                     dirty={dirty}
-                    emplacements={emplacements}
-                    roles={roles}
-                    isProfil={isProfil}
-                  />
-                </FormLayout>
-              )}
-            </Formik>
+                  >
+                    <ProfileUtilisateurForm
+                      dirty={dirty}
+                      emplacements={emplacements}
+                      roles={roles}
+                      isProfil={isProfil}
+                    />
+                  </FormLayout>
+                )}
+              </Formik>
+              <div className="w-full sm:mt-0 mt-24  mx-8">
+                <Historique id={id} type="utilisateur" />
+              </div>
+            </div>
           )}
         </div>
       )}

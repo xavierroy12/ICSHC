@@ -6,6 +6,7 @@ import ActifForm from './ActifForm';
 import { Formik, FormikValues } from 'formik';
 import FormLayout from '../FormLayout';
 import { toast } from 'react-toastify';
+import Historique from '../Historique';
 
 const Actif = () => {
   const { id } = useParams<{ id: string }>();
@@ -191,13 +192,13 @@ const Actif = () => {
 
   const handleUpdate = (values: FormikValues) => {
     const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
-
+    console.log(values);
     try {
       fetch(window.name + `api/actif/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-User-Action-Id': id_user // send the user id in a custom header
+          'X-User-Action-Id': id_user, // send the user id in a custom header
         },
         body: JSON.stringify(values),
       }).then((response) => {
@@ -222,27 +223,32 @@ const Actif = () => {
       ) : (
         <div className="mx-auto mt-8">
           {actif && id && (
-            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-              {({ values, handleChange, dirty, setFieldValue }) => (
-                <FormLayout title="Modifier un actif" dirty={dirty}>
-                  <ActifForm
-                    values={values}
-                    handleChange={handleChange}
-                    dirty={dirty}
-                    setFieldValue={setFieldValue}
-                    statuts={statuts}
-                    modeles={modeles}
-                    categories={categories}
-                    emplacements={emplacements}
-                    locataires={locataires}
-                    utilisations={utilisations}
-                    proprietaires={proprietaires}
-                    handleReception={handleReception}
-                    handleArchive={handleArchive}
-                  />
-                </FormLayout>
-              )}
-            </Formik>
+            <div className="flex flex-col sm:flex-row justify-evenly items-start">
+              <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+                {({ values, handleChange, dirty, setFieldValue }) => (
+                  <FormLayout title="Modifier un actif" dirty={dirty}>
+                    <ActifForm
+                      values={values}
+                      handleChange={handleChange}
+                      dirty={dirty}
+                      setFieldValue={setFieldValue}
+                      statuts={statuts}
+                      modeles={modeles}
+                      categories={categories}
+                      emplacements={emplacements}
+                      locataires={locataires}
+                      utilisations={utilisations}
+                      proprietaires={proprietaires}
+                      handleReception={handleReception}
+                      handleArchive={handleArchive}
+                    />
+                  </FormLayout>
+                )}
+              </Formik>
+              <div className="w-full sm:mt-0 mt-24  mx-8">
+                <Historique id={id} type="actif" />
+              </div>
+            </div>
           )}
         </div>
       )}

@@ -36,12 +36,12 @@ const FormLayout = ({ children, title, dirty }: Props) => {
           <div className="flex">
             <BackButton onclick={() => handleBack(dirty)} />
 
-            <Typography variant="h2" className="my-8 mx-auto">
+            <Typography variant="h2" className="mx-auto">
               {title}
             </Typography>
           </div>
-          <div className="flex justify-between w-fit bg-slate-100 dark:bg-slate-800 min-w-fit mt-4">
-            <div className="p-4 my-4 mx-auto">{children}</div>
+          <div className="flex justify-between w-fit bg-slate-100 dark:bg-slate-800 min-w-fit mt-6">
+            <div className="p-4 mx-auto">{children}</div>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FieldProps } from 'formik';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -10,7 +10,6 @@ interface SearchableSelectProps extends FieldProps {
   isClearable?: boolean;
   disabled?: boolean;
 }
-
 const CustomSelect = ({
   field,
   form: { touched, errors, setFieldValue },
@@ -20,9 +19,21 @@ const CustomSelect = ({
   disabled = false,
 }: SearchableSelectProps) => {
   const [inputValue, setInputValue] = useState<string>('');
-  const [value, setValue] = useState<SelectItem | null>(
-    options[field.value - 1]
-  );
+  const [value, setValue] = useState<SelectItem | null>(null);
+  useEffect(() => {
+    console.log('field.value:', field.value);
+    console.log('options:', options);
+
+    if (field.value !== undefined && field.value !== null) {
+      const matchingOption = options.find(
+        (option) => option.id === field.value
+      );
+      console.log('matchingOption:', matchingOption);
+      if (matchingOption) {
+        setValue(matchingOption);
+      }
+    }
+  }, [field.value, options]);
 
   return (
     <Autocomplete
@@ -31,12 +42,12 @@ const CustomSelect = ({
       options={options}
       sx={{ width: 300 }}
       disableClearable={!isClearable}
-      defaultValue={options[field.value - 1]}
+      defaultValue={value}
       getOptionLabel={(option) => option.label}
       inputValue={inputValue}
       value={value}
       onChange={(_, newValue) => {
-        setFieldValue(field.name, newValue);
+        setFieldValue(field.name, newValue ? newValue.id : null);
         setValue(newValue);
       }}
       onInputChange={(_, newInputValue) => {

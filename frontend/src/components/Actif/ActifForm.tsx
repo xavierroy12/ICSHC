@@ -45,7 +45,8 @@ const ActifForm = ({
   handleArchive,
 }: Props) => {
   const isAdmin = useContext(AdminContext);
-
+  console.log(proprietaires);
+  console.log(values.proprietaire);
   return (
     <Form>
       <Grid

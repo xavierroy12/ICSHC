@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
             EtatSeeder::class,
             PosteSeeder::class,
             StatutSeeder::class,
-            ProprietaireSeeder::class,
             UtilisationSeeder::class,
             EmplacementSeeder::class,
             RoleSeeder::class,

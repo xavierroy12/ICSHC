@@ -24,4 +24,24 @@ class Log extends Model
         'id_modele',
         'id_emplacement',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user');
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'id_client');
+    }
+
+    public function actif()
+    {
+        return $this->belongsTo(Actif::class, 'id_actif');
+    }
+
+    public function modele()
+    {
+        return $this->belongsTo(Modele::class, 'id_modele');
+    }
 }

@@ -283,12 +283,45 @@ class LogController extends Controller
         }
     }
 
-    public function logCategorie(Request $request){
+    public function logCategorie(Request $request)
+    {
         /*$modificateur = $request->header('X-User-Action-Id');
         $path = $request->path();
         $log = new Log([
              
         ])*/
+    }
+
+    public function showLogs(Request $request)
+    {
+        $typeLogs = $request->input('type');
+        $id_item = $request->input('id_item');
+
+        $relationships = ['actif', 'client', 'modele', 'user'];
+
+        // Return all actif logs
+        if ($typeLogs == 'actif') {
+            $logs = Log::where('id_actif', $id_item)->with($relationships)->get();
+            return response()->json($logs);
+        }
+        // Return all client logs
+        if ($typeLogs == 'client') {
+            $logs = Log::where('id_client', $id_item)->with($relationships)->get();
+            return response()->json($logs);
+        }
+        // Return all modele logs
+        if ($typeLogs == 'modele') {
+            $logs = Log::where('id_modele', $id_item)->with($relationships)->get();
+            return response()->json($logs);
+        }
+        // Return all user logs
+        if ($typeLogs == 'user') {
+            $logs = Log::where('id_user', $id_item)->with($relationships)->get();
+            return response()->json($logs);
+        }
+
+
+
     }
 
     /**

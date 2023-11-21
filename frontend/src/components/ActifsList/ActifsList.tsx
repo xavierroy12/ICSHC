@@ -190,6 +190,8 @@ const ActifsList = () => {
         client: displayData[5][0],
         emplacement: displayData[6][0],
       });
+      console.log('Set selected filters:', selectedFilters);
+      console.log('Set selected filters:', displayData);
     },
   };
 
@@ -215,11 +217,18 @@ const ActifsList = () => {
   }, [id_user]);
   useEffect(() => {
     if (filtersList.length !== 0) {
-      setFiltersGroupSelect(
-        filtersList.map((filter) => {
-          return { value: filter.id, label: filter.label };
+      // Filter the filters based on the 'from' property
+      const pageFilters = filtersList.filter(filter => filter.from === 'actifs');
+
+      // Update the filtersGroupSelect state with the new filters
+      const updatedFilterOptions = pageFilters.map(
+        (filter: { id: number; label: string }) => ({
+          value: filter.id,
+          label: filter.label,
         })
       );
+
+      setFiltersGroupSelect(updatedFilterOptions);
     }
   }, [filtersList]);
 
@@ -298,7 +307,7 @@ const ActifsList = () => {
       .then((result) => {
         if (result.exists) {
           // Alert the user that the label already exists
-          toast.error(
+          alert(
             'Un filtre portant ce nom existe déjà. Veuillez entrer un autre nom svp.'
           );
         } else {
@@ -320,7 +329,7 @@ const ActifsList = () => {
           })
             .then((response) => {
               if (response.ok) {
-                toast.success(
+                alert(
                   'Le(s) filtre(s) selectionné(s) ont été enregistrés avec succès!'
                 );
                 setOpen(false);
@@ -342,6 +351,7 @@ const ActifsList = () => {
                     );
 
                     setFiltersGroupSelect(updatedFilterOptions);
+                    console.log('Updated filter options:', updatedFilterOptions);
 
                     // Apply the newly created filter
                     if (label) {
@@ -364,6 +374,8 @@ const ActifsList = () => {
                         });
                         setSelectedFilters(selectedFilterObject);
                         setActifs(filteredActifs);
+                        console.log('Selected filter object:', selectedFilterObject);
+                        console.log('Filtered actifs:', filteredActifs);
                       }
                     }
                   })
@@ -410,7 +422,7 @@ const ActifsList = () => {
           setCurrentFiltersGroup(undefined); // Reset the selected filter label to empty string
           setActifs(cleanActifs);
         } else {
-          toast.error('Une erreur est survenue');
+          console.error('Failed to delete filter');
         }
       })
       .catch((error) => {

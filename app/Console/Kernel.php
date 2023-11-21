@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             $clientController = new ClientController();
             error_log("Cron job running");
-            $result = $clientController->storeListClientScolage();
+            $result = $clientController->syncAllClients();
             error_log("Result is $result");
         })->everyMinute();
 

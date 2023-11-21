@@ -15,8 +15,11 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\FilterController;
+use App\Http\Controllers\LogController;
+use App\Http\Middleware\LogRequestMiddleware;
 
-Route::middleware('throttle:5000,1')->group(function () {
+
+Route::middleware(['logrequest', 'throttle:5000,1'])->group(function () {
 
     Route::get('/emplacement/{id}', [EmplacementController::class, 'show']);
     Route::get('/emplacements', [EmplacementController::class, 'showAll']);
@@ -99,6 +102,13 @@ Route::middleware('throttle:5000,1')->group(function () {
 
     Route::get('/clientJson', [ClientController::class, 'listClientScolago']);
     Route::get('/clientJsonStore', [ClientController::class, 'storeListClientScolage']);
+    Route::get('/syncAllClients', [ClientController::class, 'syncAllClients']);
+
+    Route::get('/logsJson', [LogController::class, 'listJson']);
+
+    Route::get('logs/actif/{id}', [LogController::class, 'showLogActif']);
+    Route::get('logs/client/{id}', [LogController::class, 'showLogClient']);
+
 
     Route::get('/emplacements/list', [EmplacementController::class, 'listShow']);
     Route::get('/emplacement/{id}', [EmplacementController::class, 'show']);

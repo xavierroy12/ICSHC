@@ -8,10 +8,12 @@ const ModeleList = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>();
   const [modeles, setModeles] = useState<Modele[]>([]);
+  const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
 
   let lastClickTime = 0; // To track double-clicks
 
   const handleRowClick = (
+
     _rowData: string[],
     rowMeta: { dataIndex: number; rowIndex: number }
   ) => {
@@ -29,6 +31,7 @@ const ModeleList = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-User-Action-Id': id_user // send the user id in a custom header
       },
     })
       .then((response) => response.json())

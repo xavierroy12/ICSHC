@@ -10,6 +10,8 @@ type Props = {
 const AddCategorie = ({ handleClose, reloadData }: Props) => {
   const [categorie, setCategorie] = useState<string>('');
   const handleSubmit = () => {
+    const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
+
     try {
       const value = {
         nom: categorie,
@@ -18,6 +20,8 @@ const AddCategorie = ({ handleClose, reloadData }: Props) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-User-Action-Id': id_user // send the user id in a custom header
+
         },
         body: JSON.stringify(value),
       }).then((response) => {
@@ -27,6 +31,7 @@ const AddCategorie = ({ handleClose, reloadData }: Props) => {
           toast.error('Une erreur est survenue');
         }
       });
+
     } catch (error) {
       toast.error('Une erreur est survenue');
     }

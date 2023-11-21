@@ -284,14 +284,15 @@ const ActifsList = () => {
   );
 
   const saveFilters = (label: string) => {
-    const id_user = localStorage.getItem('id_user');
+    const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
+
     const urlParts = window.location.pathname.split('/');
     const from = urlParts[urlParts.length - 1];
 
     // First, check if a filter with the same label already exists
     fetch(
       window.name +
-        `api/filter/checkLabelExists?label=${label}&id_user=${id_user}`,
+      `api/filter/checkLabelExists?label=${label}&id_user=${id_user}`,
       {
         method: 'GET',
       }
@@ -317,6 +318,7 @@ const ActifsList = () => {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'X-User-Action-Id': id_user // send the user id in a custom header
             },
             body: JSON.stringify(data),
           })
@@ -474,8 +476,8 @@ const ActifsList = () => {
 
                 const response = await fetch(
                   window.name +
-                    'api/filter/getFiltersByLabel?label=' +
-                    selectedLabel
+                  'api/filter/getFiltersByLabel?label=' +
+                  selectedLabel
                 );
 
                 if (response.ok) {

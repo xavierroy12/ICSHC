@@ -190,11 +190,14 @@ const Actif = () => {
   };
 
   const handleUpdate = (values: FormikValues) => {
+    const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
+
     try {
       fetch(window.name + `api/actif/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-User-Action-Id': id_user // send the user id in a custom header
         },
         body: JSON.stringify(values),
       }).then((response) => {

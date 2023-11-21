@@ -110,10 +110,14 @@ const Actifs = () => {
   };
 
   const handleUpdate = (values: FormikValues) => {
+    const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
+
     fetch(window.name + `api/actifs`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-User-Action-Id': id_user // send the user id in a custom header
+
       },
       body: JSON.stringify(values), // Send the updated data with the mapped field names
     }).then((response) => {

@@ -14,11 +14,11 @@ class TypeClientSeeder extends Seeder
     public function run(): void
     {
         DB::table('type_client')->insert([
-            'nom' => 'Enseignant',
+            'nom' => 'Personnel',
         ]);
 
         DB::table('type_client')->insert([
-            'nom' => 'Personnel',
+            'nom' => 'Eleve',
         ]);
 
     }

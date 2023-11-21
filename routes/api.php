@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmplacementController;
 use App\Http\Controllers\StatutController;
 use App\Http\Controllers\UtilisationController;
-use App\Http\Controllers\ProprietaireController;
 use App\Http\Controllers\ActifController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\EtatController;
@@ -34,6 +33,10 @@ Route::middleware(['logrequest', 'throttle:5000,1'])->group(function () {
     Route::post('/actifs', [ActifController::class, 'updateMultiple']);
     Route::post('/actif', [ActifController::class, 'store']);
     Route::post('/actif/{id}', [ActifController::class, 'update']);
+    Route::post('/actifs/create', [ActifController::class, 'createMultiple']);
+    Route::get('/rapport/{rapportName}', [ActifController::class, 'showRapport']);
+
+
 
     Route::get('/client/{id}', [ClientController::class, 'show']);
     Route::get('/clients', [ClientController::class, 'showAll']);
@@ -43,6 +46,7 @@ Route::middleware(['logrequest', 'throttle:5000,1'])->group(function () {
 
     Route::get('/etats', [EtatController::class, 'showAll']);
     Route::get('/etats/light', [EtatController::class, 'lightShow']);
+
 
     Route::get('/modeles', [ModeleController::class, 'showAll']);
     Route::get('/modeles/light', [ModeleController::class, 'lightShow']);
@@ -59,8 +63,7 @@ Route::middleware(['logrequest', 'throttle:5000,1'])->group(function () {
     Route::get('/utilisations', [UtilisationController::class, 'showAll']);
     Route::get('/utilisations/light', [UtilisationController::class, 'lightShow']);
 
-    Route::get('/proprietaires', [ProprietaireController::class, 'showAll']);
-    Route::get('/proprietaires/light', [ProprietaireController::class, 'lightShow']);
+    Route::get('/proprietaires/light', [EmplacementController::class, 'lightShowProprietaire']);
 
     Route::get('/utilisateurs', [UtilisateurController::class, 'showAll']);
 
@@ -106,6 +109,10 @@ Route::middleware(['logrequest', 'throttle:5000,1'])->group(function () {
     Route::get('logs/actif/{id}', [LogController::class, 'showLogActif']);
     Route::get('logs/client/{id}', [LogController::class, 'showLogClient']);
 
+
+    Route::get('/emplacements/list', [EmplacementController::class, 'listShow']);
+    Route::get('/emplacement/{id}', [EmplacementController::class, 'show']);
+    Route::post('/emplacement/{id}', [EmplacementController::class, 'createUpdate']);
 
 });
 

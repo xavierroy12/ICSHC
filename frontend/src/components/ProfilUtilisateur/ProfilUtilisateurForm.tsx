@@ -2,14 +2,24 @@ import { Field, Form } from 'formik';
 import { SelectItem } from '../Actif/type';
 import { Button, Grid, TextField } from '@mui/material';
 import CustomSelect from '../CustomSelect';
+import { AdminContext } from '../../App';
+import { useContext } from 'react';
 
 type Props = {
   dirty: boolean;
   emplacements: SelectItem[];
   roles: SelectItem[];
+  isProfil: boolean;
 };
 
-const UtilisateurForm = ({ dirty, emplacements, roles }: Props) => {
+const ProfileUtilisateurForm = ({
+  dirty,
+  emplacements,
+  roles,
+  isProfil,
+}: Props) => {
+  const isAdmin = useContext(AdminContext);
+
   return (
     <Form>
       <Grid
@@ -23,7 +33,7 @@ const UtilisateurForm = ({ dirty, emplacements, roles }: Props) => {
             label="Nom"
             name="nom"
             className="input-label "
-            disabled
+            disabled={!isAdmin}
             sx={{ width: 300 }}
           />
         </Grid>
@@ -34,6 +44,7 @@ const UtilisateurForm = ({ dirty, emplacements, roles }: Props) => {
             component={CustomSelect}
             options={roles}
             label="Roles"
+            disabled={isProfil || !isAdmin}
           />
         </Grid>
         <Grid item xs={12} sm={12}>
@@ -61,4 +72,4 @@ const UtilisateurForm = ({ dirty, emplacements, roles }: Props) => {
     </Form>
   );
 };
-export default UtilisateurForm;
+export default ProfileUtilisateurForm;

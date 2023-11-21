@@ -17,7 +17,7 @@ class CommandeSeeder extends Seeder
         $numero_commande = rand(1000, 9999);
 
         DB::table('commande')->insert([
-            'numero_commande' => 69123456789,
+            'numero_commande' => "69123456789",
             'nb_actif' => 10,
             'date_commande' => '2023-09-20',
             'id_emplacement_prevu' => 1,
@@ -26,7 +26,7 @@ class CommandeSeeder extends Seeder
         $numero_commande_2 = rand(1000, 9999);
 
         DB::table('commande')->insert([
-            'numero_commande' => 42012345678,
+            'numero_commande' => "42012345678",
             'nb_actif' => 5,
             'date_commande' => '2023-09-21',
             'id_emplacement_prevu' => 2,

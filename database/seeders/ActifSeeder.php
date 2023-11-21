@@ -32,7 +32,7 @@ class ActifSeeder extends Seeder
                 'id_emplacement' => 3,
                 'id_proprietaire' => 1,
                 'id_utilisation' => 1,
-                'numero_commande' => 69123456789,
+                'numero_commande' => "69123456789",
                 'id_client' => $clients[1],
                 ],
                 [
@@ -48,7 +48,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 1,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[1],
                 ],
                 [
@@ -64,7 +64,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 4,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[2],
                 ],
                 [
@@ -80,7 +80,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 4,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[3],
                 ],
                 [
@@ -96,7 +96,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 4,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[4],
                 ],
                 [
@@ -112,7 +112,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 4,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[5],
                 ],
                 [
@@ -128,7 +128,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 4,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[6],
                 ],
                 [
@@ -144,7 +144,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 4,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[7],
                 ],
 
@@ -161,7 +161,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 4,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[8],
                 ],
                 [
@@ -177,7 +177,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 3,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[9],
                 ],
                 [
@@ -193,7 +193,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 3,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[10],
                 ],
                 [
@@ -209,7 +209,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 3,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[11],
                 ],
                 [
@@ -225,7 +225,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 3,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[12],
                 ],
                 [
@@ -241,7 +241,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 3,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[13],
                 ],
                 [
@@ -257,7 +257,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 3,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[14],
                 ],
                 [
@@ -273,7 +273,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 3,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[15],
                 ],
                 [
@@ -289,7 +289,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 2,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[16],
                 ],
                 [
@@ -305,7 +305,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 2,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[17],
                 ],
                 [
@@ -321,7 +321,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 2,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[18],
                 ],
                /* [
@@ -353,7 +353,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 2,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[0],
                 ],
                 [
@@ -369,7 +369,7 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 2,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[0],
                 ],
                 [
@@ -385,15 +385,11 @@ class ActifSeeder extends Seeder
                     'id_emplacement' => 2,
                     'id_proprietaire' => 1,
                     'id_utilisation' => 1,
-                    'numero_commande' => 69123456789,
+                    'numero_commande' => "69123456789",
                     'id_client' => $clients[5],
                 ],
-
             ]
-
-
-
-        );
+          );
         }
     }
 

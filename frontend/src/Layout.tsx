@@ -1,13 +1,16 @@
 import NavBar from './components/NavBar';
 
 type Props = {
+  darkMode: boolean;
+  handleThemeChange: () => void;
   children: React.ReactNode;
 };
 
-const Layout = ({ children }: Props) => {
+const Layout = ({ darkMode, handleThemeChange, children }: Props) => {
+    
   return (
     <div className="layout">
-      <NavBar />
+      <NavBar darkMode={darkMode} handleThemeChange={handleThemeChange} />
       <div className="content">{children}</div>
     </div>
   );

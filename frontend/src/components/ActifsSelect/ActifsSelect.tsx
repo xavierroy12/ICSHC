@@ -2,7 +2,6 @@ import { Button } from '@mui/material';
 import ActifsListSelect from '../ActifsListSelect';
 import { LightActif } from '../Actifs/type';
 import { forwardRef } from 'react';
-
 type Props = {
   actifs: LightActif[];
   selectedActifs: LightActif[];
@@ -25,9 +24,9 @@ const ActifsSelect = forwardRef(
     return (
       <div
         ref={ref as React.RefObject<HTMLDivElement>}
-        className="max-w-screen-md mx-auto mt-20 bg-white z-50 pb-10"
+        className="max-w-screen-md mx-auto z-50 pb-10"
       >
-        <div className="p-4 bg-white">
+        <div className="p-4">
           <ActifsListSelect
             selectedActifs={selectedActifs}
             setSelectedActifs={setSelectedActifs}

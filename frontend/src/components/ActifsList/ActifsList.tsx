@@ -11,6 +11,7 @@ import {
   Autocomplete,
   Button,
   CircularProgress,
+  IconButton,
   Modal,
   TextField,
   ToggleButton,
@@ -18,6 +19,8 @@ import {
 import { LightActif } from '../ActifsListSelect/type';
 import ActifsSelect from '../ActifsSelect/ActifsSelect';
 import AddGroupeFiltres from '../AddGroupeFiltres';
+import { toast } from 'react-toastify';
+import CloseIcon from '@mui/icons-material/Close';
 
 type selectedFiltersType = {
   nom?: string;
@@ -298,7 +301,7 @@ const ActifsList = () => {
       .then((result) => {
         if (result.exists) {
           // Alert the user that the label already exists
-          alert(
+          toast.error(
             'Un filtre portant ce nom existe déjà. Veuillez entrer un autre nom svp.'
           );
         } else {
@@ -321,7 +324,7 @@ const ActifsList = () => {
           })
             .then((response) => {
               if (response.ok) {
-                alert(
+                toast.success(
                   'Le(s) filtre(s) selectionné(s) ont été enregistrés avec succès!'
                 );
                 setOpen(false);
@@ -404,14 +407,14 @@ const ActifsList = () => {
           setFiltersList(updatedFiltersList);
 
           // Clear the input field or perform any other necessary actions
-          alert('Le filtre sélectionné a été supprimé avec succès!');
+          toast.success('Le filtre sélectionné a été supprimé avec succès!');
 
           // Reset the filters here
           setSelectedFilters({});
           setCurrentFiltersGroup(undefined); // Reset the selected filter label to empty string
           setActifs(cleanActifs);
         } else {
-          console.error('Failed to delete filter');
+          toast.error('Une erreur est survenue');
         }
       })
       .catch((error) => {
@@ -577,21 +580,38 @@ const ActifsList = () => {
           },
         }}
       >
-        <ActifsSelect
-          ref={ref}
-          selectedActifs={selectedActifs}
-          setSelectedActifs={setSelectedActifs}
-          actifs={actifs.map((actif: Actif) => ({
-            id: parseInt(actif.id),
-            nom: actif.nom,
-            numero_serie: actif.numero_serie,
-          }))}
-          handleSubmit={handleSubmit}
-        />
+        <div className="m-auto p-4 my-20 w-fit align-right bg-slate-400">
+          <IconButton
+            tabIndex={0}
+            onClick={handleCloseModal}
+            className="float-right"
+          >
+            <CloseIcon />
+          </IconButton>
+          <div className="p-12">
+            <ActifsSelect
+              ref={ref}
+              selectedActifs={selectedActifs}
+              setSelectedActifs={setSelectedActifs}
+              actifs={actifs.map((actif: Actif) => ({
+                id: parseInt(actif.id),
+                nom: actif.nom,
+                numero_serie: actif.numero_serie,
+              }))}
+              handleSubmit={handleSubmit}
+            />
+          </div>
+        </div>
       </Modal>
-
       <Modal open={open} onClose={() => setOpen(false)}>
-        <div className="min-w-fit max-w-fit min-h-fit max-h-fit bg-white m-auto mt-20">
+        <div className="min-w-fit max-w-fit min-h-fit max-h-fit bg-slate-400 m-auto mt-20">
+          <IconButton
+            tabIndex={0}
+            onClick={() => setOpen(false)}
+            className="float-right"
+          >
+            <CloseIcon />
+          </IconButton>
           <AddGroupeFiltres
             handleClose={handleCloseModal}
             saveFilters={(label) => saveFilters(label)}

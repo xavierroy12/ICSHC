@@ -2,6 +2,7 @@ import { Modal, Typography } from '@mui/material';
 import { Formik, FormikValues } from 'formik';
 import ModeleForm from '../Modele/ModeleForm';
 import { LightType, SelectItem } from './type';
+import { toast } from 'react-toastify';
 
 type Props = {
   setModeles: React.Dispatch<React.SetStateAction<SelectItem[]>>;
@@ -54,15 +55,13 @@ const AddModelModal = ({
       .then((response) => {
         console.log('response', response);
         if (response.ok) {
-          alert('Données sauvegardées avec succès');
-          console.log('Données sauvegardées avec succès: ', values);
+          toast.success('Données sauvegardées avec succès');
         } else {
-          console.error('Error saving data:', response.statusText);
-          console.log('CA NE FONCTIONNE PAS ', values);
+          toast.error('Une erreur est survenue');
         }
       })
-      .catch((error) => {
-        console.error('Error saving data:', error);
+      .catch(() => {
+        toast.error('Une erreur est survenue');
       });
     reloadModeles();
   };
@@ -100,13 +99,13 @@ const AddModelModal = ({
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
       <div className="flex ">
-        <div className=" bg-slate-100 m-10 p-8">
+        <div className=" bg-slate-100 dark:bg-slate-800 m-10 p-8">
           <div className="mb-8">
             <Typography variant="h4">Nouveau Model</Typography>
           </div>
           <Formik initialValues={initialValues} onSubmit={handleSubmitModele}>
             {({ values, dirty, setFieldValue }) => (
-              <div className="max-w-fit bg-slate-100 p-4">
+              <div className="max-w-fit bg-slate-100 dark:bg-slate-800 p-4">
                 <ModeleForm
                   categories={categories}
                   values={values}

@@ -122,6 +122,7 @@ const ModeleForm = ({
           </Grid>
           <Grid item xs={12}>
             <Button
+              className="my-5 mx-5 flex float-right"
               variant="contained"
               color="secondary"
               size="medium"

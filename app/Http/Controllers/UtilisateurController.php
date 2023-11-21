@@ -92,8 +92,8 @@ class UtilisateurController extends Controller
 
     public function tokenExists($token)
     {
-        error_log("CookieTOken  $token");
-        $tokenWithChar = $token . "==";
+
+        $tokenWithChar =  $token . "==";
 
         $utilisateur = Utilisateur::where('token', $tokenWithChar)->first();
 
@@ -102,14 +102,21 @@ class UtilisateurController extends Controller
             $now = time();
             if ($expiry < $now) {
                 // Token has expired
-                return FALSE;
-            } else {
+                return [
+                    'valid_token' => FALSE,
+                    'is_admin' => $utilisateur->id_role == 1 ? TRUE : FALSE,
+                ];            } else {
                 // Token is valid
-                return TRUE;
+                return [
+                    'valid_token' => TRUE,
+                    'is_admin' => $utilisateur->id_role == 1 ? TRUE : FALSE,
+                ];
             }
         } else {
-            return FALSE;
-        }
+            return [
+                'valid_token' => FALSE,
+                'is_admin' => $utilisateur->id_role == 1 ? TRUE : FALSE,
+            ];        }
 
     }
 
@@ -179,7 +186,7 @@ class UtilisateurController extends Controller
             return [
                 'id' => $utilisateur->id,
                 'nom' => $utilisateur->nom,
-                'emplacement' => $utilisateur->emplacement->nom,
+                'emplacement' => $utilisateur->emplacement->matricule. " - " .$utilisateur->emplacement->nom,
                 'role' => $utilisateur->role->nom,
             ];
         });

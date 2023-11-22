@@ -155,8 +155,8 @@ const ClientsList = () => {
       Promise.all(responses.map((response) => response.json()))
         .then(([fetchedClients, fetchedInactif, fetchedFiltersList]) => {
         setClients(fetchedClients);
-          setInactifClients(fetchedInactif);
           setCleanClients(fetchedClients);
+          setInactifClients(fetchedInactif);
           console.log(fetchedInactif);
           setFiltersList(fetchedFiltersList.filters);
         })
@@ -166,20 +166,6 @@ const ClientsList = () => {
         .catch((error) => console.error(error))
     );
   }, [id_user]);
-
-  useEffect(() => {
-    setClients(showInactif ? inactifClients : cleanClients);
-  }, [showInactif, inactifClients, cleanClients]);
-
-  useEffect(() => {
-    const areAllFiltersNoSelection = Object.values(selectedFilters).every(
-      (filter) => filter === undefined || filter === 'All'
-    );
-    setIsButtonDisabled(areAllFiltersNoSelection);
-    if (areAllFiltersNoSelection) {
-      setClients(cleanClients);
-    }
-  }, [selectedFilters, cleanClients]);
 
   useEffect(() => {
     if (filtersList && filtersList.length !== 0) {
@@ -197,6 +183,16 @@ const ClientsList = () => {
       setFiltersGroupSelect(updatedFilterOptions);
     }
   }, [filtersList]);
+
+  useEffect(() => {
+    const areAllFiltersNoSelection = Object.values(selectedFilters).every(
+      (filter) => filter === undefined || filter === 'All'
+    );
+    setIsButtonDisabled(areAllFiltersNoSelection);
+    if (areAllFiltersNoSelection) {
+      setClients(cleanClients);
+    }
+  }, [selectedFilters, cleanClients]);
 
   if (isLoading) {
     return (

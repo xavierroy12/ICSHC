@@ -19,6 +19,8 @@ import MUIDataTable, {
   import { toast } from 'react-toastify';
 
 type selectedFiltersType = {
+    matricule?: string;
+    nom?:string;
     actifs?:string;
     emplacement?: string;
     poste?:string;
@@ -75,10 +77,28 @@ const ClientsList = () => {
 
   const columns = [
     {
+        name: 'matricule',
+        label: 'Matricule',
+        options: {
+          filter: false,
+          sort: true,
+          filterList: selectedFilters.matricule ? [selectedFilters.matricule] : [],
+        },
+      },
+    {
+        name: 'nom',
+        label: 'Nom',
+        options: {
+          filter: false,
+          sort: true,
+          filterList: selectedFilters.nom ? [selectedFilters.nom] : [],
+        },
+      },
+    {
       name: 'actifs',
       label: 'Actifs',
       options: {
-        filter: true,
+        filter: false,
         sort: true,
         filterList: selectedFilters.actifs ? [selectedFilters.actifs] : [],
       },

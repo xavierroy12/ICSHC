@@ -1,5 +1,5 @@
 import ModeleForm from './ModeleForm';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { LightType, SelectItem } from '../Actif/type';
 import { CircularProgress } from '@mui/material';
 import { Modele_Type } from './type';
@@ -7,10 +7,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Formik, FormikValues } from 'formik';
 import FormLayout from '../FormLayout';
 import { toast } from 'react-toastify';
+import Historique from '../Historique';
 
 const Modele = () => {
   const [categories, setCategories] = useState<SelectItem[]>([]);
   const [modele, setModele] = useState<Modele_Type>();
+  const [loading, setLoading] = useState(true);
 
   const id = useParams<{ id: string }>().id;
   useEffect(() => {
@@ -29,6 +31,7 @@ const Modele = () => {
           }))
         );
         setModele(fetchedModele);
+        setLoading(false);
       });
   }, [id]);
 
@@ -61,8 +64,7 @@ const Modele = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-User-Action-Id': id_user // send the user id in a custom header
-
+        'X-User-Action-Id': id_user, // send the user id in a custom header
       },
       body: JSON.stringify(updatedData),
     })
@@ -79,7 +81,6 @@ const Modele = () => {
       });
   };
   const reloadData = () => {
-    console.log('reloadData');
     setTimeout(() => {
       fetch(window.name + 'api/categories/light')
         .then((response) => response.json())
@@ -95,27 +96,36 @@ const Modele = () => {
   };
 
   return (
-    <div className="mt-8">
-      {!modele ? (
+    <Fragment>
+      {loading ? (
         <div className="fixed inset-0 flex items-center justify-center">
           <CircularProgress />
         </div>
       ) : (
-        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-          {({ values, dirty, setFieldValue }) => (
-            <FormLayout title={'Modele: ' + modele.nom} dirty={dirty}>
-              <ModeleForm
-                categories={categories}
-                values={values}
-                dirty={dirty}
-                setFieldValue={setFieldValue}
-                reloadData={reloadData}
-              />
-            </FormLayout>
+        <div className="mx-auto mt-8">
+          {modele && id && (
+            <div className="flex flex-col sm:flex-row justify-evenly items-start">
+              <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+                {({ values, dirty, setFieldValue }) => (
+                  <FormLayout title={'Modele: ' + modele.nom} dirty={dirty}>
+                    <ModeleForm
+                      categories={categories}
+                      values={values}
+                      dirty={dirty}
+                      setFieldValue={setFieldValue}
+                      reloadData={reloadData}
+                    />
+                  </FormLayout>
+                )}
+              </Formik>
+              <div className="w-full sm:mt-0 mt-24  mx-8">
+                <Historique id={id} type="modele" />
+              </div>
+            </div>
           )}
-        </Formik>
+        </div>
       )}
-    </div>
+    </Fragment>
   );
 };
 export default Modele;

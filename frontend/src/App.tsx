@@ -40,6 +40,7 @@ export const AdminContext = createContext(false);
 
 function App() {
   const navigate = useNavigate();
+  const [toastShown, setToastShown] = useState(false);
 
   const [darkMode, setDarkMode] = useState(() => {
     const localDarkMode = window.localStorage.getItem('darkMode');
@@ -60,10 +61,11 @@ function App() {
   const handleThemeChange = () => {
     setDarkMode(!darkMode);
   };
-  const cookie = document.cookie
-    .split(';')
-    .find((cookie) => cookie.trim().startsWith('CookieLogged='));
+
   useEffect(() => {
+    const cookie = document.cookie
+      .split(';')
+      .find((cookie) => cookie.trim().startsWith('CookieLogged='));
     // Get the cookie
     if (cookie) {
       const token = cookie.split('=')[1]; // Extract the token value
@@ -76,13 +78,14 @@ function App() {
       }).then((response) => {
         if (response.ok) {
           response.json().then((data) => {
-            console.log('data', data);
             if (data.user.valid_token === true) {
-              toast.success('Vous êtes connecté');
-              setIsAdmin(data.user.isAdmin); // set the isAdmin state to true or false
+              if (!toastShown) toast.success('Vous êtes connecté');
+              setIsAdmin(data.user.is_admin); // set the isAdmin state to true or false
+              setToastShown(true);
             } else {
               toast.error("Vous n'êtes pas connecté");
               navigate('/login');
+              setToastShown(true);
             }
           });
         }
@@ -90,7 +93,7 @@ function App() {
     } else {
       navigate('/login');
     }
-  }, [cookie, navigate]);
+  }, [navigate, toastShown]);
 
   return (
     <AdminContext.Provider value={isAdmin}>
@@ -110,7 +113,10 @@ function App() {
                 <Route path="/modele/:id" element={<Modele />} />
 
                 <Route path="/client/:id" element={<Client />} />
-                <Route path="/clients/:alertType/:alertName" element={<ClientsList key={window.location.pathname} />} />
+                <Route
+                  path="/clients/:alertType/:alertName"
+                  element={<ClientsList key={window.location.pathname} />}
+                />
                 <Route path="/clients" element={<ClientsList />} />
 
                 <Route path="/utilisateurs" element={<UtilisateurList />} />

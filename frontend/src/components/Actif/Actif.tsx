@@ -15,7 +15,6 @@ const Actif = () => {
   const [loading, setLoading] = useState(true);
   const [statuts, setStatuts] = useState<SelectItem[]>([]);
   const [modeles, setModeles] = useState<SelectItem[]>([]);
-  const [categories, setCategories] = useState<SelectItem[]>([]);
   const [emplacements, setEmplacements] = useState<SelectItem[]>([]);
   const [locataires, setLocataires] = useState<SelectItem[]>([]);
   const [utilisations, setUtilisations] = useState<SelectItem[]>([]);
@@ -26,7 +25,6 @@ const Actif = () => {
     Promise.all([
       fetch(window.name + 'api/statuts/light'),
       fetch(window.name + 'api/modeles/light'),
-      fetch(window.name + 'api/categories/light'),
       fetch(window.name + 'api/emplacements/light'),
       fetch(window.name + 'api/clients/light'),
       fetch(window.name + 'api/utilisations/light'),
@@ -40,7 +38,6 @@ const Actif = () => {
         ([
           fetchedStatuts,
           fetchedModeles,
-          fetchedCategories,
           fetchedEmplacements,
           fetchedLocataires,
           fetchedUtilisations,
@@ -57,12 +54,6 @@ const Actif = () => {
             fetchedModeles.map((modele: LightType) => ({
               id: modele.id,
               label: modele.nom,
-            }))
-          );
-          setCategories(
-            fetchedCategories.map((categorie: LightType) => ({
-              id: categorie.id,
-              label: categorie.nom,
             }))
           );
           setEmplacements(
@@ -104,7 +95,7 @@ const Actif = () => {
     emplacement: actif?.id_emplacement.toString(),
     proprietaire: actif?.id_proprietaire.toString(),
     utilisation: actif?.id_utilisation.toString(),
-    categorie: actif?.id_categorie.toString(),
+    categorie: actif?.categorie,
     modele: actif?.id_modele.toString(),
     assigne_a: actif?.id_client?.toString(),
     en_entrepot: actif?.en_entrepot || false,
@@ -124,9 +115,12 @@ const Actif = () => {
       const updatedActif = {
         nom: values.nom,
         numero_serie: values.numero_serie,
-        id_categorie: values.categorie.id || values.categorie,
+        numero_commande: values.numero_commande,
+        addresse_mac: values.adresse_mac,
+        id_categorie: values.categorie,
         en_entrepot: values.en_entrepot,
         date_retour: values.date_retour,
+        date_creation: values.date_creation,
         note: values.note,
         id_assigne_a: values.assigne_a?.id || values.assigne_a || '',
         id_modele: values.modele.id || values.modele,
@@ -152,10 +146,12 @@ const Actif = () => {
     const updatedData = {
       nom: values.nom,
       numero_serie: values.numero_serie,
-
-      id_categorie: values.categorie.id || values.categorie,
+      numero_commande: values.numero_commande,
+      addresse_mac: values.adresse_mac,
+      id_categorie: values.categorie,
       en_entrepot: values.en_entrepot,
       date_retour: values.date_retour,
+      date_creation: values.date_creation,
       note: values.note,
       id_assigne_a: values.assigne_a?.id || values.assigne_a || '',
       id_modele: values.modele.id || values.modele,
@@ -234,7 +230,6 @@ const Actif = () => {
                       setFieldValue={setFieldValue}
                       statuts={statuts}
                       modeles={modeles}
-                      categories={categories}
                       emplacements={emplacements}
                       locataires={locataires}
                       utilisations={utilisations}

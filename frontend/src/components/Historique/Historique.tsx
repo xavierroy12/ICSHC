@@ -6,6 +6,7 @@ import {
   TableCell,
   TableHead,
   TableBody,
+  Typography,
 } from '@mui/material';
 import { Fragment, useEffect, useState } from 'react';
 
@@ -34,41 +35,50 @@ const Historique = ({ id, type }: Props) => {
 
   return (
     <Fragment>
-      <div className="w-full overflow-scroll max-h-screen overflow-y-scroll">
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Date</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell align="right">Utilisateur</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {historiques &&
-                historiques.map((row, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      '&:last-child td, &:last-child th': {
-                        border: 0,
-                      },
-                    }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {row.date}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                      {row.description}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                      {row.utilisateur}
-                    </TableCell>
+      <div className="md:mr-20">
+        <div className="w-full">
+          <div className="mb-8">
+            <Typography variant="h4" className="mx-auto">
+              Historique
+            </Typography>
+          </div>
+          <div className="w-full overflow-scroll max-h-screen overflow-y-scroll">
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Date</TableCell>
+                    <TableCell>Description</TableCell>
+                    <TableCell align="right">Utilisateur</TableCell>
                   </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {historiques &&
+                    historiques.map((row, index) => (
+                      <TableRow
+                        key={index}
+                        sx={{
+                          '&:last-child td, &:last-child th': {
+                            border: 0,
+                          },
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {row.date}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {row.description}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {row.utilisateur}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+        </div>
       </div>
     </Fragment>
   );

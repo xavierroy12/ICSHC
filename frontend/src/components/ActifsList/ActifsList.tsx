@@ -190,8 +190,6 @@ const ActifsList = () => {
         client: displayData[5][0],
         emplacement: displayData[6][0],
       });
-      console.log('Set selected filters:', selectedFilters);
-      console.log('Set selected filters:', displayData);
     },
   };
 
@@ -307,7 +305,7 @@ const ActifsList = () => {
       .then((result) => {
         if (result.exists) {
           // Alert the user that the label already exists
-          alert(
+          toast.error(
             'Un filtre portant ce nom existe déjà. Veuillez entrer un autre nom svp.'
           );
         } else {
@@ -329,8 +327,8 @@ const ActifsList = () => {
           })
             .then((response) => {
               if (response.ok) {
-                alert(
-                  'Le(s) filtre(s) selectionné(s) ont été enregistrés avec succès!'
+                toast.success(
+                    'Le(s) filtre(s) selectionné(s) ont été enregistrés avec succès!'
                 );
                 setOpen(false);
 
@@ -351,7 +349,6 @@ const ActifsList = () => {
                     );
 
                     setFiltersGroupSelect(updatedFilterOptions);
-                    console.log('Updated filter options:', updatedFilterOptions);
 
                     // Apply the newly created filter
                     if (label) {
@@ -374,8 +371,6 @@ const ActifsList = () => {
                         });
                         setSelectedFilters(selectedFilterObject);
                         setActifs(filteredActifs);
-                        console.log('Selected filter object:', selectedFilterObject);
-                        console.log('Filtered actifs:', filteredActifs);
                       }
                     }
                   })
@@ -422,7 +417,7 @@ const ActifsList = () => {
           setCurrentFiltersGroup(undefined); // Reset the selected filter label to empty string
           setActifs(cleanActifs);
         } else {
-          console.error('Failed to delete filter');
+            toast.error('Une erreur est survenue lors de la supression du filtre');
         }
       })
       .catch((error) => {

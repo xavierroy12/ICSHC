@@ -276,7 +276,6 @@ const ClientsList = () => {
                     );
 
                     setFiltersGroupSelect(updatedFilterOptions);
-                    console.log('Updated filter options:', updatedFilterOptions);
 
                     // Reset the selected filters and show the cleanClients
                     setSelectedFilters({});
@@ -332,7 +331,7 @@ const ClientsList = () => {
           setCurrentFiltersGroup(undefined); // Reset the selected filter label to empty string
           setClients(cleanClients);
         } else {
-          toast.error('Une erreur est survenue');
+          toast.error('Une erreur est survenue lors de la suppression du filtre.');
         }
       })
       .catch((error) => {
@@ -361,7 +360,6 @@ const ClientsList = () => {
           isOptionEqualToValue={(option, value) => option.label === value.label}
           onChange={async (_, newValue) => {
             if (newValue) {
-              console.log('Selected filter:', newValue);
 
               try {
                 const selectedLabel = newValue.label;
@@ -376,8 +374,6 @@ const ClientsList = () => {
                 if (response.ok) {
                   const selectedFilterObject = await response.json();
 
-                  console.log('Selected filter object:', selectedFilterObject);
-
                   const filteredClients = cleanClients.filter((client) => {
                     return Object.keys(selectedFilterObject).every((key) => {
                       const filterValue = selectedFilterObject[key] as string;
@@ -387,8 +383,6 @@ const ClientsList = () => {
                       );
                     });
                   });
-
-                  console.log('Filtered clients:', filteredClients);
 
                   setSelectedFilters(selectedFilterObject);
                   setClients(filteredClients);

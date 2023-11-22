@@ -20,7 +20,6 @@ type Props = {
   dirty: boolean;
   statuts: SelectItem[];
   modeles: SelectItem[];
-  categories: SelectItem[];
   emplacements: SelectItem[];
   locataires: SelectItem[];
   utilisations: SelectItem[];
@@ -36,7 +35,6 @@ const ActifForm = ({
   setFieldValue,
   statuts,
   modeles,
-  categories,
   emplacements,
   locataires,
   utilisations,
@@ -57,7 +55,7 @@ const ActifForm = ({
             as={TextField}
             label="Nom"
             name="nom"
-            className="input-label "
+            className="input-label"
             sx={{ width: 300 }}
           />
         </Grid>
@@ -67,7 +65,7 @@ const ActifForm = ({
             as={TextField}
             label="Numéro de commande"
             name="numero_commande"
-            className="input-label "
+            className="input-label"
             disabled={!isAdmin}
             sx={{ width: 300 }}
           />
@@ -106,11 +104,11 @@ const ActifForm = ({
         </Grid>
         <Grid item xs={12} sm={6}>
           <Field
-            className="input-field"
+            as={TextField}
             name="categorie"
-            component={CustomSelect}
-            options={categories}
             label="Catégorie"
+            disabled
+            sx={{ width: 300 }}
           />
         </Grid>
 

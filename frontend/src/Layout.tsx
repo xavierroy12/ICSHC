@@ -1,4 +1,5 @@
 import NavBar from './components/NavBar';
+import Footer from './components/Footer';
 
 type Props = {
   darkMode: boolean;
@@ -12,6 +13,7 @@ const Layout = ({ darkMode, handleThemeChange, children }: Props) => {
     <div className="layout">
       <NavBar darkMode={darkMode} handleThemeChange={handleThemeChange} />
       <div className="content">{children}</div>
+       <Footer/>
     </div>
   );
 };

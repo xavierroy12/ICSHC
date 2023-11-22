@@ -3,3 +3,9 @@ export type LightActif = {
   nom: string;
   numero_serie: string;
 };
+
+export type LightClient = {
+    id: number;
+    nom: string;
+    matricule:string;
+  };

@@ -7,6 +7,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { Fragment, useContext, useState } from 'react';
 import { AdminContext } from '../../App';
+import Logo from '../../../../resources/img/Logo.png';
 
 type Props = {
   darkMode: boolean;
@@ -24,28 +25,32 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  
   return (
     <AppBar position="static">
       <Toolbar>
+      <img src={Logo} alt="Logo" className="mr-16 w-64 h-24" />
         <Link to={`/`}>
           <Button color="inherit">
-            <span className="font-semibold text-xl tracking-tight">ICSSHC</span>
+            <span className=" font-semibold text-xl tracking-tight">ICSSHC</span>
           </Button>
         </Link>
         <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+        <Divider orientation="vertical" flexItem color="white" />
           <Button
             component={Link}
             to={`/dashboard`}
             color="inherit"
-            className="mr-4"
+            className=" mr-4"
           >
-            Dashboard
+            Tableau de bord
           </Button>
+
           <Button
             component={Link}
             to={`/actifs`}
             color="inherit"
-            className="mr-4"
+            className=" mr-4"
           >
             Actifs
           </Button>
@@ -53,7 +58,7 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
             component={Link}
             to={`/modeles`}
             color="inherit"
-            className="mr-4"
+            className=" mr-4"
           >
             Modeles
           </Button>
@@ -61,7 +66,7 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
             component={Link}
             to={`/commandes`}
             color="inherit"
-            className="mr-4"
+            className=" mr-4"
           >
             Commandes
           </Button>
@@ -69,7 +74,7 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
             component={Link}
             to={`/clients`}
             color="inherit"
-            className="mr-4"
+            className=" mr-4"
           >
             Clients
           </Button>
@@ -137,7 +142,7 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
             component={Link}
             to={`/profil`}
             color="inherit"
-            className="mr-4"
+            className=" mr-4"
           >
             Profil
           </Button>

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('prenom', 32)->nullable();
             $table->string('courriel', 64)->nullable();
             $table->boolean('emplacement_manuel')->default(FALSE);
+            $table->boolean('inactif')->default(FALSE);
             $table->unsignedBigInteger('id_poste')->nullable();
             $table->unsignedBigInteger('id_type_client');
             $table->unsignedBigInteger('id_actif')->nullable();

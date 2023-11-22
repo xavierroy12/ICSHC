@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from 'react';
 import { Client } from './type';
 import { FiltreGroup } from '../Filtres/type';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import MUIDataTable, {
     MUIDataTableColumn,
     MUIDataTableOptions,
@@ -33,6 +34,9 @@ type selectedFiltersType = {
 
 const ClientsList = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const filter = location.state?.filter;
+
   const [open, setOpen] = useState(false);
   const [showInactif, setShowInactif] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -167,25 +171,34 @@ const ClientsList = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    Promise.all([
+
+    const fetches = [
       fetch(window.name + 'api/clients/list'),
       fetch(window.name + 'api/clients/inactif'),
-      fetch(window.name + `api/filter/getFiltersById?id_user=${id_user}`),
-    ]).then((responses) =>
-      Promise.all(responses.map((response) => response.json()))
-        .then(([fetchedClients, fetchedInactif, fetchedFiltersList]) => {
-        setClients(fetchedClients);
-          setCleanClients(fetchedClients);
+    ];
+
+    if (id_user) {
+      fetches.push(fetch(window.name + `api/filter/getFiltersById?id_user=${id_user}`));
+    }
+
+    Promise.all(fetches)
+      .then((responses) => Promise.all(responses.map((res) => res.json())))
+      .then((data) => {
+        const [fetchedClients, fetchedInactif] = data;
+
+        if (filter) {
+          const flatFilter = Array.isArray(filter[0]) ? filter.flat() : filter.map((item: { matricule: any; }) => item.matricule);
+          const filteredClients = fetchedClients.filter((client: { matricule: any; }) => flatFilter.includes(client.matricule));
+          const filteredInactif = fetchedInactif.filter((client: { matricule: any; }) => flatFilter.includes(client.matricule));
+          setClients([...filteredClients, ...filteredInactif]);
+        } else {
+          setClients(fetchedClients);
           setInactifClients(fetchedInactif);
-          console.log(fetchedInactif);
-          setFiltersList(fetchedFiltersList.filters);
-        })
-        .then(() => {
-          setIsLoading(false);
-        })
-        .catch((error) => console.error(error))
-    );
-  }, [id_user]);
+        }
+
+        setIsLoading(false);
+      });
+  }, [filter, id_user]);
 
   useEffect(() => {
     if (filtersList && filtersList.length !== 0) {

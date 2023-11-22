@@ -26,6 +26,7 @@ const ProfilUtilisateur = ({ id, isProfil }: Props) => {
   const [utilisateur, setUtilisateur] = useState<Utilisateur_Type>();
   const [roles, setRoles] = useState<SelectItem[]>([]);
   const [emplacements, setEmplacements] = useState<SelectItem[]>([]);
+  const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
 
   useEffect(() => {
     Promise.all([
@@ -67,7 +68,10 @@ const ProfilUtilisateur = ({ id, isProfil }: Props) => {
     };
     fetch(window.name + `api/utilisateur/${id}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-User-Action-Id': id_user // send the user id in a custom header
+      },
       body: JSON.stringify(data),
     }).then((response) => {
       if (response.ok) {

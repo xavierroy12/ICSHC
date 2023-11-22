@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->string('id_actif')->nullable();
             $table->string('id_modele')->nullable();
             $table->string('id_emplacement')->nullable();
+            $table->string('id_utilisateur')->nullable();
             $table->timestamps();
         });
     }

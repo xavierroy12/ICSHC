@@ -109,7 +109,7 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
                 <MenuItem
                   onClick={handleClose}
                   component={Link}
-                  to={`/dashboard`}
+                  to={`http://10.0.22.24:8080/api/clientJsonStore`}
                 >
                   Sync
                 </MenuItem>

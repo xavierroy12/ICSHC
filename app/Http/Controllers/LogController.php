@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Log;
-use App\Models\User;
+use App\Models\Utilisateur;
 use App\Models\Actif;
 use App\Models\Client;
 use App\Models\Modele;
@@ -200,6 +200,17 @@ class LogController extends Controller
                 'id_actif' => $id,
             ]);
             $log->save();
+            $log = new Log([
+                'url' => $request->fullUrl(),
+                'method' => $request->method(),
+                'action' => 'desassignation',
+                'field' => 'id_actif',
+                'old_value' => null,
+                'new_value' => $id,
+                'id_user' => $modificateur,
+                'id_client' => $idClient,
+            ]);
+            $log->save();
         }
 
         foreach ($removedIds as $id) {
@@ -212,6 +223,18 @@ class LogController extends Controller
                 'new_value' => null,
                 'id_user' => $modificateur,
                 'id_actif' => $id,
+            ]);
+            $log->save();
+
+            $log = new Log([
+                'url' => $request->fullUrl(),
+                'method' => $request->method(),
+                'action' => 'desassignation',
+                'field' => 'id_actif',
+                'old_value' => $id,
+                'new_value' => null,
+                'id_user' => $modificateur,
+                'id_client' => $idClient,
             ]);
             $log->save();
         }
@@ -293,6 +316,44 @@ class LogController extends Controller
         ])*/
     }
 
+    public function logUtilisateur(Request $request)
+    {
+        $modificateur = $request->header('X-User-Action-Id');
+        error_log($modificateur);
+        $path = $request->path();
+        $idUtilisateur = basename($path);
+        error_log('idutilisateur is : ' . $idUtilisateur);
+        $utilisateur = Utilisateur::find($idUtilisateur);
+
+
+        $data = $request->all();
+        //set the data to be logged
+        $requestData = [
+            'id_role' => isset($data['id_role']) ? $data['id_role'] : null,
+            'id_emplacement' => isset($data['id_emplacement']) ? $data['id_emplacement'] : null,
+        ];
+
+        foreach ($requestData as $field => $newValue) {
+            if ($utilisateur->$field != $newValue && $newValue != null) {
+                error_log('field is ' . $field . ' and newValue is ' . $newValue . ' and oldValue is ' . $utilisateur->$field);
+                $log = new Log([
+                    'url' => $request->fullUrl(),
+                    'method' => $request->method(),
+                    'action' => 'modifier',
+                    'field' => $field,
+                    'old_value' => $utilisateur->$field,
+                    'new_value' => $newValue,
+                    'id_user' => $modificateur,
+                    'id_utilisateur' => $idUtilisateur,
+                ]);
+
+                error_log($log);
+                $log->save();
+            }
+        }
+    }
+
+
 
     public function showLogs($typeItem, $id_item)
     {
@@ -301,15 +362,17 @@ class LogController extends Controller
         $logsReturned = [];
         $relationships = ['actif', 'client', 'modele', 'user'];
 
-
-
+        error_log('attempting to show logs for ' . $typeItem . ' ' . $id_item);
         // Return all actif logs
         if ($typeItem == 'actif') {
             $logs = Log::where('id_actif', $id_item)->with($relationships)->get();
+            error_log($logs);
         }
         // Return all client logs
         if ($typeItem == 'client') {
             $logs = Log::where('id_client', $id_item)->with($relationships)->get();
+            error_log('good until if typeitem');
+            error_log($logs);
         }
         // Return all modele logs
         if ($typeItem == 'modele') {
@@ -319,14 +382,14 @@ class LogController extends Controller
         if ($typeItem == 'user') {
             $logs = Log::where('id_user', $id_item)->with($relationships)->get();
         }
-
-        foreach($logs as $log){
-            if($this->isForeignKey($log->field)){
-                $log->old_value = $this->getFieldValue($log->old_value, $log->field);
-                $log->new_value = $this->getFieldValue($log->new_value, $log->field);
+        foreach ($logs as $log) {
+            if ($this->isForeignKey($log->field)) {
+                error_log('logging before getfieldvalue');
+                error_log($log);
+                $log->old_value = $this->getFieldValue($log->old_value, $typeItem, $log->field, $id_item, False);
+                $log->new_value = $this->getFieldValue($log->new_value, $typeItem, $log->field, $id_item, True);
                 $champ = substr($log->field, 3);
-            }
-            else{
+            } else {
                 $champ = $log->field;
             }
             $old_value = $log->old_value !== null ? $log->old_value : 'rien';
@@ -334,44 +397,81 @@ class LogController extends Controller
 
             $description = $log->action . ' ' . $champ . ' de ' . $old_value . ' à ' . $new_value;
             //todo: read the user fr fr no cap
-            //$utilisateur = $log->user->nom !== null ? $log->user->nom : 'Utilisateur introuvable';
-            $utilisateur = 'personne';
+            $username = Utilisateur::find($log->id_user);
+            $nameUser = $username->nom;
+            $utilisateur = $nameUser !== null ? $nameUser : 'Utilisateur introuvable';
+            //$utilisateur = 'personne';
 
 
             $data = [
-                'date' => $log->created_at,
+                'date' => $log->created_at->timezone('America/New_York')->format('Y-m-d H:i:s'),
                 'description' => $description,
-                'utilisateur' =>$utilisateur,
+                'utilisateur' => $utilisateur,
             ];
 
 
-
+            error_log('one of the log is : ' . $data['date']);
             array_push($logsReturned, $data);
         }
 
         return response()->json($logsReturned);
     }
 
-    public function isForeignKey($field){
+    public function isForeignKey($field)
+    {
         return substr($field, 0, 2) == 'id';
     }
 
-    public function getFieldValue($value, $typeItem){
-        if($typeItem == 'actif'){
-            $actif = Actif::find($value);
-            return $actif->nom;
+    public function getFieldValue($value, $typeItem, $field, $id_item, $isNew)
+    {
+        if ($typeItem == 'actif') {
+            $actif = Actif::find($id_item);
+            error_log($actif);
+            error_log('getFieldValue parameters: value=' . $value . ', typeItem=' . $typeItem . ', field=' . $field . ', id_item=' . $id_item);
+
+
+
+
+            if ($field === 'id_categorie')
+                $result = $actif->modele->categorie->nom;
+            else {
+                $relatedModelName = substr($field, 3); // Remove 'id_' from the start of the field name
+                $itemToFind = ucfirst($relatedModelName);
+                error_log('item to find is : ' . $itemToFind);
+                $itemToFindClass = "\\App\\Models\\" . $itemToFind; // Construct the fully qualified class name
+                $ResultModel = $itemToFindClass::find($value);
+                error_log('ResultModel to find is : ' . $ResultModel);
+                $result = $ResultModel->nom;
+            }
+
+
+            error_log('tryting returns : ' . $result);
+            return $result;
         }
-        if($typeItem == 'client'){
+        if ($typeItem == 'client') {
             $client = Client::find($value);
-            return $client->nom;
+            $relatedModelName = substr($field, 3); // Remove 'id_' from the start of the field name
+            $itemToFind = ucfirst($relatedModelName);
+            error_log('item to find is 2 : ' . $itemToFind);
+            $itemToFindClass = "\\App\\Models\\" . $itemToFind; // Construct the fully qualified class name
+            error_log('itemToFindClass to find is : ' . $itemToFindClass);
+            error_log($value);
+            $ResultModel = $itemToFindClass::find($value);
+            if (isset($ResultModel)) {
+                $result = $ResultModel->nom;
+                error_log('result in isset ' . $result);
+            } else
+                $result = null;
+
+            return $result;
         }
-        if($typeItem == 'modele'){
+        if ($typeItem == 'modele') {
             $modele = Modele::find($value);
             return $modele->nom;
         }
-        if($typeItem == 'user'){
-            $user = User::find($value);
-            return $user->name;
+        if ($typeItem == 'user') {
+            $user = Utilisateur::find($value);
+            return $user->nom;
         }
     }
 

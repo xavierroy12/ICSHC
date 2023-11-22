@@ -23,6 +23,7 @@ class Log extends Model
         'id_actif',
         'id_modele',
         'id_emplacement',
+        'id_utilisateur',
     ];
 
     public function user()
@@ -43,5 +44,15 @@ class Log extends Model
     public function modele()
     {
         return $this->belongsTo(Modele::class, 'id_modele');
+    }
+
+    public function emplacement()
+    {
+        return $this->belongsTo(Emplacement::class, 'id_emplacement');
+    }
+
+    public function utilisateur()
+    {
+        return $this->belongsTo(Utilisateur::class, 'id_utilisateur');
     }
 }

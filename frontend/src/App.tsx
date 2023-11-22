@@ -78,7 +78,6 @@ function App() {
       }).then((response) => {
         if (response.ok) {
           response.json().then((data) => {
-            console.log('data', data);
             if (data.user.valid_token === true) {
               if (!toastShown) toast.success('Vous êtes connecté');
               setIsAdmin(data.user.is_admin); // set the isAdmin state to true or false

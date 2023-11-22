@@ -7,7 +7,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { Fragment, useContext, useState } from 'react';
 import { AdminContext } from '../../App';
-import Logo from '../../../../resources/img/Logo.png';
+import Logo from '../../../public/logo.png';
 
 type Props = {
   darkMode: boolean;
@@ -25,18 +25,12 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  
+
   return (
     <AppBar position="static">
       <Toolbar>
-      <img src={Logo} alt="Logo" className="mr-16 w-64 h-24" />
-        <Link to={`/`}>
-          <Button color="inherit">
-            <span className=" font-semibold text-xl tracking-tight">ICSSHC</span>
-          </Button>
-        </Link>
+        <img src={Logo} alt="Logo" className="mr-16 w-64 h-24" />
         <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-        <Divider orientation="vertical" flexItem color="white" />
           <Button
             component={Link}
             to={`/dashboard`}

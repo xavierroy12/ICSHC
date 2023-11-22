@@ -1,5 +1,11 @@
 import Layout from './Layout';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -33,6 +39,8 @@ if (process.env.NODE_ENV === 'development') {
 export const AdminContext = createContext(false);
 
 function App() {
+  const navigate = useNavigate();
+
   const [darkMode, setDarkMode] = useState(() => {
     const localDarkMode = window.localStorage.getItem('darkMode');
     return localDarkMode ? JSON.parse(localDarkMode) : false;
@@ -52,21 +60,13 @@ function App() {
   const handleThemeChange = () => {
     setDarkMode(!darkMode);
   };
-  //enlever pour le split 3
-  //localStorage.setItem('id_user', '2');
   const cookie = document.cookie
     .split(';')
-    .find((cookie) => cookie.trim().startsWith('CookieLogged=')); // Get the cookie
-
-  //Bypass Login for dev purposes, might want to remove that later
-  if (cookie === 'CookieLogged=Minou') {
-    toast.success('Bypassing login');
-  } else {
+    .find((cookie) => cookie.trim().startsWith('CookieLogged='));
+  useEffect(() => {
+    // Get the cookie
     if (cookie) {
       const token = cookie.split('=')[1]; // Extract the token value
-      console.log('Token:', token); // Add this line to log the token value
-      console.log(window.name);
-
       fetch(window.name + 'api/checkToken', {
         method: 'POST',
         body: JSON.stringify({ token: token }),
@@ -76,69 +76,66 @@ function App() {
       }).then((response) => {
         if (response.ok) {
           response.json().then((data) => {
-            if (data.success === true) {
+            console.log('data', data);
+            if (data.user.valid_token === true) {
               toast.success('Vous êtes connecté');
-              console.log('Token is valid');
-              console.log('user data', data.utilisateur);
-              setIsAdmin(data.utilisateur.isAdmin); // Assuming the user data has an isAdmin field
+              setIsAdmin(data.user.isAdmin); // set the isAdmin state to true or false
             } else {
               toast.error("Vous n'êtes pas connecté");
-              console.log('Token is invalid');
-              return <Login />;
+              navigate('/login');
             }
           });
         }
       });
     } else {
-      return <Login />;
+      navigate('/login');
     }
-  }
+  }, [cookie, navigate]);
+
   return (
     <AdminContext.Provider value={isAdmin}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <div className="App">
           <div className={darkMode ? 'dark' : ''}>
-            <Router>
-              <Layout darkMode={darkMode} handleThemeChange={handleThemeChange}>
-                <ToastContainer />
-                <Routes>
-                  <Route path="/actifs" element={<ActifsList />} />
-                  <Route path="/actifs/modify" element={<Actifs />} />
-                  <Route path="/actif/:id" element={<Actif />} />
-                  <Route path="/actif" element={<ActifAdd />} />
+            <Layout darkMode={darkMode} handleThemeChange={handleThemeChange}>
+              <ToastContainer />
+              <Routes>
+                <Route path="/actifs" element={<ActifsList />} />
+                <Route path="/actifs/modify" element={<Actifs />} />
+                <Route path="/actif/:id" element={<Actif />} />
+                <Route path="/actif" element={<ActifAdd />} />
 
-                  <Route path="/modeles" element={<ModeleList />} />
-                  <Route path="/modele/:id" element={<Modele />} />
+                <Route path="/modeles" element={<ModeleList />} />
+                <Route path="/modele/:id" element={<Modele />} />
 
-                  <Route path="/client/:id" element={<Client />} />
-                  <Route path="/clients" element={<ClientsList />} />
+                <Route path="/client/:id" element={<Client />} />
+                <Route path="/clients" element={<ClientsList />} />
 
-                  <Route path="/utilisateurs" element={<UtilisateurList />} />
-                  <Route path="/utilisateur/:id" element={<Utilisateur />} />
+                <Route path="/utilisateurs" element={<UtilisateurList />} />
+                <Route path="/utilisateur/:id" element={<Utilisateur />} />
 
-                  <Route path="/profil" element={<Profil />} />
+                <Route path="/profil" element={<Profil />} />
 
-                  <Route path="/commandes" element={<CommandesList />} />
-                  <Route
-                    path="/commande/:numero_commande"
-                    element={<Commande />}
-                  />
+                <Route path="/commandes" element={<CommandesList />} />
+                <Route
+                  path="/commande/:numero_commande"
+                  element={<Commande />}
+                />
 
                   <Route path="/dashboard" element={<Dashboard/>} />
                   <Route path="/clients/:alertType/:alertName" element={<ClientsList key={window.location.pathname} />} />
 
-                  <Route path="/rapport" element={<Rapport />} />
+                <Route path="/rapport" element={<Rapport />} />
 
-                  <Route path="/emplacements" element={<EmplacementList />} />
-                  <Route path="/emplacement/:id" element={<Emplacement />} />
+                <Route path="/emplacements" element={<EmplacementList />} />
+                <Route path="/emplacement/:id" element={<Emplacement />} />
 
-                  <Route path="*" element={<h1>Not Found</h1>} />
+                <Route path="*" element={<h1>Not Found</h1>} />
 
-                  <Route path="/login" element={<Login />} />
-                </Routes>
-              </Layout>
-            </Router>
+                <Route path="/login" element={<Login />} />
+              </Routes>
+            </Layout>
           </div>
         </div>
       </ThemeProvider>

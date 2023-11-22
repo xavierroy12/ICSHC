@@ -1,9 +1,9 @@
 import Layout from './Layout';
 import {
-  BrowserRouter as Router,
+  //BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
+  //Navigate,
   useNavigate,
 } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
@@ -124,7 +124,7 @@ function App() {
                   element={<Commande />}
                 />
 
-                <Route path="/dashboard" element={<Dashboard/>} />
+                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/rapport" element={<Rapport />} />
 
                 <Route path="/emplacements" element={<EmplacementList />} />

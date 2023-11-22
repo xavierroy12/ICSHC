@@ -67,6 +67,17 @@ class ClientSeeder extends Seeder
         ]);
 
         DB::table('client')->insert([
+            'matricule' => '99999999',
+            'nom' => 'MONSIEUR',
+            'prenom' => 'INACTIF',
+            'id_poste' => rand(1, 2),
+            'id_type_client' => 2,
+            'id_actif' => 23,
+            'id_emplacement' => 2,
+            'inactif' => 1,
+        ]);
+
+        DB::table('client')->insert([
             [
                 'matricule' => '10015516',
                 'nom' => 'Doe',

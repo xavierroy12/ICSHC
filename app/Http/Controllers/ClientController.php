@@ -171,7 +171,6 @@ class ClientController extends Controller
         $client = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])->find($id);
         $client->setAttribute('nom', $client->prenom . ' ' . $client->nom);
 
-
         return response()->json($client);
     }
 
@@ -216,7 +215,9 @@ class ClientController extends Controller
 
     public function listShow()
     {
-        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])->get()
+        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
+        ->where('inactif', false)
+        ->get()
         ->map(
             function ($client) {
                 return [
@@ -263,4 +264,132 @@ class ClientController extends Controller
 
         return response()->json($client);
     }
+
+    //Personne inactif dans le système
+    public function getInactifClients()
+    {
+        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
+        ->where('inactif', true)
+        ->get()
+        ->map(
+            function ($client) {
+                return [
+                    "id" => $client->id,
+                    "matricule" => $client->matricule,
+                    "nom" => $client->prenom . ' ' . $client->nom, // Concatenate prenom and nom
+                    'actifs' =>  $client->actifs->pluck('nom')->implode(', '),
+                    'emplacement' => $client->emplacement->nom ?? 'Aucun',
+                    'poste' => $client->poste->nom ?? 'Aucun',
+                    'type_client' => $client->type_client->nom ?? 'Aucun',
+                ];
+            }
+        );
+        return response()->json($clients);
+    }
+
+
+    public function getOlderActifs()
+    {
+        $fiveYearsAgo = now()->subYears(5);
+
+        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
+        ->where('inactif', false)
+        ->whereHas('actifs', function ($query) use ($fiveYearsAgo) {
+            $query->whereDate('created_at', '<=', $fiveYearsAgo);
+        })
+        ->get()
+        ->map($this->clientMapFunction());
+
+        return response()->json($clients);
+    }
+
+    // Personne ayant plus de 1 appareil
+    public function getMoreThanOneActifs()
+    {
+        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
+        ->has('actifs', '>', 1)
+        ->get()
+        ->map($this->clientMapFunction());
+
+        return response()->json($clients);
+    }
+
+    // Personne que le lieu d’attribution ne concorde pas avec l’appareil
+    public function getMismatchedActifs()
+    {
+        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
+        ->whereHas('actifs', function ($query) {
+            $query->whereColumn('actif.id_emplacement', '!=', 'client.id_emplacement');
+        })
+        ->get()
+        ->map($this->clientMapFunction());
+
+        return response()->json($clients);
+    }
+
+    // Personne ayant des appareils et ne travaillant plus pour vous
+    public function getInnactiveActifs()
+    {
+        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
+        ->where('inactif', true)
+        ->whereHas('actifs')
+        ->get()
+        ->map($this->clientMapFunction());
+
+        return response()->json($clients);
+    }
+
+    private function clientMapFunction()
+    {
+        return function ($client) {
+            return [
+                "id" => $client->id,
+                "matricule" => $client->matricule,
+                "nom" => $client->prenom . ' ' . $client->nom, // Concatenate prenom and nom
+                'actifs' =>  $client->actifs->pluck('nom')->implode(', '),
+                'emplacement' => $client->emplacement->nom ?? 'Aucun',
+                'poste' => $client->poste->nom ?? 'Aucun',
+                'type_client' => $client->type_client->nom ?? 'Aucun',
+            ];
+        };
+    }
+
+    public function getAllAlerts()
+    {
+        error_log('getAllAlerts');
+        $alerts = [];
+
+        // Personne que le lieu d’attribution ne concorde pas avec l’appareil (alerte rouge)
+        $mismatchedActifs = $this->getMismatchedActifs()->original;
+        if (!empty($mismatchedActifs)) {
+            $alerts[] = ['type' => 'error', 'message' => 'Client que le lieu d\'attribution ne concorde pas avec celui de l\'appareil', 'data' => $mismatchedActifs];
+        }
+
+        // Personne ayant des appareils et ne travaillant plus pour vous (alerte rouge)
+        $innactiveActifs = $this->getInnactiveActifs()->original;
+        if (!empty($innactiveActifs)) {
+            $alerts[] = ['type' => 'error', 'message' => 'Client inactif dans le système ayant un ou des appareils', 'data' => $innactiveActifs];
+        }
+
+        // Matériel trop vieux attribué à un client (alerte jaune)
+        $olderActifs = $this->getOlderActifs()->original;
+        if (!empty($olderActifs)) {
+            $alerts[] = ['type' => 'warning', 'message' => 'Matériel trop vieux attribué à un client', 'data' => $olderActifs];
+        }
+
+        // Personne ayant plus de 1 appareil (alerte jaune)
+        $moreThanOneActifs = $this->getMoreThanOneActifs()->original;
+        if (!empty($moreThanOneActifs)) {
+            $alerts[] = ['type' => 'warning', 'message' => 'Client ayant plus d\'un appareil', 'data' => $moreThanOneActifs];
+        }
+
+        // If no alerts, return success message
+        if (empty($alerts)) {
+            $alerts[] = ['type' => 'success', 'message' => 'Aucun problème détecté!', 'data' => []];
+        }
+
+        return response()->json($alerts);
+    }
+
+
 }

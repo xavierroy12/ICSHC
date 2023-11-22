@@ -233,7 +233,6 @@ class ActifController extends Controller
                     'statut' => $actif->statut->nom,
                     'client' => $actif->client ? ($actif->client->prenom . ' ' . $actif->client->nom) : 'Aucun',
                     'emplacement' => $actif->emplacement->matricule. " - " .$actif->emplacement->nom,
-
                 ];
             });
         return response()->json($actifs);

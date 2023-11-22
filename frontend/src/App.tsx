@@ -15,6 +15,7 @@ import UtilisateurList from './components/UtilisateurList';
 import Utilisateur from './components/Utilisateur';
 import CommandesList from './components/CommandesList';
 import Commande from './components/Commande';
+import Dashboard from './components/Dashboard/Dashboard';
 import ActifAdd from './components/ActifAdd/ActifAdd';
 import Rapport from './components/Rapport';
 import EmplacementList from './components/EmplacementList';
@@ -123,6 +124,9 @@ function App() {
                     path="/commande/:numero_commande"
                     element={<Commande />}
                   />
+
+                  <Route path="/dashboard" element={<Dashboard/>} />
+                  <Route path="/clients/:alertType/:alertName" element={<ClientsList key={window.location.pathname} />} />
 
                   <Route path="/rapport" element={<Rapport />} />
 

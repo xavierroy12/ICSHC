@@ -8,13 +8,12 @@ type Props = {
 };
 
 const Layout = ({ darkMode, handleThemeChange, children }: Props) => {
-    
-  return (
-    <div className="layout">
-      <NavBar darkMode={darkMode} handleThemeChange={handleThemeChange} />
-      <div className="content">{children}</div>
-       <Footer/>
-    </div>
-  );
-};
-export default Layout;
+    return (
+      <div className="layout flex flex-col min-h-screen">
+        <NavBar darkMode={darkMode} handleThemeChange={handleThemeChange} />
+        <div className="content flex-grow">{children}</div>
+        <Footer/>
+      </div>
+    );
+  };
+  export default Layout;

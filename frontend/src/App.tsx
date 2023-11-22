@@ -110,6 +110,7 @@ function App() {
                 <Route path="/modele/:id" element={<Modele />} />
 
                 <Route path="/client/:id" element={<Client />} />
+                <Route path="/clients/:alertType/:alertName" element={<ClientsList key={window.location.pathname} />} />
                 <Route path="/clients" element={<ClientsList />} />
 
                 <Route path="/utilisateurs" element={<UtilisateurList />} />
@@ -123,9 +124,7 @@ function App() {
                   element={<Commande />}
                 />
 
-                  <Route path="/dashboard" element={<Dashboard/>} />
-                  <Route path="/clients/:alertType/:alertName" element={<ClientsList key={window.location.pathname} />} />
-
+                <Route path="/dashboard" element={<Dashboard/>} />
                 <Route path="/rapport" element={<Rapport />} />
 
                 <Route path="/emplacements" element={<EmplacementList />} />

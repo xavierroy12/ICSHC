@@ -459,7 +459,7 @@ const ActifsList = () => {
       </div>
       <div className="items-end justify-end flex pb-4">
         <Autocomplete
-          className="w-1/6"
+          className="w-1/6 mr-4"
           options={filtersGroupSelect}
           getOptionLabel={(option) => option.label}
           isOptionEqualToValue={(option, value) => option.label === value.label}

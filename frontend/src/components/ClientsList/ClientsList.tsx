@@ -1,36 +1,36 @@
-import {useEffect, useRef, useState} from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Client } from './type';
 import { FiltreGroup } from '../Filtres/type';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import MUIDataTable, {
-    MUIDataTableColumn,
-    MUIDataTableOptions,
-  } from 'mui-datatables';
-  import DeleteIcon from '@mui/icons-material/Delete';
-  import {
-    Autocomplete,
-    Button,
-    CircularProgress,
-    Modal,
-    TextField,
-    ToggleButton,
-  } from '@mui/material';
-  import AddGroupeFiltres from '../AddGroupeFiltres';
-  import { toast } from 'react-toastify';
+  MUIDataTableColumn,
+  MUIDataTableOptions,
+} from 'mui-datatables';
+import DeleteIcon from '@mui/icons-material/Delete';
+import {
+  Autocomplete,
+  Button,
+  CircularProgress,
+  Modal,
+  TextField,
+  ToggleButton,
+} from '@mui/material';
+import AddGroupeFiltres from '../AddGroupeFiltres';
+import { toast } from 'react-toastify';
 
 type selectedFiltersType = {
-    matricule?: string;
-    nom?:string;
-    actifs?:string;
-    emplacement?: string;
-    poste?:string;
-    type_client?:string;
-  };
-  type currentFiltersGroupType = {
-    value: number;
-    label: string;
-  };
+  matricule?: string;
+  nom?: string;
+  actifs?: string;
+  emplacement?: string;
+  poste?: string;
+  type_client?: string;
+};
+type currentFiltersGroupType = {
+  value: number;
+  label: string;
+};
 
 const ClientsList = () => {
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ const ClientsList = () => {
 
   const [inactifClients, setInactifClients] = useState<Client[]>([]);
 
- // New state to store selected filters
+  // New state to store selected filters
   const [selectedFilters, setSelectedFilters] = useState<selectedFiltersType>(
     {}
   );
@@ -81,23 +81,25 @@ const ClientsList = () => {
 
   const columns = [
     {
-        name: 'matricule',
-        label: 'Matricule',
-        options: {
-          filter: false,
-          sort: true,
-          filterList: selectedFilters.matricule ? [selectedFilters.matricule] : [],
-        },
+      name: 'matricule',
+      label: 'Matricule',
+      options: {
+        filter: false,
+        sort: true,
+        filterList: selectedFilters.matricule
+          ? [selectedFilters.matricule]
+          : [],
       },
+    },
     {
-        name: 'nom',
-        label: 'Nom',
-        options: {
-          filter: false,
-          sort: true,
-          filterList: selectedFilters.nom ? [selectedFilters.nom] : [],
-        },
+      name: 'nom',
+      label: 'Nom',
+      options: {
+        filter: false,
+        sort: true,
+        filterList: selectedFilters.nom ? [selectedFilters.nom] : [],
       },
+    },
     {
       name: 'actifs',
       label: 'Actifs',
@@ -113,7 +115,9 @@ const ClientsList = () => {
       options: {
         filter: true,
         sort: true,
-        filterList: selectedFilters.emplacement ? [selectedFilters.emplacement] : [],
+        filterList: selectedFilters.emplacement
+          ? [selectedFilters.emplacement]
+          : [],
       },
     },
     {
@@ -131,7 +135,9 @@ const ClientsList = () => {
       options: {
         filter: true,
         sort: true,
-        filterList: selectedFilters.type_client ? [selectedFilters.type_client] : [],
+        filterList: selectedFilters.type_client
+          ? [selectedFilters.type_client]
+          : [],
       },
     },
   ];
@@ -177,7 +183,9 @@ const ClientsList = () => {
     ];
 
     if (id_user) {
-      fetches.push(fetch(window.name + `api/filter/getFiltersById?id_user=${id_user}`));
+      fetches.push(
+        fetch(window.name + `api/filter/getFiltersById?id_user=${id_user}`)
+      );
     }
 
     Promise.all(fetches)
@@ -186,9 +194,17 @@ const ClientsList = () => {
         const [fetchedClients, fetchedInactif] = data;
 
         if (filter) {
-          const flatFilter = Array.isArray(filter[0]) ? filter.flat() : filter.map((item: { matricule: any; }) => item.matricule);
-          const filteredClients = fetchedClients.filter((client: { matricule: any; }) => flatFilter.includes(client.matricule));
-          const filteredInactif = fetchedInactif.filter((client: { matricule: any; }) => flatFilter.includes(client.matricule));
+          const flatFilter = Array.isArray(filter[0])
+            ? filter.flat()
+            : filter.map((item: { matricule: unknown }) => item.matricule);
+          const filteredClients = fetchedClients.filter(
+            (client: { matricule: unknown }) =>
+              flatFilter.includes(client.matricule)
+          );
+          const filteredInactif = fetchedInactif.filter(
+            (client: { matricule: unknown }) =>
+              flatFilter.includes(client.matricule)
+          );
           setClients([...filteredClients, ...filteredInactif]);
         } else {
           setClients(fetchedClients);
@@ -203,7 +219,9 @@ const ClientsList = () => {
   useEffect(() => {
     if (filtersList && filtersList.length !== 0) {
       // Filter the filters based on the 'from' property
-      const pageFilters = filtersList.filter(filter => filter.from === 'clients');
+      const pageFilters = filtersList.filter(
+        (filter) => filter.from === 'clients'
+      );
 
       // Update the filtersGroupSelect state with the new filters
       const updatedFilterOptions = pageFilters.map(
@@ -379,7 +397,9 @@ const ClientsList = () => {
           setCurrentFiltersGroup(undefined); // Reset the selected filter label to empty string
           setClients(cleanClients);
         } else {
-          toast.error('Une erreur est survenue lors de la suppression du filtre.');
+          toast.error(
+            'Une erreur est survenue lors de la suppression du filtre.'
+          );
         }
       })
       .catch((error) => {
@@ -387,33 +407,32 @@ const ClientsList = () => {
       });
   };
 
- const handleCloseModal = () => {
+  const handleCloseModal = () => {
     setClients(cleanClients);
     setOpen(false);
-};
+  };
 
-return (
+  return (
     <div className="w-11/12 mx-auto mt-10">
-         <div className="flex float-left mt-4 ml-4">
+      <div className="flex float-left mt-4 ml-4">
         <ToggleButton
-        selected={showInactif}
-        value={showInactif}
-        onChange={() => setShowInactif(!showInactif)}
-        size="small"
-        color="primary"
+          selected={showInactif}
+          value={showInactif}
+          onChange={() => setShowInactif(!showInactif)}
+          size="small"
+          color="primary"
         >
-        Voir Inactif
+          Voir Inactif
         </ToggleButton>
-     </div>
+      </div>
       <div className="items-end justify-end flex pb-4">
-      <Autocomplete
+        <Autocomplete
           className="w-1/6 mr-4"
           options={filtersGroupSelect}
           getOptionLabel={(option) => option.label}
           isOptionEqualToValue={(option, value) => option.label === value.label}
           onChange={async (_, newValue) => {
             if (newValue) {
-
               try {
                 const selectedLabel = newValue.label;
                 setCurrentFiltersGroup(newValue);
@@ -461,21 +480,21 @@ return (
           )}
         />
         <Button
-                disabled={isButtonDisabled} // Disable the button based on the state
-                ref={saveButtonRef}
-                onClick={() => {
-                  setOpen(true);
-                }}
-              >
-                Sauvegarder filtre(s)
-              </Button>
+          disabled={isButtonDisabled} // Disable the button based on the state
+          ref={saveButtonRef}
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
+          Sauvegarder filtre(s)
+        </Button>
       </div>
       <MUIDataTable
-            title={showInactif ? 'Clients Inactifs' : 'Clients'}
-            data={showInactif ? inactifClients : clients}
-            columns={columns}
-            options={options}
-        />
+        title={showInactif ? 'Clients Inactifs' : 'Clients'}
+        data={showInactif ? inactifClients : clients}
+        columns={columns}
+        options={options}
+      />
       <Modal open={open} onClose={() => setOpen(false)}>
         <div className="min-w-fit max-w-fit min-h-fit max-h-fit bg-white m-auto mt-20">
           <AddGroupeFiltres
@@ -489,4 +508,3 @@ return (
   );
 };
 export default ClientsList;
-

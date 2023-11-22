@@ -8,6 +8,7 @@ use App\Models\Utilisateur;
 use App\Models\Actif;
 use App\Models\Client;
 use App\Models\Modele;
+use Illuminate\Support\Str;
 
 
 class LogController extends Controller
@@ -407,6 +408,7 @@ class LogController extends Controller
         $logsReturned = [];
         $relationships = ['actif', 'client', 'modele', 'user'];
 
+
         error_log('attempting to show logs for ' . $typeItem . ' ' . $id_item);
         // Return all actif logs
         if ($typeItem == 'actif') {
@@ -424,15 +426,49 @@ class LogController extends Controller
             $logs = Log::where('id_modele', $id_item)->with($relationships)->get();
         }
         // Return all user logs
-        if ($typeItem == 'user') {
+        if ($typeItem == 'utilisateur') {
+            error_log('iditem is : ' . $id_item);
             $logs = Log::where('id_user', $id_item)->with($relationships)->get();
+
+            /* foreach ($logs as $log) {
+                 $values = [
+                     "id_client" => $log->id_client,
+                     "id_actif" => $log->id_actif,
+                     "id_modele" => $log->id_modele,
+                     "id_emplacement" => $log->id_emplacement,
+                     "id_utilisateur" => $log->id_utilisateur
+                 ];
+                 $nonNullValue = null;
+                 foreach ($values as $key => $value) {
+                     if ($value !== null) {
+                         $nonNullValue = [$key => $value];
+                         break;
+                     }
+                 }
+                 if ($nonNullValue) {
+                     $relatedModelName = substr(key($nonNullValue), 3); // Remove 'id_' from the start of the field name
+                     $itemToFind = ucfirst($relatedModelName);
+                     error_log('item to find is : ' . $itemToFind);
+                     $itemToFindClass = "\\App\\Models\\" . $itemToFind; // Construct the fully qualified class name
+                     $ResultModel = $itemToFindClass::find(current($nonNullValue));
+                     error_log('ResultModel to find is : ' . $ResultModel);
+                     error_log('NonNullValue is : ' . json_encode($nonNullValue));
+
+
+                 }
+             }*/
         }
+
+
+
         foreach ($logs as $log) {
+            error_log($log);
             if ($this->isForeignKey($log->field)) {
-                error_log('logging before getfieldvalue');
-                error_log($log);
+
+
                 $log->old_value = $this->getFieldValue($log->old_value, $typeItem, $log->field, $id_item, False);
                 $log->new_value = $this->getFieldValue($log->new_value, $typeItem, $log->field, $id_item, True);
+
                 $champ = substr($log->field, 3);
             } else {
                 $champ = $log->field;
@@ -452,8 +488,6 @@ class LogController extends Controller
                 'utilisateur' => $utilisateur,
             ];
 
-
-            error_log('one of the log is : ' . $data['date']);
             array_push($logsReturned, $data);
         }
 
@@ -467,22 +501,22 @@ class LogController extends Controller
 
     public function getFieldValue($value, $typeItem, $field, $id_item, $isNew)
     {
+
+        error_log('getFieldValue parameters: value=' . $value . ', typeItem=' . $typeItem . ', field=' . $field . ', id_item=' . $id_item);
+
         if ($value == null)
             return null;
 
         if ($typeItem == 'actif') {
             $actif = Actif::find($id_item);
-            error_log($actif);
-            error_log('getFieldValue parameters: value=' . $value . ', typeItem=' . $typeItem . ', field=' . $field . ', id_item=' . $id_item);
+            //error_log('getFieldValue parameters: value=' . $value . ', typeItem=' . $typeItem . ', field=' . $field . ', id_item=' . $id_item);
             if ($field === 'id_categorie')
                 $result = $actif->modele->categorie->nom;
             else {
                 $relatedModelName = substr($field, 3); // Remove 'id_' from the start of the field name
                 $itemToFind = ucfirst($relatedModelName);
-                error_log('item to find is : ' . $itemToFind);
                 $itemToFindClass = "\\App\\Models\\" . $itemToFind; // Construct the fully qualified class name
                 $ResultModel = $itemToFindClass::find($value);
-                error_log('ResultModel to find is : ' . $ResultModel);
                 if ($itemToFind == 'Client')
                     $result = $ResultModel->prenom . ' ' . $ResultModel->nom;
                 else
@@ -490,21 +524,16 @@ class LogController extends Controller
             }
 
 
-            error_log('tryting returns : ' . $result);
             return $result;
         }
         if ($typeItem == 'client') {
             $client = Client::find($value);
             $relatedModelName = substr($field, 3); // Remove 'id_' from the start of the field name
             $itemToFind = ucfirst($relatedModelName);
-            error_log('item to find is 2 : ' . $itemToFind);
             $itemToFindClass = "\\App\\Models\\" . $itemToFind; // Construct the fully qualified class name
-            error_log('itemToFindClass to find is : ' . $itemToFindClass);
-            error_log($value);
             $ResultModel = $itemToFindClass::find($value);
             if (isset($ResultModel)) {
                 $result = $ResultModel->nom;
-                error_log('result in isset ' . $result);
             } else
                 $result = null;
 
@@ -514,9 +543,21 @@ class LogController extends Controller
             $modele = Modele::find($value);
             return $modele->nom;
         }
-        if ($typeItem == 'user') {
+        if ($typeItem == 'utilisateur') {
             $user = Utilisateur::find($value);
-            return $user->nom;
+            error_log('user is : ' . $user);
+            $relatedModelName = substr($field, 3); // Remove 'id_' from the start of the field name
+            $itemToFind = Str::studly($relatedModelName);
+            $itemToFind = str_replace('_', '', $itemToFind);
+            error_log((string) $itemToFind);
+            $itemToFindClass = "\\App\\Models\\" . $itemToFind; // Construct the fully qualified class name
+            $ResultModel = $itemToFindClass::find($value); //
+            if (isset($ResultModel)) {
+                $result = $ResultModel->nom;
+            } else
+                $result = null;
+
+            return $result;
         }
     }
 

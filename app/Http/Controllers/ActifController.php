@@ -160,7 +160,9 @@ class ActifController extends Controller
 
             // Get the data from the form
             $data = $request->all();
-
+            if ($data['id_assigne_a'] == 'Aucun') {
+                $data['id_assigne_a'] = null;
+            }
             // Map the form data to match the expected field names in your Laravel API
             $updatedDataActif = [
                 'nom' => $data['nom'],
@@ -232,7 +234,7 @@ class ActifController extends Controller
                     'categorie' => $actif->modele->categorie->nom,
                     'statut' => $actif->statut->nom,
                     'client' => $actif->client ? ($actif->client->prenom . ' ' . $actif->client->nom) : 'Aucun',
-                    'emplacement' => $actif->emplacement->matricule. " - " .$actif->emplacement->nom,
+                    'emplacement' => $actif->emplacement->matricule . " - " . $actif->emplacement->nom,
 
                 ];
             });
@@ -274,7 +276,7 @@ class ActifController extends Controller
             'en_entrepot' => $actif->en_entrepot,
             'date_retour' => $actif->date_retour,
             'note' => $actif->note,
-            'numero_commande' => $actif->numero_commande?? "Aucun",
+            'numero_commande' => $actif->numero_commande ?? "Aucun",
         ];
         return response()->json($data);
     }
@@ -298,29 +300,28 @@ class ActifController extends Controller
     }
 
     public function archivedActifs()
-
-{
-    $archivedActifs = Actif::with(['modele.categorie', 'statut', 'client', 'emplacement'])
-        ->where('id_statut', 5)
-        ->get()
-        ->map(function ($actif) {
-            return [
-                'id' => $actif->id,
-                'numero_commande' => $actif->numero_commande,
-                'numero_serie' => $actif->numero_serie,
-                'nom' => $actif->nom,
-                'modele' => $actif->modele->nom,
-                'modele_id' => $actif->modele->id,
-                'categorie' => $actif->modele->categorie->nom,
-                'categorie_id' => $actif->modele->categorie->id,
-                'statut' => $actif->statut->nom,
-                'statut_id' => $actif->statut->id,
-                'client' => $actif->client->prenom . ' ' . $actif->client->nom ?? 'Aucun',
-                'client_id' => $actif->client->id,
-                'emplacement' => $actif->emplacement->matricule. " - " .$actif->emplacement->nom,
-                'emplacement_id' => $actif->emplacement->id,
-            ];
-        });
+    {
+        $archivedActifs = Actif::with(['modele.categorie', 'statut', 'client', 'emplacement'])
+            ->where('id_statut', 5)
+            ->get()
+            ->map(function ($actif) {
+                return [
+                    'id' => $actif->id,
+                    'numero_commande' => $actif->numero_commande,
+                    'numero_serie' => $actif->numero_serie,
+                    'nom' => $actif->nom,
+                    'modele' => $actif->modele->nom,
+                    'modele_id' => $actif->modele->id,
+                    'categorie' => $actif->modele->categorie->nom,
+                    'categorie_id' => $actif->modele->categorie->id,
+                    'statut' => $actif->statut->nom,
+                    'statut_id' => $actif->statut->id,
+                    'client' => $actif->client->prenom . ' ' . $actif->client->nom ?? 'Aucun',
+                    'client_id' => $actif->client->id,
+                    'emplacement' => $actif->emplacement->matricule . " - " . $actif->emplacement->nom,
+                    'emplacement_id' => $actif->emplacement->id,
+                ];
+            });
 
         return response()->json($archivedActifs);
     }
@@ -366,8 +367,7 @@ class ActifController extends Controller
     {
         $data = $request->all();
         $id_modele = Modele::where('nom', $data[0]['modele'])->first()->id;
-        foreach($data as $newActif)
-        {
+        foreach ($data as $newActif) {
             $actif = new Actif;
             $actif->numero_serie = $newActif['numero_serie'];
             $actif->adresse_mac = $newActif['adresse_mac'];
@@ -381,56 +381,56 @@ class ActifController extends Controller
     public function showRapport($rapportName)
     {
 
-        Log::info('showRapport function called with rapportName: '.$rapportName);
+        Log::info('showRapport function called with rapportName: ' . $rapportName);
         $data = null;
-        switch($rapportName){
-            case("ActifsEcole"):
-                $data =  DB::table('emplacement')
-                ->leftJoin('actif', 'actif.id_emplacement', '=', 'emplacement.id')
-                ->select('emplacement.matricule as id', 'emplacement.nom', DB::raw('count(actif.id) as nbActifs'))
-                ->groupBy('emplacement.id', 'emplacement.nom')
-                ->get();
-            break;
-            case("ActifsProprietaire"):
-                $data =  DB::table('proprietaire')
-                ->leftJoin('actif', 'actif.id_proprietaire', '=', 'proprietaire.id')
-                ->select('proprietaire.id', 'proprietaire.nom', DB::raw('count(actif.id) as nbActifs'))
-                ->groupBy('proprietaire.id', 'proprietaire.nom')
-                ->get();
-            break;
-            case("ActifsType"):
-                $data =  DB::table('actif')
-                ->join('modele', 'actif.id_modele', '=', 'modele.id')
-                ->join('type_modele', 'modele.id_type_modele', '=', 'type_modele.id')
-                ->select('type_modele.id', 'type_modele.nom', DB::raw('count(actif.id) as nbActifs'))
-                ->groupBy('type_modele.id', 'type_modele.nom')
-                ->get();
-            break;
-            case("ActifsFinVieEcole"):
-                $data =  DB::table('emplacement')
-                ->leftJoin('actif', 'actif.id_emplacement', '=', 'emplacement.id')
-                ->select('emplacement.matricule  as id', 'emplacement.nom', DB::raw('count(actif.id) as nbActifs'))
-                ->where('actif.created_at', '<=', now()->subYears(5))
-                ->groupBy('emplacement.id', 'emplacement.nom')
-                ->get();
-            break;
-            case("ActifsFinVieProprietaire"):
-                $data =  DB::table('proprietaire')
-                ->leftJoin('actif', 'actif.id_proprietaire', '=', 'proprietaire.id')
-                ->select('proprietaire.id', 'proprietaire.nom', DB::raw('count(actif.id) as nbActifs'))
-                ->where('actif.created_at', '<=', now()->subYears(5))
-                ->groupBy('proprietaire.id', 'proprietaire.nom')
-                ->get();
-            break;
-            case("ActifsFinVieType"):
-                $data =  DB::table('actif')
-                ->join('modele', 'actif.id_modele', '=', 'modele.id')
-                ->join('type_modele', 'modele.id_type_modele', '=', 'type_modele.id')
-                ->select('type_modele.id', 'type_modele.nom', DB::raw('count(actif.id) as nbActifs'))
-                ->where('actif.created_at', '<=', now()->subYears(5))
-                ->groupBy('type_modele.id', 'type_modele.nom')
-                ->get();
-            break;
+        switch ($rapportName) {
+            case ("ActifsEcole"):
+                $data = DB::table('emplacement')
+                    ->leftJoin('actif', 'actif.id_emplacement', '=', 'emplacement.id')
+                    ->select('emplacement.matricule as id', 'emplacement.nom', DB::raw('count(actif.id) as nbActifs'))
+                    ->groupBy('emplacement.id', 'emplacement.nom')
+                    ->get();
+                break;
+            case ("ActifsProprietaire"):
+                $data = DB::table('proprietaire')
+                    ->leftJoin('actif', 'actif.id_proprietaire', '=', 'proprietaire.id')
+                    ->select('proprietaire.id', 'proprietaire.nom', DB::raw('count(actif.id) as nbActifs'))
+                    ->groupBy('proprietaire.id', 'proprietaire.nom')
+                    ->get();
+                break;
+            case ("ActifsType"):
+                $data = DB::table('actif')
+                    ->join('modele', 'actif.id_modele', '=', 'modele.id')
+                    ->join('type_modele', 'modele.id_type_modele', '=', 'type_modele.id')
+                    ->select('type_modele.id', 'type_modele.nom', DB::raw('count(actif.id) as nbActifs'))
+                    ->groupBy('type_modele.id', 'type_modele.nom')
+                    ->get();
+                break;
+            case ("ActifsFinVieEcole"):
+                $data = DB::table('emplacement')
+                    ->leftJoin('actif', 'actif.id_emplacement', '=', 'emplacement.id')
+                    ->select('emplacement.matricule  as id', 'emplacement.nom', DB::raw('count(actif.id) as nbActifs'))
+                    ->where('actif.created_at', '<=', now()->subYears(5))
+                    ->groupBy('emplacement.id', 'emplacement.nom')
+                    ->get();
+                break;
+            case ("ActifsFinVieProprietaire"):
+                $data = DB::table('proprietaire')
+                    ->leftJoin('actif', 'actif.id_proprietaire', '=', 'proprietaire.id')
+                    ->select('proprietaire.id', 'proprietaire.nom', DB::raw('count(actif.id) as nbActifs'))
+                    ->where('actif.created_at', '<=', now()->subYears(5))
+                    ->groupBy('proprietaire.id', 'proprietaire.nom')
+                    ->get();
+                break;
+            case ("ActifsFinVieType"):
+                $data = DB::table('actif')
+                    ->join('modele', 'actif.id_modele', '=', 'modele.id')
+                    ->join('type_modele', 'modele.id_type_modele', '=', 'type_modele.id')
+                    ->select('type_modele.id', 'type_modele.nom', DB::raw('count(actif.id) as nbActifs'))
+                    ->where('actif.created_at', '<=', now()->subYears(5))
+                    ->groupBy('type_modele.id', 'type_modele.nom')
+                    ->get();
+                break;
 
 
         }

@@ -114,9 +114,15 @@ class LogController extends Controller
             'id_proprietaire' => isset($data['id_proprietaire']) ? $data['id_proprietaire'] : null,
             'id_utilisation' => isset($data['id_utilisation']) ? $data['id_utilisation'] : null,
         ];
+        error_log('id_client is : ' . $requestData['id_client']);
+        if ($requestData['id_client'] == 'Aucun')
+            $requestData['id_client'] = null;
+
+
         //for each field in the request, check if it is different from the current value and if it is, log it
+        error_log('id_client is after log : ' . $requestData['id_client']);
         foreach ($requestData as $field => $newValue) {
-            if ($actif->$field != $newValue && $newValue != null) {
+            if ($actif->$field != $newValue) {
                 error_log('field is ' . $field . ' and newValue is ' . $newValue . ' and oldValue is ' . $actif->$field);
                 $log = new Log([
                     'url' => $request->fullUrl(),
@@ -135,38 +141,51 @@ class LogController extends Controller
                     }
                     $log->old_value = $actif->modele->categorie->id;
                 }
-                if ($field == 'id_client') {
-                    error_log('id_client');
-                    //To-do: call the logClient for a desasignation and assignation log. Here we are just creating the log for the actif
-                    $client = Client::where('id', $requestData['id_client'])->first();
-                    //to-do: check why the assignation wont save.
-                    error_log('client id ' . $client->id);
-                    $log->new_value = $client->id;
-                    error_log('log is : ' . $log);
+                //if the field is id_client we need to make sure the logs we are creating are associated with the client and the actif
+                /*if ($field == 'id_client')
+                    if ($newValue == null) {
+                        $log->action = 'Desassignation';
+                        $log->id_client = $actif->$field;
+                    } else if ($actif->$field == null) {
+                        $log->action = 'Assignation';
+                        $log->id_client = $newValue;
+                    } else {
+                        $logDesassignation = $log;
+                        $log->action = 'Assignation';
+                        $log->id_client = $newValue;
+                        $logDesassignation->action = 'Desassignation';
+                        $logDesassignation->id_client = $actif->$field;
+                    }
 
-                    $logAssignation = new Log([
-                        'url' => $request->fullUrl(),
-                        'method' => $request->method(),
-                        'action' => 'assignation',
-                        'field' => 'id_client',
-                        'old_value' => null,
-                        'new_value' => $client->id,
-                        'id_user' => $modificateur,
-                        'id_actif' => $id,
-                    ]);
-                    $logDesassignation = new Log([
-                        'url' => $request->fullUrl(),
-                        'method' => $request->method(),
-                        'action' => 'desassignation',
-                        'field' => 'id_client',
-                        'old_value' => $actif->client->id,
-                        'new_value' => null,
-                        'id_user' => $modificateur,
-                        'id_actif' => $id,
-                    ]);
-                    $logAssignation->save();
-                    $logDesassignation->save();
-                }
+                    //Handling exceptions, if the field is id_client, we need to get the client of the actif
+
+                    /*if ($field == 'id_client') {
+                        $client = Client::where('id', $requestData['id_client'])->first();
+                        $log->new_value = $client->id;
+                        
+                                            $logAssignation = new Log([
+                                                'url' => $request->fullUrl(),
+                                                'method' => $request->method(),
+                                                'action' => 'assignation',
+                                                'field' => 'id_client',
+                                                'old_value' => null,
+                                                'new_value' => $client->id,
+                                                'id_user' => $modificateur,
+                                                'id_actif' => $id,
+                                            ]);
+                                            $logDesassignation = new Log([
+                                                'url' => $request->fullUrl(),
+                                                'method' => $request->method(),
+                                                'action' => 'desassignation',
+                                                'field' => 'id_client',
+                                                'old_value' => $actif->client->id,
+                                                'new_value' => null,
+                                                'id_user' => $modificateur,
+                                                'id_actif' => $id,
+                                            ]);
+                                            $logAssignation->save();
+                                            $logDesassignation->save();
+                    }*/
                 error_log('log is : ' . $log);
                 $log->save();
             }
@@ -179,20 +198,46 @@ class LogController extends Controller
     {
         $modificateur = $request->header('X-User-Action-Id');
         $path = $request->path();
+        //id kevin tremblay
         $idClient = basename($path);
         //$client = Client::find($idClient);
-        $actifClients = $actifs = Actif::where('id_client', $idClient)->get();
+        //list actif associer a Kevin
+        $actifClients = Actif::where('id_client', $idClient)->get();
+        //array des actif qu'on veut qui soit assigner a kevin
         $actifsRequestIds = $request->input('actifs');
+        //array des actif qui sont deja assigner a kevin
         $actifClientsIds = $actifClients->pluck('id')->toArray();
 
         $addedIds = array_diff($actifsRequestIds, $actifClientsIds);
         $removedIds = array_diff($actifClientsIds, $actifsRequestIds);
 
+
+
         foreach ($addedIds as $id) {
+            $actif = Actif::where('id', $id)->first();
+            error_log('actif line 218 is : ' . $actif);
+            //If one of the actif is already assigned, we create a log for the client wich just lost an actif.
+            if ($actif->id_client != null) {
+                $logDesasignation = new Log([
+                    'url' => $request->fullUrl(),
+                    'method' => $request->method(),
+                    'action' => 'Desassignation',
+                    'field' => 'id_actif',
+                    'old_value' => $id,
+                    'new_value' => null,
+                    'id_user' => $modificateur,
+                    'id_client' => $actif->id_client,
+                ]);
+                $logDesasignation->save();
+            }
+
+
+
+
             $log = new Log([
                 'url' => $request->fullUrl(),
                 'method' => $request->method(),
-                'action' => 'assignation',
+                'action' => 'Assignation',
                 'field' => 'id_client',
                 'old_value' => null,
                 'new_value' => $idClient,
@@ -203,7 +248,7 @@ class LogController extends Controller
             $log = new Log([
                 'url' => $request->fullUrl(),
                 'method' => $request->method(),
-                'action' => 'desassignation',
+                'action' => 'Assignation',
                 'field' => 'id_actif',
                 'old_value' => null,
                 'new_value' => $id,
@@ -217,7 +262,7 @@ class LogController extends Controller
             $log = new Log([
                 'url' => $request->fullUrl(),
                 'method' => $request->method(),
-                'action' => 'desassignation',
+                'action' => 'Desassignation',
                 'field' => 'id_client',
                 'old_value' => $idClient,
                 'new_value' => null,
@@ -229,7 +274,7 @@ class LogController extends Controller
             $log = new Log([
                 'url' => $request->fullUrl(),
                 'method' => $request->method(),
-                'action' => 'desassignation',
+                'action' => 'Desassignation',
                 'field' => 'id_actif',
                 'old_value' => $id,
                 'new_value' => null,
@@ -396,11 +441,9 @@ class LogController extends Controller
             $new_value = $log->new_value !== null ? $log->new_value : 'rien';
 
             $description = $log->action . ' ' . $champ . ' de ' . $old_value . ' à ' . $new_value;
-            //todo: read the user fr fr no cap
             $username = Utilisateur::find($log->id_user);
             $nameUser = $username->nom;
             $utilisateur = $nameUser !== null ? $nameUser : 'Utilisateur introuvable';
-            //$utilisateur = 'personne';
 
 
             $data = [
@@ -424,14 +467,13 @@ class LogController extends Controller
 
     public function getFieldValue($value, $typeItem, $field, $id_item, $isNew)
     {
+        if ($value == null)
+            return null;
+
         if ($typeItem == 'actif') {
             $actif = Actif::find($id_item);
             error_log($actif);
             error_log('getFieldValue parameters: value=' . $value . ', typeItem=' . $typeItem . ', field=' . $field . ', id_item=' . $id_item);
-
-
-
-
             if ($field === 'id_categorie')
                 $result = $actif->modele->categorie->nom;
             else {
@@ -441,7 +483,10 @@ class LogController extends Controller
                 $itemToFindClass = "\\App\\Models\\" . $itemToFind; // Construct the fully qualified class name
                 $ResultModel = $itemToFindClass::find($value);
                 error_log('ResultModel to find is : ' . $ResultModel);
-                $result = $ResultModel->nom;
+                if ($itemToFind == 'Client')
+                    $result = $ResultModel->prenom . ' ' . $ResultModel->nom;
+                else
+                    $result = $ResultModel->nom;
             }
 
 

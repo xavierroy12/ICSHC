@@ -11,6 +11,7 @@ import {
   Autocomplete,
   Button,
   CircularProgress,
+  IconButton,
   Modal,
   TextField,
   ToggleButton,
@@ -18,6 +19,8 @@ import {
 import { LightActif } from '../ActifsListSelect/type';
 import ActifsSelect from '../ActifsSelect/ActifsSelect';
 import AddGroupeFiltres from '../AddGroupeFiltres';
+import { toast } from 'react-toastify';
+import CloseIcon from '@mui/icons-material/Close';
 
 type selectedFiltersType = {
   nom?: string;
@@ -214,11 +217,18 @@ const ActifsList = () => {
   }, [id_user]);
   useEffect(() => {
     if (filtersList.length !== 0) {
-      setFiltersGroupSelect(
-        filtersList.map((filter) => {
-          return { value: filter.id, label: filter.label };
+      // Filter the filters based on the 'from' property
+      const pageFilters = filtersList.filter(filter => filter.from === 'actifs');
+
+      // Update the filtersGroupSelect state with the new filters
+      const updatedFilterOptions = pageFilters.map(
+        (filter: { id: number; label: string }) => ({
+          value: filter.id,
+          label: filter.label,
         })
       );
+
+      setFiltersGroupSelect(updatedFilterOptions);
     }
   }, [filtersList]);
 
@@ -281,14 +291,15 @@ const ActifsList = () => {
   );
 
   const saveFilters = (label: string) => {
-    const id_user = localStorage.getItem('id_user');
+    const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
+
     const urlParts = window.location.pathname.split('/');
     const from = urlParts[urlParts.length - 1];
 
     // First, check if a filter with the same label already exists
     fetch(
       window.name +
-        `api/filter/checkLabelExists?label=${label}&id_user=${id_user}`,
+      `api/filter/checkLabelExists?label=${label}&id_user=${id_user}`,
       {
         method: 'GET',
       }
@@ -297,7 +308,7 @@ const ActifsList = () => {
       .then((result) => {
         if (result.exists) {
           // Alert the user that the label already exists
-          alert(
+          toast.error(
             'Un filtre portant ce nom existe déjà. Veuillez entrer un autre nom svp.'
           );
         } else {
@@ -314,13 +325,14 @@ const ActifsList = () => {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'X-User-Action-Id': id_user // send the user id in a custom header
             },
             body: JSON.stringify(data),
           })
             .then((response) => {
               if (response.ok) {
-                alert(
-                  'Le(s) filtre(s) selectionné(s) ont été enregistrés avec succès!'
+                toast.success(
+                    'Le(s) filtre(s) selectionné(s) ont été enregistrés avec succès!'
                 );
                 setOpen(false);
 
@@ -402,14 +414,14 @@ const ActifsList = () => {
           setFiltersList(updatedFiltersList);
 
           // Clear the input field or perform any other necessary actions
-          alert('Le filtre sélectionné a été supprimé avec succès!');
+          toast.success('Le filtre sélectionné a été supprimé avec succès!');
 
           // Reset the filters here
           setSelectedFilters({});
           setCurrentFiltersGroup(undefined); // Reset the selected filter label to empty string
           setActifs(cleanActifs);
         } else {
-          console.error('Failed to delete filter');
+            toast.error('Une erreur est survenue lors de la supression du filtre');
         }
       })
       .catch((error) => {
@@ -471,8 +483,8 @@ const ActifsList = () => {
 
                 const response = await fetch(
                   window.name +
-                    'api/filter/getFiltersByLabel?label=' +
-                    selectedLabel
+                  'api/filter/getFiltersByLabel?label=' +
+                  selectedLabel
                 );
 
                 if (response.ok) {
@@ -575,21 +587,38 @@ const ActifsList = () => {
           },
         }}
       >
-        <ActifsSelect
-          ref={ref}
-          selectedActifs={selectedActifs}
-          setSelectedActifs={setSelectedActifs}
-          actifs={actifs.map((actif: Actif) => ({
-            id: parseInt(actif.id),
-            nom: actif.nom,
-            numero_serie: actif.numero_serie,
-          }))}
-          handleSubmit={handleSubmit}
-        />
+        <div className="m-auto p-4 my-20 w-fit align-right bg-slate-400">
+          <IconButton
+            tabIndex={0}
+            onClick={handleCloseModal}
+            className="float-right"
+          >
+            <CloseIcon />
+          </IconButton>
+          <div className="p-12">
+            <ActifsSelect
+              ref={ref}
+              selectedActifs={selectedActifs}
+              setSelectedActifs={setSelectedActifs}
+              actifs={actifs.map((actif: Actif) => ({
+                id: parseInt(actif.id),
+                nom: actif.nom,
+                numero_serie: actif.numero_serie,
+              }))}
+              handleSubmit={handleSubmit}
+            />
+          </div>
+        </div>
       </Modal>
-
       <Modal open={open} onClose={() => setOpen(false)}>
-        <div className="min-w-fit max-w-fit min-h-fit max-h-fit bg-white m-auto mt-20">
+        <div className="min-w-fit max-w-fit min-h-fit max-h-fit bg-slate-400 m-auto mt-20">
+          <IconButton
+            tabIndex={0}
+            onClick={() => setOpen(false)}
+            className="float-right"
+          >
+            <CloseIcon />
+          </IconButton>
           <AddGroupeFiltres
             handleClose={handleCloseModal}
             saveFilters={(label) => saveFilters(label)}

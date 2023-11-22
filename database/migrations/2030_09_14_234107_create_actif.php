@@ -26,14 +26,14 @@ return new class extends Migration
             $table->unsignedBigInteger('id_statut');
             $table->unsignedBigInteger('id_emplacement')->nullable();
             $table->unsignedBigInteger('id_proprietaire')->nullable();
-            $table->unsignedBigInteger('id_utilisation');
-            $table->unsignedBigInteger('numero_commande');
+            $table->unsignedBigInteger('id_utilisation')->nullable();
+            $table->string('numero_commande')->nullable();
             $table->unsignedBigInteger('id_client')->nullable();
             $table->foreign('numero_commande')->references('numero_commande')->on('commande');
             $table->foreign('id_modele')->references('id')->on('modele');
             $table->foreign('id_statut')->references('id')->on('statut');
             $table->foreign('id_emplacement')->references('id')->on('emplacement');
-            $table->foreign('id_proprietaire')->references('id')->on('proprietaire');
+            $table->foreign('id_proprietaire')->references('id')->on('emplacement');
             $table->foreign('id_utilisation')->references('id')->on('utilisation');
             $table->foreign('id_client')->references('id')->on('client');
             $table->timestamps();

@@ -8,6 +8,8 @@ use App\Models\Actif;
 use App\Models\Client;
 use App\Models\Modele;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ActifController extends Controller
 {
@@ -34,57 +36,56 @@ class ActifController extends Controller
 
     public function updateMultiple(Request $request)
     {
-            $data = $request->all();
-            $arrayIdActifs = $data['ids'];
+        $data = $request->all();
+        $arrayIdActifs = $data['ids'];
 
-            //request object with all possible fields, if not set, set to null
-            $requestData = [
-                'en_entrepot' => isset($data['en_entrepot']) ? $data['en_entrepot'] : null,
-                'date_retour' => isset($data['date_retour']) ? $data['date_retour'] : null,
-                'note' => isset($data['note']) ? $data['note'] : null,
-                'id_modele' => isset($data['modele']) ? $data['modele'] : null,
-                'id_categorie' => isset($data['categorie']) ? $data['categorie'] : null,
-                'id_statut' => isset($data['statut']) ? $data['statut'] : null,
-               // 'id_assigne_a' => isset($data['desasignation']) ? $data['id_assigne_a'] : null,
-                'id_emplacement' => isset($data['emplacement']) ? $data['emplacement'] : null,
-                'id_proprietaire' => isset($data['proprietaire']) ? $data['proprietaire'] : null,
-                'id_utilisation' => isset($data['utilisation']) ? $data['utilisation'] : null,
-            ];
-            $filteredData = array_filter($requestData, function ($value) {
-                return $value !== null;
-            });
-            /*$updatedDataModele = [
-                'id_type_modele' => isset($data['id_categorie']) ? $data['id_categorie'] : null,
-            ];*/
-
-
+        //request object with all possible fields, if not set, set to null
+        $requestData = [
+            'en_entrepot' => isset($data['en_entrepot']) ? $data['en_entrepot'] : null,
+            'date_retour' => isset($data['date_retour']) ? $data['date_retour'] : null,
+            'note' => isset($data['note']) ? $data['note'] : null,
+            'id_modele' => isset($data['modele']) ? $data['modele'] : null,
+            'id_categorie' => isset($data['categorie']) ? $data['categorie'] : null,
+            'id_statut' => isset($data['statut']) ? $data['statut'] : null,
+            // 'id_assigne_a' => isset($data['desasignation']) ? $data['id_assigne_a'] : null,
+            'id_emplacement' => isset($data['emplacement']) ? $data['emplacement'] : null,
+            'id_proprietaire' => isset($data['proprietaire']) ? $data['proprietaire'] : null,
+            'id_utilisation' => isset($data['utilisation']) ? $data['utilisation'] : null,
+        ];
+        $filteredData = array_filter($requestData, function ($value) {
+            return $value !== null;
+        });
+        /*$updatedDataModele = [
+            'id_type_modele' => isset($data['id_categorie']) ? $data['id_categorie'] : null,
+        ];*/
 
 
 
-            //update each actif with the request data
-            foreach ($arrayIdActifs as $id) {
-                // Get the Actif object to update
-                $actif = Actif::findOrFail($id);
-                if($requestData['id_categorie'])
-                {
-                    $updatedDataModele = [
-                        'id_type_modele' => $requestData['id_categorie'],
-                    ];
-                    Modele::where('id', $actif->id_modele)->update($updatedDataModele);
-                }
 
-                $client = Client::where('id_actif', $id);
 
-                //Remove assignation from previous client
-                if ($data['desasignation']) {
-                    $client->update(['id_actif' => null]);
-                }
-                if (!$actif->update($filteredData)) {
-                    return response()->json(['message' => 'Erreur lors de la mise à jour de l\'actif'], 500);
-                }
+        //update each actif with the request data
+        foreach ($arrayIdActifs as $id) {
+            // Get the Actif object to update
+            $actif = Actif::findOrFail($id);
+            if ($requestData['id_categorie']) {
+                $updatedDataModele = [
+                    'id_type_modele' => $requestData['id_categorie'],
+                ];
+                Modele::where('id', $actif->id_modele)->update($updatedDataModele);
             }
-            $actif->save();
-            return response()->json(['message' => 'Actifs mis à jour avec succès'], 200);
+
+            $client = Client::where('id_actif', $id);
+
+            //Remove assignation from previous client
+            if ($data['desasignation']) {
+                $client->update(['id_actif' => null]);
+            }
+            if (!$actif->update($filteredData)) {
+                return response()->json(['message' => 'Erreur lors de la mise à jour de l\'actif'], 500);
+            }
+        }
+        $actif->save();
+        return response()->json(['message' => 'Actifs mis à jour avec succès'], 200);
 
     }
 
@@ -151,58 +152,58 @@ class ActifController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-{
-    try {
-        // Get the Actif object to update
-        $actif = Actif::findOrFail($id);
+    {
+        try {
+            // Get the Actif object to update
+            $actif = Actif::findOrFail($id);
 
 
-        // Get the data from the form
-        $data = $request->all();
+            // Get the data from the form
+            $data = $request->all();
 
-        // Map the form data to match the expected field names in your Laravel API
-        $updatedDataActif = [
-            'nom' => $data['nom'],
-            'numero_serie' => $data['numero_serie'],
-            'en_entrepot' => $data['en_entrepot'],
-            'date_retour' => $data['date_retour'],
-            'note' => $data['note'],
-            'id_modele' => $data['id_modele'],
-            'id_statut' => $data['id_statut'],
-            'id_emplacement' => $data['id_emplacement'],
-            'id_proprietaire' => $data['id_proprietaire'],
-            'id_utilisation' => $data['id_utilisation'],
-            'id_client'=> $data['id_assigne_a']
-            //'numero_commande' => $data['numero_commande'], //Todo add this to the form
-        ];
+            // Map the form data to match the expected field names in your Laravel API
+            $updatedDataActif = [
+                'nom' => $data['nom'],
+                'numero_serie' => $data['numero_serie'],
+                'en_entrepot' => $data['en_entrepot'],
+                'date_retour' => $data['date_retour'],
+                'note' => $data['note'],
+                'id_modele' => $data['id_modele'],
+                'id_statut' => $data['id_statut'],
+                'id_emplacement' => $data['id_emplacement'],
+                'id_proprietaire' => $data['id_proprietaire'],
+                'id_utilisation' => $data['id_utilisation'],
+                'id_client' => $data['id_assigne_a']
+                //'numero_commande' => $data['numero_commande'], //Todo add this to the form
+            ];
 
-        $updatedDataModele = [
-            'id_type_modele' => $data['id_categorie'],
-        ];
+            $updatedDataModele = [
+                'id_type_modele' => $data['id_categorie'],
+            ];
 
-        // Update the Actif object with the updated data
-        $actif->fill($updatedDataActif);
-        Modele::where('id', $actif->id_modele)->update($updatedDataModele);
-
-
+            // Update the Actif object with the updated data
+            $actif->fill($updatedDataActif);
+            Modele::where('id', $actif->id_modele)->update($updatedDataModele);
 
 
-        // Check if the Actif object is actually updated
-        print_r($actif);
 
-        // Save the updated Actif object to the database
-        if ($actif->save()) {
-            // Return a success response
-            return response()->json(['message' => 'Actif mis à jour avec succès'], 200);
-        } else {
-            // Return an error response
-            return response()->json(['message' => "Erreur lors de la mise à jour de l'actif"], 500);
+
+            // Check if the Actif object is actually updated
+            print_r($actif);
+
+            // Save the updated Actif object to the database
+            if ($actif->save()) {
+                // Return a success response
+                return response()->json(['message' => 'Actif mis à jour avec succès'], 200);
+            } else {
+                // Return an error response
+                return response()->json(['message' => "Erreur lors de la mise à jour de l'actif"], 500);
+            }
+        } catch (\Exception $e) {
+            // Return an error response with the error message
+            return response()->json(['message' => $e->getMessage()], 500);
         }
-    } catch (\Exception $e) {
-        // Return an error response with the error message
-        return response()->json(['message' => $e->getMessage()], 500);
     }
-}
     /**
      * Remove the specified resource from storage.
      */
@@ -216,7 +217,7 @@ class ActifController extends Controller
         $actifs = Actif::with(['modele.categorie', 'statut', 'client', 'emplacement'])
             ->whereHas('statut', function ($query) {
                 $query->where('nom', '!=', 'Archivé')
-                      ->where('id_statut', '!=', 2);
+                    ->where('id_statut', '!=', 2);
 
 
             })
@@ -231,11 +232,9 @@ class ActifController extends Controller
                     'categorie' => $actif->modele->categorie->nom,
                     'statut' => $actif->statut->nom,
                     'client' => $actif->client ? ($actif->client->prenom . ' ' . $actif->client->nom) : 'Aucun',
-                    'emplacement' => $actif->emplacement->nom,
-
+                    'emplacement' => $actif->emplacement->matricule. " - " .$actif->emplacement->nom,
                 ];
             });
-            error_log($actifs);
         return response()->json($actifs);
     }
 
@@ -267,14 +266,14 @@ class ActifController extends Controller
             'id_modele' => $actif->modele->id,
             'id_categorie' => $actif->modele->categorie->id,
             'id_statut' => $actif->statut->id,
-            'id_utilisation' => $actif->utilisation->id,
-            'id_proprietaire' => $actif->proprietaire->id,
+            'id_utilisation' => $actif->utilisation->id ?? "Aucun",
+            'id_proprietaire' => $actif->proprietaire->id ?? "Aucun",
             'id_emplacement' => $actif->emplacement->id,
-            'id_client' => $actif->client->id ?? null,
+            'id_client' => $actif->client->id ?? "Aucun",
             'en_entrepot' => $actif->en_entrepot,
             'date_retour' => $actif->date_retour,
             'note' => $actif->note,
-            'numero_commande' => $actif->numero_commande,
+            'numero_commande' => $actif->numero_commande?? "Aucun",
         ];
         return response()->json($data);
     }
@@ -283,8 +282,8 @@ class ActifController extends Controller
     public function lightShow()
     {
         $actifs = Actif::whereHas('statut', function ($query) {
-                $query->where('nom', '!=', 'Archivé');
-            })
+            $query->where('nom', '!=', 'Archivé');
+        })
             ->get()
             ->map(function ($actif) {
                 return [
@@ -298,6 +297,7 @@ class ActifController extends Controller
     }
 
     public function archivedActifs()
+
 {
     $archivedActifs = Actif::with(['modele.categorie', 'statut', 'client', 'emplacement'])
         ->where('id_statut', 5)
@@ -316,17 +316,17 @@ class ActifController extends Controller
                 'statut_id' => $actif->statut->id,
                 'client' => $actif->client->prenom . ' ' . $actif->client->nom ?? 'Aucun',
                 'client_id' => $actif->client->id,
-                'emplacement' => $actif->emplacement->nom,
+                'emplacement' => $actif->emplacement->matricule. " - " .$actif->emplacement->nom,
                 'emplacement_id' => $actif->emplacement->id,
             ];
         });
 
-    return response()->json($archivedActifs);
-}
+        return response()->json($archivedActifs);
+    }
 
 
 
-    Public function createActifsCommande($produit, $no_commande)
+    public function createActifsCommande($produit, $no_commande)
     {
         $modele_descriptif = $produit['description'];
         $id_modele = $this->findModele($modele_descriptif);
@@ -361,6 +361,81 @@ class ActifController extends Controller
 
         return null;
     }
+    public function createMultiple(Request $request)
+    {
+        $data = $request->all();
+        $id_modele = Modele::where('nom', $data[0]['modele'])->first()->id;
+        foreach($data as $newActif)
+        {
+            $actif = new Actif;
+            $actif->numero_serie = $newActif['numero_serie'];
+            $actif->adresse_mac = $newActif['adresse_mac'];
+            $actif->id_modele = $id_modele;
+            $actif->en_entrepot = true;
+            $actif->id_statut = 3;
+            $actif->id_emplacement = 1;
+            $actif->save();
+        }
+    }
+    public function showRapport($rapportName)
+    {
 
+        Log::info('showRapport function called with rapportName: '.$rapportName);
+        $data = null;
+        switch($rapportName){
+            case("ActifsEcole"):
+                $data =  DB::table('emplacement')
+                ->leftJoin('actif', 'actif.id_emplacement', '=', 'emplacement.id')
+                ->select('emplacement.matricule as id', 'emplacement.nom', DB::raw('count(actif.id) as nbActifs'))
+                ->groupBy('emplacement.id', 'emplacement.nom')
+                ->get();
+            break;
+            case("ActifsProprietaire"):
+                $data =  DB::table('proprietaire')
+                ->leftJoin('actif', 'actif.id_proprietaire', '=', 'proprietaire.id')
+                ->select('proprietaire.id', 'proprietaire.nom', DB::raw('count(actif.id) as nbActifs'))
+                ->groupBy('proprietaire.id', 'proprietaire.nom')
+                ->get();
+            break;
+            case("ActifsType"):
+                $data =  DB::table('actif')
+                ->join('modele', 'actif.id_modele', '=', 'modele.id')
+                ->join('type_modele', 'modele.id_type_modele', '=', 'type_modele.id')
+                ->select('type_modele.id', 'type_modele.nom', DB::raw('count(actif.id) as nbActifs'))
+                ->groupBy('type_modele.id', 'type_modele.nom')
+                ->get();
+            break;
+            case("ActifsFinVieEcole"):
+                $data =  DB::table('emplacement')
+                ->leftJoin('actif', 'actif.id_emplacement', '=', 'emplacement.id')
+                ->select('emplacement.matricule  as id', 'emplacement.nom', DB::raw('count(actif.id) as nbActifs'))
+                ->where('actif.created_at', '<=', now()->subYears(5))
+                ->groupBy('emplacement.id', 'emplacement.nom')
+                ->get();
+            break;
+            case("ActifsFinVieProprietaire"):
+                $data =  DB::table('proprietaire')
+                ->leftJoin('actif', 'actif.id_proprietaire', '=', 'proprietaire.id')
+                ->select('proprietaire.id', 'proprietaire.nom', DB::raw('count(actif.id) as nbActifs'))
+                ->where('actif.created_at', '<=', now()->subYears(5))
+                ->groupBy('proprietaire.id', 'proprietaire.nom')
+                ->get();
+            break;
+            case("ActifsFinVieType"):
+                $data =  DB::table('actif')
+                ->join('modele', 'actif.id_modele', '=', 'modele.id')
+                ->join('type_modele', 'modele.id_type_modele', '=', 'type_modele.id')
+                ->select('type_modele.id', 'type_modele.nom', DB::raw('count(actif.id) as nbActifs'))
+                ->where('actif.created_at', '<=', now()->subYears(5))
+                ->groupBy('type_modele.id', 'type_modele.nom')
+                ->get();
+            break;
+
+
+        }
+
+        return response()->json($data);
+
+    }
 
 }

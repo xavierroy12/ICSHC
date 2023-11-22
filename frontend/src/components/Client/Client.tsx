@@ -1,12 +1,15 @@
 import { Fragment, useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Actif } from '../ActifsList/type';
-import { CircularProgress, Grid, TextField, Typography } from '@mui/material';
+import { CircularProgress, Grid, TextField } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import ActifsSelect from '../ActifsSelect/ActifsSelect';
 import { LightActif } from '../Actifs/type';
+import FormLayout from '../FormLayout';
+import { toast } from 'react-toastify';
+import Historique from '../Historique';
 
 type Emplacement_Type = {
   id: number;
@@ -61,7 +64,6 @@ const Client = () => {
     ]).then((responses) =>
       Promise.all(responses.map((response) => response.json()))
         .then(([fetchedActif, fetchedClient]) => {
-          console.log(fetchedClient);
           setActifs(fetchedActif);
           setClient(fetchedClient);
           if (fetchedClient.actifs)
@@ -80,21 +82,24 @@ const Client = () => {
     );
   }, [id]);
   const handleSubmit = () => {
+    const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
+
     const selectedRows = selectedActifs.map((actif) => actif.id);
     console.log(selectedRows);
     fetch(window.name + `api/client/actifs/${id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-User-Action-Id': id_user, // send the user id in a custom header
       },
       body: JSON.stringify({ actifs: selectedRows }),
     })
       .then((response) => response.json())
-      .then((data) => {
-        console.log('Success:', data);
+      .then(() => {
+        toast.success('Données sauvegardées avec succès');
       })
-      .catch((error) => {
-        console.error('Error:', error);
+      .catch(() => {
+        toast.error('Une erreur est survenue');
       });
   };
 
@@ -106,13 +111,10 @@ const Client = () => {
         </div>
       ) : (
         <div className="mx-auto mt-8">
-          <div className="min-w-fit">
-            <div className="mx-8">
-              <Typography variant="h2" className="text-3xl font-semibold">
-                Client
-              </Typography>
-              {client && (
-                <div className="flex justify-between w-fit bg-slate-100 min-w-fit mt-4">
+          {client && id && (
+            <div className="flex flex-col sm:flex-row justify-evenly items-start">
+              <FormLayout title={client.nom} dirty={false}>
+                <div className="flex justify-between w-fit bg-slate-100 dark:bg-slate-800 min-w-fit mt-4">
                   <div className="p-4 my-4   mx-auto">
                     <Grid
                       container
@@ -202,9 +204,12 @@ const Client = () => {
                     </Grid>
                   </div>
                 </div>
-              )}
+              </FormLayout>
+              <div className="w-full sm:mt-0 mt-24  mx-8">
+                <Historique id={id} type="client" />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
     </Fragment>

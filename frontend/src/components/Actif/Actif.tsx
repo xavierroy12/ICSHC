@@ -3,8 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress'; // Import Material-UI CircularProgress
 import { Actif_Type, LightType, SelectItem } from './type';
 import ActifForm from './ActifForm';
-import { Typography } from '@mui/material';
 import { Formik, FormikValues } from 'formik';
+import FormLayout from '../FormLayout';
+import { toast } from 'react-toastify';
+import Historique from '../Historique';
 
 const Actif = () => {
   const { id } = useParams<{ id: string }>();
@@ -118,6 +120,7 @@ const Actif = () => {
 
     if (confirmed) {
       // Set the statut of the actif to "Archivé"
+
       const updatedActif = {
         nom: values.nom,
         numero_serie: values.numero_serie,
@@ -161,6 +164,7 @@ const Actif = () => {
       id_proprietaire: values.proprietaire.id || values.proprietaire,
       id_utilisation: values.utilisation.id || values.utilisation,
     };
+    console.log(updatedData);
 
     handleUpdate(updatedData);
   };
@@ -187,28 +191,26 @@ const Actif = () => {
   };
 
   const handleUpdate = (values: FormikValues) => {
+    const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
+    console.log(values);
     try {
       fetch(window.name + `api/actif/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-User-Action-Id': id_user, // send the user id in a custom header
         },
         body: JSON.stringify(values),
-      })
-        .then((response) => {
-          if (response.ok) {
-            alert('Données sauvegardées avec succès');
-            navigate('/actifs');
-          } else {
-            console.error('Error saving data:', response.statusText);
-            console.log('CA NE FONCTIONNE PAS ', values);
-          }
-        })
-        .catch((error) => {
-          console.error('Error saving data:', error);
-        });
+      }).then((response) => {
+        if (response.ok) {
+          toast.success('Données sauvegardées avec succès');
+          navigate('/actifs');
+        } else {
+          toast.error('Une erreur est survenue');
+        }
+      });
     } catch (error) {
-      console.error('Error saving data:', error);
+      toast.error('Une erreur est survenue');
     }
   };
 
@@ -221,37 +223,30 @@ const Actif = () => {
       ) : (
         <div className="mx-auto mt-8">
           {actif && id && (
-            <div className="min-w-fit">
-              <div className="mx-8 ">
-                <Typography variant="h2" className="my-8 mx-auto">
-                  Actif: {actif.nom}
-                </Typography>
-                <div className="flex justify-between w-fit bg-slate-100 min-w-fit mt-4">
-                  <div className="p-4 my-4   mx-auto">
-                    <Formik
-                      initialValues={initialValues}
-                      onSubmit={handleSubmit}
-                    >
-                      {({ values, handleChange, dirty, setFieldValue }) => (
-                        <ActifForm
-                          values={values}
-                          handleChange={handleChange}
-                          dirty={dirty}
-                          setFieldValue={setFieldValue}
-                          statuts={statuts}
-                          modeles={modeles}
-                          categories={categories}
-                          emplacements={emplacements}
-                          locataires={locataires}
-                          utilisations={utilisations}
-                          proprietaires={proprietaires}
-                          handleReception={handleReception}
-                          handleArchive={handleArchive}
-                        />
-                      )}
-                    </Formik>
-                  </div>
-                </div>
+            <div className="flex flex-col sm:flex-row justify-evenly items-start">
+              <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+                {({ values, handleChange, dirty, setFieldValue }) => (
+                  <FormLayout title="Modifier un actif" dirty={dirty}>
+                    <ActifForm
+                      values={values}
+                      handleChange={handleChange}
+                      dirty={dirty}
+                      setFieldValue={setFieldValue}
+                      statuts={statuts}
+                      modeles={modeles}
+                      categories={categories}
+                      emplacements={emplacements}
+                      locataires={locataires}
+                      utilisations={utilisations}
+                      proprietaires={proprietaires}
+                      handleReception={handleReception}
+                      handleArchive={handleArchive}
+                    />
+                  </FormLayout>
+                )}
+              </Formik>
+              <div className="w-full sm:mt-0 mt-24  mx-8">
+                <Historique id={id} type="actif" />
               </div>
             </div>
           )}

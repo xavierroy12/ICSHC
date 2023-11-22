@@ -2,15 +2,18 @@ import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 
 type Props = {
+  darkMode: boolean;
+  handleThemeChange: () => void;
   children: React.ReactNode;
 };
 
-const Layout = ({ children }: Props) => {
+const Layout = ({ darkMode, handleThemeChange, children }: Props) => {
+    
   return (
-    <div className="layout min-h-screen flex flex-col">
-      <NavBar />
-      <div className="content flex-grow">{children}</div>
-      <Footer/>
+    <div className="layout">
+      <NavBar darkMode={darkMode} handleThemeChange={handleThemeChange} />
+      <div className="content">{children}</div>
+       <Footer/>
     </div>
   );
 };

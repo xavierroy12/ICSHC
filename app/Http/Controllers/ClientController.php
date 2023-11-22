@@ -44,12 +44,14 @@ class ClientController extends Controller
         $scolagoDbModel = new ScolagoDbModel();
         $emplacementController = new EmplacementController();
         $clients = $scolagoDbModel->getEmployees();
-
+        $totalClients = count($clients);
+        $counter = 0;
 
 
         foreach ($clients as $client) {
             $matriculeLieu = $client['LIEU'];
            $emplacement = $emplacementController->getEmplacement($matriculeLieu);
+           
 
             $clientData = [
                 'matricule' => $client["MATR"],
@@ -66,7 +68,7 @@ class ClientController extends Controller
                 $clientData['courriel'] = $courriel;
             }
             //If client has emplacement, set emplacement.
-            error_log($existingClient);
+
             if (isset($existingClient) && $existingClient->emplacement_manuel){
                 //skip the check
             } else {
@@ -80,13 +82,14 @@ class ClientController extends Controller
 
             if ($existingClient) {
                 $existingClient->update($clientData);
+
             } else {
                 Client::create($clientData);
             }
+            $counter++;
+            error_log("Processed client {$counter} out of {$totalClients}");
 
         }
-
-        return response()->json($clients);
     }
 
     public function listClientEleve()
@@ -94,6 +97,54 @@ class ClientController extends Controller
         $eleveDbModel = new EleveDbModel();
         $eleves = $eleveDbModel->getEleve();
         return response()->json($eleves);
+    }
+
+    public function storeClientEleve(){
+        //Variable necessaire pour ajouter les eleves
+        $emplacementController = new EmplacementController();
+        $eleveDbModel = new EleveDbModel();
+        $eleves = $eleveDbModel->getEleve();
+        $totalClients = count($eleves);
+        $counter = 0;
+
+
+        foreach ($eleves as $eleve) {
+            $matriculeLieu = $eleve['ECO'];
+            $emplacement = $emplacementController->getEmplacement($matriculeLieu);
+
+            $clientData = [
+                'matricule' => $eleve["FICHE"],
+                'nom' => $eleve["NOM"],
+                'prenom' => $eleve["PNOM"],
+                'id_type_client' => 2,
+            ];
+
+            $existingClient = Client::where('matricule', $eleve["FICHE"])->first();
+            //If the eleve has a emplacement, set emplacement.
+            if ($emplacement !== null) {
+                $id_emplacement = $emplacement->id;
+                $clientData['id_emplacement'] = $id_emplacement;
+            }//If the eleve has no emplacement, set emplacement to 1, wich is no emplacement.
+            else {
+                $clientData['id_emplacement'] = 1;
+            }
+
+
+            if ($existingClient) {
+                $existingClient->update($clientData);
+            } else {
+                Client::create($clientData);
+            }
+            $counter++;
+            error_log("Processed eleves {$counter} out of {$totalClients}");
+        }
+        
+    }
+
+    public function syncAllClients(){
+        $this->storeListClientScolage();
+        $this->storeClientEleve();
+        return response()->json(['message' => 'Sync completed successfully'], 200);
     }
 
     /**
@@ -156,8 +207,8 @@ class ClientController extends Controller
     {
         $clients = Client::All()->map(function ($client) {
             return [
-                "id" => $client->matricule,
-                "nom" => $client->prenom . ' ' . $client->nom,
+                "id" => $client->id,
+                "nom" => $client->matricule . ' - ' . $client->prenom . ' ' . $client->nom,
             ];
         });        return response()->json($clients);
     }
@@ -174,7 +225,7 @@ class ClientController extends Controller
                     "matricule" => $client->matricule,
                     "nom" => $client->prenom . ' ' . $client->nom, // Concatenate prenom and nom
                     'actifs' =>  $client->actifs->pluck('nom')->implode(', '),
-                    'emplacement' => $client->emplacement->nom ?? 'Aucun',
+                    'emplacement' => isset($client->emplacement) && isset($client->emplacement->matricule) && isset($client->emplacement->nom) ? ($client->emplacement->matricule . " - " . $client->emplacement->nom) : 'Aucun',
                     'poste' => $client->poste->nom ?? 'Aucun',
                     'type_client' => $client->type_client->nom ?? 'Aucun',
                 ];

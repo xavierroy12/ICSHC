@@ -23,7 +23,11 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
 
     ];
-
+    protected $routeMiddleware = [
+        // ...
+        'logrequest' => \App\Http\Middleware\LogRequestMiddleware::class,
+        // ...
+    ];
     /**
      * The application's route middleware groups.
      *
@@ -43,7 +47,6 @@ class Kernel extends HttpKernel
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':5000,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-
         ],
     ];
 

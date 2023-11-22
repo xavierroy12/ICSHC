@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FieldProps } from 'formik';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -8,37 +8,42 @@ interface SearchableSelectProps extends FieldProps {
   options: SelectItem[];
   label: string;
   isClearable?: boolean;
-  needsId?: boolean;
+  disabled?: boolean;
 }
-
 const CustomSelect = ({
   field,
   form: { touched, errors, setFieldValue },
   options,
   label,
   isClearable = false,
-  needsId = false,
+  disabled = false,
 }: SearchableSelectProps) => {
   const [inputValue, setInputValue] = useState<string>('');
-  const [value, setValue] = useState<SelectItem | null>(
-    options[field.value - 1]
-  );
+  const [value, setValue] = useState<SelectItem | null>(null);
+  useEffect(() => {
+    if (field.value !== undefined && field.value !== null) {
+      const matchingOption = options.find(
+        (option) => option.id === Number(field.value)
+      );
+      if (matchingOption) {
+        setValue(matchingOption);
+      }
+    }
+  }, [field.value, options]);
 
   return (
     <Autocomplete
+      disabled={disabled}
       placeholder={label}
       options={options}
       sx={{ width: 300 }}
       disableClearable={!isClearable}
-      defaultValue={options[field.value - 1]}
-      getOptionLabel={(option) => {
-        if (needsId) return option.id + ' - ' + option.label;
-        return option.label;
-      }}
+      defaultValue={value}
+      getOptionLabel={(option) => option.label}
       inputValue={inputValue}
       value={value}
       onChange={(_, newValue) => {
-        setFieldValue(field.name, newValue);
+        setFieldValue(field.name, newValue ? newValue.id : null);
         setValue(newValue);
       }}
       onInputChange={(_, newInputValue) => {
@@ -49,6 +54,7 @@ const CustomSelect = ({
         <TextField
           {...params}
           label={label}
+          disabled={disabled}
           variant="outlined"
           error={touched[field.name] && Boolean(errors[field.name])}
         />

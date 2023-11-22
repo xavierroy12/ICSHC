@@ -1,7 +1,7 @@
 export type Actif_Type = {
   id: number;
   numero_serie: string;
-  numero_commande:string;
+  numero_commande: string;
   nom: string;
   adresse_mac: string;
   date_retour: string;
@@ -34,7 +34,7 @@ export type LightType = {
 
 export type ActifFormValues = {
   numero_serie: string;
-  numero_commande:string
+  numero_commande: string
   nom: string;
   adresse_mac: string;
   id_statut: string;

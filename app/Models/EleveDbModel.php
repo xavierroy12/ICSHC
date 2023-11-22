@@ -21,7 +21,7 @@ class EleveDbModel extends Model
             $conn = new PDO("sqlsrv:Server=$servername,$port;Database=$dbname;LoginTimeout=30", $username, $password);
             //$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            echo "Connected successfully";
+            //echo "Connected successfully";
             return $conn;
         } catch(PDOException $e) {
             echo "Connection failed: " . $e->getMessage();

@@ -41,7 +41,7 @@ class Actif extends Model
     }
     public function proprietaire()
     {
-        return $this->belongsTo(Proprietaire::class, 'id_proprietaire');
+        return $this->belongsTo(Emplacement::class, 'id_proprietaire');
 
     }
     public function utilisation()

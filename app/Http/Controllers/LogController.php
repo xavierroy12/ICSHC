@@ -9,6 +9,7 @@ use App\Models\Actif;
 use App\Models\Client;
 use App\Models\Modele;
 use App\Models\Commande;
+use App\Models\Emplacement;
 use Illuminate\Support\Str;
 
 
@@ -105,7 +106,6 @@ class LogController extends Controller
         $requestData = [
             'nom' => isset($data['nom']) ? $data['nom'] : null,
             'numero_serie' => isset($data['numero_serie']) ? $data['numero_serie'] : null,
-            'id_categorie' => isset($data['id_categorie']) ? $data['id_categorie'] : null,
             'en_entrepot' => isset($data['en_entrepot']) ? $data['en_entrepot'] : null,
             'date_retour' => isset($data['date_retour']) ? $data['date_retour'] : null,
             'note' => isset($data['note']) ? $data['note'] : null,
@@ -129,7 +129,7 @@ class LogController extends Controller
                 $log = new Log([
                     'url' => $request->fullUrl(),
                     'method' => $request->method(),
-                    'action' => 'modifier',
+                    'action' => 'Modifier',
                     'field' => $field,
                     'old_value' => $actif->$field,
                     'new_value' => $newValue,
@@ -342,7 +342,7 @@ class LogController extends Controller
                 $log = new Log([
                     'url' => $request->fullUrl(),
                     'method' => $request->method(),
-                    'action' => 'modifier',
+                    'action' => 'Modifier',
                     'field' => $field,
                     'old_value' => $modele->$field,
                     'new_value' => $newValue,
@@ -386,7 +386,7 @@ class LogController extends Controller
                 $log = new Log([
                     'url' => $request->fullUrl(),
                     'method' => $request->method(),
-                    'action' => 'modifier',
+                    'action' => 'Modifier',
                     'field' => $field,
                     'old_value' => $utilisateur->$field,
                     'new_value' => $newValue,
@@ -525,9 +525,12 @@ class LogController extends Controller
         if ($typeItem == 'actif') {
             $actif = Actif::find($id_item);
             //error_log('getFieldValue parameters: value=' . $value . ', typeItem=' . $typeItem . ', field=' . $field . ', id_item=' . $id_item);
-            if ($field === 'id_categorie')
-                $result = $actif->modele->categorie->nom;
-            else {
+            error_log('field is : ' . $field);
+            if ($field === 'id_proprietaire') {
+                $proprietaire = Emplacement::find($value);
+                $result = $proprietaire->nom;
+            } else {
+                error_log('line 533');
                 $relatedModelName = substr($field, 3); // Remove 'id_' from the start of the field name
                 $itemToFind = ucfirst($relatedModelName);
                 $itemToFindClass = "\\App\\Models\\" . $itemToFind; // Construct the fully qualified class name
@@ -581,7 +584,7 @@ class LogController extends Controller
                 $result = $ResultModel->nom;
             } else
                 $result = null;
-
+            error_log('line 584');
             return $result;
         }
     }

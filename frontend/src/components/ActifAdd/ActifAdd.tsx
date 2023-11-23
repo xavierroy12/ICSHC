@@ -1,5 +1,5 @@
-import { Formik, FormikValues } from 'formik';
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Formik } from 'formik';
+import { Fragment, useEffect, useState } from 'react';
 import ActifAddForm, { light_Actif } from './ActifAddForm';
 import { useNavigate } from 'react-router';
 import { LightType, SelectItem } from '../Actif/type';
@@ -30,7 +30,6 @@ const ActifAdd = () => {
       });
   }, []);
 
-  const formValuesRef = useRef<FormikValues | null>(null);
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -41,13 +40,12 @@ const ActifAdd = () => {
     setOpen(true);
   };
 
-  const handleUpdate = (values: FormikValues) => {
-    formValuesRef.current = values;
+  const handleUpdate = () => {
     handleOpen();
   };
 
   const handleSubmit = () => {
-    const values = formValuesRef.current;
+    const values = actifs;
     try {
       fetch(window.name + `api/actifs/create`, {
         method: 'POST',

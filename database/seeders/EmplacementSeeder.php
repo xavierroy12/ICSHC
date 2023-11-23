@@ -36,7 +36,7 @@ class EmplacementSeeder extends Seeder
         ]);
         DB::table('emplacement')->insert([
             'matricule' => '099',
-            'nom' => ' Centre de service de East Angus',
+            'nom' => 'Centre de service de East Angus',
             'numero_civique' => '123',
             'adresse' => 'rue des Entreprises',
             "est_proprietaire" => true,
@@ -44,7 +44,7 @@ class EmplacementSeeder extends Seeder
 
         DB::table('emplacement')->insert([
             'matricule' => '007',
-            'nom' => ' Polyvalente Louis Saint-Laurent',
+            'nom' => 'Polyvalente Louis Saint-Laurent',
             'numero_civique' => '215',
             'adresse' => 'rue de l\'Aréna',
         ]);

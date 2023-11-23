@@ -44,8 +44,6 @@ function Login() {
         if (response.ok) {
           response.json().then(data => {
             // Set the user data in localStorage
-            console.log('line47');
-            console.log(data);
             localStorage.setItem('id_emplacement', JSON.stringify(data.emplacement));
             localStorage.setItem('id_user', JSON.stringify(data.id));
             localStorage.setItem('id_role', JSON.stringify(data.id_role));

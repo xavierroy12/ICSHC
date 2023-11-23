@@ -1,9 +1,9 @@
 import { Button, CircularProgress } from '@mui/material';
-import MUIDataTable, { MUIDataTableOptions } from 'mui-datatables';
 import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import List from '../List';
 
-type Emplacement = {
+export type Emplacement = {
   id: number;
   matricule: string;
   nom: string;
@@ -65,31 +65,6 @@ const EmplacementList = () => {
       },
     },
   ];
-
-  const options: Partial<MUIDataTableOptions> = {
-    textLabels: {
-        body: {
-          noMatch: "Désolé, aucun résultat n'a été généré pour la recherche...",
-        },
-    },
-    filterType: 'dropdown',
-    responsive: 'simple',
-    search: true,
-    filter: false,
-    tableBodyHeight: 'calc(100vh - 300px)',
-    pagination: true,
-    rowsPerPage: 50,
-    rowsPerPageOptions: [50, 100, 200],
-    onRowClick: (
-      rowData: string[],
-      rowMeta: { dataIndex: number; rowIndex: number }
-    ) => {
-      handleRowClick(rowData, rowMeta);
-    },
-    print: false,
-    download: false,
-    selectableRows: 'none',
-  };
   return (
     <Fragment>
       {isLoading ? (
@@ -98,12 +73,14 @@ const EmplacementList = () => {
         </div>
       ) : (
         <div className="w-11/12 mx-auto mt-10">
-          <MUIDataTable
-            title={'Emplacements'}
-            data={emplacements}
-            columns={columns}
-            options={options}
-          />
+          <div className="mt-10 w-full">
+            <List
+              data={emplacements}
+              columns={columns}
+              handleRowClick={handleRowClick}
+              title={'Emplacements'}
+            />
+          </div>
         </div>
       )}
       <div>

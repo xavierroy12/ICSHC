@@ -29,7 +29,6 @@ const Emplacement = () => {
     fetch(window.name + `api/emplacement/${id}`)
       .then((response) => response.json())
       .then((fetchedEmplacement) => {
-        console.log(fetchedEmplacement);
         setEmplacement(fetchedEmplacement);
         setLoading(false);
       });

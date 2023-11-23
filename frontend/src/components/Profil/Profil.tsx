@@ -3,8 +3,6 @@ import ProfilUtilisateur from '../ProfilUtilisateur/ProfilUtilisateur';
 
 const Profil = () => {
   const id = localStorage.getItem('id_user');
-  console.log(id);
-
   return (
     <Fragment>{id && <ProfilUtilisateur id={id} isProfil={true} />}</Fragment>
   );

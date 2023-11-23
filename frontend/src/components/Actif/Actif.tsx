@@ -81,7 +81,6 @@ const Actif = () => {
               label: proprietaire.nom,
             }))
           );
-          console.log(fetchedActif);
           setActif(fetchedActif);
           setLoading(false);
         }

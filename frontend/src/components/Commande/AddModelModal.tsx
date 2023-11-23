@@ -53,7 +53,6 @@ const AddModelModal = ({
       body: JSON.stringify(updatedData),
     })
       .then((response) => {
-        console.log('response', response);
         if (response.ok) {
           toast.success('Données sauvegardées avec succès');
         } else {

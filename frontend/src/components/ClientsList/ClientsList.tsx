@@ -162,16 +162,16 @@ const ClientsList = () => {
     selectableRows: 'none',
 
     onFilterChange: (
-      _changedColumnIndex: string | MUIDataTableColumn | null,
-      displayData: string[][]
-    ) => {
-      setSelectedFilters({
-        actifs: displayData[0][0],
-        emplacement: displayData[1][0],
-        poste: displayData[2][0],
-        type_client: displayData[3][0],
-      });
-    },
+        _changedColumnIndex: string | MUIDataTableColumn | null,
+        displayData: string[][]
+      ) => {
+        setSelectedFilters({
+            emplacement: displayData[3][0],
+            poste: displayData[4][0],
+            type_client: displayData[5][0],
+            });
+      },
+
   };
 
   useEffect(() => {

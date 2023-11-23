@@ -33,6 +33,9 @@ const ModeleForm = ({
   reloadData,
 }: Props) => {
   const [open, setOpen] = useState(false);
+  const localDarkMode = window.localStorage.getItem('darkMode');
+  const modalBgColor =
+    localDarkMode === 'true' ? 'bg-slate-600' : 'bg-slate-100';
 
   return (
     <div>
@@ -135,7 +138,12 @@ const ModeleForm = ({
         </Grid>
       </Form>
       <Modal open={open} onClose={() => setOpen(false)}>
-        <div className="min-w-fit max-w-fit min-h-fit max-h-fit bg-white m-auto mt-20">
+        <div
+          className={
+            'min-w-fit max-w-fit min-h-fit max-h-fit bg-white m-auto mt-20' +
+            modalBgColor
+          }
+        >
           <AddCategorie
             handleClose={() => setOpen(false)}
             reloadData={reloadData}

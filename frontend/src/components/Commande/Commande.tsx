@@ -29,6 +29,8 @@ import ConfirmDialog from '../ConfirmationDialog';
 const steps = ['Informations', 'Modèles', 'Actifs'];
 
 const Commande = () => {
+  const navigate = useNavigate();
+
   const { numero_commande } = useParams<{ numero_commande: string }>();
 
   const [open, setOpen] = useState(false);
@@ -42,8 +44,6 @@ const Commande = () => {
   const [completed, setCompleted] = useState<{
     [k: number]: boolean;
   }>({});
-
-  const navigate = useNavigate();
 
   const totalSteps = () => {
     return steps.length;
@@ -161,12 +161,10 @@ const Commande = () => {
     });
 
     fetch(window.name + `api/commande/reception/${commande?.numero_commande}`, {
-
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-User-Action-Id': id_user, // send the user id in a custom header
-
       },
       body: JSON.stringify(updatedActifs),
     })

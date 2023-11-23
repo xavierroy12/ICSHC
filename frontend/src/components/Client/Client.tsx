@@ -11,42 +11,15 @@ import FormLayout from '../FormLayout';
 import { toast } from 'react-toastify';
 import Historique from '../Historique';
 
-type Emplacement_Type = {
-  id: number;
-  nom: string;
-  numero_civique: number;
-  adresse: string;
-  created_at: string | null;
-  updated_at: string | null;
-};
-
-type Poste_Type = {
-  id: number;
-  nom: string;
-  created_at: string | null;
-  updated_at: string | null;
-};
-
-type Type_Client_Type = {
-  id: number;
-  nom: string;
-  created_at: string | null;
-  updated_at: string | null;
-};
-
 type Client_Type = {
   id: number;
   nom: string;
-  actifs: Actif[];
   matricule: string;
-  emplacement: Emplacement_Type;
-  poste: Poste_Type;
-  type_client: Type_Client_Type;
-  id_poste: number;
-  id_type_client: number;
-  id_emplacement: number;
-  created_at: string | null;
-  updated_at: string | null;
+  emplacement: string;
+  poste: string;
+  type_client: string;
+  updated_at: string;
+  actifs: Actif[];
 };
 
 const Client = () => {
@@ -66,6 +39,7 @@ const Client = () => {
         .then(([fetchedActif, fetchedClient]) => {
           setActifs(fetchedActif);
           setClient(fetchedClient);
+          console.log(fetchedClient);
           if (fetchedClient.actifs)
             setSelectedActifs(
               fetchedClient.actifs.map((actif: Actif) => ({
@@ -147,7 +121,7 @@ const Client = () => {
                           className="input-label "
                           disabled
                           sx={{ width: 300 }}
-                          value={client.emplacement.nom}
+                          value={client.emplacement}
                         />
                       </Grid>
                       <Grid item xs={12} sm={6}>
@@ -157,7 +131,7 @@ const Client = () => {
                           className="input-label "
                           disabled
                           sx={{ width: 300 }}
-                          value={client.poste.nom}
+                          value={client.poste}
                         />
                       </Grid>{' '}
                       <Grid item xs={12} sm={6}>
@@ -167,7 +141,7 @@ const Client = () => {
                           className="input-label "
                           disabled
                           sx={{ width: 300 }}
-                          value={client.type_client.nom}
+                          value={client.type_client}
                         />
                       </Grid>
                       <Grid item xs={12} sm={6}>

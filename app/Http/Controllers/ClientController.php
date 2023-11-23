@@ -8,7 +8,8 @@ use App\Models\EleveDbModel;
 use App\Http\Controllers\EmplacementController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActifController;
-use App\Models\Actif;
+use App\Models\TypeClient;
+
 
 class ClientController extends Controller
 {
@@ -47,17 +48,18 @@ class ClientController extends Controller
         $totalClients = count($clients);
         $counter = 0;
 
+        $typeClient = TypeClient::where('nom', 'Personnel')->first();
 
         foreach ($clients as $client) {
             $matriculeLieu = $client['LIEU'];
            $emplacement = $emplacementController->getEmplacement($matriculeLieu);
-           
+
 
             $clientData = [
                 'matricule' => $client["MATR"],
                 'nom' => $client["NOM"],
                 'prenom' => $client["PRNOM"],
-                'id_type_client' => 1,
+                'id_type_client' =>  $typeClient,
             ];
 
             $existingClient = Client::where('matricule', $client["MATR"])->first();
@@ -107,7 +109,7 @@ class ClientController extends Controller
         $totalClients = count($eleves);
         $counter = 0;
 
-
+        $typeEleve = TypeClient::where('nom', 'Élève')->first();
         foreach ($eleves as $eleve) {
             $matriculeLieu = $eleve['ECO'];
             $emplacement = $emplacementController->getEmplacement($matriculeLieu);
@@ -116,7 +118,7 @@ class ClientController extends Controller
                 'matricule' => $eleve["FICHE"],
                 'nom' => $eleve["NOM"],
                 'prenom' => $eleve["PNOM"],
-                'id_type_client' => 2,
+                'id_type_client' =>$typeEleve,
             ];
 
             $existingClient = Client::where('matricule', $eleve["FICHE"])->first();
@@ -138,7 +140,7 @@ class ClientController extends Controller
             $counter++;
             error_log("Processed eleves {$counter} out of {$totalClients}");
         }
-        
+
     }
 
     public function syncAllClients(){
@@ -168,9 +170,20 @@ class ClientController extends Controller
      */
     public function show($id)
     {
-        $client = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])->find($id);
-        $client->setAttribute('nom', $client->prenom . ' ' . $client->nom);
-
+        $client = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])
+                        ->where('id', $id)
+                        ->first();
+        if ($client) {
+            $client = [
+                "id" => $client->id,
+                "matricule" => $client->matricule,
+                "nom" => $client->prenom . ' ' . $client->nom, // Concatenate prenom and nom
+                'actifs' =>  $client->actifs,
+                'emplacement' => $client->emplacement->nom ?? 'Aucun',
+                'poste' => $client->poste->nom ?? 'Aucun',
+                'type_client' => $client->type_client->nom ?? 'Aucun',
+            ];
+        }
         return response()->json($client);
     }
 

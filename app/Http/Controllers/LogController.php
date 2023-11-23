@@ -248,7 +248,7 @@ class LogController extends Controller
         $log = new Log([
             'url' => $request->fullUrl(),
             'method' => $request->method(),
-            'action' => 'ajoutFavoris',
+            'action' => 'Modifier',
             'field' => 'favoris',
             'old_value' => False,
             'new_value' => True,
@@ -256,7 +256,7 @@ class LogController extends Controller
             'id_modele' => $idModele,
         ]);
         if ($modele->favoris == True) {
-            $log->action = 'retraitFavoris';
+            $log->action = 'Modifier';
             $log->new_value = False;
             $log->old_value = True;
         }

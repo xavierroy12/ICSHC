@@ -24,10 +24,26 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
     setAnchorEl(null);
   };
 
+
+  const handleLogout = () => {
+    localStorage.clear();
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i];
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    }
+
+  };
+
   return (
     <AppBar position="static">
       <Toolbar>
-        <img src="/Logo.png" alt="Logo" className="mr-16 w-64 h-24" />
+        <Link to="/dashboard">
+          <img src="/Logo.png" alt="Logo" className="mr-16 w-64 h-24" />
+        </Link>
+
 
         <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
           <Button
@@ -111,7 +127,7 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
                 >
                   Sync
                 </MenuItem>
-               
+
               </Menu>
             </Fragment>
           )}
@@ -124,6 +140,15 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
             className=" mr-4"
           >
             Profil
+          </Button>
+          <Button
+            component={Link}
+            to={`/profil`}
+            color="inherit"
+            className=" mr-4"
+            onClick={handleLogout} // add this line
+          >
+            Déconnexion
           </Button>
           <IconButton onClick={handleThemeChange}>
             {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}

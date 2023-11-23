@@ -163,14 +163,15 @@ const Actifs = () => {
 
   const sendData = (values: FormikValues) => {
     const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
-
+    const ids: number[] = selectedActifs.map(actif => actif.id);
     fetch(window.name + `api/actifs`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-User-Action-Id': id_user, // send the user id in a custom header
       },
-      body: JSON.stringify(values), // Send the updated data with the mapped field names
+
+      body: JSON.stringify({ values, ids }), // Send the updated data with the mapped field names
     }).then((response) => {
       if (response.ok) {
         // Display a success message to the user

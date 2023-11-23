@@ -56,21 +56,24 @@ class LogController extends Controller
         $modificateur = $request->header('X-User-Action-Id');
         $data = $request->all();
         $arrayIdActifs = $data['ids'];
+        $data = $data['values'];
         $requestData = [
             'en_entrepot' => isset($data['en_entrepot']) ? $data['en_entrepot'] : null,
             'date_retour' => isset($data['date_retour']) ? $data['date_retour'] : null,
             'note' => isset($data['note']) ? $data['note'] : null,
-            'id_modele' => isset($data['modele']) ? $data['modele'] : null,
-            'id_categorie' => isset($data['categorie']) ? $data['categorie'] : null,
-            'id_statut' => isset($data['statut']) ? $data['statut'] : null,
-            'id_emplacement' => isset($data['emplacement']) ? $data['emplacement'] : null,
-            'id_proprietaire' => isset($data['proprietaire']) ? $data['proprietaire'] : null,
-            'id_utilisation' => isset($data['utilisation']) ? $data['utilisation'] : null,
+            'id_modele' => isset($data['id_modele']) ? $data['id_modele'] : null,
+            'id_categorie' => isset($data['id_categorie']) ? $data['id_categorie'] : null,
+            'id_statut' => isset($data['id_statut']) ? $data['id_statut'] : null,
+            'id_emplacement' => isset($data['id_emplacement']) ? $data['id_emplacement'] : null,
+            'id_proprietaire' => isset($data['id_proprietaire']) ? $data['id_proprietaire'] : null,
+            'id_utilisation' => isset($data['id_utilisation']) ? $data['id_utilisation'] : null,
         ];
+        error_log('foreach');
         foreach ($arrayIdActifs as $id) {
             $actif = Actif::find($id);
-
             foreach ($requestData as $field => $newValue) {
+                error_log('field is ' . $field . ' and newValue is ' . $newValue . ' and oldValue is ' . $actif->$field);
+
                 if ($actif->$field != $newValue && $newValue != null) {
                     error_log('field is ' . $field . ' and newValue is ' . $newValue);
                     $log = new Log([
@@ -136,59 +139,13 @@ class LogController extends Controller
                     'id_user' => $modificateur,
                     'id_actif' => $id,
                 ]);
-                //Handling exceptions, if the field is categorie, we need to get the categorie of the modele of the actif
                 if ($field == 'id_categorie') {
                     if ($actif->modele->categorie->id == $newValue) {
                         continue;
                     }
                     $log->old_value = $actif->modele->categorie->id;
                 }
-                //if the field is id_client we need to make sure the logs we are creating are associated with the client and the actif
-                /*if ($field == 'id_client')
-                    if ($newValue == null) {
-                        $log->action = 'Desassignation';
-                        $log->id_client = $actif->$field;
-                    } else if ($actif->$field == null) {
-                        $log->action = 'Assignation';
-                        $log->id_client = $newValue;
-                    } else {
-                        $logDesassignation = $log;
-                        $log->action = 'Assignation';
-                        $log->id_client = $newValue;
-                        $logDesassignation->action = 'Desassignation';
-                        $logDesassignation->id_client = $actif->$field;
-                    }
 
-                    //Handling exceptions, if the field is id_client, we need to get the client of the actif
-
-                    /*if ($field == 'id_client') {
-                        $client = Client::where('id', $requestData['id_client'])->first();
-                        $log->new_value = $client->id;
-                        
-                                            $logAssignation = new Log([
-                                                'url' => $request->fullUrl(),
-                                                'method' => $request->method(),
-                                                'action' => 'assignation',
-                                                'field' => 'id_client',
-                                                'old_value' => null,
-                                                'new_value' => $client->id,
-                                                'id_user' => $modificateur,
-                                                'id_actif' => $id,
-                                            ]);
-                                            $logDesassignation = new Log([
-                                                'url' => $request->fullUrl(),
-                                                'method' => $request->method(),
-                                                'action' => 'desassignation',
-                                                'field' => 'id_client',
-                                                'old_value' => $actif->client->id,
-                                                'new_value' => null,
-                                                'id_user' => $modificateur,
-                                                'id_actif' => $id,
-                                            ]);
-                                            $logAssignation->save();
-                                            $logDesassignation->save();
-                    }*/
-                error_log('log is : ' . $log);
                 $log->save();
             }
         }
@@ -200,14 +157,9 @@ class LogController extends Controller
     {
         $modificateur = $request->header('X-User-Action-Id');
         $path = $request->path();
-        //id kevin tremblay
         $idClient = basename($path);
-        //$client = Client::find($idClient);
-        //list actif associer a Kevin
         $actifClients = Actif::where('id_client', $idClient)->get();
-        //array des actif qu'on veut qui soit assigner a kevin
         $actifsRequestIds = $request->input('actifs');
-        //array des actif qui sont deja assigner a kevin
         $actifClientsIds = $actifClients->pluck('id')->toArray();
 
         $addedIds = array_diff($actifsRequestIds, $actifClientsIds);
@@ -232,9 +184,6 @@ class LogController extends Controller
                 ]);
                 $logDesasignation->save();
             }
-
-
-
 
             $log = new Log([
                 'url' => $request->fullUrl(),
@@ -324,7 +273,6 @@ class LogController extends Controller
         error_log($request);
 
         $data = $request->all();
-        //set the data to be logged
         $requestData = [
             'id' => isset($data['id']) ? $data['id'] : null,
             'nom' => isset($data['nom']) ? $data['nom'] : null,
@@ -352,15 +300,6 @@ class LogController extends Controller
                 $log->save();
             }
         }
-    }
-
-    public function logCategorie(Request $request)
-    {
-        /*$modificateur = $request->header('X-User-Action-Id');
-        $path = $request->path();
-        $log = new Log([
-
-        ])*/
     }
 
     public function logUtilisateur(Request $request)

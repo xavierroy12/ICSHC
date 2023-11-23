@@ -77,7 +77,7 @@ class ActifController extends Controller
             $client = Client::where('id_actif', $id);
 
             //Remove assignation from previous client
-            if ($data['desasignation']) {
+            if (isset($data['desasignation'])) {
                 $client->update(['id_actif' => null]);
             }
             if (!$actif->update($filteredData)) {
@@ -196,7 +196,7 @@ class ActifController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
-     /**
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Actif $Actif)

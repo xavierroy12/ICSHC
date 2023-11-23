@@ -136,7 +136,7 @@ function App() {
                 <Route path="/emplacements" element={<EmplacementList />} />
                 <Route path="/emplacement/:id" element={<Emplacement />} />
 
-                <Route path="*" element={<h1>Not Found</h1>} />
+                <Route path="*" element={<Dashboard />} />
 
                 <Route path="/login" element={<Login />} />
               </Routes>

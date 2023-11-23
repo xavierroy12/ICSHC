@@ -261,7 +261,7 @@ const ClientsList = () => {
         columns={columns}
         handleRowClick={handleRowClick}
         handleFilerChange={handleSelectedFiltersChange}
-        title={showInactif ? 'Clients Inactifs' : 'Clients'}
+        title={showInactif ? 'Client(s) Inactif(s)' : 'Clients'}
       />
     </div>
   );

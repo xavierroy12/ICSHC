@@ -302,7 +302,7 @@ const ActifsList = () => {
               setSelectedRows={handleSetSelectedRows}
               handleFilerChange={handleSelectedFiltersChange}
               handleRowClick={handleRowClick}
-              title={showarchived ? 'Actifs archivés' : 'Actifs'}
+              title={showarchived ? 'Actif(s) archivé(s)' : 'Actifs'}
             />
             <div>
               <div className="float-right m-4">

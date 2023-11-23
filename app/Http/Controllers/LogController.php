@@ -68,14 +68,11 @@ class LogController extends Controller
             'id_proprietaire' => isset($data['id_proprietaire']) ? $data['id_proprietaire'] : null,
             'id_utilisation' => isset($data['id_utilisation']) ? $data['id_utilisation'] : null,
         ];
-        error_log('foreach');
         foreach ($arrayIdActifs as $id) {
             $actif = Actif::find($id);
             foreach ($requestData as $field => $newValue) {
-                error_log('field is ' . $field . ' and newValue is ' . $newValue . ' and oldValue is ' . $actif->$field);
 
                 if ($actif->$field != $newValue && $newValue != null) {
-                    error_log('field is ' . $field . ' and newValue is ' . $newValue);
                     $log = new Log([
                         'url' => $request->fullUrl(),
                         'method' => $request->method(),
@@ -119,16 +116,13 @@ class LogController extends Controller
             'id_proprietaire' => isset($data['id_proprietaire']) ? $data['id_proprietaire'] : null,
             'id_utilisation' => isset($data['id_utilisation']) ? $data['id_utilisation'] : null,
         ];
-        error_log('id_client is : ' . $requestData['id_client']);
         if ($requestData['id_client'] == 'Aucun')
             $requestData['id_client'] = null;
 
 
         //for each field in the request, check if it is different from the current value and if it is, log it
-        error_log('id_client is after log : ' . $requestData['id_client']);
         foreach ($requestData as $field => $newValue) {
             if ($actif->$field != $newValue) {
-                error_log('field is ' . $field . ' and newValue is ' . $newValue . ' and oldValue is ' . $actif->$field);
                 $log = new Log([
                     'url' => $request->fullUrl(),
                     'method' => $request->method(),
@@ -169,7 +163,6 @@ class LogController extends Controller
 
         foreach ($addedIds as $id) {
             $actif = Actif::where('id', $id)->first();
-            error_log('actif line 218 is : ' . $actif);
             //If one of the actif is already assigned, we create a log for the client wich just lost an actif.
             if ($actif->id_client != null) {
                 $logDesasignation = new Log([
@@ -238,13 +231,11 @@ class LogController extends Controller
 
     public function logFavoris(Request $request)
     {
-        error_log($request);
         $modificateur = $request->header('X-User-Action-Id');
         $path = $request->path();
         $idModele = basename($path);
         $modele = Modele::find($idModele);
 
-        error_log($modele);
         $log = new Log([
             'url' => $request->fullUrl(),
             'method' => $request->method(),
@@ -270,7 +261,6 @@ class LogController extends Controller
         $path = $request->path();
         $idModele = basename($path);
         $modele = Modele::find($idModele);
-        error_log($request);
 
         $data = $request->all();
         $requestData = [
@@ -286,7 +276,6 @@ class LogController extends Controller
 
         foreach ($requestData as $field => $newValue) {
             if ($modele->$field != $newValue && $newValue != null) {
-                error_log('field is ' . $field . ' and newValue is ' . $newValue . ' and oldValue is ' . $modele->$field);
                 $log = new Log([
                     'url' => $request->fullUrl(),
                     'method' => $request->method(),
@@ -305,10 +294,8 @@ class LogController extends Controller
     public function logUtilisateur(Request $request)
     {
         $modificateur = $request->header('X-User-Action-Id');
-        error_log($modificateur);
         $path = $request->path();
         $idUtilisateur = basename($path);
-        error_log('idutilisateur is : ' . $idUtilisateur);
         $utilisateur = Utilisateur::find($idUtilisateur);
 
 
@@ -321,7 +308,6 @@ class LogController extends Controller
 
         foreach ($requestData as $field => $newValue) {
             if ($utilisateur->$field != $newValue && $newValue != null) {
-                error_log('field is ' . $field . ' and newValue is ' . $newValue . ' and oldValue is ' . $utilisateur->$field);
                 $log = new Log([
                     'url' => $request->fullUrl(),
                     'method' => $request->method(),
@@ -333,7 +319,6 @@ class LogController extends Controller
                     'id_utilisateur' => $idUtilisateur,
                 ]);
 
-                error_log($log);
                 $log->save();
             }
         }
@@ -344,13 +329,8 @@ class LogController extends Controller
         $modificateur = $request->header('X-User-Action-Id');
         $path = $request->path();
         $numeroCommande = basename($path);
-        error_log($numeroCommande);
         $commande = Commande::find($numeroCommande);
-        if ($commande === null) {
-            error_log('Erreur: commande introuvable');
 
-        }
-        error_log(print_r($request->all(), true));
         $id_etat_recu = 3;
         $log = new Log([
             'url' => $request->fullUrl(),
@@ -370,13 +350,10 @@ class LogController extends Controller
 
     public function showLogs($typeItem, $id_item)
     {
-
         $logs = [];
         $logsReturned = [];
         $relationships = ['actif', 'client', 'modele', 'user'];
 
-
-        error_log('attempting to show logs for ' . $typeItem . ' ' . $id_item);
         // Return all actif logs
         if ($typeItem == 'actif') {
             $logs = Log::where('id_actif', $id_item)->with($relationships)->get();
@@ -411,8 +388,6 @@ class LogController extends Controller
         ];
 
         foreach ($logs as $log) {
-            error_log($log);
-
             if ($this->isForeignKey($log->field)) {
                 $log->old_value = $this->getFieldValue($log->old_value, $typeItem, $log->field, $id_item, False);
                 $log->new_value = $this->getFieldValue($log->new_value, $typeItem, $log->field, $id_item, True);
@@ -443,7 +418,6 @@ class LogController extends Controller
                     $itemToFind = '';
                     $instanceModifierNom = '';
                     if (strpos($key, 'id_') === 0 && $key != 'id_user' && $param !== null) {
-                        error_log('The key is: ' . $key . ' and the value is: ' . $param);
                         $ObjectModifier = $key;
                         $ObjectModifierNom = substr($ObjectModifier, 3); // Remove 'id_' from the start of the field name
                         $itemToFind = Str::studly($ObjectModifierNom);
@@ -482,21 +456,16 @@ class LogController extends Controller
 
     public function getFieldValue($value, $typeItem, $field, $id_item, $isNew)
     {
-
-        error_log('getFieldValue parameters: value=' . $value . ', typeItem=' . $typeItem . ', field=' . $field . ', id_item=' . $id_item);
-
         if ($value == null)
             return null;
 
         if ($typeItem == 'actif') {
             $actif = Actif::find($id_item);
             //error_log('getFieldValue parameters: value=' . $value . ', typeItem=' . $typeItem . ', field=' . $field . ', id_item=' . $id_item);
-            error_log('field is : ' . $field);
             if ($field === 'id_proprietaire') {
                 $proprietaire = Emplacement::find($value);
                 $result = $proprietaire->nom;
             } else {
-                error_log('line 533');
                 $relatedModelName = substr($field, 3); // Remove 'id_' from the start of the field name
                 $itemToFind = ucfirst($relatedModelName);
                 $itemToFindClass = "\\App\\Models\\" . $itemToFind; // Construct the fully qualified class name
@@ -511,7 +480,6 @@ class LogController extends Controller
             return $result;
         }
         if ($typeItem == 'client') {
-            $client = Client::find($value);
             $relatedModelName = substr($field, 3); // Remove 'id_' from the start of the field name
             $itemToFind = ucfirst($relatedModelName);
             $itemToFindClass = "\\App\\Models\\" . $itemToFind; // Construct the fully qualified class name
@@ -524,12 +492,9 @@ class LogController extends Controller
             return $result;
         }
         if ($typeItem == 'modele') {
-            $Modele = Modele::find($value);
-            error_log('user is : ' . $Modele);
             $relatedModelName = substr($field, 3); // Remove 'id_' from the start of the field name
             $itemToFind = Str::studly($relatedModelName);
             $itemToFind = str_replace('_', '', $itemToFind);
-            error_log((string) $itemToFind);
             $itemToFindClass = "\\App\\Models\\" . $itemToFind; // Construct the fully qualified class name
             $ResultModel = $itemToFindClass::find($value); //
             if (isset($ResultModel)) {
@@ -547,7 +512,6 @@ class LogController extends Controller
                 $relatedModelName = substr($field, 3); // Remove 'id_' from the start of the field name
                 $itemToFind = Str::studly($relatedModelName);
                 $itemToFind = str_replace('_', '', $itemToFind);
-                error_log((string) $itemToFind);
                 $itemToFindClass = "\\App\\Models\\" . $itemToFind; // Construct the fully qualified class name
                 $ResultModel = $itemToFindClass::find($value); //
             }
@@ -558,7 +522,6 @@ class LogController extends Controller
                     $result = $ResultModel->nom;
             } else
                 $result = null;
-            error_log('line 584');
             return $result;
         }
     }

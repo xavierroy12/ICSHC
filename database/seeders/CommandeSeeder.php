@@ -32,5 +32,40 @@ class CommandeSeeder extends Seeder
             'id_emplacement_prevu' => 2,
             'id_etat' => 2,
         ]);
+        /*DB::table('commande')->insert([
+            'numero_commande' => "92012345678",
+            'nb_actif' => 5,
+            'date_commande' => '2023-09-21',
+            'id_emplacement_prevu' => 2,
+            'id_etat' => 1,
+        ]);
+        DB::table('commande')->insert([
+            'numero_commande' => "82012345678",
+            'nb_actif' => 5,
+            'date_commande' => '2023-09-21',
+            'id_emplacement_prevu' => 2,
+            'id_etat' => 1,
+        ]);
+        DB::table('commande')->insert([
+            'numero_commande' => "72012345678",
+            'nb_actif' => 5,
+            'date_commande' => '2023-09-21',
+            'id_emplacement_prevu' => 2,
+            'id_etat' => 1,
+        ]);
+        DB::table('commande')->insert([
+            'numero_commande' => "62012345678",
+            'nb_actif' => 5,
+            'date_commande' => '2023-09-21',
+            'id_emplacement_prevu' => 2,
+            'id_etat' => 1,
+        ]);
+        DB::table('commande')->insert([
+            'numero_commande' => "52012345678",
+            'nb_actif' => 5,
+            'date_commande' => '2023-09-21',
+            'id_emplacement_prevu' => 2,
+            'id_etat' => 1,
+        ]);*/
     }
 }

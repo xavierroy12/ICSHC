@@ -8,6 +8,7 @@ use App\Models\Utilisateur;
 use App\Models\Actif;
 use App\Models\Client;
 use App\Models\Modele;
+use App\Models\Commande;
 use Illuminate\Support\Str;
 
 
@@ -74,7 +75,7 @@ class LogController extends Controller
                     $log = new Log([
                         'url' => $request->fullUrl(),
                         'method' => $request->method(),
-                        'action' => 'modifier',
+                        'action' => 'Modifier',
                         'field' => $field,
                         'old_value' => $actif->$field,
                         'new_value' => $newValue,
@@ -399,6 +400,33 @@ class LogController extends Controller
         }
     }
 
+    public function logReceptionCommande(Request $request)
+    {
+        $modificateur = $request->header('X-User-Action-Id');
+        $path = $request->path();
+        $numeroCommande = basename($path);
+        error_log($numeroCommande);
+        $commande = Commande::find($numeroCommande);
+        if ($commande === null) {
+            error_log('Erreur: commande introuvable');
+
+        }
+        error_log(print_r($request->all(), true));
+        $id_etat_recu = 3;
+        $log = new Log([
+            'url' => $request->fullUrl(),
+            'method' => $request->method(),
+            'action' => 'Reception',
+            'field' => 'id_etat',
+            'old_value' => $commande->id_etat,
+            'new_value' => $id_etat_recu,
+            'id_user' => $modificateur,
+            'id_commande' => $numeroCommande,
+        ]);
+        $log->save();
+
+    }
+
 
 
     public function showLogs($typeItem, $id_item)
@@ -429,43 +457,24 @@ class LogController extends Controller
         if ($typeItem == 'utilisateur') {
             error_log('iditem is : ' . $id_item);
             $logs = Log::where('id_user', $id_item)->with($relationships)->get();
-
-            /* foreach ($logs as $log) {
-                 $values = [
-                     "id_client" => $log->id_client,
-                     "id_actif" => $log->id_actif,
-                     "id_modele" => $log->id_modele,
-                     "id_emplacement" => $log->id_emplacement,
-                     "id_utilisateur" => $log->id_utilisateur
-                 ];
-                 $nonNullValue = null;
-                 foreach ($values as $key => $value) {
-                     if ($value !== null) {
-                         $nonNullValue = [$key => $value];
-                         break;
-                     }
-                 }
-                 if ($nonNullValue) {
-                     $relatedModelName = substr(key($nonNullValue), 3); // Remove 'id_' from the start of the field name
-                     $itemToFind = ucfirst($relatedModelName);
-                     error_log('item to find is : ' . $itemToFind);
-                     $itemToFindClass = "\\App\\Models\\" . $itemToFind; // Construct the fully qualified class name
-                     $ResultModel = $itemToFindClass::find(current($nonNullValue));
-                     error_log('ResultModel to find is : ' . $ResultModel);
-                     error_log('NonNullValue is : ' . json_encode($nonNullValue));
-
-
-                 }
-             }*/
+        }
+        // Return Commande log
+        if ($typeItem == 'commande') {
+            $logs = Log::where('id_commande', $id_item)->with($relationships)->get();
         }
 
-
+        $beautifyChampDict = [
+            'type_modele' => 'Catégorie',
+            'etat' => ' État de la commande',
+        ];
+        $beautifyValueDict = [
+            '0' => 'Non',
+            '1' => 'Oui',
+        ];
 
         foreach ($logs as $log) {
             error_log($log);
             if ($this->isForeignKey($log->field)) {
-
-
                 $log->old_value = $this->getFieldValue($log->old_value, $typeItem, $log->field, $id_item, False);
                 $log->new_value = $this->getFieldValue($log->new_value, $typeItem, $log->field, $id_item, True);
 
@@ -476,12 +485,18 @@ class LogController extends Controller
             $old_value = $log->old_value !== null ? $log->old_value : 'rien';
             $new_value = $log->new_value !== null ? $log->new_value : 'rien';
 
-            $description = $log->action . ' ' . $champ . ' de ' . $old_value . ' à ' . $new_value;
+            $champ = $beautifyChampDict[$champ] ?? $champ;
+            $old_value = $beautifyValueDict[$old_value] ?? $old_value;
+            $new_value = $beautifyValueDict[$new_value] ?? $new_value;
+
+            $description = $log->action . ', ' . $champ . ' de ' . $old_value . ' à ' . $new_value;
+            error_log($log->id_user);
             $username = Utilisateur::find($log->id_user);
-            $nameUser = $username->nom;
+            if (isset($username))
+                $nameUser = $username->nom;
+            else
+                $nameUser = null;
             $utilisateur = $nameUser !== null ? $nameUser : 'Utilisateur introuvable';
-
-
             $data = [
                 'date' => $log->created_at->timezone('America/New_York')->format('Y-m-d H:i:s'),
                 'description' => $description,
@@ -540,12 +555,22 @@ class LogController extends Controller
             return $result;
         }
         if ($typeItem == 'modele') {
-            $modele = Modele::find($value);
-            return $modele->nom;
+            $Modele = Modele::find($value);
+            error_log('user is : ' . $Modele);
+            $relatedModelName = substr($field, 3); // Remove 'id_' from the start of the field name
+            $itemToFind = Str::studly($relatedModelName);
+            $itemToFind = str_replace('_', '', $itemToFind);
+            error_log((string) $itemToFind);
+            $itemToFindClass = "\\App\\Models\\" . $itemToFind; // Construct the fully qualified class name
+            $ResultModel = $itemToFindClass::find($value); //
+            if (isset($ResultModel)) {
+                $result = $ResultModel->nom;
+            } else
+                $result = null;
+
+            return $result;
         }
-        if ($typeItem == 'utilisateur') {
-            $user = Utilisateur::find($value);
-            error_log('user is : ' . $user);
+        if ($typeItem == 'utilisateur' || 'commande') {
             $relatedModelName = substr($field, 3); // Remove 'id_' from the start of the field name
             $itemToFind = Str::studly($relatedModelName);
             $itemToFind = str_replace('_', '', $itemToFind);

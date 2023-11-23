@@ -146,6 +146,8 @@ const Commande = () => {
   }, [numero_commande]);
 
   const handleSubmit = () => {
+    const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
+
     const updatedActifs = commande?.actifs.map((actif) => {
       const modele = modeleCommande?.find(
         (modele) => modele.description_modele === actif.description_modele
@@ -159,9 +161,12 @@ const Commande = () => {
     });
 
     fetch(window.name + `api/commande/reception/${commande?.numero_commande}`, {
+
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-User-Action-Id': id_user, // send the user id in a custom header
+
       },
       body: JSON.stringify(updatedActifs),
     })

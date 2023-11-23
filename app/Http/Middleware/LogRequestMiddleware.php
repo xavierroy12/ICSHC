@@ -75,8 +75,9 @@ class LogRequestMiddleware
                 case 'commandeAchat':
                     // Handle POST request for /commandeAchat
                     break;
-                case 'commande/reception/':
-                    // Handle POST request for /commandeAchat
+                case 'commande/reception/id':
+                    error_log('in commande/reception/numero_commande');
+                    $this->logController->logReceptionCommande($request);
                     break;
                 case 'filter/saveFilters':
                     // Handle POST request for /filter/saveFilters

@@ -27,7 +27,7 @@ type Props = {
 
 const ActifsForm = ({
   modeles,
-  categories,
+  //categories,
   statuts,
   emplacements,
   utilisations,
@@ -62,13 +62,7 @@ const ActifsForm = ({
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Field
-              name="categorie"
-              component={CustomSelect}
-              options={categories}
-              label="Categorie"
-              isClearable
-            />
+
           </Grid>
           <Grid item xs={12}>
             <Field

@@ -101,7 +101,7 @@ function App() {
         <CssBaseline />
         <div className="App">
           <div className={darkMode ? 'dark' : ''}>
-            <Layout darkMode={darkMode} handleThemeChange={handleThemeChange}>
+            <Layout darkMode={darkMode} handleThemeChange={handleThemeChange} showNavAndFooter={location.pathname !== '/login'}>
               <ToastContainer />
               <Routes>
                 <Route path="/actifs" element={<ActifsList />} />

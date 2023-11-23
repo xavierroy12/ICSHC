@@ -18,7 +18,7 @@ class TypeClientSeeder extends Seeder
         ]);
 
         DB::table('type_client')->insert([
-            'nom' => 'Eleve',
+            'nom' => 'Élève',
         ]);
 
     }

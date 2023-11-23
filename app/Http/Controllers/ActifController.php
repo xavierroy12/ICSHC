@@ -196,7 +196,7 @@ class ActifController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
-    /**
+     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Actif $Actif)

@@ -67,6 +67,11 @@ const EmplacementList = () => {
   ];
 
   const options: Partial<MUIDataTableOptions> = {
+    textLabels: {
+        body: {
+          noMatch: "Désolé, aucun résultat n'a été généré pour la recherche...",
+        },
+    },
     filterType: 'dropdown',
     responsive: 'simple',
     search: true,

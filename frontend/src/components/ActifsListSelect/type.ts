@@ -5,7 +5,7 @@ export type LightActif = {
 };
 
 export type LightClient = {
-    id: number;
-    nom: string;
-    matricule:string;
-  };
+  id: number;
+  nom: string;
+  matricule: string;
+};

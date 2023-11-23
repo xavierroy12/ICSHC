@@ -20,8 +20,7 @@ const AddCategorie = ({ handleClose, reloadData }: Props) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-User-Action-Id': id_user // send the user id in a custom header
-
+          'X-User-Action-Id': id_user, // send the user id in a custom header
         },
         body: JSON.stringify(value),
       }).then((response) => {
@@ -31,7 +30,6 @@ const AddCategorie = ({ handleClose, reloadData }: Props) => {
           toast.error('Une erreur est survenue');
         }
       });
-
     } catch (error) {
       toast.error('Une erreur est survenue');
     }

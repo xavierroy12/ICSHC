@@ -34,7 +34,7 @@ export type LightType = {
 
 export type ActifFormValues = {
   numero_serie: string;
-  numero_commande: string
+  numero_commande: string;
   nom: string;
   adresse_mac: string;
   id_statut: string;
@@ -53,4 +53,4 @@ export type ActifFormValues = {
 export type SelectItem = {
   label: string;
   id: number;
-}
+};

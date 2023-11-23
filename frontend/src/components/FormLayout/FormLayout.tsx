@@ -1,15 +1,35 @@
 import { Fragment, useState } from 'react';
 import BackButton from '../BackButton';
-import { Typography } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Typography,
+} from '@mui/material';
 import ConfirmDialog from '../ConfirmationDialog';
 
 type Props = {
   children: React.ReactNode;
   title: string;
   dirty: boolean;
+  open?: boolean;
+  handleClose?: () => void;
+  handleConfirm?: () => void;
+  hasDialog?: boolean;
 };
 
-const FormLayout = ({ children, title, dirty }: Props) => {
+const FormLayout = ({
+  children,
+  title,
+  dirty,
+  open,
+  handleClose,
+  handleConfirm,
+  hasDialog = true,
+}: Props) => {
   const [isDialogOpen, setDialogOpen] = useState(false);
 
   const handleBack = (dirty: boolean) => {
@@ -20,11 +40,11 @@ const FormLayout = ({ children, title, dirty }: Props) => {
     }
   };
 
-  const handleClose = () => {
+  const handleCloseBack = () => {
     setDialogOpen(false);
   };
 
-  const handleConfirm = () => {
+  const handleConfirmBack = () => {
     setDialogOpen(false);
     history.back();
   };
@@ -47,9 +67,27 @@ const FormLayout = ({ children, title, dirty }: Props) => {
       </div>
       <ConfirmDialog
         open={isDialogOpen}
-        onClose={handleClose}
-        onConfirm={handleConfirm}
+        onClose={handleCloseBack}
+        onConfirm={handleConfirmBack}
       />
+      {hasDialog && (
+        <Dialog open={open ?? false} onClose={handleClose}>
+          <DialogTitle>Confirmation</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Êtes vous sur de la modification de l'élément ?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Annuler
+            </Button>
+            <Button onClick={handleConfirm} color="primary" autoFocus>
+              Confirmer
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </Fragment>
   );
 };

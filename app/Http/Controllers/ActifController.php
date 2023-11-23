@@ -179,19 +179,9 @@ class ActifController extends Controller
                 //'numero_commande' => $data['numero_commande'], //Todo add this to the form
             ];
 
-            $updatedDataModele = [
-                'id_type_modele' => $data['id_categorie'],
-            ];
 
             // Update the Actif object with the updated data
             $actif->fill($updatedDataActif);
-            Modele::where('id', $actif->id_modele)->update($updatedDataModele);
-
-
-
-
-            // Check if the Actif object is actually updated
-            print_r($actif);
 
             // Save the updated Actif object to the database
             if ($actif->save()) {
@@ -220,8 +210,6 @@ class ActifController extends Controller
             ->whereHas('statut', function ($query) {
                 $query->where('nom', '!=', 'Archivé')
                     ->where('id_statut', '!=', 2);
-
-
             })
             ->get()
             ->map(function ($actif) {
@@ -266,7 +254,7 @@ class ActifController extends Controller
             'nom' => $actif->nom,
             'adresse_mac' => $actif->adresse_mac,
             'id_modele' => $actif->modele->id,
-            'id_categorie' => $actif->modele->categorie->id,
+            'categorie' => $actif->modele->categorie->nom,
             'id_statut' => $actif->statut->id,
             'id_utilisation' => $actif->utilisation->id ?? "Aucun",
             'id_proprietaire' => $actif->proprietaire->id ?? "Aucun",

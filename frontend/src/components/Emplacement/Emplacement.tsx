@@ -1,6 +1,6 @@
 import { CircularProgress } from '@mui/material';
 import { Formik, FormikValues } from 'formik';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import EmplacementForm from './EmplacementForm';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormLayout from '../FormLayout';
@@ -44,7 +44,26 @@ const Emplacement = () => {
     est_proprietaire: emplacement?.est_proprietaire,
   };
 
-  const handleSubmit = (values: FormikValues) => {
+  const formValuesRef = useRef<FormikValues | null>(null);
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleUpdate = (values: FormikValues) => {
+    formValuesRef.current = values;
+    handleOpen();
+  };
+
+  const handleSubmit = () => {
+    const values = formValuesRef.current;
+    if (!values) return;
+
     fetch(window.name + `api/emplacement/${id}`, {
       method: 'POST',
       headers: {
@@ -59,6 +78,7 @@ const Emplacement = () => {
         toast.error('Une erreur est survenue');
       }
     });
+    handleClose();
   };
 
   return (
@@ -70,11 +90,14 @@ const Emplacement = () => {
       ) : (
         <div className="mx-auto mt-8">
           {id && (
-            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+            <Formik initialValues={initialValues} onSubmit={handleUpdate}>
               {({ values, dirty, setFieldValue }) => (
                 <FormLayout
                   title={emplacement?.nom || 'Nouveau emplacement'}
                   dirty={dirty}
+                  handleConfirm={handleSubmit}
+                  open={open}
+                  handleClose={handleClose}
                 >
                   <EmplacementForm
                     values={values}

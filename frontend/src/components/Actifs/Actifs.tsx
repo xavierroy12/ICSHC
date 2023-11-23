@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CircularProgress, Typography } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SelectActifsList from '../ActifsListSelect';
@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 const Actifs = () => {
   const location = useLocation();
   const { selectedRows } = location.state;
+  const [sendingType, setSendingType] = useState<string>(''); // 'reception' | 'update'
 
   const [loading, setLoading] = useState(true);
   const [statuts, setStatuts] = useState<SelectItem[]>([]);
@@ -109,15 +110,65 @@ const Actifs = () => {
     note: '',
   };
 
+  const formValuesRef = useRef<FormikValues | null>(null);
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
   const handleUpdate = (values: FormikValues) => {
+    formValuesRef.current = values;
+    handleOpen();
+  };
+
+  const handleConfirm = () => {
+    const values = formValuesRef.current;
+    if (!values) return;
+    let statut = null;
+    switch (sendingType) {
+      case 'reception':
+        statut =
+          statuts.find((statut) => statut.label === 'Déployable')?.id || '';
+        break;
+      default:
+        statut = values.statut.id || values.statut;
+    }
+    const updatedData = {
+      nom: values.nom,
+      numero_serie: values.numero_serie,
+      numero_commande: values.numero_commande,
+      addresse_mac: values.adresse_mac,
+      id_categorie: values.categorie,
+      en_entrepot: values.en_entrepot,
+      date_retour: values.date_retour,
+      date_creation: values.date_creation,
+      note: values.note,
+      id_assigne_a: values.assigne_a?.id || values.assigne_a || '',
+      id_modele: values.modele.id || values.modele,
+      id_statut: statut,
+      id_emplacement: values.emplacement.id || values.emplacement,
+      id_proprietaire: values.proprietaire.id || values.proprietaire,
+      id_utilisation: values.utilisation.id || values.utilisation,
+    };
+
+    sendData(updatedData);
+
+    handleClose();
+  };
+
+  const sendData = (values: FormikValues) => {
     const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
 
     fetch(window.name + `api/actifs`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-User-Action-Id': id_user // send the user id in a custom header
-
+        'X-User-Action-Id': id_user, // send the user id in a custom header
       },
       body: JSON.stringify(values), // Send the updated data with the mapped field names
     }).then((response) => {
@@ -132,41 +183,6 @@ const Actifs = () => {
     });
   };
 
-  const handleSubmit = (values: FormikValues) => {
-    // Map the form values to match the expected field names in your Laravel API
-    const updatedData = {
-      ids: selectedRows,
-      modele: values.modele?.id,
-      categorie: values.categorie?.id,
-      statut: values.statut?.id,
-      desasignation: false,
-      emplacement: values.emplacement?.id,
-      en_entrepot: values.en_entrepot,
-      utilisation: values.utilisation?.id,
-      proprietaire: values.proprietaire?.id,
-      date_retour: values.date_retour,
-      note: values.note,
-    };
-    handleUpdate(updatedData);
-  };
-
-  const handleReception = (values: FormikValues) => {
-    const statut = statuts.find((statut) => statut.label === 'Déployable');
-    const updatedData = {
-      ids: selectedRows,
-      modele: values.modele?.id,
-      categorie: values.categorie?.id,
-      statut: statut?.id,
-      desasignation: true,
-      emplacement: values.emplacement?.id,
-      en_entrepot: values.en_entrepot,
-      utilisation: values.utilisation?.id,
-      proprietaire: values.proprietaire?.id,
-      date_retour: values.date_retour,
-      note: values.note,
-    };
-    handleUpdate(updatedData);
-  };
   return (
     <div className="flex flex-col md:flex-row">
       {loading ? (
@@ -176,9 +192,15 @@ const Actifs = () => {
       ) : (
         <>
           <div className="md:w-2/3 md:ml-20 md:mr-6 mt-8 min-w-fit h-full">
-            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+            <Formik initialValues={initialValues} onSubmit={handleUpdate}>
               {({ values, handleChange, dirty, setFieldValue }) => (
-                <FormLayout title="Ajouter des actifs" dirty={dirty}>
+                <FormLayout
+                  title="Ajouter des actifs"
+                  dirty={dirty}
+                  handleConfirm={handleConfirm}
+                  open={open}
+                  handleClose={handleClose}
+                >
                   <ActifsForm
                     statuts={statuts}
                     modeles={modeles}
@@ -190,7 +212,7 @@ const Actifs = () => {
                     handleChange={handleChange}
                     dirty={dirty}
                     setFieldValue={setFieldValue}
-                    handleReception={handleReception}
+                    setSendingType={setSendingType}
                   />
                 </FormLayout>
               )}

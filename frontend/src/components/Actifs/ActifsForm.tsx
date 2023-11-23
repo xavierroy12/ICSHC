@@ -2,7 +2,7 @@ import { Grid, TextField, Button, FormControlLabel } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import { Field, FormikValues, Form } from 'formik';
+import { Field, FormikValues, Form, useFormikContext } from 'formik';
 import { Fragment, SyntheticEvent } from 'react';
 import CustomSelect from '../CustomSelect';
 import { SelectItem } from '../Actif/type';
@@ -22,7 +22,7 @@ type Props = {
     shouldValidate?: boolean | undefined
   ) => void;
   dirty: boolean;
-  handleReception: (values: FormikValues) => void;
+  setSendingType: (type: string) => void;
 };
 
 const ActifsForm = ({
@@ -36,8 +36,14 @@ const ActifsForm = ({
   handleChange,
   setFieldValue,
   dirty,
-  handleReception,
+  setSendingType,
 }: Props) => {
+  const { submitForm } = useFormikContext<FormikValues>();
+
+  const handleReception = async () => {
+    setSendingType('reception');
+    await submitForm();
+  };
   return (
     <Fragment>
       <Form>
@@ -176,7 +182,7 @@ const ActifsForm = ({
               color="primary"
               size="medium"
               onClick={() => {
-                handleReception(values);
+                handleReception();
               }}
             >
               Réception

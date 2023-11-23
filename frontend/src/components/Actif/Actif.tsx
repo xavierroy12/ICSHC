@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress'; // Import Material-UI CircularProgress
 import { Actif_Type, LightType, SelectItem } from './type';
@@ -12,6 +12,7 @@ const Actif = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
+  const [sendingType, setSendingType] = useState<string>(''); // 'reception' | 'archive' | 'update'
   const [loading, setLoading] = useState(true);
   const [statuts, setStatuts] = useState<SelectItem[]>([]);
   const [modeles, setModeles] = useState<SelectItem[]>([]);
@@ -80,6 +81,7 @@ const Actif = () => {
               label: proprietaire.nom,
             }))
           );
+          console.log(fetchedActif);
           setActif(fetchedActif);
           setLoading(false);
         }
@@ -104,45 +106,37 @@ const Actif = () => {
     note: actif?.note,
   };
 
-  const handleArchive = (values: FormikValues) => {
-    const confirmed = window.confirm(
-      'Attention! Si vous retirez un actif du trafic, il ne sera plus en fonction et accessible dans la liste des actifs. Êtes-vous certain de vouloir faire cette action?'
-    );
+  const formValuesRef = useRef<FormikValues | null>(null);
+  const [open, setOpen] = useState(false);
 
-    if (confirmed) {
-      // Set the statut of the actif to "Archivé"
-
-      const updatedActif = {
-        nom: values.nom,
-        numero_serie: values.numero_serie,
-        numero_commande: values.numero_commande,
-        addresse_mac: values.adresse_mac,
-        id_categorie: values.categorie,
-        en_entrepot: values.en_entrepot,
-        date_retour: values.date_retour,
-        date_creation: values.date_creation,
-        note: values.note,
-        id_assigne_a: values.assigne_a?.id || values.assigne_a || '',
-        id_modele: values.modele.id || values.modele,
-        id_statut: 5,
-        id_emplacement: values.emplacement.id || values.emplacement,
-        id_proprietaire: values.proprietaire.id || values.proprietaire,
-        id_utilisation: values.utilisation.id || values.utilisation,
-      };
-
-      // Update the actif in the database
-      // ...
-      handleUpdate(updatedActif);
-
-      // Navigate back to the actifs page
-      navigate('/actifs');
-    } else {
-      // Cancel the action
-    }
+  const handleClose = () => {
+    setOpen(false);
   };
 
-  const handleSubmit = (values: FormikValues) => {
-    // Map the form values to match the expected field names in your Laravel API
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleUpdate = (values: FormikValues) => {
+    formValuesRef.current = values;
+    handleOpen();
+  };
+
+  const handleConfirm = () => {
+    const values = formValuesRef.current;
+    if (!values) return;
+    let statut = null;
+    switch (sendingType) {
+      case 'reception':
+        statut =
+          statuts.find((statut) => statut.label === 'Déployable')?.id || '';
+        break;
+      case 'archive':
+        statut = statuts.find((statut) => statut.label === 'Archivé')?.id || '';
+        break;
+      default:
+        statut = values.statut.id || values.statut;
+    }
     const updatedData = {
       nom: values.nom,
       numero_serie: values.numero_serie,
@@ -155,40 +149,18 @@ const Actif = () => {
       note: values.note,
       id_assigne_a: values.assigne_a?.id || values.assigne_a || '',
       id_modele: values.modele.id || values.modele,
-      id_statut: values.statut.id || values.statut,
+      id_statut: statut,
       id_emplacement: values.emplacement.id || values.emplacement,
       id_proprietaire: values.proprietaire.id || values.proprietaire,
       id_utilisation: values.utilisation.id || values.utilisation,
     };
-    console.log(updatedData);
 
-    handleUpdate(updatedData);
+    sendData(updatedData);
+
+    handleClose();
   };
-
-  const handleReception = (values: FormikValues) => {
-    const statut = statuts.find((statut) => statut.label === 'Déployable');
-
-    const updatedData = {
-      nom: values.nom,
-      numero_serie: values.numero_serie,
-
-      id_categorie: values.categorie.id || values.categorie,
-      en_entrepot: true,
-      date_retour: values.date_retour,
-      note: values.note,
-      id_assigne_a: '',
-      id_modele: values.modele.id || values.modele,
-      id_statut: statut?.id,
-      id_emplacement: values.emplacement.id || values.emplacement,
-      id_proprietaire: values.proprietaire.id || values.proprietaire,
-      id_utilisation: values.utilisation.id || values.utilisation,
-    };
-    handleUpdate(updatedData);
-  };
-
-  const handleUpdate = (values: FormikValues) => {
+  const sendData = (values: FormikValues) => {
     const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
-    console.log(values);
     try {
       fetch(window.name + `api/actif/${id}`, {
         method: 'POST',
@@ -220,9 +192,15 @@ const Actif = () => {
         <div className="mx-auto mt-8">
           {actif && id && (
             <div className="flex flex-col sm:flex-row justify-evenly items-start">
-              <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+              <Formik initialValues={initialValues} onSubmit={handleUpdate}>
                 {({ values, handleChange, dirty, setFieldValue }) => (
-                  <FormLayout title="Modifier un actif" dirty={dirty}>
+                  <FormLayout
+                    title="Modifier un actif"
+                    dirty={dirty}
+                    handleConfirm={handleConfirm}
+                    open={open}
+                    handleClose={handleClose}
+                  >
                     <ActifForm
                       values={values}
                       handleChange={handleChange}
@@ -234,8 +212,7 @@ const Actif = () => {
                       locataires={locataires}
                       utilisations={utilisations}
                       proprietaires={proprietaires}
-                      handleReception={handleReception}
-                      handleArchive={handleArchive}
+                      setSendingType={setSendingType}
                     />
                   </FormLayout>
                 )}

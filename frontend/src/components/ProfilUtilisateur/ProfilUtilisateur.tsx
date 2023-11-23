@@ -1,6 +1,6 @@
 import { CircularProgress } from '@mui/material';
 import { FormikValues, Formik } from 'formik';
-import { useState, useEffect, Fragment } from 'react';
+import { useState, useEffect, Fragment, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { SelectItem } from '../Actif/type';
 import { LightType } from '../Actifs/type';
@@ -61,7 +61,26 @@ const ProfilUtilisateur = ({ id, isProfil }: Props) => {
     id_role: utilisateur?.id_role,
     id_emplacement: utilisateur?.id_emplacement,
   };
-  const handleSubmit = (values: FormikValues) => {
+
+  const formValuesRef = useRef<FormikValues | null>(null);
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleUpdate = (values: FormikValues) => {
+    formValuesRef.current = values;
+    handleOpen();
+  };
+
+  const handleSubmit = () => {
+    const values = formValuesRef.current;
+    if (!values) return;
     const data = {
       id_role: values.id_role.id || values.id_role,
       id_emplacement: values.id_emplacement.id || values.id_emplacement,
@@ -70,7 +89,7 @@ const ProfilUtilisateur = ({ id, isProfil }: Props) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-User-Action-Id': id_user // send the user id in a custom header
+        'X-User-Action-Id': id_user, // send the user id in a custom header
       },
       body: JSON.stringify(data),
     }).then((response) => {
@@ -92,7 +111,7 @@ const ProfilUtilisateur = ({ id, isProfil }: Props) => {
         <div className="mx-auto mt-8">
           {utilisateur && id && (
             <div className="flex flex-col sm:flex-row justify-evenly items-start">
-              <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+              <Formik initialValues={initialValues} onSubmit={handleUpdate}>
                 {({ dirty }) => (
                   <FormLayout
                     title={
@@ -101,6 +120,9 @@ const ProfilUtilisateur = ({ id, isProfil }: Props) => {
                         : 'Utilisateur: ' + utilisateur.nom
                     }
                     dirty={dirty}
+                    handleConfirm={handleSubmit}
+                    open={open}
+                    handleClose={handleClose}
                   >
                     <ProfileUtilisateurForm
                       dirty={dirty}

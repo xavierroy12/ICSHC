@@ -1,5 +1,5 @@
-import { Formik } from 'formik';
-import { Fragment, useEffect, useState } from 'react';
+import { Formik, FormikValues } from 'formik';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import ActifAddForm, { light_Actif } from './ActifAddForm';
 import { useNavigate } from 'react-router';
 import { LightType, SelectItem } from '../Actif/type';
@@ -30,14 +30,31 @@ const ActifAdd = () => {
       });
   }, []);
 
+  const formValuesRef = useRef<FormikValues | null>(null);
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleUpdate = (values: FormikValues) => {
+    formValuesRef.current = values;
+    handleOpen();
+  };
+
   const handleSubmit = () => {
+    const values = formValuesRef.current;
     try {
       fetch(window.name + `api/actifs/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(actifs),
+        body: JSON.stringify(values),
       }).then((response) => {
         if (response.ok) {
           toast.success('Données sauvegardées avec succès');
@@ -49,14 +66,21 @@ const ActifAdd = () => {
     } catch (error) {
       toast.error('Une erreur est survenue');
     }
+    handleClose();
   };
 
   return (
     <Fragment>
       <div className="mx-auto mt-8">
-        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+        <Formik initialValues={initialValues} onSubmit={handleUpdate}>
           {({ dirty }) => (
-            <FormLayout title="Ajouter des actifs" dirty={dirty}>
+            <FormLayout
+              title="Ajouter des actifs"
+              dirty={dirty}
+              handleConfirm={handleSubmit}
+              open={open}
+              handleClose={handleClose}
+            >
               <div className="w-fit">
                 <ActifAddForm
                   modeles={modeles}

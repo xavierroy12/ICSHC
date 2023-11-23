@@ -8,6 +8,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import CustomSelect from '../CustomSelect';
 import { AdminContext } from '../../App';
+import { useFormikContext } from 'formik';
 
 type Props = {
   values: FormikValues;
@@ -24,8 +25,7 @@ type Props = {
   locataires: SelectItem[];
   utilisations: SelectItem[];
   proprietaires: SelectItem[];
-  handleReception: (values: FormikValues) => void;
-  handleArchive: (values: FormikValues) => void;
+  setSendingType: (type: string) => void;
 };
 
 const ActifForm = ({
@@ -39,10 +39,20 @@ const ActifForm = ({
   locataires,
   utilisations,
   proprietaires,
-  handleReception,
-  handleArchive,
+  setSendingType,
 }: Props) => {
+  const { submitForm } = useFormikContext<FormikValues>();
+
   const isAdmin = useContext(AdminContext);
+
+  const handleReception = async () => {
+    setSendingType('reception');
+    await submitForm();
+  };
+  const handleArchive = async () => {
+    setSendingType('archive');
+    await submitForm();
+  };
   return (
     <Form>
       <Grid
@@ -249,7 +259,7 @@ const ActifForm = ({
             style={{ marginRight: '1rem' }}
             color="primary"
             size="medium"
-            onClick={() => handleReception(values)}
+            onClick={() => handleReception()}
           >
             Réception
           </Button>
@@ -260,7 +270,7 @@ const ActifForm = ({
             variant="contained"
             color="error"
             size="medium"
-            onClick={() => handleArchive(values)}
+            onClick={() => handleArchive()}
           >
             Archivé
           </Button>

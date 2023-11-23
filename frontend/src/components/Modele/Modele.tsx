@@ -1,5 +1,5 @@
 import ModeleForm from './ModeleForm';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { LightType, SelectItem } from '../Actif/type';
 import { CircularProgress } from '@mui/material';
 import { Modele_Type } from './type';
@@ -48,7 +48,25 @@ const Modele = () => {
     taille: modele?.taille,
   };
 
-  const handleSubmit = (values: FormikValues) => {
+  const formValuesRef = useRef<FormikValues | null>(null);
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleUpdate = (values: FormikValues) => {
+    formValuesRef.current = values;
+    handleOpen();
+  };
+
+  const handleSubmit = () => {
+    const values = formValuesRef.current;
+    if (!values) return;
     const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
     const updatedData = {
       id: values?.id,
@@ -79,6 +97,7 @@ const Modele = () => {
       .catch(() => {
         toast.error('Une erreur est survenue');
       });
+    handleClose();
   };
   const reloadData = () => {
     setTimeout(() => {
@@ -105,9 +124,15 @@ const Modele = () => {
         <div className="mx-auto mt-8">
           {modele && id && (
             <div className="flex flex-col sm:flex-row justify-evenly items-start">
-              <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+              <Formik initialValues={initialValues} onSubmit={handleUpdate}>
                 {({ values, dirty, setFieldValue }) => (
-                  <FormLayout title={'Modele: ' + modele.nom} dirty={dirty}>
+                  <FormLayout
+                    title={'Modele: ' + modele.nom}
+                    dirty={dirty}
+                    handleConfirm={handleSubmit}
+                    open={open}
+                    handleClose={handleClose}
+                  >
                     <ModeleForm
                       categories={categories}
                       values={values}

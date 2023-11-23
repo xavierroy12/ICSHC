@@ -1,8 +1,8 @@
 import { CircularProgress } from '@mui/material';
-import MUIDataTable, { MUIDataTableOptions } from 'mui-datatables';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-type utilisateur_type = {
+import List from '../List';
+export type Utilisateur = {
   id: number;
   nom: string;
 };
@@ -10,7 +10,7 @@ const UtilisateurList = () => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState<boolean>();
-  const [utilisateurs, setUtilisateurs] = useState<utilisateur_type[]>([]);
+  const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([]);
 
   let lastClickTime = 0;
 
@@ -61,31 +61,6 @@ const UtilisateurList = () => {
       .catch((error) => console.error(error));
   }, []);
 
-  const options: Partial<MUIDataTableOptions> = {
-    textLabels: {
-        body: {
-          noMatch: "Désolé, aucun résultat n'a été généré pour la recherche...",
-        },
-    },
-    filterType: 'dropdown',
-    responsive: 'simple',
-    search: true,
-    filter: true,
-    tableBodyHeight: 'calc(100vh - 300px)',
-    pagination: true,
-    rowsPerPage: 50,
-    rowsPerPageOptions: [50, 100, 200],
-    onRowClick: (
-      rowData: string[],
-      rowMeta: { dataIndex: number; rowIndex: number }
-    ) => {
-      handleRowClick(rowData, rowMeta);
-    },
-    print: false,
-    download: false,
-    selectableRows: 'none',
-  };
-
   return (
     <div className="w-11/12 mx-auto mt-10">
       {isLoading ? (
@@ -93,14 +68,14 @@ const UtilisateurList = () => {
           <CircularProgress />
         </div>
       ) : (
-        <Fragment>
-          <MUIDataTable
-            title={'Utilisateurs'}
+        <div className="mt-10 w-full">
+          <List
             data={utilisateurs}
             columns={columns}
-            options={options}
+            handleRowClick={handleRowClick}
+            title={'Utilisateurs'}
           />
-        </Fragment>
+        </div>
       )}
     </div>
   );

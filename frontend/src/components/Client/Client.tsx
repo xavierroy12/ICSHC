@@ -85,7 +85,6 @@ const Client = () => {
     const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
 
     const selectedRows = selectedActifs.map((actif) => actif.id);
-    console.log(selectedRows);
     fetch(window.name + `api/client/actifs/${id}`, {
       method: 'POST',
       headers: {

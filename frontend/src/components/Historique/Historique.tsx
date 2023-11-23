@@ -28,7 +28,6 @@ const Historique = ({ id, type }: Props) => {
     fetch(window.name + `api/historique/${type}/${id}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setHistoriques(data);
       });
   }, [id, type]);

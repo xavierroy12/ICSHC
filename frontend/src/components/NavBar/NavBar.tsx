@@ -111,21 +111,7 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
                 >
                   Sync
                 </MenuItem>
-                <MenuItem
-                  onClick={async () => {
-                    try {
-                      const response = await fetch(
-                        'http://10.0.22.24:8080/api/utilisateursCookie'
-                      );
-                      const data = await response.json();
-                      console.log(data);
-                    } catch (error) {
-                      console.error('Error:', error);
-                    }
-                  }}
-                >
-                  testIdparcookie
-                </MenuItem>
+               
               </Menu>
             </Fragment>
           )}

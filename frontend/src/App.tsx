@@ -1,11 +1,5 @@
 import Layout from './Layout';
-import {
-  //BrowserRouter as Router,
-  Routes,
-  Route,
-  //Navigate,
-  useNavigate,
-} from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -101,7 +95,11 @@ function App() {
         <CssBaseline />
         <div className="App">
           <div className={darkMode ? 'dark' : ''}>
-            <Layout darkMode={darkMode} handleThemeChange={handleThemeChange} showNavAndFooter={location.pathname !== '/login'}>
+            <Layout
+              darkMode={darkMode}
+              handleThemeChange={handleThemeChange}
+              showNavAndFooter={location.pathname !== '/login'}
+            >
               <ToastContainer />
               <Routes>
                 <Route path="/actifs" element={<ActifsList />} />

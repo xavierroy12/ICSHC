@@ -65,7 +65,6 @@ class LogRequestMiddleware
                 case 'categorie':
                     // Handle POST request for /categorie
                     error_log('in categoirie');
-                    $this->logController->logCategorie($request);
                     break;
                 case 'utilisateur/id':
                     // Handle POST request for /utilisateur/{id}

@@ -81,8 +81,8 @@ class LogController extends Controller
                         'method' => $request->method(),
                         'action' => 'Modifier',
                         'field' => $field,
-                        'old_value' => $actif->$field,
-                        'new_value' => $newValue,
+                        'old_value' => $newValue,
+                        'new_value' => $actif->$field,
                         'id_user' => $modificateur,
                         'id_actif' => $id,
                     ]);

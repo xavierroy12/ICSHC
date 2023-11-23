@@ -22,7 +22,6 @@ class DropdownController extends Controller
         ClientController $clientController,
         EmplacementController $emplacementController,
         StatutController $statutController,
-        ProprietaireController $proprietaireController,
         UtilisationController $utilisationController
     ) {
         $dropdowns = [
@@ -31,7 +30,6 @@ class DropdownController extends Controller
             'clients' => $this->getNames($clientController->showAll(), 'nom'),
             'emplacements' => $this->getNames($emplacementController->showAll(), 'nom'),
             'statuts' => $this->getNames($statutController->showAll(), 'nom'),
-            'proprietaires' => $this->getNames($proprietaireController->showAll(), 'nom'),
             'utilisations' => $this->getNames($utilisationController->showAll(), 'nom'),
         ];
 

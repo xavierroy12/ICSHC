@@ -13,4 +13,3 @@ export type Actif = {
   emplacement: string;
   emplacement_id: number;
 };
-

@@ -22,9 +22,7 @@ class LoginController extends Controller
     public static function generateToken() {
         $token = bin2hex(random_bytes(30)); // Generate a random token
         $expiration = Carbon::now()->addDays(30); // Set expiration to 30 days from now
-        error_log("Token $token generated");
         $encryptedToken = Crypt::encryptString($token);
-        error_log("Encrypted token is $encryptedToken");
         return [
             'token' => $encryptedToken,
             'expiration' => $expiration,
@@ -40,7 +38,6 @@ class LoginController extends Controller
 
         if ($utilisateur["valid_token"]){
             // Token is valid, return the user information
-            error_log("Token $token is valid");
             return response()->json([
                 'success' => true,
                 'user' => $utilisateur
@@ -101,10 +98,8 @@ class LoginController extends Controller
             else {
                 $token = LoginController::generateToken();
                 $test = $token['token'];
-                error_log("Token in login controller is $test ");
                 $email = showattrib($ad, $userdn, 'extensionattribute3');
                 $userFinal = $utilisateur->store($user, $nom, $token['token'], $token['expiration'], $email);
-                error_log("User $userFinal added to database");
                 return $userFinal;
             }
         }
@@ -119,7 +114,6 @@ class LoginController extends Controller
         ldap_set_option($ad, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($ad, LDAP_OPT_REFERRALS, 0);
         if (@ldap_bind($ad, "{$user}@{$domain}", $password)) {
-            error_log("LDAP bind successful for user: $user");
             //info of user in ldap
             $userdn = getDN($ad, $user, $basedn);
             $usercn = showattrib($ad, $userdn, 'cn');
@@ -132,8 +126,6 @@ class LoginController extends Controller
             // If user in group, create cookie and return user info
             if ($entries['count'] > 0) {
                 $userFinal = addUserDb($ad, $userdn, $user, $usercn);
-                error_log($userFinal->id);
-
                     $cookie = $this->createCookie($user);
                     $response = response()->json([
                         'user' => $user,
@@ -149,7 +141,6 @@ class LoginController extends Controller
                 }
                 // If user not in group, return error
                 else {
-                    error_log("User $user not in group $group");
                     return response()->json([
                         'message' => 'User not in group'
                     ], 401);
@@ -157,7 +148,6 @@ class LoginController extends Controller
             }
             // If LDAP bind failed, return error
             else {
-                error_log("LDAP bind failed for user: $user");
                 return response()->json([
                     'message' => 'Invalid username or password'
                 ], 401);

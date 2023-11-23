@@ -61,9 +61,7 @@ const ActifsForm = ({
               isClearable
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
-
-          </Grid>
+          <Grid item xs={12} sm={6}></Grid>
           <Grid item xs={12}>
             <Field
               name="statut"

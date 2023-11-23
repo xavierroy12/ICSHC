@@ -22,7 +22,6 @@ const AddGroupeFiltres = ({
     handleClose();
   };
 
-
   useEffect(() => {
     setIsButtonDisabled(label.trim() === '');
   }, [label]);

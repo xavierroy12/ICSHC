@@ -188,7 +188,6 @@ class UtilisateurController extends Controller
     }
     public function showList()
     {
-        error_log("showList");
         $utilisateurs = Utilisateur::with(['emplacement', 'role'])->get()->map(function ($utilisateur) {
             return [
                 'id' => $utilisateur->id,

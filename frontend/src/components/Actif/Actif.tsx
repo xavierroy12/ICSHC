@@ -153,7 +153,7 @@ const Actif = () => {
         updatedData.id_emplacement = current_id_emplacement;
         break;
       case 'archive':
-        updatedData.id_statut = "archivé"
+        updatedData.id_statut = 'archivé';
         updatedData.id_assigne_a = '';
         updatedData.date_retour = '';
         updatedData.en_entrepot = true;

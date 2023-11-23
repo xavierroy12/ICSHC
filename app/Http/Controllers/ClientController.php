@@ -25,11 +25,11 @@ class ClientController extends Controller
     {
         $client = Client::where('courriel', $email)->first();
 
-    if ($client) {
-        return $client;
-    } else {
-        return FALSE;
-    }
+        if ($client) {
+            return $client;
+        } else {
+            return FALSE;
+        }
     }
 
     public function listClientScolago()
@@ -41,37 +41,35 @@ class ClientController extends Controller
 
     }
 
-    public function storeListClientScolage(){
+    public function storeListClientScolage()
+    {
         $scolagoDbModel = new ScolagoDbModel();
         $emplacementController = new EmplacementController();
         $clients = $scolagoDbModel->getEmployees();
         $totalClients = count($clients);
         $counter = 0;
-
         $typeClient = TypeClient::where('nom', 'Personnel')->first();
 
         foreach ($clients as $client) {
             $matriculeLieu = $client['LIEU'];
-           $emplacement = $emplacementController->getEmplacement($matriculeLieu);
-
-
+            $emplacement = $emplacementController->getEmplacement($matriculeLieu);
             $clientData = [
                 'matricule' => $client["MATR"],
                 'nom' => $client["NOM"],
                 'prenom' => $client["PRNOM"],
-                'id_type_client' =>  $typeClient,
+                'id_type_client' => $typeClient->id,
             ];
 
             $existingClient = Client::where('matricule', $client["MATR"])->first();
 
             //If client has email, set email.
-            if($client["UserPrincipalName"] != null){
+            if ($client["UserPrincipalName"] != null) {
                 $courriel = $client["UserPrincipalName"];
                 $clientData['courriel'] = $courriel;
             }
             //If client has emplacement, set emplacement.
 
-            if (isset($existingClient) && $existingClient->emplacement_manuel){
+            if (isset($existingClient) && $existingClient->emplacement_manuel) {
                 //skip the check
             } else {
                 if ($emplacement !== null) {
@@ -101,7 +99,8 @@ class ClientController extends Controller
         return response()->json($eleves);
     }
 
-    public function storeClientEleve(){
+    public function storeClientEleve()
+    {
         //Variable necessaire pour ajouter les eleves
         $emplacementController = new EmplacementController();
         $eleveDbModel = new EleveDbModel();
@@ -118,7 +117,7 @@ class ClientController extends Controller
                 'matricule' => $eleve["FICHE"],
                 'nom' => $eleve["NOM"],
                 'prenom' => $eleve["PNOM"],
-                'id_type_client' =>$typeEleve,
+                'id_type_client' => $typeEleve->id,
             ];
 
             $existingClient = Client::where('matricule', $eleve["FICHE"])->first();
@@ -126,7 +125,7 @@ class ClientController extends Controller
             if ($emplacement !== null) {
                 $id_emplacement = $emplacement->id;
                 $clientData['id_emplacement'] = $id_emplacement;
-            }//If the eleve has no emplacement, set emplacement to 1, wich is no emplacement.
+            } //If the eleve has no emplacement, set emplacement to 1, wich is no emplacement.
             else {
                 $clientData['id_emplacement'] = 1;
             }
@@ -143,7 +142,8 @@ class ClientController extends Controller
 
     }
 
-    public function syncAllClients(){
+    public function syncAllClients()
+    {
         $this->storeListClientScolage();
         $this->storeClientEleve();
         return response()->json(['message' => 'Sync completed successfully'], 200);
@@ -171,14 +171,14 @@ class ClientController extends Controller
     public function show($id)
     {
         $client = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])
-                        ->where('id', $id)
-                        ->first();
+            ->where('id', $id)
+            ->first();
         if ($client) {
             $client = [
                 "id" => $client->id,
                 "matricule" => $client->matricule,
                 "nom" => $client->prenom . ' ' . $client->nom, // Concatenate prenom and nom
-                'actifs' =>  $client->actifs,
+                'actifs' => $client->actifs,
                 'emplacement' => $client->emplacement->nom ?? 'Aucun',
                 'poste' => $client->poste->nom ?? 'Aucun',
                 'type_client' => $client->type_client->nom ?? 'Aucun',
@@ -223,27 +223,28 @@ class ClientController extends Controller
                 "id" => $client->id,
                 "nom" => $client->matricule . ' - ' . $client->prenom . ' ' . $client->nom,
             ];
-        });        return response()->json($clients);
+        });
+        return response()->json($clients);
     }
 
     public function listShow()
     {
-        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
-        ->where('inactif', false)
-        ->get()
-        ->map(
-            function ($client) {
-                return [
-                    "id" => $client->id,
-                    "matricule" => $client->matricule,
-                    "nom" => $client->prenom . ' ' . $client->nom, // Concatenate prenom and nom
-                    'actifs' =>  $client->actifs->pluck('nom')->implode(', '),
-                    'emplacement' => isset($client->emplacement) && isset($client->emplacement->matricule) && isset($client->emplacement->nom) ? ($client->emplacement->matricule . " - " . $client->emplacement->nom) : 'Aucun',
-                    'poste' => $client->poste->nom ?? 'Aucun',
-                    'type_client' => $client->type_client->nom ?? 'Aucun',
-                ];
-            }
-        );
+        $clients = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])
+            ->where('inactif', false)
+            ->get()
+            ->map(
+                function ($client) {
+                    return [
+                        "id" => $client->id,
+                        "matricule" => $client->matricule,
+                        "nom" => $client->prenom . ' ' . $client->nom, // Concatenate prenom and nom
+                        'actifs' => $client->actifs->pluck('nom')->implode(', '),
+                        'emplacement' => isset($client->emplacement) && isset($client->emplacement->matricule) && isset($client->emplacement->nom) ? ($client->emplacement->matricule . " - " . $client->emplacement->nom) : 'Aucun',
+                        'poste' => $client->poste->nom ?? 'Aucun',
+                        'type_client' => $client->type_client->nom ?? 'Aucun',
+                    ];
+                }
+            );
         return response()->json($clients);
     }
 
@@ -281,22 +282,22 @@ class ClientController extends Controller
     //Personne inactif dans le système
     public function getInactifClients()
     {
-        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
-        ->where('inactif', true)
-        ->get()
-        ->map(
-            function ($client) {
-                return [
-                    "id" => $client->id,
-                    "matricule" => $client->matricule,
-                    "nom" => $client->prenom . ' ' . $client->nom, // Concatenate prenom and nom
-                    'actifs' =>  $client->actifs->pluck('nom')->implode(', '),
-                    'emplacement' => $client->emplacement->nom ?? 'Aucun',
-                    'poste' => $client->poste->nom ?? 'Aucun',
-                    'type_client' => $client->type_client->nom ?? 'Aucun',
-                ];
-            }
-        );
+        $clients = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])
+            ->where('inactif', true)
+            ->get()
+            ->map(
+                function ($client) {
+                    return [
+                        "id" => $client->id,
+                        "matricule" => $client->matricule,
+                        "nom" => $client->prenom . ' ' . $client->nom, // Concatenate prenom and nom
+                        'actifs' => $client->actifs->pluck('nom')->implode(', '),
+                        'emplacement' => $client->emplacement->nom ?? 'Aucun',
+                        'poste' => $client->poste->nom ?? 'Aucun',
+                        'type_client' => $client->type_client->nom ?? 'Aucun',
+                    ];
+                }
+            );
         return response()->json($clients);
     }
 
@@ -305,13 +306,13 @@ class ClientController extends Controller
     {
         $fiveYearsAgo = now()->subYears(5);
 
-        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
-        ->where('inactif', false)
-        ->whereHas('actifs', function ($query) use ($fiveYearsAgo) {
-            $query->whereDate('created_at', '<=', $fiveYearsAgo);
-        })
-        ->get()
-        ->map($this->clientMapFunction());
+        $clients = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])
+            ->where('inactif', false)
+            ->whereHas('actifs', function ($query) use ($fiveYearsAgo) {
+                $query->whereDate('created_at', '<=', $fiveYearsAgo);
+            })
+            ->get()
+            ->map($this->clientMapFunction());
 
         return response()->json($clients);
     }
@@ -319,10 +320,10 @@ class ClientController extends Controller
     // Personne ayant plus de 1 appareil
     public function getMoreThanOneActifs()
     {
-        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
-        ->has('actifs', '>', 1)
-        ->get()
-        ->map($this->clientMapFunction());
+        $clients = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])
+            ->has('actifs', '>', 1)
+            ->get()
+            ->map($this->clientMapFunction());
 
         return response()->json($clients);
     }
@@ -330,12 +331,12 @@ class ClientController extends Controller
     // Personne que le lieu d’attribution ne concorde pas avec l’appareil
     public function getMismatchedActifs()
     {
-        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
-        ->whereHas('actifs', function ($query) {
-            $query->whereColumn('actif.id_emplacement', '!=', 'client.id_emplacement');
-        })
-        ->get()
-        ->map($this->clientMapFunction());
+        $clients = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])
+            ->whereHas('actifs', function ($query) {
+                $query->whereColumn('actif.id_emplacement', '!=', 'client.id_emplacement');
+            })
+            ->get()
+            ->map($this->clientMapFunction());
 
         return response()->json($clients);
     }
@@ -343,11 +344,11 @@ class ClientController extends Controller
     // Personne ayant des appareils et ne travaillant plus pour vous
     public function getInnactiveActifs()
     {
-        $clients = Client::with(['actifs','emplacement', 'poste', 'type_client'])
-        ->where('inactif', true)
-        ->whereHas('actifs')
-        ->get()
-        ->map($this->clientMapFunction());
+        $clients = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])
+            ->where('inactif', true)
+            ->whereHas('actifs')
+            ->get()
+            ->map($this->clientMapFunction());
 
         return response()->json($clients);
     }
@@ -359,7 +360,7 @@ class ClientController extends Controller
                 "id" => $client->id,
                 "matricule" => $client->matricule,
                 "nom" => $client->prenom . ' ' . $client->nom, // Concatenate prenom and nom
-                'actifs' =>  $client->actifs->pluck('nom')->implode(', '),
+                'actifs' => $client->actifs->pluck('nom')->implode(', '),
                 'emplacement' => $client->emplacement->nom ?? 'Aucun',
                 'poste' => $client->poste->nom ?? 'Aucun',
                 'type_client' => $client->type_client->nom ?? 'Aucun',
@@ -369,7 +370,6 @@ class ClientController extends Controller
 
     public function getAllAlerts()
     {
-        error_log('getAllAlerts');
         $alerts = [];
 
         // Personne que le lieu d’attribution ne concorde pas avec l’appareil (alerte rouge)

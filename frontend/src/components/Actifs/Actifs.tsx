@@ -11,6 +11,8 @@ import { toast } from 'react-toastify';
 
 const Actifs = () => {
   const location = useLocation();
+  const current_id_emplacement = window.localStorage.getItem('id_emplacement');
+
   const { selectedRows } = location.state;
   const [sendingType, setSendingType] = useState<string>(''); // 'reception' | 'update'
 
@@ -129,15 +131,7 @@ const Actifs = () => {
   const handleConfirm = () => {
     const values = formValuesRef.current;
     if (!values) return;
-    let statut = null;
-    switch (sendingType) {
-      case 'reception':
-        statut =
-          statuts.find((statut) => statut.label === 'Déployable')?.id || '';
-        break;
-      default:
-        statut = values.statut.id || values.statut;
-    }
+
     const updatedData = {
       nom: values.nom,
       numero_serie: values.numero_serie,
@@ -148,14 +142,23 @@ const Actifs = () => {
       date_retour: values.date_retour,
       date_creation: values.date_creation,
       note: values.note,
-      id_assigne_a: values.assigne_a?.id || values.assigne_a || '',
       id_modele: values.modele.id || values.modele,
-      id_statut: statut,
+      id_statut: values.statut.id || values.statut,
       id_emplacement: values.emplacement.id || values.emplacement,
       id_proprietaire: values.proprietaire.id || values.proprietaire,
       id_utilisation: values.utilisation.id || values.utilisation,
+      desassignation: false,
     };
-
+    switch (sendingType) {
+      case 'reception':
+        updatedData.id_statut =
+          statuts.find((statut) => statut.label === 'Déployable')?.id || '';
+        updatedData.date_retour = '';
+        updatedData.en_entrepot = true;
+        updatedData.id_emplacement = current_id_emplacement;
+        updatedData.desassignation = true;
+        break;
+    }
     sendData(updatedData);
 
     handleClose();
@@ -163,7 +166,7 @@ const Actifs = () => {
 
   const sendData = (values: FormikValues) => {
     const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
-    const ids: number[] = selectedActifs.map(actif => actif.id);
+    const ids: number[] = selectedActifs.map((actif) => actif.id);
     fetch(window.name + `api/actifs`, {
       method: 'POST',
       headers: {

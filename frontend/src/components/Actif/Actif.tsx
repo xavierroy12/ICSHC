@@ -11,6 +11,7 @@ import Historique from '../Historique';
 const Actif = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const current_id_emplacement = window.localStorage.getItem('id_emplacement');
 
   const [sendingType, setSendingType] = useState<string>(''); // 'reception' | 'archive' | 'update'
   const [loading, setLoading] = useState(true);
@@ -124,18 +125,7 @@ const Actif = () => {
   const handleConfirm = () => {
     const values = formValuesRef.current;
     if (!values) return;
-    let statut = null;
-    switch (sendingType) {
-      case 'reception':
-        statut =
-          statuts.find((statut) => statut.label === 'Déployable')?.id || '';
-        break;
-      case 'archive':
-        statut = statuts.find((statut) => statut.label === 'Archivé')?.id || '';
-        break;
-      default:
-        statut = values.statut.id || values.statut;
-    }
+
     const updatedData = {
       nom: values.nom,
       numero_serie: values.numero_serie,
@@ -148,12 +138,28 @@ const Actif = () => {
       note: values.note,
       id_assigne_a: values.assigne_a?.id || values.assigne_a || '',
       id_modele: values.modele.id || values.modele,
-      id_statut: statut,
+      id_statut: values.statut.id || values.statut,
       id_emplacement: values.emplacement.id || values.emplacement,
       id_proprietaire: values.proprietaire.id || values.proprietaire,
       id_utilisation: values.utilisation.id || values.utilisation,
     };
-
+    switch (sendingType) {
+      case 'reception':
+        updatedData.id_statut =
+          statuts.find((statut) => statut.label === 'Déployable')?.id || '';
+        updatedData.id_assigne_a = '';
+        updatedData.date_retour = '';
+        updatedData.en_entrepot = true;
+        updatedData.id_emplacement = current_id_emplacement;
+        break;
+      case 'archive':
+        updatedData.id_statut = "archivé"
+        updatedData.id_assigne_a = '';
+        updatedData.date_retour = '';
+        updatedData.en_entrepot = true;
+        updatedData.id_emplacement = current_id_emplacement;
+        break;
+    }
     sendData(updatedData);
 
     handleClose();

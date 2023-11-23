@@ -38,55 +38,43 @@ class ActifController extends Controller
     {
         $data = $request->all();
         $arrayIdActifs = $data['ids'];
+        $values = $data['values'];
 
         //request object with all possible fields, if not set, set to null
         $requestData = [
-            'en_entrepot' => isset($data['en_entrepot']) ? $data['en_entrepot'] : null,
-            'date_retour' => isset($data['date_retour']) ? $data['date_retour'] : null,
-            'note' => isset($data['note']) ? $data['note'] : null,
-            'id_modele' => isset($data['modele']) ? $data['modele'] : null,
-            'id_categorie' => isset($data['categorie']) ? $data['categorie'] : null,
-            'id_statut' => isset($data['statut']) ? $data['statut'] : null,
-            // 'id_assigne_a' => isset($data['desasignation']) ? $data['id_assigne_a'] : null,
-            'id_emplacement' => isset($data['emplacement']) ? $data['emplacement'] : null,
-            'id_proprietaire' => isset($data['proprietaire']) ? $data['proprietaire'] : null,
-            'id_utilisation' => isset($data['utilisation']) ? $data['utilisation'] : null,
+            'en_entrepot' => isset($values['en_entrepot']) ? $values['en_entrepot'] : null,
+            'date_retour' => isset($values['date_retour']) ? $values['date_retour'] : null,
+            'note' => isset($values['note']) ? $values['note'] : null,
+            'id_modele' => isset($values['modele']) ? $values['modele'] : null,
+            'id_categorie' => isset($values['categorie']) ? $values['categorie'] : null,
+            'id_statut' => isset($values['statut']) ? $values['statut'] : null,
+            'id_emplacement' => isset($values['emplacement']) ? $values['emplacement'] : null,
+            'id_proprietaire' => isset($values['proprietaire']) ? $values['proprietaire'] : null,
+            'id_utilisation' => isset($values['utilisation']) ? $values['utilisation'] : null,
         ];
         $filteredData = array_filter($requestData, function ($value) {
             return $value !== null;
         });
-        /*$updatedDataModele = [
-            'id_type_modele' => isset($data['id_categorie']) ? $data['id_categorie'] : null,
-        ];*/
-
-
-
-
 
         //update each actif with the request data
         foreach ($arrayIdActifs as $id) {
             // Get the Actif object to update
             $actif = Actif::findOrFail($id);
-            if ($requestData['id_categorie']) {
-                $updatedDataModele = [
-                    'id_type_modele' => $requestData['id_categorie'],
-                ];
-                Modele::where('id', $actif->id_modele)->update($updatedDataModele);
-            }
 
             $client = Client::where('id_actif', $id);
 
             //Remove assignation from previous client
-            if (isset($data['desasignation'])) {
+            if (isset($values['desassignation']) && $values['desassignation']) {
                 $client->update(['id_actif' => null]);
+                $actif->update(['id_client' => null]);
             }
             if (!$actif->update($filteredData)) {
                 return response()->json(['message' => 'Erreur lors de la mise à jour de l\'actif'], 500);
             }
+            $actif->save();
         }
-        $actif->save();
-        return response()->json(['message' => 'Actifs mis à jour avec succès'], 200);
 
+        return response()->json(['message' => 'Actifs mis à jour avec succès'], 200);
     }
 
     /**
@@ -160,8 +148,21 @@ class ActifController extends Controller
 
             // Get the data from the form
             $data = $request->all();
-            if ($data['id_assigne_a'] == 'Aucun') {
+            if ($data['id_assigne_a'] == 'Aucun' || $data['id_assigne_a'] == '') {
                 $data['id_assigne_a'] = null;
+            }
+            if ($data['id_proprietaire'] == 'Aucun' || $data['id_proprietaire'] == '') {
+                $data['id_proprietaire'] = null;
+            }
+            if ($data['id_utilisation'] == 'Aucun' || $data['id_utilisation'] == '') {
+                $data['id_utilisation'] = null;
+            }
+            if ($data['id_emplacement'] == 'Aucun' || $data['id_emplacement'] == '') {
+                $data['id_emplacement'] = null;
+            }
+            if ($data['id_statut'] == 'archivé') {
+                $statut_archived = DB::table('statut')->where('nom', 'Archivé')->first();
+                $data['id_statut'] = $statut_archived->id;
             }
             // Map the form data to match the expected field names in your Laravel API
             $updatedDataActif = [

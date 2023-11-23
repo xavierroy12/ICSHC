@@ -209,8 +209,7 @@ class ActifController extends Controller
     {
         $actifs = Actif::with(['modele.categorie', 'statut', 'client', 'emplacement'])
             ->whereHas('statut', function ($query) {
-                $query->where('nom', '!=', 'Archivé')
-                    ->where('id_statut', '!=', 2);
+                $query->where('nom', '!=', 'Archivé');
             })
             ->get()
             ->map(function ($actif) {
@@ -289,8 +288,9 @@ class ActifController extends Controller
 
     public function archivedActifs()
     {
+        $statut_archived = DB::table('statut')->where('nom', 'Archivé')->first();
         $archivedActifs = Actif::with(['modele.categorie', 'statut', 'client', 'emplacement'])
-            ->where('id_statut', 5)
+            ->where('id_statut', $statut_archived->id)
             ->get()
             ->map(function ($actif) {
                 return [
@@ -304,8 +304,8 @@ class ActifController extends Controller
                     'categorie_id' => $actif->modele->categorie->id,
                     'statut' => $actif->statut->nom,
                     'statut_id' => $actif->statut->id,
-                    'client' => $actif->client->prenom . ' ' . $actif->client->nom ?? 'Aucun',
-                    'client_id' => $actif->client->id,
+                    'client' =>  $actif->client ? ($actif->client->prenom . ' ' . $actif->client->nom) : 'Aucun',
+                    'client_id' => $actif->client ? $actif->client->id : null,
                     'emplacement' => $actif->emplacement->matricule . " - " . $actif->emplacement->nom,
                     'emplacement_id' => $actif->emplacement->id,
                 ];

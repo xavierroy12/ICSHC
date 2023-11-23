@@ -3,6 +3,7 @@ import { Actif } from './type';
 import { FiltreGroup } from '../Filtres/type';
 import { useNavigate } from 'react-router-dom';
 import {
+  Box,
   Button,
   CircularProgress,
   IconButton,
@@ -32,6 +33,7 @@ type currentFiltersGroupType = {
 
 const ActifsList = () => {
   const navigate = useNavigate();
+
   const [showarchived, setShowArchived] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>();
 
@@ -61,6 +63,10 @@ const ActifsList = () => {
     { value: number; label: string }[]
   >([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true); // State to manage button disabled state
+
+  const localDarkMode = window.localStorage.getItem('darkMode');
+  const modalBgColor =
+    localDarkMode === 'true' ? 'bg-slate-600' : 'bg-slate-100';
 
   const handleRowClick = (
     _rowData: string[],
@@ -331,6 +337,7 @@ const ActifsList = () => {
               </div>
             </div>
             <Modal
+              className="m-auto p-4 w-fit h-fit align-right"
               ref={ref}
               open={showListSelect}
               onClose={handleCloseModal}
@@ -340,7 +347,9 @@ const ActifsList = () => {
                 },
               }}
             >
-              <div className="m-auto p-4 my-20 w-fit align-right bg-slate-400">
+              <div
+                className={'m-auto p-4 py-10 w-fit align-right ' + modalBgColor}
+              >
                 <IconButton
                   tabIndex={0}
                   onClick={handleCloseModal}
@@ -348,7 +357,7 @@ const ActifsList = () => {
                 >
                   <CloseIcon />
                 </IconButton>
-                <div className="p-12">
+                <Box className="m-auto p-4 mt-10 w-fit align-right ">
                   <ActifsSelect
                     ref={ref}
                     selectedActifs={selectedActifs}
@@ -356,7 +365,7 @@ const ActifsList = () => {
                     actifs={lightActifs}
                     handleSubmit={handleSubmit}
                   />
-                </div>
+                </Box>
               </div>
             </Modal>
           </div>

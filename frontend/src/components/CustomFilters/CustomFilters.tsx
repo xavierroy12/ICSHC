@@ -199,6 +199,11 @@ const CustomFilters = ({
   const handleCloseModal = () => {
     setOpen(false);
   };
+
+  const localDarkMode = window.localStorage.getItem('darkMode');
+  const modalBgColor =
+    localDarkMode === 'true' ? 'bg-slate-600' : 'bg-slate-100';
+
   const onChange = async (
     newValue: {
       value: number;
@@ -294,7 +299,12 @@ const CustomFilters = ({
         </Button>
       </div>
       <Modal open={open} onClose={handleCloseModal}>
-        <div className="min-w-fit max-w-fit min-h-fit max-h-fit bg-slate-400 m-auto mt-20">
+        <div
+          className={
+            'min-w-fit max-w-fit min-h-fit max-h-fit m-auto mt-20' +
+            modalBgColor
+          }
+        >
           <IconButton
             tabIndex={0}
             onClick={() => setOpen(false)}

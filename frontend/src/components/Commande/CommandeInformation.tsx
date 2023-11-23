@@ -3,8 +3,7 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { Commande_Type } from './type';
-import { AdminContext } from '../../App';
-import { Fragment, useContext } from 'react';
+import { Fragment } from 'react';
 import Historique from '../Historique';
 
 type Props = {
@@ -12,8 +11,6 @@ type Props = {
 };
 
 const CommandeInformation = ({ commande }: Props) => {
-  const isAdmin = useContext(AdminContext);
-
   return (
     <Fragment>
       <div className="flex flex-col sm:flex-row justify-evenly items-start w-full">
@@ -35,7 +32,7 @@ const CommandeInformation = ({ commande }: Props) => {
                 label="Numero commande"
                 name="numero_commande"
                 className="input-label"
-                disabled={!isAdmin}
+                disabled
                 sx={{ width: 300 }}
                 value={commande.numero_commande}
               />
@@ -45,7 +42,7 @@ const CommandeInformation = ({ commande }: Props) => {
                 label="emplacement"
                 name="emplacement"
                 className="input-label "
-                disabled={!isAdmin}
+                disabled
                 sx={{ width: 300 }}
                 value={commande.emplacement}
               />
@@ -55,7 +52,7 @@ const CommandeInformation = ({ commande }: Props) => {
                 label="État"
                 name="etat"
                 className="input-label "
-                disabled={!isAdmin}
+                disabled
                 sx={{ width: 300 }}
                 value={commande.etat}
               />
@@ -65,7 +62,7 @@ const CommandeInformation = ({ commande }: Props) => {
                 label="Nombre actif"
                 name="nb_actif"
                 className="input-label "
-                disabled={!isAdmin}
+                disabled
                 sx={{ width: 300 }}
                 value={commande.nb_actif}
               />
@@ -81,7 +78,7 @@ const CommandeInformation = ({ commande }: Props) => {
                       ? dayjs(commande.date_commande)
                       : null
                   }
-                  disabled={!isAdmin}
+                  disabled
                   sx={{ width: 300 }}
                 />
               </LocalizationProvider>

@@ -7,9 +7,6 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { Fragment, useContext, useState } from 'react';
 import { AdminContext } from '../../App';
-import Logo from '/var/www/html/inventaire/ICSHC/frontend/public/Logo.png';
-
-
 type Props = {
   darkMode: boolean;
   handleThemeChange: () => void;
@@ -29,9 +26,9 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
 
   return (
     <AppBar position="static">
-      <Toolbar>{
-        <img src={Logo} alt="Logo" className="mr-16 w-64 h-24" />
-      }
+      <Toolbar>
+        <img src="/Logo.png" alt="Logo" className="mr-16 w-64 h-24" />
+
         <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
           <Button
             component={Link}

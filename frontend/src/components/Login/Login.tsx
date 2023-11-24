@@ -70,6 +70,7 @@ function Login() {
     document.cookie = `CookieLogged=${'Minou'}; expires=${new Date(
       Date.now() + 60 * 24 * 60 * 60 * 1000
     ).toUTCString()}; path=/`;
+    localStorage.setItem('id_user', '1');
     window.location.href = '/';
   };
 

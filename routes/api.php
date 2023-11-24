@@ -105,6 +105,7 @@ Route::middleware(['logrequest', 'throttle:5000,1'])->group(function () {
     Route::get('/clientJson', [ClientController::class, 'listClientScolago']);
     Route::get('/clientJsonStore', [ClientController::class, 'storeListClientScolage']);
     Route::get('/syncAllClients', [ClientController::class, 'syncAllClients']);
+    Route::post('/syncAllClients', [ClientController::class, 'syncAllClients']);
 
     Route::get('/logsJson', [LogController::class, 'listJson']);
 

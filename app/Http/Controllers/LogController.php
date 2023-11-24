@@ -427,6 +427,9 @@ class LogController extends Controller
                         $itemToFindClass = "\\App\\Models\\" . $itemToFind; // Construct the fully qualified class name
                         $instanceModifier = $itemToFindClass::find($param); //
                         $instanceModifierNom = $instanceModifier->nom;
+
+                        if ($itemToFind == 'Client')
+                            $instanceModifierNom = $instanceModifier->prenom . ' ' . $instanceModifier->nom;
                         break;
                     }
                 }
@@ -474,8 +477,6 @@ class LogController extends Controller
                 else
                     $result = $ResultModel->nom;
             }
-
-
             return $result;
         }
         if ($typeItem == 'client') {
@@ -490,7 +491,7 @@ class LogController extends Controller
                     $result = $ResultModel->nom;
             } else
                 $result = null;
-
+            error_log($result);
             return $result;
         }
         if ($typeItem == 'modele') {
@@ -518,7 +519,6 @@ class LogController extends Controller
                 $ResultModel = $itemToFindClass::find($value); //
             }
             if (isset($ResultModel)) {
-
                 if ($itemToFind == 'Client')
                     $result = $ResultModel->prenom . ' ' . $ResultModel->nom;
                 else
@@ -526,6 +526,7 @@ class LogController extends Controller
             } else
                 $result = null;
 
+            error_log($result);
             return $result;
         }
     }

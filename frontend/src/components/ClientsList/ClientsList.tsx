@@ -130,37 +130,38 @@ const ClientsList = () => {
       },
     },
   ];
+  const resetData = () => {
+    setSelectedFilters({});
+    setCurrentFiltersGroup(undefined); // Reset the selected filter label to empty string
+    setClients(cleanClients);
+  };
 
   useEffect(() => {
     setIsLoading(true);
-
+  
     const fetches = [
       fetch(window.name + 'api/clients/list'),
       fetch(window.name + 'api/clients/inactif'),
     ];
-
+  
     if (id_user) {
       fetches.push(
         fetch(window.name + `api/filter/getFiltersById?id_user=${id_user}`)
       );
     }
-
+  
     Promise.all(fetches)
       .then((responses) => Promise.all(responses.map((res) => res.json())))
       .then((data) => {
-        const [fetchedClients, fetchedInactif] = data;
-
+        const [fetchedClients, fetchedInactif, fetchedFilters] = data;
+  
         if (filter) {
-          const flatFilter = Array.isArray(filter[0])
-            ? filter.flat()
-            : filter.map((item: { matricule: unknown }) => item.matricule);
+          const flatFilter = filter.map((item: { matricule: string }) => item.matricule);
           const filteredClients = fetchedClients.filter(
-            (client: { matricule: unknown }) =>
-              flatFilter.includes(client.matricule)
+            (client: { matricule: string }) => flatFilter.includes(client.matricule)
           );
           const filteredInactif = fetchedInactif.filter(
-            (client: { matricule: unknown }) =>
-              flatFilter.includes(client.matricule)
+            (client: { matricule: string }) => flatFilter.includes(client.matricule)
           );
           setClients([...filteredClients, ...filteredInactif]);
         } else {
@@ -168,10 +169,15 @@ const ClientsList = () => {
           setCleanClients(fetchedClients);
           setInactifClients(fetchedInactif);
         }
-
+  
+        setFiltersList(fetchedFilters.filters);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
         setIsLoading(false);
       });
-  }, [filter, id_user]);
+  }, [id_user, filter]);
 
   useEffect(() => {
     if (filtersList && filtersList.length !== 0) {
@@ -197,9 +203,7 @@ const ClientsList = () => {
       (filter) => filter === undefined || filter === 'All'
     );
     setIsButtonDisabled(areAllFiltersNoSelection);
-    if (areAllFiltersNoSelection) {
-      setClients(cleanClients);
-    }
+    setClients(cleanClients);
   }, [selectedFilters, cleanClients]);
 
   if (isLoading) {
@@ -210,11 +214,7 @@ const ClientsList = () => {
     );
   }
 
-  const resetData = () => {
-    setSelectedFilters({});
-    setCurrentFiltersGroup(undefined); // Reset the selected filter label to empty string
-    setClients(cleanClients);
-  };
+  
 
   const handleSelectedFiltersChange = (displayData: string[][]) => {
     setSelectedFilters({

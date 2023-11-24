@@ -373,58 +373,128 @@ class ActifController extends Controller
         $data = null;
         switch ($rapportName) {
             case ("ActifsEcole"):
-                $data = DB::table('emplacement')
-                    ->leftJoin('actif', 'actif.id_emplacement', '=', 'emplacement.id')
-                    ->select('emplacement.matricule as id', 'emplacement.nom', DB::raw('count(actif.id) as nbActifs'))
-                    ->groupBy('emplacement.id', 'emplacement.nom')
-                    ->get();
-                break;
+                $rawData = DB::table('emplacement')
+                ->leftJoin('actif', 'actif.id_emplacement', '=', 'emplacement.id')
+                ->join('modele', 'actif.id_modele', '=', 'modele.id')
+                ->join('type_modele', 'modele.id_type_modele', '=', 'type_modele.id')
+                ->select('emplacement.matricule as id', 'emplacement.nom', 'type_modele.nom as type_modele', DB::raw('count(actif.id) as typeCount'))
+                ->groupBy('emplacement.id', 'emplacement.nom', 'type_modele.nom')
+                ->get();
+
+            $data = $this->cleanRepportData($rawData);
+            break;
             case ("ActifsProprietaire"):
-                $data = DB::table('proprietaire')
-                    ->leftJoin('actif', 'actif.id_proprietaire', '=', 'proprietaire.id')
-                    ->select('proprietaire.id', 'proprietaire.nom', DB::raw('count(actif.id) as nbActifs'))
-                    ->groupBy('proprietaire.id', 'proprietaire.nom')
-                    ->get();
+                $rawData = DB::table('emplacement')
+                ->where('emplacement.est_proprietaire', '=', true)
+                ->leftJoin('actif', 'actif.id_proprietaire', '=', 'emplacement.id')
+                ->join('modele', 'actif.id_modele', '=', 'modele.id')
+                ->join('type_modele', 'modele.id_type_modele', '=', 'type_modele.id')
+                ->select('emplacement.id', 'emplacement.nom', 'type_modele.nom as type_modele', DB::raw('count(actif.id) as typeCount'))
+                ->groupBy('emplacement.id', 'emplacement.nom', 'type_modele.nom')
+                ->get();
+
+            $data = $this->cleanRepportData($rawData);
                 break;
             case ("ActifsType"):
                 $data = DB::table('actif')
                     ->join('modele', 'actif.id_modele', '=', 'modele.id')
                     ->join('type_modele', 'modele.id_type_modele', '=', 'type_modele.id')
-                    ->select('type_modele.id', 'type_modele.nom', DB::raw('count(actif.id) as nbActifs'))
+                    ->select('type_modele.id as Id', 'type_modele.nom as Nom', DB::raw('count(actif.id) as nbActifs'))
                     ->groupBy('type_modele.id', 'type_modele.nom')
                     ->get();
                 break;
             case ("ActifsFinVieEcole"):
-                $data = DB::table('emplacement')
-                    ->leftJoin('actif', 'actif.id_emplacement', '=', 'emplacement.id')
-                    ->select('emplacement.matricule  as id', 'emplacement.nom', DB::raw('count(actif.id) as nbActifs'))
-                    ->where('actif.created_at', '<=', now()->subYears(5))
-                    ->groupBy('emplacement.id', 'emplacement.nom')
+                $rawData = DB::table('emplacement')
+                    ->leftJoin('actif', function ($join) {
+                        $join->on('actif.id_emplacement', '=', 'emplacement.id')
+                            ->where('actif.created_at', '<=', now()->subYears(5));
+                    })
+                    ->join('modele', 'actif.id_modele', '=', 'modele.id')
+                    ->join('type_modele', 'modele.id_type_modele', '=', 'type_modele.id')
+                    ->select('emplacement.matricule as id', 'emplacement.nom', 'type_modele.nom as type_modele', DB::raw('count(actif.id) as typeCount'))
+                    ->groupBy('emplacement.id', 'emplacement.nom', 'type_modele.nom')
                     ->get();
+
+                $data = $this->cleanRepportData($rawData);
                 break;
             case ("ActifsFinVieProprietaire"):
-                $data = DB::table('proprietaire')
-                    ->leftJoin('actif', 'actif.id_proprietaire', '=', 'proprietaire.id')
-                    ->select('proprietaire.id', 'proprietaire.nom', DB::raw('count(actif.id) as nbActifs'))
-                    ->where('actif.created_at', '<=', now()->subYears(5))
-                    ->groupBy('proprietaire.id', 'proprietaire.nom')
+                $rawData = DB::table('emplacement')
+                    ->where('emplacement.est_proprietaire', '=', true)
+                    ->leftJoin('actif', function ($join) {
+                        $join->on('actif.id_proprietaire', '=', 'emplacement.id')
+                            ->where('actif.created_at', '<=', now()->subYears(5));
+                    })
+                    ->join('modele', 'actif.id_modele', '=', 'modele.id')
+                    ->join('type_modele', 'modele.id_type_modele', '=', 'type_modele.id')
+                    ->select('emplacement.id', 'emplacement.nom', 'type_modele.nom as type_modele', DB::raw('count(actif.id) as typeCount'))
+                    ->groupBy('emplacement.id', 'emplacement.nom', 'type_modele.nom')
                     ->get();
+
+                $data = $this->cleanRepportData($rawData);
                 break;
             case ("ActifsFinVieType"):
                 $data = DB::table('actif')
                     ->join('modele', 'actif.id_modele', '=', 'modele.id')
                     ->join('type_modele', 'modele.id_type_modele', '=', 'type_modele.id')
-                    ->select('type_modele.id', 'type_modele.nom', DB::raw('count(actif.id) as nbActifs'))
+                    ->select('type_modele.id as Id', 'type_modele.nom as Nom', DB::raw('count(actif.id) as Total'))
                     ->where('actif.created_at', '<=', now()->subYears(5))
                     ->groupBy('type_modele.id', 'type_modele.nom')
                     ->get();
                 break;
+            case( "Actifs"):
+                $data = Actif::with(['modele.categorie', 'statut', 'client', 'emplacement'])->get()->map(function ($actif) {
+                    return [
+                        'Id' => $actif->id,
+                        'Nom' => $actif->nom,
+                        'Numero Serie' => $actif->numero_serie,
+                        'Adresse Mac' => $actif->adresse_mac,
+                        'Modele' => $actif->modele->nom,
+                        'Categorie' => $actif->modele->categorie->nom,
+                        'Statut' => $actif->statut->nom,
+                        'Client' => $actif->client ? ($actif->client->prenom . ' ' . $actif->client->nom) : 'Aucun',
+                        'Numero Commande' => $actif->numero_commande,
+                        'Emplacement' => $actif->emplacement->matricule . " - " . $actif->emplacement->nom,
+                        'Proprietaire' => $actif->proprietaire->matricule . " - " . $actif->proprietaire->nom,
+                        'En Entrepot' => $actif->en_entrepot ? 'Oui' : 'Non',
+                        'Note' => $actif->note,
+                        'Date Retour' => $actif->date_retour,
+                        'Date Creation' => $actif->created_at,
+                    ];
+                });
 
+            break;
 
         }
 
         return response()->json($data);
 
+    }
+    private function cleanRepportData($rawData)
+    {
+        $data = [];
+        foreach ($rawData as $row) {
+            if (!isset($data[$row->id])) {
+                $data[$row->id] = [
+                    'Id' => $row->id,
+                    'Nom' => $row->nom,
+                    'Total' => 0, // Initialize total
+                ];
+            }
+            $data[$row->id][$row->type_modele] = $row->typeCount;
+            $data[$row->id]['Total'] += $row->typeCount;
+
+        }
+
+        // Move 'total' to the end of each sub-array
+        foreach ($data as $id => $values) {
+            if (isset($values['Total'])) {
+                $total = $values['Total'];
+                unset($data[$id]['Total']);
+                $data[$id]['Total'] = $total;
+            }
+        }
+
+        return array_values($data);
     }
 
 }

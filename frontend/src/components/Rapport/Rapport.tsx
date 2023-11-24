@@ -10,15 +10,20 @@ import {
   MenuItem,
 } from '@mui/material';
 
+type ColumnsType = {
+  name: string;
+  label: string;
+  options?: {
+    display: boolean;
+  };
+};
+
 const Rapport = () => {
   const [currentData, setCurrentData] = useState<object[]>([]);
   const [currentRapport, setCurrentRapport] = useState<string>('ActifsEcole');
 
-  const columns = [
-    { name: 'id', label: 'Id', options: { display: false } },
-    { name: 'nom', label: 'Nom', enableColumnFilter: false },
-    { name: 'nbActifs', label: "Nombre d'actif", enableColumnFilter: false },
-  ];
+  const [currentColumns, setCurrentColumns] = useState<ColumnsType[]>();
+
   const options: Partial<MUIDataTableOptions> = {
     responsive: 'simple',
     search: true,
@@ -44,6 +49,13 @@ const Rapport = () => {
         Promise.all(responses.map((response) => response.json()))
           .then(([fetchedData]) => {
             setCurrentData(fetchedData);
+            console.log(fetchedData);
+            const newColumns = Object.keys(fetchedData[0]).map((key) => ({
+              name: key,
+              label: key,
+            }));
+
+            setCurrentColumns(newColumns);
           })
           .catch((error) => console.error(error))
     );
@@ -52,48 +64,52 @@ const Rapport = () => {
   return (
     <div className=" m-10">
       <div className="mb-8 mt-20">
-        <Typography variant="h4" className="my-8 ">
-          Rapport
-        </Typography>
-      </div>
-      <Box sx={{ minWidth: 120, width: 300 }}>
-        <FormControl fullWidth>
-          <InputLabel id="inputRapportLabel">Rapport</InputLabel>
-          <Select
-            fullWidth
-            labelId="inputRapportLabel"
-            id="inputRapportSelect"
-            value={currentRapport}
-            label="Rapport"
-            onChange={handleChange}
-            disabled={false}
-          >
-            <MenuItem value={'ActifsEcole'}>Actifs par École</MenuItem>
-            <MenuItem value={'ActifsProprietaire'}>
-              Actifs par Propriétaire
-            </MenuItem>
-            <MenuItem value={'ActifsType'}>Actifs par Type</MenuItem>
+        <div className="w-11/12 mx-auto">
+          <Typography variant="h4">Rapport</Typography>
+          <div className="mt-10">
+            <Box sx={{ minWidth: 120, width: 300 }}>
+              <FormControl fullWidth>
+                <InputLabel id="inputRapportLabel">Rapport</InputLabel>
+                <Select
+                  fullWidth
+                  labelId="inputRapportLabel"
+                  id="inputRapportSelect"
+                  value={currentRapport}
+                  label="Rapport"
+                  onChange={handleChange}
+                  disabled={false}
+                >
+                  <MenuItem value={'ActifsEcole'}>Actifs par École</MenuItem>
+                  <MenuItem value={'ActifsProprietaire'}>
+                    Actifs par Propriétaire
+                  </MenuItem>
+                  <MenuItem value={'ActifsType'}>Actifs par Type</MenuItem>
 
-            <MenuItem value={'ActifsFinVieEcole'}>
-              Actifs fin de vie par École
-            </MenuItem>
-            <MenuItem value={'ActifsFinVieProprietaire'}>
-              Actifs fin de vie par Propriétaire
-            </MenuItem>
-            <MenuItem value={'ActifsFinVieType'}>
-              Actifs fin de vie par Type
-            </MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
-
-      <div className="w-11/12 mx-auto mt-10">
-        <MUIDataTable
-          title={''}
-          data={currentData}
-          columns={columns}
-          options={options}
-        />
+                  <MenuItem value={'ActifsFinVieEcole'}>
+                    Actifs fin de vie par École
+                  </MenuItem>
+                  <MenuItem value={'ActifsFinVieProprietaire'}>
+                    Actifs fin de vie par Propriétaire
+                  </MenuItem>
+                  <MenuItem value={'ActifsFinVieType'}>
+                    Actifs fin de vie par Type
+                  </MenuItem>
+                  <MenuItem value={'Actifs'}>Actifs</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+            <div className="mt-10">
+              {currentColumns && currentData && (
+                <MUIDataTable
+                  title={''}
+                  data={currentData}
+                  columns={currentColumns}
+                  options={options}
+                />
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

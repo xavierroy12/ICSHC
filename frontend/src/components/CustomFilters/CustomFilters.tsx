@@ -48,6 +48,7 @@ const CustomFilters = ({
   setFiltersList,
   data,
   setData,
+  resetData,
   currentFiltersGroup,
   setCurrentFiltersGroup,
   isButtonDisabled,
@@ -191,6 +192,9 @@ const CustomFilters = ({
               );
 
               setFiltersGroupSelect(updatedFilterOptions);
+
+              // Reset the data to its original state
+              resetData();
             });
         } else {
           toast.error('Une erreur est survenue lors de la supression du filtre');

@@ -380,6 +380,7 @@ class LogController extends Controller
             'Etat' => ' État de la commande',
             'En_entrepot' => 'En entrepôt',
             'Date_retour' => 'Date de retour',
+            'Numero_serie' => 'Numéro de série',
 
         ];
         $beautifyValueDict = [
@@ -460,8 +461,6 @@ class LogController extends Controller
             return null;
 
         if ($typeItem == 'actif') {
-            $actif = Actif::find($id_item);
-            //error_log('getFieldValue parameters: value=' . $value . ', typeItem=' . $typeItem . ', field=' . $field . ', id_item=' . $id_item);
             if ($field === 'id_proprietaire') {
                 $proprietaire = Emplacement::find($value);
                 $result = $proprietaire->nom;
@@ -485,7 +484,10 @@ class LogController extends Controller
             $itemToFindClass = "\\App\\Models\\" . $itemToFind; // Construct the fully qualified class name
             $ResultModel = $itemToFindClass::find($value);
             if (isset($ResultModel)) {
-                $result = $ResultModel->nom;
+                if ($itemToFind == 'Client')
+                    $result = $ResultModel->prenom . ' ' . $ResultModel->nom;
+                else
+                    $result = $ResultModel->nom;
             } else
                 $result = null;
 
@@ -516,12 +518,14 @@ class LogController extends Controller
                 $ResultModel = $itemToFindClass::find($value); //
             }
             if (isset($ResultModel)) {
+
                 if ($itemToFind == 'Client')
                     $result = $ResultModel->prenom . ' ' . $ResultModel->nom;
                 else
                     $result = $ResultModel->nom;
             } else
                 $result = null;
+
             return $result;
         }
     }

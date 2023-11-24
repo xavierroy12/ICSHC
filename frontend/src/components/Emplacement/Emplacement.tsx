@@ -20,9 +20,9 @@ const Emplacement = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [emplacement, setEmplacement] = useState<Emplacement_Type>();
-
+  const isNew = id === 'new';
   useEffect(() => {
-    if (id === 'new') {
+    if (isNew) {
       setLoading(false);
       return;
     }
@@ -40,7 +40,7 @@ const Emplacement = () => {
     adresse: emplacement?.adresse,
     matricule: emplacement?.matricule,
     numero_civique: emplacement?.numero_civique,
-    est_proprietaire: emplacement?.est_proprietaire,
+    est_proprietaire: emplacement?.est_proprietaire || isNew,
   };
 
   const formValuesRef = useRef<FormikValues | null>(null);

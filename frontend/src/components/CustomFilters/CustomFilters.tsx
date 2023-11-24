@@ -299,12 +299,7 @@ const CustomFilters = ({
         </Button>
       </div>
       <Modal open={open} onClose={handleCloseModal}>
-        <div
-          className={
-            'min-w-fit max-w-fit min-h-fit max-h-fit m-auto mt-20' +
-            modalBgColor
-          }
-        >
+        <div className={'m-auto p-4 py-10 w-fit align-right ' + modalBgColor}>
           <IconButton
             tabIndex={0}
             onClick={() => setOpen(false)}

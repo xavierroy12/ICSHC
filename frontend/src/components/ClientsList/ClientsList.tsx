@@ -209,6 +209,7 @@ const ClientsList = () => {
       </div>
     );
   }
+
   const resetData = () => {
     setSelectedFilters({});
     setCurrentFiltersGroup(undefined); // Reset the selected filter label to empty string

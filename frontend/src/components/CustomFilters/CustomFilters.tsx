@@ -46,10 +46,8 @@ const CustomFilters = ({
   selectedFilters,
   setSelectedFilters,
   setFiltersList,
-  filtersList,
   data,
   setData,
-  resetData,
   currentFiltersGroup,
   setCurrentFiltersGroup,
   isButtonDisabled,
@@ -58,9 +56,8 @@ const CustomFilters = ({
   setFiltersGroupSelect,
 }: Props) => {
   const [open, setOpen] = useState(false);
-
+  const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
   const saveFilters = (label: string) => {
-    const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
 
     const urlParts = window.location.pathname.split('/');
     const from = urlParts[urlParts.length - 1];
@@ -174,22 +171,29 @@ const CustomFilters = ({
     })
       .then((response) => {
         if (response.ok) {
-          // Filter deleted successfully, now update the filtersList
-          const updatedFiltersList = filtersList.filter(
-            (filter) => filter.id !== filterId
+          toast.success(
+            'Le(s) filtre(s) selectionné(s) ont été enregistrés avec succès!'
           );
+          setOpen(false);
 
-          setFiltersList(updatedFiltersList as FiltreGroup[]);
+          // After the filters are saved successfully, fetch the updated filter list
+          fetch(window.name + `api/filter/getFiltersById?id_user=${id_user}`)
+            .then((response) => response.json())
+            .then((newFiltersData) => {
+              setFiltersList(newFiltersData.filters);
 
-          // Clear the input field or perform any other necessary actions
-          toast.success('Le filtre sélectionné a été supprimé avec succès!');
+              // Update the filtersGroupSelect state with the new filters
+              const updatedFilterOptions = newFiltersData.filters.map(
+                (filter: { id: number; label: string }) => ({
+                  value: filter.id,
+                  label: filter.label,
+                })
+              );
 
-          // Reset the filters here
-          resetData();
+              setFiltersGroupSelect(updatedFilterOptions);
+            });
         } else {
-          toast.error(
-            'Une erreur est survenue lors de la supression du filtre'
-          );
+          toast.error('Une erreur est survenue lors de la supression du filtre');
         }
       })
       .catch((error) => {

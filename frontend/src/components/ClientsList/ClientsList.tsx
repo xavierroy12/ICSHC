@@ -138,23 +138,23 @@ const ClientsList = () => {
 
   useEffect(() => {
     setIsLoading(true);
-  
+
     const fetches = [
       fetch(window.name + 'api/clients/list'),
       fetch(window.name + 'api/clients/inactif'),
     ];
-  
+
     if (id_user) {
       fetches.push(
         fetch(window.name + `api/filter/getFiltersById?id_user=${id_user}`)
       );
     }
-  
+
     Promise.all(fetches)
       .then((responses) => Promise.all(responses.map((res) => res.json())))
       .then((data) => {
         const [fetchedClients, fetchedInactif, fetchedFilters] = data;
-  
+
         if (filter) {
           const flatFilter = filter.map((item: { matricule: string }) => item.matricule);
           const filteredClients = fetchedClients.filter(
@@ -169,7 +169,7 @@ const ClientsList = () => {
           setCleanClients(fetchedClients);
           setInactifClients(fetchedInactif);
         }
-  
+
         setFiltersList(fetchedFilters.filters);
         setIsLoading(false);
       })
@@ -213,8 +213,6 @@ const ClientsList = () => {
       </div>
     );
   }
-
-  
 
   const handleSelectedFiltersChange = (displayData: string[][]) => {
     setSelectedFilters({

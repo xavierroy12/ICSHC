@@ -244,11 +244,6 @@ class ActifController extends Controller
             return response()->json(['message' => 'Actif non trouvé'], 404);
         }
 
-        // Check if the actif's statut is "Archivé" and return an empty response or handle it as needed.
-        if ($actif->statut->nom === 'Archivé') {
-            return response()->json(['message' => 'Cet actif est archivé'], 404);
-        }
-
         $data = [
             'numero_serie' => $actif->numero_serie,
             'nom' => $actif->nom,

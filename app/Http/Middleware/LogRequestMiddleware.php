@@ -36,7 +36,7 @@ class LogRequestMiddleware
                     break;
                 case 'actif':
                     // Handle POST request for actif wich is store
-                    error_log('in actif canty figure out wich one');
+                    error_log('in actif cant figure out wich one');
                     break;
                 case 'actif/id':
                     // Handle POST request for /actif/{id}

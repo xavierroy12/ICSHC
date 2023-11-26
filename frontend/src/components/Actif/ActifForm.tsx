@@ -1,5 +1,5 @@
 import { useContext, type SyntheticEvent } from 'react';
-import { Form, Field, FormikValues } from 'formik';
+import { Form, Field, FormikValues, FormikErrors } from 'formik';
 import { SelectItem } from './type';
 import { Grid, TextField, Button } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -26,6 +26,7 @@ type Props = {
   utilisations: SelectItem[];
   proprietaires: SelectItem[];
   setSendingType: (type: string) => void;
+  errors: FormikErrors<FormikValues>;
 };
 
 const ActifForm = ({
@@ -40,6 +41,7 @@ const ActifForm = ({
   utilisations,
   proprietaires,
   setSendingType,
+  errors,
 }: Props) => {
   const { submitForm } = useFormikContext<FormikValues>();
 
@@ -53,6 +55,7 @@ const ActifForm = ({
     setSendingType('archive');
     await submitForm();
   };
+  console.log(errors);
   return (
     <Form>
       <Grid
@@ -67,6 +70,8 @@ const ActifForm = ({
             name="nom"
             className="input-label"
             sx={{ width: 300 }}
+            error={errors.nom ? true : false}
+            helperText={errors.nom}
           />
         </Grid>
 
@@ -78,6 +83,8 @@ const ActifForm = ({
             className="input-label"
             disabled={!isAdmin}
             sx={{ width: 300 }}
+            error={errors.numero_commande ? true : false}
+            helperText={errors.numero_commande}
           />
         </Grid>
 
@@ -89,6 +96,8 @@ const ActifForm = ({
             className="input-field"
             disabled={!isAdmin}
             sx={{ width: 300 }}
+            error={errors.numero_serie ? true : false}
+            helperText={errors.numero_serie}
           />
         </Grid>
 
@@ -100,6 +109,8 @@ const ActifForm = ({
             className="input-label "
             disabled={!isAdmin}
             sx={{ width: 300 }}
+            error={errors.adresse_mac ? true : false}
+            helperText={errors.adresse_mac}
           />
         </Grid>
 
@@ -110,6 +121,8 @@ const ActifForm = ({
             component={CustomSelect}
             options={modeles}
             label="Modèle"
+            error={errors.modele ? true : false}
+            helperText={errors.modele}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -119,6 +132,8 @@ const ActifForm = ({
             label="Catégorie"
             disabled
             sx={{ width: 300 }}
+            error={errors.categorie ? true : false}
+            helperText={errors.categorie}
           />
         </Grid>
 
@@ -129,6 +144,8 @@ const ActifForm = ({
             component={CustomSelect}
             options={statuts}
             label="Statut"
+            error={errors.statut ? true : false}
+            helperText={errors.statut}
           />
         </Grid>
 
@@ -140,6 +157,8 @@ const ActifForm = ({
             options={locataires}
             label="Assigné à"
             isClearable={true}
+            error={errors.assigne_a ? true : false}
+            helperText={errors.assigne_a}
           />
         </Grid>
 
@@ -150,6 +169,8 @@ const ActifForm = ({
             component={CustomSelect}
             options={emplacements}
             label="Emplacement"
+            error={errors.emplacement ? true : false}
+            helperText={errors.emplacement}
           />
         </Grid>
 
@@ -164,6 +185,8 @@ const ActifForm = ({
               const target = event.target as HTMLInputElement;
               setFieldValue('en_entrepot', target.checked);
             }}
+            error={errors.en_entrepot ? true : false}
+            helperText={errors.en_entrepot}
           />
           <label htmlFor="en_entrepot" className="ml-4">
             En entrepôt
@@ -177,6 +200,8 @@ const ActifForm = ({
             component={CustomSelect}
             options={utilisations}
             label="Utilisation"
+            error={errors.utilisation ? true : false}
+            helperText={errors.utilisation}
           />
         </Grid>
 
@@ -187,6 +212,8 @@ const ActifForm = ({
             component={CustomSelect}
             options={proprietaires}
             label="Propriétaire"
+            error={errors.proprietaire ? true : false}
+            helperText={errors.proprietaire}
           />
         </Grid>
 
@@ -197,10 +224,23 @@ const ActifForm = ({
               label="Date de création"
               format="YYYY-MM-DD"
               name="date_creation"
-              className="input-label "
               value={values.date_creation ? dayjs(values.date_creation) : null}
               disabled={!isAdmin}
               sx={{ width: 300 }}
+              onChange={(value: Date) => {
+                setFieldValue(
+                  'date_creation',
+                  value?.toISOString().substring(0, 10) || ''
+                );
+              }}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  variant: 'outlined',
+                  error: errors.date_creation ? true : false,
+                  helperText: errors.date_creation,
+                },
+              }}
             />
           </Grid>
         </LocalizationProvider>
@@ -221,8 +261,15 @@ const ActifForm = ({
                 );
               }}
               sx={{ width: 300 }}
+              clearable
               slotProps={{
-                field: { clearable: true },
+                textField: {
+                  field: { clearable: true },
+                  fullWidth: true,
+                  variant: 'outlined',
+                  error: errors.date_retour ? true : false,
+                  helperText: errors.date_retour,
+                },
               }}
             />
           </Grid>
@@ -239,6 +286,8 @@ const ActifForm = ({
             value={values.note}
             onChange={handleChange}
             sx={{ width: '100%' }}
+            error={errors.note ? true : false}
+            helperText={errors.note}
           />
         </Grid>
 
@@ -249,7 +298,7 @@ const ActifForm = ({
             color="secondary"
             size="medium"
             type="submit"
-            disabled={!dirty}
+            disabled={!dirty || Object.keys(errors).length > 0}
           >
             Sauvegarder
           </Button>
@@ -260,6 +309,7 @@ const ActifForm = ({
             color="primary"
             size="medium"
             onClick={() => handleReception()}
+            disabled={Object.keys(errors).length > 0}
           >
             Réception
           </Button>
@@ -271,6 +321,7 @@ const ActifForm = ({
             color="error"
             size="medium"
             onClick={() => handleArchive()}
+            disabled={Object.keys(errors).length > 0}
           >
             Archivé
           </Button>

@@ -4,7 +4,7 @@ import { LightType, SelectItem } from '../Actif/type';
 import { CircularProgress } from '@mui/material';
 import { Modele_Type } from './type';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Formik, FormikValues } from 'formik';
+import { Formik, FormikErrors, FormikValues } from 'formik';
 import FormLayout from '../FormLayout';
 import { toast } from 'react-toastify';
 import Historique from '../Historique';
@@ -113,7 +113,18 @@ const Modele = () => {
         });
     }, 1000);
   };
+  const validate = (values: FormikValues) => {
+    const errors: FormikErrors<FormikValues> = {};
 
+    if (values.nom.length > 32)
+      errors.nom = 'Le nom ne doit pas dépasser 32 caractères';
+    else if (!values.nom) errors.nom = 'Requis';
+    if (!values.id_type_modele) {
+      errors.id_type_modele = 'Requis';
+    }
+
+    return errors;
+  };
   return (
     <Fragment>
       {loading ? (
@@ -124,8 +135,12 @@ const Modele = () => {
         <div className="mx-auto mt-8">
           {modele && id && (
             <div className="flex flex-col sm:flex-row justify-evenly items-start">
-              <Formik initialValues={initialValues} onSubmit={handleUpdate}>
-                {({ values, dirty, setFieldValue }) => (
+              <Formik
+                initialValues={initialValues}
+                onSubmit={handleUpdate}
+                validate={validate}
+              >
+                {({ values, dirty, setFieldValue, errors }) => (
                   <FormLayout
                     title={'Modele: ' + modele.nom}
                     dirty={dirty}
@@ -139,6 +154,7 @@ const Modele = () => {
                       dirty={dirty}
                       setFieldValue={setFieldValue}
                       reloadData={reloadData}
+                      errors={errors}
                     />
                   </FormLayout>
                 )}

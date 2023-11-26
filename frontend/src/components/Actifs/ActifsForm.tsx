@@ -2,14 +2,19 @@ import { Grid, TextField, Button, FormControlLabel } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import { Field, FormikValues, Form, useFormikContext } from 'formik';
+import {
+  Field,
+  FormikValues,
+  Form,
+  useFormikContext,
+  FormikErrors,
+} from 'formik';
 import { Fragment, SyntheticEvent } from 'react';
 import CustomSelect from '../CustomSelect';
 import { SelectItem } from '../Actif/type';
 
 type Props = {
   modeles: SelectItem[];
-  categories: SelectItem[];
   statuts: SelectItem[];
   emplacements: SelectItem[];
   utilisations: SelectItem[];
@@ -23,11 +28,11 @@ type Props = {
   ) => void;
   dirty: boolean;
   setSendingType: (type: string) => void;
+  errors: FormikErrors<FormikValues>;
 };
 
 const ActifsForm = ({
   modeles,
-  //categories,
   statuts,
   emplacements,
   utilisations,
@@ -37,6 +42,7 @@ const ActifsForm = ({
   setFieldValue,
   dirty,
   setSendingType,
+  errors,
 }: Props) => {
   const { submitForm } = useFormikContext<FormikValues>();
 
@@ -121,22 +127,26 @@ const ActifsForm = ({
               <Field
                 component={DatePicker}
                 label="Date de retour"
-                format="DD/MM/YYYY"
+                format="YYYY-MM-DD"
                 name="date_retour"
+                value={values.date_retour ? dayjs(values.date_retour) : null}
                 className="input-label "
-                clearable
-                sx={{ width: '100%' }}
-                slotProps={{
-                  field: { clearable: true },
-                }}
-                value={
-                  values.date_retour ? dayjs(values.date_retour) : undefined
-                }
                 onChange={(value: Date) => {
                   setFieldValue(
                     'date_retour',
                     value?.toISOString().substring(0, 10) || ''
                   );
+                }}
+                sx={{ width: 300 }}
+                clearable
+                slotProps={{
+                  textField: {
+                    field: { clearable: true },
+                    fullWidth: true,
+                    variant: 'outlined',
+                    error: errors.date_retour ? true : false,
+                    helperText: errors.date_retour,
+                  },
                 }}
               />
             </LocalizationProvider>
@@ -152,6 +162,8 @@ const ActifsForm = ({
               value={values.note}
               onChange={handleChange}
               sx={{ width: '100%' }}
+              error={errors.note ? true : false}
+              helperText={errors.note}
             />
           </Grid>
 
@@ -163,7 +175,7 @@ const ActifsForm = ({
               color="primary"
               size="medium"
               type="submit"
-              disabled={!dirty}
+              disabled={!dirty || Object.keys(errors).length > 0}
             >
               Sauvegarder
             </Button>
@@ -176,6 +188,7 @@ const ActifsForm = ({
               onClick={() => {
                 handleReception();
               }}
+              disabled={Object.keys(errors).length > 0}
             >
               Réception
             </Button>

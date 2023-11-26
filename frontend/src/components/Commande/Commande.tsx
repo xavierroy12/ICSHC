@@ -218,7 +218,7 @@ const Commande = () => {
             </div>
 
             <Box sx={{ width: '100' }}>
-              <div className="w-10/12 m-auto">
+              <div className="w-8/12 m-auto">
                 <Stepper nonLinear activeStep={activeStep}>
                   <Step key="step1" completed={completed[1]}>
                     <StepLabel>{steps[0]}</StepLabel>

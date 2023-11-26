@@ -313,7 +313,6 @@ const ActifForm = ({
           >
             Réception
           </Button>
-
           <Button
             className="my-5 mx-5 flex float-left"
             style={{ marginRight: '1rem' }}

@@ -1,4 +1,4 @@
-import { Field, Form } from 'formik';
+import { Field, Form, FormikErrors, FormikValues } from 'formik';
 import { SelectItem } from '../Actif/type';
 import { Button, Grid, TextField } from '@mui/material';
 import CustomSelect from '../CustomSelect';
@@ -10,6 +10,7 @@ type Props = {
   emplacements: SelectItem[];
   roles: SelectItem[];
   isProfil: boolean;
+  errors: FormikErrors<FormikValues>;
 };
 
 const ProfileUtilisateurForm = ({
@@ -17,6 +18,7 @@ const ProfileUtilisateurForm = ({
   emplacements,
   roles,
   isProfil,
+  errors,
 }: Props) => {
   const isAdmin = useContext(AdminContext);
 
@@ -35,6 +37,8 @@ const ProfileUtilisateurForm = ({
             className="input-label "
             disabled={!isAdmin}
             sx={{ width: 300 }}
+            error={errors.nom ? true : false}
+            helperText={errors.nom}
           />
         </Grid>
         <Grid item xs={12} sm={12}>
@@ -45,6 +49,8 @@ const ProfileUtilisateurForm = ({
             options={roles}
             label="Roles"
             disabled={isProfil || !isAdmin}
+            error={errors.id_role ? true : false}
+            helperText={errors.id_role}
           />
         </Grid>
         <Grid item xs={12} sm={12}>
@@ -54,6 +60,8 @@ const ProfileUtilisateurForm = ({
             component={CustomSelect}
             options={emplacements}
             label="Emplacement"
+            error={errors.id_emplacement ? true : false}
+            helperText={errors.id_emplacement}
           />
         </Grid>
         <Grid item xs={12}>
@@ -63,7 +71,7 @@ const ProfileUtilisateurForm = ({
             color="secondary"
             size="medium"
             type="submit"
-            disabled={!dirty}
+            disabled={!dirty || Object.keys(errors).length > 0}
           >
             Sauvegarder
           </Button>

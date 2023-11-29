@@ -18,12 +18,13 @@ return new class extends Migration {
             $table->string('field')->nullable();
             $table->string('old_value')->nullable();
             $table->string('new_value')->nullable();
-            $table->string('id_user')->nullable();
-            $table->string('id_client')->nullable();
-            $table->string('id_actif')->nullable();
-            $table->string('id_modele')->nullable();
-            $table->string('id_emplacement')->nullable();
-            $table->string('id_utilisateur')->nullable();
+
+            $table->unsignedInteger('id_user')->nullable();
+            $table->unsignedInteger('id_client')->nullable();
+            $table->unsignedInteger('id_actif')->nullable();
+            $table->unsignedInteger('id_modele')->nullable();
+            $table->unsignedInteger('id_emplacement')->nullable();
+            $table->unsignedInteger('id_utilisateur')->nullable();
             $table->string('id_commande')->nullable();
             $table->timestamps();
         });

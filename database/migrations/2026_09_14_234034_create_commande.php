@@ -15,10 +15,13 @@ return new class extends Migration
             $table->string('numero_commande')->primary();
             $table->integer('nb_actif')->nullable();
             $table->date('date_commande')->nullable();
-            $table->unsignedBigInteger('id_etat');
-            $table->unsignedBigInteger('id_emplacement_prevu')->nullable();
+
+            $table->unsignedInteger('id_etat');
+            $table->unsignedInteger('id_emplacement_prevu')->nullable();
+
             $table->foreign('id_etat')->references('id')->on('etat');
             $table->foreign('id_emplacement_prevu')->references('id')->on('emplacement');
+
             $table->timestamps();
         });
     }

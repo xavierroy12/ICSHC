@@ -1,3 +1,13 @@
+//   Nicolas Boissé - 2023/11/28
+//
+//   CustomFilters.tsx représente un composant React conçu pour être réutilisé à travers différentes pages de notre application.
+//   Son objectif principal est de permettre à l'utilisateur de créer, sauvegarder, charger et supprimer
+//   des filtres personnalisés pour manipuler les données à afficher dans les tableaux (mui data grids).
+//   Les pages présentement concernés par cette fonctionalité sont actifList.tsx, et clientList.tsx, les fonctions et méthodes qui communiquent directement
+//   avec le component react se trouvent sur ces pages ex: handleSelectedFiltersChange
+//
+
+
 import {
   Autocomplete,
   Button,

@@ -1,3 +1,14 @@
+//   Nicolas Boissé - 2023/11/28
+//
+//   Dashboard.tsx représente une page de l'application web qui est accessible seulement aux utilisateurs une fois connectés.
+//   Son objectif principal est de permettre à l'utilisateur de voir les alertes qui lui sont destinées.
+//   Les alertes sont des messages qui sont générés par le système et qui indique à l'utilisateur qu'il y a des actions à prendre concernant les actifs (matériel).
+//   Il existe 4 types d'alertes présentement: actif trop vieux, client avec plus d'un actif, actif avec emplacement différent du client et client innactif avec du matériel.
+//   Lorsqu'un utilisateur se connecte, il est redirigé vers cette page. Il peut ensuite cliquer sur le bouton déroulant pour voir les détails de celles-ci.
+//   Lorsqu'un utilisateur clique sur une alerte, il est redirigé vers la page ClientsList.tsx avec les filtres appropriés pour afficher les clients concernés par l'alerte.
+//
+
+
 import { useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';

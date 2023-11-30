@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress'; // Import Material-UI CircularProgress
 import { Actif_Type, LightType, SelectItem } from './type';
 import ActifForm from './ActifForm';
-import { Formik, FormikValues } from 'formik';
+import { Formik, FormikErrors, FormikValues } from 'formik';
 import FormLayout from '../FormLayout';
 import { toast } from 'react-toastify';
 import Historique from '../Historique';
@@ -186,7 +186,56 @@ const Actif = () => {
       toast.error('Une erreur est survenue');
     }
   };
+  const validate = (values: FormikValues) => {
+    const errors: FormikErrors<FormikValues> = {};
 
+    if (values.numero_serie?.length > 32)
+      errors.numero_serie = 'Maximum 32 caractères';
+    else if (!values.numero_serie) errors.numero_serie = 'Requis';
+    if (values.adresse_mac?.length > 32)
+      errors.adresse_mac = 'Maximum 32 caractères';
+    else if (!values.adresse_mac) errors.adresse_mac = 'Requis';
+    if (values.nom?.length > 32) errors.nom = 'Maximum 32 caractères';
+    else if (!values.nom) errors.nom = 'Requis';
+    if (values.numero_commande?.length > 255)
+      errors.numero_commande = 'Maximum 255 caractères';
+    else if (!values.numero_commande) errors.numero_commande = 'Requis';
+
+    if (!values.modele) errors.modele = 'Requis';
+    if (!values.emplacement) errors.emplacement = 'Requis';
+    if (!values.proprietaire) errors.proprietaire = 'Requis';
+    if (!values.utilisation) errors.utilisation = 'Requis';
+    if (!values.statut) errors.statut = 'Requis';
+
+    if (values.note?.length > 512) errors.note = 'Maximum 512 caractères';
+
+    if (values.date_creation) {
+      const inputDate = new Date(values.date_creation);
+      const today = new Date();
+
+      // Set the time of today to 00:00:00 for a fair comparison
+      today.setHours(0, 0, 0, 0);
+      console.log(inputDate, today);
+
+      if (inputDate > today) {
+        errors.date_creation =
+          "La date de création doit être aujourd'hui ou avant";
+      }
+    }
+
+    if (values.date_retour) {
+      const inputDate = new Date(values.date_retour);
+      const today = new Date();
+      // Set the time of today to 00:00:00 for a fair comparison
+      today.setHours(0, 0, 0, 0);
+
+      if (inputDate < today) {
+        errors.date_retour = "La date de retour doit être aujourd'hui ou après";
+      }
+    }
+
+    return errors;
+  };
   return (
     <Fragment>
       {loading ? (
@@ -197,8 +246,12 @@ const Actif = () => {
         <div className="mx-auto mt-8">
           {actif && id && (
             <div className="flex flex-col sm:flex-row justify-evenly items-start">
-              <Formik initialValues={initialValues} onSubmit={handleUpdate}>
-                {({ values, handleChange, dirty, setFieldValue }) => (
+              <Formik
+                initialValues={initialValues}
+                onSubmit={handleUpdate}
+                validate={validate}
+              >
+                {({ values, handleChange, dirty, setFieldValue, errors }) => (
                   <FormLayout
                     title="Modifier un actif"
                     dirty={dirty}
@@ -218,6 +271,7 @@ const Actif = () => {
                       utilisations={utilisations}
                       proprietaires={proprietaires}
                       setSendingType={setSendingType}
+                      errors={errors}
                     />
                   </FormLayout>
                 )}

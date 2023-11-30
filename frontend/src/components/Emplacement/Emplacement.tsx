@@ -1,5 +1,5 @@
 import { CircularProgress } from '@mui/material';
-import { Formik, FormikValues } from 'formik';
+import { Formik, FormikErrors, FormikValues } from 'formik';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import EmplacementForm from './EmplacementForm';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -80,6 +80,22 @@ const Emplacement = () => {
     handleClose();
   };
 
+  const validate = (values: FormikValues) => {
+    const errors: FormikErrors<FormikValues> = {};
+    if (values.nom?.length > 64) errors.nom = 'Maximum 64 caractères';
+    else if (!values.nom) errors.nom = 'Requis';
+    if (values.numero_civique?.length > 255)
+      errors.numero_civique = 'Maximum 255 caractères';
+    else if (!values.numero_civique) errors.numero_civique = 'Requis';
+    if (values.adresse?.length > 64) errors.adresse = 'Maximum 64 caractères';
+    else if (!values.adresse) errors.adresse = 'Requis';
+    if (values.matricule?.length > 3) errors.matricule = 'Maximum 3 caractères';
+    else if (!values.matricule) errors.matricule = 'Requis';
+      
+
+    return errors;
+  };
+
   return (
     <Fragment>
       {loading ? (
@@ -89,8 +105,12 @@ const Emplacement = () => {
       ) : (
         <div className="mx-auto mt-8">
           {id && (
-            <Formik initialValues={initialValues} onSubmit={handleUpdate}>
-              {({ values, dirty, setFieldValue }) => (
+            <Formik
+              initialValues={initialValues}
+              onSubmit={handleUpdate}
+              validate={validate}
+            >
+              {({ values, dirty, setFieldValue, errors }) => (
                 <FormLayout
                   title={emplacement?.nom || 'Nouveau emplacement'}
                   dirty={dirty}
@@ -102,6 +122,7 @@ const Emplacement = () => {
                     values={values}
                     dirty={dirty}
                     setFieldValue={setFieldValue}
+                    errors={errors}
                   />
                 </FormLayout>
               )}

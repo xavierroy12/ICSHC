@@ -18,10 +18,12 @@ return new class extends Migration
             $table->string('processeur', 64)->nullable();
             $table->string('memoire_vive', 32)->nullable();
             $table->string('taille', 16)->nullable();
-            $table->unsignedBigInteger('id_type_modele');
+            $table->boolean('favoris')->default(false);
+
+            $table->unsignedInteger('id_type_modele');
 
             $table->foreign('id_type_modele')->references('id')->on('type_modele');
-            $table->boolean('favoris')->default(false);
+
 
             $table->timestamps();
         });

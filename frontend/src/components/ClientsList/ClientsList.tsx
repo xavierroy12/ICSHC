@@ -64,7 +64,7 @@ const ClientsList = () => {
     lastClickTime = clickTime;
 
     if (isDoubleClick) {
-      navigate('/client/' + clients[rowMeta.dataIndex].id);
+      navigate('/client/' + currentClients[rowMeta.dataIndex].id);
     }
   };
 
@@ -156,12 +156,16 @@ const ClientsList = () => {
         const [fetchedClients, fetchedInactif, fetchedFilters] = data;
 
         if (filter) {
-          const flatFilter = filter.map((item: { matricule: string }) => item.matricule);
+          const flatFilter = filter.map(
+            (item: { matricule: string }) => item.matricule
+          );
           const filteredClients = fetchedClients.filter(
-            (client: { matricule: string }) => flatFilter.includes(client.matricule)
+            (client: { matricule: string }) =>
+              flatFilter.includes(client.matricule)
           );
           const filteredInactif = fetchedInactif.filter(
-            (client: { matricule: string }) => flatFilter.includes(client.matricule)
+            (client: { matricule: string }) =>
+              flatFilter.includes(client.matricule)
           );
           setClients([...filteredClients, ...filteredInactif]);
         } else {

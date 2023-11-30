@@ -76,9 +76,9 @@ const ActifsList = () => {
     const isDoubleClick = clickTime - lastClickTime < 300; // Adjust the time as needed
 
     lastClickTime = clickTime;
-
+    console.log(actifs[rowMeta.dataIndex].id);
     if (isDoubleClick) {
-      navigate('/actif/' + actifs[rowMeta.dataIndex].id);
+      navigate('/actif/' + currentActif[rowMeta.dataIndex].id);
     }
   };
   const handleSetSelectedRows = (allRowsSelected: { dataIndex: number }[]) => {

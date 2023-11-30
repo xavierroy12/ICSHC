@@ -1,5 +1,5 @@
 import { Button, Checkbox, Grid, TextField } from '@mui/material';
-import { Field, Form, FormikValues } from 'formik';
+import { Field, Form, FormikErrors, FormikValues } from 'formik';
 import { SyntheticEvent } from 'react';
 
 interface Props {
@@ -10,9 +10,10 @@ interface Props {
     value: unknown,
     shouldValidate?: boolean | undefined
   ) => void;
+  errors: FormikErrors<FormikValues>;
 }
 
-const EmplacementForm = ({ values, dirty, setFieldValue }: Props) => {
+const EmplacementForm = ({ values, dirty, setFieldValue, errors }: Props) => {
   return (
     <Form>
       <Grid
@@ -27,6 +28,8 @@ const EmplacementForm = ({ values, dirty, setFieldValue }: Props) => {
             name="nom"
             className="input-label "
             sx={{ width: 300 }}
+            error={errors.nom ? true : false}
+            helperText={errors.nom}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -36,6 +39,8 @@ const EmplacementForm = ({ values, dirty, setFieldValue }: Props) => {
             name="matricule"
             className="input-label "
             sx={{ width: 300 }}
+            error={errors.matricule ? true : false}
+            helperText={errors.matricule}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -45,6 +50,8 @@ const EmplacementForm = ({ values, dirty, setFieldValue }: Props) => {
             name="numero_civique"
             className="input-label "
             sx={{ width: 300 }}
+            error={errors.numero_civique ? true : false}
+            helperText={errors.numero_civique}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -54,6 +61,8 @@ const EmplacementForm = ({ values, dirty, setFieldValue }: Props) => {
             name="adresse"
             className="input-label "
             sx={{ width: 300 }}
+            error={errors.adresse ? true : false}
+            helperText={errors.adresse}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -78,7 +87,7 @@ const EmplacementForm = ({ values, dirty, setFieldValue }: Props) => {
             color="secondary"
             size="medium"
             type="submit"
-            disabled={!dirty}
+            disabled={!dirty || Object.keys(errors).length > 0}
           >
             Sauvegarder
           </Button>

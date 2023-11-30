@@ -1,5 +1,5 @@
 import { CircularProgress } from '@mui/material';
-import { FormikValues, Formik } from 'formik';
+import { FormikValues, Formik, FormikErrors } from 'formik';
 import { useState, useEffect, Fragment, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { SelectItem } from '../Actif/type';
@@ -101,6 +101,19 @@ const ProfilUtilisateur = ({ id, isProfil }: Props) => {
       }
     });
   };
+
+  const validate = (values: FormikValues) => {
+    const errors: FormikErrors<FormikValues> = {};
+    if (values.nom?.length > 32)
+      errors.nom = 'Nom ne doit pas dépasser 32 caractères';
+    else if (!values.nom) errors.nom = 'Requis';
+
+    if (!values.id_role) errors.id_role = 'Requis';
+
+    if (!values.id_emplacement) errors.id_emplacement = 'Requis';
+
+    return errors;
+  };
   return (
     <Fragment>
       {loading ? (
@@ -111,8 +124,12 @@ const ProfilUtilisateur = ({ id, isProfil }: Props) => {
         <div className="mx-auto mt-8">
           {utilisateur && id && (
             <div className="flex flex-col sm:flex-row justify-evenly items-start">
-              <Formik initialValues={initialValues} onSubmit={handleUpdate}>
-                {({ dirty }) => (
+              <Formik
+                initialValues={initialValues}
+                onSubmit={handleUpdate}
+                validate={validate}
+              >
+                {({ dirty, errors }) => (
                   <FormLayout
                     title={
                       isProfil
@@ -129,6 +146,7 @@ const ProfilUtilisateur = ({ id, isProfil }: Props) => {
                       emplacements={emplacements}
                       roles={roles}
                       isProfil={isProfil}
+                      errors={errors}
                     />
                   </FormLayout>
                 )}

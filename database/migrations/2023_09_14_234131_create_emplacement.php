@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('emplacement', function (Blueprint $table) {
             $table->id();
             $table->string('matricule', 3);
-            $table->string('nom', 64);
-            $table->string('numero_civique');
-            $table->string('adresse', 64);
+            $table->string('nom', 32);
+            $table->string('numero_civique',4);
+            $table->string('adresse');
             $table->boolean('est_proprietaire')->default(false);
             $table->timestamps();
 

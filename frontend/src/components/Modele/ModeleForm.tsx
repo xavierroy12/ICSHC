@@ -6,7 +6,7 @@ import {
   Modal,
   IconButton,
 } from '@mui/material';
-import { FormikValues, Field, Form } from 'formik';
+import { FormikValues, Field, Form, FormikErrors } from 'formik';
 import CustomSelect from '../CustomSelect';
 import { SelectItem } from '../Actif/type';
 import { SyntheticEvent, useState } from 'react';
@@ -23,6 +23,7 @@ type Props = {
     shouldValidate?: boolean | undefined
   ) => void;
   reloadData: () => void;
+  errors: FormikErrors<FormikValues>;
 };
 
 const ModeleForm = ({
@@ -31,6 +32,7 @@ const ModeleForm = ({
   dirty,
   setFieldValue,
   reloadData,
+  errors,
 }: Props) => {
   const [open, setOpen] = useState(false);
   const localDarkMode = window.localStorage.getItem('darkMode');
@@ -52,6 +54,8 @@ const ModeleForm = ({
               name="nom"
               sx={{ width: 300 }}
               value={values.nom}
+              error={errors.nom ? true : false}
+              helperText={errors.nom}
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -62,6 +66,8 @@ const ModeleForm = ({
                 options={categories}
                 label="Catégorie"
                 className="mr-8"
+                error={errors.id_type_modele ? true : false}
+                helperText={errors.id_type_modele}
               />
 
               <IconButton
@@ -130,7 +136,7 @@ const ModeleForm = ({
               color="secondary"
               size="medium"
               type="submit"
-              disabled={!dirty}
+              disabled={!dirty || Object.keys(errors).length > 0}
             >
               Sauvegarder
             </Button>

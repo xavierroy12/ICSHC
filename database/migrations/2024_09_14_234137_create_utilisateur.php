@@ -16,12 +16,16 @@ return new class extends Migration
             $table->string('nom', 32);
             $table->string('nom_utilisateur', 32);
             $table->string('courriel', 64);
-            $table->unsignedBigInteger('id_emplacement')->nullable();
-            $table->unsignedBigInteger('id_role')->default(2);
-            $table->string('token', 500)->nullable(); // Add token column
-            $table->timestamp('expiration')->nullable(); // Add expiration column
+            $table->string('token')->nullable(); // Add token column
+
+            $table->unsignedInteger('id_emplacement')->nullable();
+            $table->unsignedInteger('id_role')->default(2);
+
             $table->foreign('id_emplacement')->references('id')->on('emplacement');
             $table->foreign('id_role')->references('id')->on('role');
+
+            $table->timestamp('expiration')->nullable(); // Add expiration column
+
             $table->timestamps();
         });
     }

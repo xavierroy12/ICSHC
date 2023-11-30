@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import SelectActifsList from '../ActifsListSelect';
 import ActifsForm from './ActifsForm';
 import { SelectItem } from '../Actif/type';
-import { Formik, FormikValues } from 'formik';
+import { Formik, FormikErrors, FormikValues } from 'formik';
 import { LightActif, LightType } from './type';
 import FormLayout from '../FormLayout';
 import { toast } from 'react-toastify';
@@ -22,7 +22,6 @@ const Actifs = () => {
   const [emplacements, setEmplacements] = useState<SelectItem[]>([]);
   const [utilisations, setUtilisations] = useState<SelectItem[]>([]);
   const [proprietaires, setProprietaires] = useState<SelectItem[]>([]);
-  const [categories, setCategories] = useState<SelectItem[]>([]);
 
   const [actifs, setActifs] = useState<LightActif[]>([]);
   const [selectedActifs, setSelectedActifs] = useState<LightActif[]>([]);
@@ -35,7 +34,6 @@ const Actifs = () => {
       fetch(window.name + 'api/emplacements/light'),
       fetch(window.name + 'api/utilisations/light'),
       fetch(window.name + 'api/proprietaires/light'),
-      fetch(window.name + 'api/categories/light'),
       fetch(window.name + 'api/actifs/light'),
     ])
       .then((responses) =>
@@ -48,7 +46,6 @@ const Actifs = () => {
           emplacementsData,
           utilisationsData,
           proprietairesData,
-          categoriesData,
           actifsData,
         ]) => {
           setStatuts(
@@ -79,12 +76,6 @@ const Actifs = () => {
             proprietairesData.map((proprietaire: LightType) => ({
               id: proprietaire.id,
               label: proprietaire.nom,
-            }))
-          );
-          setCategories(
-            categoriesData.map((categorie: LightType) => ({
-              id: categorie.id,
-              label: categorie.nom,
             }))
           );
           setActifs(actifsData);
@@ -186,7 +177,21 @@ const Actifs = () => {
       }
     });
   };
+  const validate = (values: FormikValues) => {
+    const errors: FormikErrors<FormikValues> = {};
+    if (values.note?.length > 512) errors.note = 'La note est trop longue';
+    if (values.date_retour) {
+      const inputDate = new Date(values.date_retour);
+      const today = new Date();
+      // Set the time of today to 00:00:00 for a fair comparison
+      today.setHours(0, 0, 0, 0);
 
+      if (inputDate < today) {
+        errors.date_retour = "La date de retour doit être aujourd'hui ou après";
+      }
+    }
+    return errors;
+  };
   return (
     <div className="flex flex-col md:flex-row">
       {loading ? (
@@ -196,8 +201,12 @@ const Actifs = () => {
       ) : (
         <>
           <div className="md:w-2/3 md:ml-20 md:mr-6 mt-8 min-w-fit h-full">
-            <Formik initialValues={initialValues} onSubmit={handleUpdate}>
-              {({ values, handleChange, dirty, setFieldValue }) => (
+            <Formik
+              initialValues={initialValues}
+              onSubmit={handleUpdate}
+              validate={validate}
+            >
+              {({ values, handleChange, dirty, setFieldValue, errors }) => (
                 <FormLayout
                   title="Ajouter des actifs"
                   dirty={dirty}
@@ -208,7 +217,6 @@ const Actifs = () => {
                   <ActifsForm
                     statuts={statuts}
                     modeles={modeles}
-                    categories={categories}
                     emplacements={emplacements}
                     utilisations={utilisations}
                     proprietaires={proprietaires}
@@ -217,6 +225,7 @@ const Actifs = () => {
                     dirty={dirty}
                     setFieldValue={setFieldValue}
                     setSendingType={setSendingType}
+                    errors={errors}
                   />
                 </FormLayout>
               )}

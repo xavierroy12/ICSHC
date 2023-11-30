@@ -42,9 +42,42 @@ function App() {
   });
   const [isAdmin, setIsAdmin] = useState(true);
 
+
   useEffect(() => {
     window.localStorage.setItem('darkMode', JSON.stringify(darkMode));
   }, [darkMode]);
+
+  //logout if local storage is manipulated
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if ((e.key === 'id_user' && e.newValue !== e.oldValue && e.oldValue !== null) ||
+        (e.key === 'id_role' && e.newValue !== e.oldValue && e.oldValue !== null)) {
+        // If the 'id_user' item in local storage is changed, log out the user
+        handleLogout();
+        navigate('/login');
+        toast.error("Changement de variable de navigateur détecté, vous avez été déconnecté.");
+        setToastShown(true);
+      }
+    };
+
+    const handleLogout = () => {
+      localStorage.clear();
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i];
+        const eqPos = cookie.indexOf('=');
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      }
+
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   const theme = createTheme({
     palette: {

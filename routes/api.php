@@ -71,6 +71,9 @@ Route::middleware(['logrequest', 'throttle:5000,1'])->group(function () {
 
     Route::get('/statuts', [StatutController::class, 'showAll']);
     Route::get('/statuts/light', [StatutController::class, 'lightShow']);
+    Route::get('/admin/statuts', [StatutController::class, 'adminShow']);
+    Route::post('/admin/statuts', [StatutController::class, 'adminUpdate']);
+    Route::delete('/admin/statuts', [StatutController::class, 'adminDelete']);
 
     Route::post('/login', [LoginController::class, 'checkLogin']);
     Route::post('/checkToken', [LoginController::class, 'checkToken']);

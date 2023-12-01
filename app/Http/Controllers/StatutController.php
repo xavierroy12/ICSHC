@@ -62,11 +62,13 @@ class StatutController extends Controller
     {
         //
     }
+
     public function showAll()
     {
         $statuts = Statut::all();
         return response()->json($statuts);
     }
+
     public function lightShow()
     {
         $statuts = Statut::where('nom', '!=', 'Archivé')->get()->map(function ($statut) {
@@ -77,5 +79,45 @@ class StatutController extends Controller
         });
 
         return response()->json($statuts);
+    }
+
+    public function adminShow()
+    {
+        $statuts = Statut::all()->map(function ($statut) {
+            return [
+                "id" => $statut->id,
+                "nom" => $statut->nom,
+            ];
+        });
+
+        return response()->json($statuts);
+    }
+
+    public function adminUpdate(Request $request)
+    {
+        $statut = null;
+
+        if ($request->id == "new") {
+            $statut = new Statut();
+        } else {
+            $statut = Statut::find($request->id);
+        }
+
+        $statut->nom = $request->nom;
+        $statut->save();
+
+        return response()->json($statut);
+    }
+
+    public function adminDelete(Request $request)
+    {
+        $new_statut = Statut::find($request->newId);
+        $old_statut = Statut::find($request->oldId);
+
+        $old_statut->actifs()->update(['id_statut' => $new_statut->id]);
+
+        $old_statut->delete();
+
+        return response()->json("ok");
     }
 }

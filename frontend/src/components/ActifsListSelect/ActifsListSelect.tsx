@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
   Autocomplete,
-  Button,
   FormControlLabel,
   Grid,
   IconButton,
@@ -139,16 +138,15 @@ const ActifsListSelect = ({
                     <TableCell>{actif.nom}</TableCell>
                     <TableCell>{actif.numero_serie}</TableCell>
                     <TableCell>
-                      <Button
+                      <IconButton
                         color="error"
-                        variant="outlined"
                         size="small"
                         onClick={() => {
                           onDeleteData(actif);
                         }}
                       >
                         <DeleteIcon />
-                      </Button>
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -129,6 +129,13 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
                 <MenuItem
                   onClick={handleClose}
                   component={Link}
+                  to={`/panneauAdmin`}
+                >
+                  Panneau Admin
+                </MenuItem>
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
                   to={`/utilisateurs`}
                 >
                   Utilisateurs
@@ -136,16 +143,16 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
                 <MenuItem
                   onClick={handleClose}
                   component={Link}
-                  to={`/rapport`}
+                  to={`/emplacements`}
                 >
-                  Rapports
+                  Emplacements
                 </MenuItem>
                 <MenuItem
                   onClick={handleClose}
                   component={Link}
-                  to={`/emplacements`}
+                  to={`/rapport`}
                 >
-                  Emplacements
+                  Rapports
                 </MenuItem>
                 <MenuItem
                   onClick={handleSync}

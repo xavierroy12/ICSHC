@@ -23,6 +23,7 @@ import Emplacement from './components/Emplacement';
 import Profil from './components/Profil/Profil';
 import { createContext, useEffect, useState } from 'react';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import AdminPanel from './components/AdminPanel';
 
 if (process.env.NODE_ENV === 'development') {
   window.name = 'http://localhost:8000/';
@@ -166,6 +167,8 @@ function App() {
 
                 <Route path="/emplacements" element={<EmplacementList />} />
                 <Route path="/emplacement/:id" element={<Emplacement />} />
+
+                <Route path="/panneauAdmin" element={<AdminPanel />} />
 
                 <Route path="*" element={<Dashboard />} />
 

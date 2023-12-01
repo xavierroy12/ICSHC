@@ -12,4 +12,6 @@ class Statut extends Model
 
     protected $table = 'statut';
 
+    
+
 }

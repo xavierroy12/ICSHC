@@ -1,5 +1,5 @@
 import { Modal, Typography } from '@mui/material';
-import { Formik, FormikValues } from 'formik';
+import { Formik, FormikErrors, FormikValues } from 'formik';
 import ModeleForm from '../Modele/ModeleForm';
 import { LightType, SelectItem } from './type';
 import { toast } from 'react-toastify';
@@ -96,7 +96,18 @@ const AddModelModal = ({
   const localDarkMode = window.localStorage.getItem('darkMode');
   const modalBgColor =
     localDarkMode === 'true' ? 'bg-slate-600' : 'bg-slate-100';
+  const validate = (values: FormikValues) => {
+    const errors: FormikErrors<FormikValues> = {};
 
+    if (values.nom.length > 32)
+      errors.nom = 'Le nom ne doit pas dépasser 32 caractères';
+    else if (!values.nom) errors.nom = 'Requis';
+    if (!values.id_type_modele) {
+      errors.id_type_modele = 'Requis';
+    }
+
+    return errors;
+  };
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
       <div className={'flex  ' + modalBgColor}>
@@ -104,8 +115,12 @@ const AddModelModal = ({
           <div className="mb-8">
             <Typography variant="h4">Nouveau Model</Typography>
           </div>
-          <Formik initialValues={initialValues} onSubmit={handleSubmitModele}>
-            {({ values, dirty, setFieldValue }) => (
+          <Formik
+            initialValues={initialValues}
+            onSubmit={handleSubmitModele}
+            validate={validate}
+          >
+            {({ values, dirty, setFieldValue, errors }) => (
               <div className="max-w-fit p-4">
                 <ModeleForm
                   categories={categories}
@@ -113,6 +128,7 @@ const AddModelModal = ({
                   dirty={dirty}
                   setFieldValue={setFieldValue}
                   reloadData={reloadData}
+                  errors={errors}
                 />
               </div>
             )}

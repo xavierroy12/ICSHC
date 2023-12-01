@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Statut;
+use App\Models\Actif;
+
 use Illuminate\Http\Request;
 
 class StatutController extends Controller
@@ -114,7 +116,13 @@ class StatutController extends Controller
         $new_statut = Statut::find($request->newId);
         $old_statut = Statut::find($request->oldId);
 
-        $old_statut->actifs()->update(['id_statut' => $new_statut->id]);
+        $actifs = Actif::where('id_statut', $old_statut->id)->get();
+        if ($actifs->count() > 0) {
+            $actifs->each(function ($actif) use ($new_statut) {
+                $actif->id_statut = $new_statut->id;
+                $actif->save();
+            });
+        }
 
         $old_statut->delete();
 

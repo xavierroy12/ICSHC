@@ -61,9 +61,15 @@ Route::middleware(['logrequest', 'throttle:5000,1'])->group(function () {
     Route::get('/categories', [TypeModeleController::class, 'showAll']);
     Route::get('/categories/light', [TypeModeleController::class, 'lightShow']);
     Route::post('/categorie', [TypeModeleController::class, 'add']);
+    Route::get('/admin/categories', [TypeModeleController::class, 'adminShow']);
+    Route::post('/admin/categories', [TypeModeleController::class, 'adminUpdate']);
+    Route::delete('/admin/categories', [TypeModeleController::class, 'adminDelete']);
 
     Route::get('/utilisations', [UtilisationController::class, 'showAll']);
     Route::get('/utilisations/light', [UtilisationController::class, 'lightShow']);
+    Route::get('/admin/utilisations', [UtilisationController::class, 'adminShow']);
+    Route::post('/admin/utilisations', [UtilisationController::class, 'adminUpdate']);
+    Route::delete('/admin/utilisations', [UtilisationController::class, 'adminDelete']);
 
     Route::get('/proprietaires/light', [EmplacementController::class, 'lightShowProprietaire']);
 

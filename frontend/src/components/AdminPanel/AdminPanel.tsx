@@ -117,8 +117,15 @@ const AdminPanel = () => {
 
   const handleDelete = async () => {
     const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
-    const newData = data?.find((value) => value.nom === newValue);
+    const newData = data?.find((value) => value.id === newValue);
+
+    console.log('before if');
+    console.log(newValue);
+    console.log(newData);
+    console.log(dataDelete);
     if (!newData || !dataDelete) return;
+    console.log('after if');
+
     const ids = { newId: newData.id, oldId: dataDelete.id };
     try {
       fetch(window.name + `api/admin/` + currentTable, {
@@ -281,7 +288,9 @@ const AdminPanel = () => {
                 {data
                   ?.filter((item) => item.id !== dataDelete.id)
                   .map((item) => (
-                    <MenuItem value={item.id}>{item.nom}</MenuItem>
+                    <MenuItem key={item.id} value={item.id}>
+                      {item.nom}
+                    </MenuItem>
                   ))}
               </Select>
               <Button onClick={confirmDelete}>Confirmer</Button>

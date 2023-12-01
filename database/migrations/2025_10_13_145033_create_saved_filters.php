@@ -13,10 +13,14 @@ return new class extends Migration
     {
         Schema::create('saved_filters', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('id_user');
             $table->string('label', 32);
             $table->json('filters');
             $table->string('from', 32);
+
+            $table->unsignedBigInteger('id_user');
+
+            $table->foreign('id_user')->references('id')->on('utilisateur');
+
             $table->timestamps();
         });
     }

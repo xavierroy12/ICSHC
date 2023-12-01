@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('taille', 16)->nullable();
             $table->boolean('favoris')->default(false);
 
-            $table->unsignedInteger('id_type_modele');
+            $table->unsignedBigInteger('id_type_modele');
 
             $table->foreign('id_type_modele')->references('id')->on('type_modele');
 

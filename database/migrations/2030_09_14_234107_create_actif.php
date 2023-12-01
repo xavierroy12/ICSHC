@@ -19,19 +19,19 @@ return new class extends Migration
 
             $table->string('numero_serie', 32)->nullable();
             $table->string('nom', 32)->default('Sans nom');
+            $table->string('adresse_mac', 17)->nullable();
             $table->boolean('en_entrepot');
-            $table->string('adresse_mac', 12)->nullable();
             $table->date('date_retour')->nullable();
             $table->text('note')->nullable();
             $table->text('modele_descriptif')->nullable();
             $table->string('numero_commande')->nullable();
 
-            $table->unsignedInteger('id_modele')->nullable();
-            $table->unsignedInteger('id_statut');
-            $table->unsignedInteger('id_emplacement')->nullable();
-            $table->unsignedInteger('id_proprietaire')->nullable();
-            $table->unsignedInteger('id_utilisation')->nullable();
-            $table->unsignedInteger('id_client')->nullable();
+            $table->unsignedBigInteger('id_modele')->nullable();
+            $table->unsignedBigInteger('id_statut');
+            $table->unsignedBigInteger('id_emplacement')->nullable();
+            $table->unsignedBigInteger('id_proprietaire')->nullable();
+            $table->unsignedBigInteger('id_utilisation')->nullable();
+            $table->unsignedBigInteger('id_client')->nullable();
 
             $table->foreign('numero_commande')->references('numero_commande')->on('commande');
             $table->foreign('id_modele')->references('id')->on('modele');

@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('courriel', 64);
             $table->string('token')->nullable(); // Add token column
 
-            $table->unsignedInteger('id_emplacement')->nullable();
-            $table->unsignedInteger('id_role')->default(2);
+            $table->unsignedBigInteger('id_emplacement')->nullable();
+            $table->unsignedBigInteger('id_role')->default(2);
 
             $table->foreign('id_emplacement')->references('id')->on('emplacement');
             $table->foreign('id_role')->references('id')->on('role');

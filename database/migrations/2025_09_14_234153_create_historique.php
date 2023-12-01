@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->date('date_creation');
             $table->string('type_affecte', 64);
-            $table->unsignedInteger('id_utilisateur');
+            $table->unsignedBigInteger('id_utilisateur');
 
             $table->foreign('id_utilisateur')->references('id')->on('utilisateur');
             $table->timestamps();

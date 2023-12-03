@@ -164,6 +164,7 @@ const Actif = () => {
 
     handleClose();
   };
+
   const sendData = (values: FormikValues) => {
     const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
     try {
@@ -186,6 +187,7 @@ const Actif = () => {
       toast.error('Une erreur est survenue');
     }
   };
+
   const validate = (values: FormikValues) => {
     const errors: FormikErrors<FormikValues> = {};
 
@@ -236,6 +238,7 @@ const Actif = () => {
 
     return errors;
   };
+    
   return (
     <Fragment>
       {loading ? (

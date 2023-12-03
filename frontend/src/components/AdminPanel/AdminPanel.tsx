@@ -119,12 +119,7 @@ const AdminPanel = () => {
     const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
     const newData = data?.find((value) => value.id === newValue);
 
-    console.log('before if');
-    console.log(newValue);
-    console.log(newData);
-    console.log(dataDelete);
     if (!newData || !dataDelete) return;
-    console.log('after if');
 
     const ids = { newId: newData.id, oldId: dataDelete.id };
     try {

@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -16,7 +15,7 @@ return new class extends Migration
             $table->string('nom', 32);
             $table->string('nom_utilisateur', 32);
             $table->string('courriel', 64);
-            $table->string('token')->nullable(); // Add token column
+            $table->string('token', 350)->nullable(); // Add token column
 
             $table->unsignedBigInteger('id_emplacement')->nullable();
             $table->unsignedBigInteger('id_role')->default(2);

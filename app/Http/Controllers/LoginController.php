@@ -13,13 +13,15 @@ use Carbon\Carbon; // Import the Carbon class
 class LoginController extends Controller
 {
     //doesnt work
-    private function createCookie($user) {
+    private function createCookie($user)
+    {
         $cookie = cookie('user', $user, 60);
         $_COOKIE['user'] = $user;
         return $cookie;
     }
     //creates a encryprted token and expiration date
-    public static function generateToken() {
+    public static function generateToken()
+    {
         $token = bin2hex(random_bytes(30)); // Generate a random token
         $expiration = Carbon::now()->addDays(30); // Set expiration to 30 days from now
         $encryptedToken = Crypt::encryptString($token);
@@ -36,7 +38,7 @@ class LoginController extends Controller
         $utilisateur = new UtilisateurController();
         $utilisateur = $utilisateur->tokenExists($token); // Get the user by the token
 
-        if ($utilisateur["valid_token"]){
+        if ($utilisateur["valid_token"]) {
             // Token is valid, return the user information
             return response()->json([
                 'success' => true,
@@ -60,46 +62,72 @@ class LoginController extends Controller
         $password = $request->input('password');
 
         //Function to get the DN of the user
-        function getDN($ad, $samaccountname, $basedn) {
+        function getDN($ad, $samaccountname, $basedn)
+        {
             $attributes = array('dn');
-            $result = ldap_search($ad, $basedn,
-            "(samaccountname={$samaccountname})", $attributes);
-            if ($result === FALSE) { return ''; }
+            $result = ldap_search(
+                $ad,
+                $basedn,
+                "(samaccountname={$samaccountname})",
+                $attributes
+            );
+            if ($result === FALSE) {
+                return '';
+            }
             $entries = ldap_get_entries($ad, $result);
-            if ($entries['count']>0) { return $entries[0]['dn']; }
-            else { return ''; };
+            if ($entries['count'] > 0) {
+                return $entries[0]['dn'];
+            } else {
+                return '';
+            }
+            ;
         }
 
-        function getDnGroup($ad, $group, $basedn) {
+        function getDnGroup($ad, $group, $basedn)
+        {
             $result = ldap_search($ad, $basedn, "(cn={$group})", array('cn'));
-            if ($result === FALSE) { return ''; }
+            if ($result === FALSE) {
+                return '';
+            }
             $entries = ldap_get_entries($ad, $result);
-            if ($entries['count'] > 0) { return $entries[0]['dn']; }
-            else { return ''; };
+            if ($entries['count'] > 0) {
+                return $entries[0]['dn'];
+            } else {
+                return '';
+            }
+            ;
         }
 
         //Function to show attribute of that DN, mostly for trouble shooting
-        function showattrib($ad, $userdn, $attrib) {
+        function showattrib($ad, $userdn, $attrib)
+        {
             $attributes = array($attrib);
             $result = ldap_read($ad, $userdn, "(objectclass=*)", $attributes);
-            if ($result === FALSE) { return FALSE; };
+            if ($result === FALSE) {
+                return FALSE;
+            }
+            ;
             $entries = ldap_get_entries($ad, $result);
             return $entries[0][$attrib][0];
         }
         //Function to add user to database, store function check if user already exist
-        function addUserDb($ad,$userdn, $user, $nom) {
+        function addUserDb($ad, $userdn, $user, $nom)
+        {
+
+
             $utilisateur = new UtilisateurController();
             //If user exist, check if token is expired, if not return false
-            if($utilisateur->userExists($user)){
+            if ($utilisateur->userExists($user)) {
                 $token = LoginController::generateToken();
+                error_log("testLineTest");
                 $userFinal = $utilisateur->updateToken($user, $token['token'], $token['expiration']);
                 return $userFinal;
-            }
-            else {
+            } else {
                 $token = LoginController::generateToken();
                 $test = $token['token'];
                 $email = showattrib($ad, $userdn, 'extensionattribute3');
                 $userFinal = $utilisateur->store($user, $nom, $token['token'], $token['expiration'], $email);
+
                 return $userFinal;
             }
         }
@@ -119,38 +147,44 @@ class LoginController extends Controller
             $usercn = showattrib($ad, $userdn, 'cn');
             $groupdn = getDN($ad, $group, $basedn);
             $result = ldap_read($ad, $userdn, "(memberof={$groupdn})", array('dn'));
-           // $email = showattrib($ad, $userdn, 'extensionattribute3');
-            //error_log("User $user email is $email");
+            $email = showattrib($ad, $userdn, 'extensionattribute3');
+            error_log("User $user email is $email");
             $entries = ldap_get_entries($ad, $result);
 
             // If user in group, create cookie and return user info
             if ($entries['count'] > 0) {
-                $userFinal = addUserDb($ad, $userdn, $user, $usercn);
-                    $cookie = $this->createCookie($user);
-                    $response = response()->json([
-                        'user' => $user,
-                        'usercn' => $usercn,
-                        'token' => $userFinal->token,
-                        'emplacement' => $userFinal->id_emplacement,
-                        'id' => $userFinal->id,
-                        'id_role' => $userFinal->id_role,
-                    ], 200);
-                    $response->withCookie($cookie);
-                    return $response;
+                error_log("User $user is in group $group");
 
-                }
-                // If user not in group, return error
-                else {
-                    return response()->json([
-                        'message' => 'User not in group'
-                    ], 401);
-                }
+
+                $userFinal = addUserDb($ad, $userdn, $user, $usercn);
+                error_log("line 156");
+                $cookie = $this->createCookie($user);
+                $response = response()->json([
+                    'user' => $user,
+                    'usercn' => $usercn,
+                    'token' => $userFinal->token,
+                    'emplacement' => $userFinal->id_emplacement,
+                    'id' => $userFinal->id,
+                    'id_role' => $userFinal->id_role,
+                ], 200);
+
+
+                $response->withCookie($cookie);
+                return $response;
+
             }
-            // If LDAP bind failed, return error
+            // If user not in group, return error
             else {
                 return response()->json([
-                    'message' => 'Invalid username or password'
+                    'message' => 'User not in group'
                 ], 401);
             }
         }
+        // If LDAP bind failed, return error
+        else {
+            return response()->json([
+                'message' => 'Invalid username or password'
+            ], 401);
+        }
     }
+}

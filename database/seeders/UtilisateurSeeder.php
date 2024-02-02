@@ -13,20 +13,6 @@ class UtilisateurSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('utilisateur')->insert([
-            'nom' => 'Luc Grandchamps',
-            'nom_utilisateur' => 'lgrandchamps',
-            'id_emplacement' => 1,
-            'courriel' => 'lgrandchamps@cshc.qc.ca',
-            'id_role' => 1,
-        ]);
 
-        DB::table('utilisateur')->insert([
-            'nom' => 'Nicolas Lachance',
-            'nom_utilisateur' => 'nlachance',
-            'id_emplacement' => 3,
-            'courriel' => 'nlachance@cshc.qc.ca',
-            'id_role' => 2,
-        ]);
     }
 }

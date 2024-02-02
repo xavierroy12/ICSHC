@@ -48,7 +48,7 @@ class ClientController extends Controller
         $clients = $scolagoDbModel->getEmployees();
         $totalClients = count($clients);
         $counter = 0;
-        $typeClient = TypeClient::where('nom', 'Personnel')->first();
+        $typeClient = TypeClient::where('nom', 'Employé')->first();
 
         foreach ($clients as $client) {
             $matriculeLieu = $client['LIEU'];

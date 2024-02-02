@@ -2,6 +2,7 @@
   "name": "icshc-frontend",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://inventaire.csshc.gouv.qc.ca",
   "type": "module",
   "scripts": {
     "start": "npm run dev",

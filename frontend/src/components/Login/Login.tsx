@@ -31,7 +31,7 @@ function Login() {
 
   const handleLogin = () => {
     // Send email and password to server for authentication
-    fetch('http://10.0.22.24:8080/api/login', {
+    fetch('https://inventaireApi.csshc.gouv.qc.ca/api/login', {
       method: 'POST',
       body: JSON.stringify({ username, password }),
       headers: {
@@ -65,14 +65,14 @@ function Login() {
         setLoginStatus('Problème de serveur : ' + error);
       });
   };
-
+{/*}
   const bypass = () => {
     document.cookie = `CookieLogged=${'Minou'}; expires=${new Date(
       Date.now() + 60 * 24 * 60 * 60 * 1000
     ).toUTCString()}; path=/`;
     localStorage.setItem('id_user', '1');
     window.location.href = '/';
-  };
+  };*/}
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -132,14 +132,14 @@ function Login() {
             >
               Se connecter
             </Button>
-            <Button
+           {/* <Button
               onClick={bypass}
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
               bypass
-            </Button>
+        </Button>*/}
           </Box>
         </Box>
       </Container>

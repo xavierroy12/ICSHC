@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Modele;
+use App\Models\TypeModele;
+use Illuminate\Support\Facades\Log;
+
+
 
 class ModeleController extends Controller
 {
@@ -164,5 +168,47 @@ class ModeleController extends Controller
             ];
         });
         return response()->json($modeles);
+    }
+
+    public function createModelFromImport($manufacteur, $model, $modelNo, $category)
+    {
+        //On change les noms des manufacteurs pour qu'ils soient les mêmes que dans la base de données
+        if($manufacteur === "DELL INC."){
+            $manufacteur = "Dell";
+        }
+        if($manufacteur === "Hewlett-Packard"){
+            $manufacteur = "HP";
+        }
+        if($manufacteur === "Microsoft Corporation"){
+            $manufacteur = "Microsoft";
+        }
+        $typeModele = TypeModele::firstWhere('nom', $category);
+        //Si aucune category, on met la catégorie à "Aucune catégorie", sinon on met la catégorie trouvée
+        if ($category === "") {
+            $typeModele = TypeModele::firstWhere('nom', 'Aucune catégorie');
+            $typeModeleId = $typeModele->id;
+        }
+        elseif ($typeModele === null) {
+            Log::error('Category not found: ' . $category);
+            $typeModeleId = 1;
+        } 
+        else {
+            $typeModeleId = $typeModele->id;
+        }
+
+        $modelName = $manufacteur . " " . $modelNo . " " . $model;
+        //on cree les modeles selon ce qui a dans le fichier a importer 
+        $modele = Modele::firstOrCreate(
+            ['nom' => $modelName], // attributes to find
+            [ // attributes to create if not found
+                'stockage' => "",
+                'processeur' => "",
+                'memoire_vive' => "",
+                'taille' => "",
+                'id_type_modele' => $typeModeleId,
+                'favoris' => true
+            ]
+        );
+        return $modele->id;
     }
 }

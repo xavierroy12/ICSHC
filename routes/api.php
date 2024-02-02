@@ -16,6 +16,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\FilterController;
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\ImportationController;
 use App\Http\Middleware\LogRequestMiddleware;
 
 
@@ -124,10 +125,13 @@ Route::middleware(['logrequest', 'throttle:5000,1'])->group(function () {
     Route::get('/emplacements/list', [EmplacementController::class, 'listShow']);
     Route::get('/emplacement/{id}', [EmplacementController::class, 'show']);
     Route::post('/emplacement/{id}', [EmplacementController::class, 'createUpdate']);
-
-
-
     Route::get('/getAllAlerts', [ClientController::class, 'getAllAlerts']);
+
+    //Routes pour ajout de matériel par script powershell (F12)
+    Route::post('/modifierParF12', [ActifController::class, 'modifierParF12']);
+    // Route pour importer du mateirel a partir d<un fichier csv
+    Route::get('/importer', [ImportationController::class, 'importFromCSV']);
+
 });
 
 

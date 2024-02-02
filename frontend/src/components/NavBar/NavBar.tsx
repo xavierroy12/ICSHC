@@ -45,7 +45,7 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
   const handleSync = async () => {
     handleClose();
     setIsSyncing(true);
-    fetch('http://10.0.22.24:8080/api/syncAllClients', {
+    fetch('https://inventaireApi.csshc.gouv.qc.ca/api/syncAllClients', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

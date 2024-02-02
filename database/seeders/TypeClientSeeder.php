@@ -14,7 +14,7 @@ class TypeClientSeeder extends Seeder
     public function run(): void
     {
         DB::table('type_client')->insert([
-            'nom' => 'Personnel',
+            'nom' => 'Employé',
         ]);
 
         DB::table('type_client')->insert([

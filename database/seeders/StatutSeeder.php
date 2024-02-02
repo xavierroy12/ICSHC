@@ -16,24 +16,26 @@ class StatutSeeder extends Seeder
         DB::table('statut')->insert([
             'nom' => 'En réparation',
         ]);
-
         DB::table('statut')->insert([
             'nom' => 'Commandé',
         ]);
-
         DB::table('statut')->insert([
             'nom' => 'Déployable',
         ]);
-
         DB::table('statut')->insert([
             'nom' => 'Déployé',
         ]);
         DB::table('statut')->insert([
             'nom' => 'Hors service',
         ]);
-
         DB::table('statut')->insert([
             'nom' => 'Archivé',
+        ]);
+        DB::table('statut')->insert([
+            'nom' => 'Perdu',
+        ]);
+        DB::table('statut')->insert([
+            'nom' => 'Inconnue',
         ]);
     }
 }

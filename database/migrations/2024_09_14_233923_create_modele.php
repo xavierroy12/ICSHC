@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('modele', function (Blueprint $table) {
             $table->id();
-            $table->string('nom', 32);
+            $table->string('nom', 256);
             $table->string('stockage', 32)->nullable();
             $table->string('processeur', 64)->nullable();
             $table->string('memoire_vive', 32)->nullable();

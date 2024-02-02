@@ -18,8 +18,8 @@ return new class extends Migration
             $table->id();
 
             $table->string('numero_serie', 32)->nullable();
-            $table->string('nom', 32)->default('Sans nom');
-            $table->string('adresse_mac', 17)->nullable();
+            $table->string('nom', 64)->default('Sans nom');
+            $table->string('adresse_mac', 64)->nullable();
             $table->boolean('en_entrepot');
             $table->date('date_retour')->nullable();
             $table->text('note')->nullable();

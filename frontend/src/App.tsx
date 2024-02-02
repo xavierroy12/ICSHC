@@ -28,7 +28,7 @@ import AdminPanel from './components/AdminPanel';
 if (process.env.NODE_ENV === 'development') {
   window.name = 'http://localhost:8000/';
 } else {
-  window.name = 'http://10.0.22.24:8080/';
+  window.name = 'https://inventaireApi.csshc.gouv.qc.ca/';
 }
 
 export const AdminContext = createContext(false);

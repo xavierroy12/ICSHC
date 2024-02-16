@@ -11,6 +11,8 @@ import { AdminContext } from '../../App';
 import { useFormikContext } from 'formik';
 
 type Props = {
+  id: number; // Add this line
+
   values: FormikValues;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   setFieldValue: (
@@ -30,6 +32,7 @@ type Props = {
 };
 
 const ActifForm = ({
+  id,
   values,
   handleChange,
   dirty,
@@ -43,6 +46,7 @@ const ActifForm = ({
   setSendingType,
   errors,
 }: Props) => {
+  console.log(values.id);
   const { submitForm } = useFormikContext<FormikValues>();
 
   const isAdmin = useContext(AdminContext);
@@ -290,7 +294,17 @@ const ActifForm = ({
             helperText={errors.note}
           />
         </Grid>
-
+        <Grid item xs={12}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              window.open('https://inventaireapi.csshc.gouv.qc.ca/label/' + id, '_blank');
+            }}
+          >
+            Generate Label
+          </Button>
+        </Grid>
         <Grid item xs={12}>
           <Button
             className="my-5 mx-5 flex float-right"

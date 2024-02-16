@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Log;
+use Illuminate\Support\Facades\Log as FacadesLog;
 use App\Models\Utilisateur;
 use App\Models\Actif;
 use App\Models\Client;
@@ -423,7 +424,6 @@ class LogController extends Controller
                         $ObjectModifierNom = substr($ObjectModifier, 3); // Remove 'id_' from the start of the field name
                         $itemToFind = Str::studly($ObjectModifierNom);
                         $itemToFind = str_replace('_', '', $itemToFind);
-                        error_log('line 449 : ' . (string) $itemToFind);
                         $itemToFindClass = "\\App\\Models\\" . $itemToFind; // Construct the fully qualified class name
                         $instanceModifier = $itemToFindClass::find($param); //
                         $instanceModifierNom = $instanceModifier->nom;
@@ -460,12 +460,14 @@ class LogController extends Controller
 
     public function getFieldValue($value, $typeItem, $field, $id_item, $isNew)
     {
-        if ($value == null)
+        if ($value == null || $value == 'Aucun')
             return null;
 
         if ($typeItem == 'actif') {
             if ($field === 'id_proprietaire') {
+                FacadesLog::info($value);
                 $proprietaire = Emplacement::find($value);
+                FacadesLog::info($proprietaire);
                 $result = $proprietaire->nom;
             } else {
                 $relatedModelName = substr($field, 3); // Remove 'id_' from the start of the field name

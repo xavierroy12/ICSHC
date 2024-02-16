@@ -33,6 +33,7 @@ export type LightType = {
 };
 
 export type ActifFormValues = {
+  id: number;
   numero_serie: string;
   numero_commande: string;
   nom: string;

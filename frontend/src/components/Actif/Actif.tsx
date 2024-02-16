@@ -238,7 +238,10 @@ const Actif = () => {
 
     return errors;
   };
-    
+
+
+  // Convert the id to a number
+  const actifId = Number(id);
   return (
     <Fragment>
       {loading ? (
@@ -263,6 +266,7 @@ const Actif = () => {
                     handleClose={handleClose}
                   >
                     <ActifForm
+                      id={actifId} // Add this line
                       values={values}
                       handleChange={handleChange}
                       dirty={dirty}

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Actif;
 use App\Models\Commande;
 use App\Models\Modele;
-
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActifController;
 use App\Models\Emplacement;
@@ -44,11 +44,12 @@ class CommandeController extends Controller
     {
         $actif = Actif::where('numero_commande', $numero_commande)->get()->map(
             function ($actif)
-            {
+            { log::error($actif);
                 return[
                     "id" => $actif->id,
                     'numero_serie' => $actif->numero_serie,
                     'adresse_mac' => $actif->adresse_mac,
+
                     'modele' => $actif->modele->nom ?? '',
                     'description_modele' => $actif->modele_descriptif
                 ];
@@ -88,7 +89,6 @@ class CommandeController extends Controller
     public function reception(Request $request, $numero_commande)
     {
         $actifs = $request->all();
-
         foreach ($actifs as $actif) {
             $modele = Modele::where('nom', $actif['modele'])->first();
             $a = Actif::where('id', $actif['id'])->first();
@@ -153,23 +153,26 @@ class CommandeController extends Controller
     {
         $actifController = new ActifController;
 
-        error_log('Reception de la commande d\'achat');
+        Log::error('Reception de la commande d\'achat');
         $data = json_decode($request->getContent(), true);
+        $data = $data['data'];
+
+        Log::error('Data: ' . print_r($data, true));
         if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
             return response()->json(['error' => 'Unable to decode JSON'], 400);
         }
-
         //Creating Commande
         if(isset($data["date_creation"])){
+            log::error('line 164');
 
             $quantiteTotal = 0;
             foreach($data["produits"] as $produit){
                 $quantite = $produit["quantite_produit"];
                 $quantiteTotal = $quantiteTotal + $quantite;
             }
-            $matricule_emplacement = $data["matricule_emplacement"];
+            $matricule_emplacement = $data["matricule"];
             $emplacement_id = Emplacement::where('matricule', $matricule_emplacement)->first()->id;
-
+            log::error('line 172');
             $commande = new Commande;
             $commande->date_commande = $data["date_creation"];
             $commande->numero_commande = $data["no_commande"];
@@ -179,13 +182,12 @@ class CommandeController extends Controller
             $commande->save();
         }
         else{
-            error_log('Failed to decode data into an array');
+            log::info('Failed to decode data into an array');
         }
 
         //Creating actifs
             if (isset($data['produits'])) {
                 $produits = $data['produits'];
-                error_log('Produits: ' . print_r($produits, true));
                 foreach ($produits as $produit) {
                     $actifController->createActifsCommande($produit, $data["no_commande"]);
                 }
@@ -193,7 +195,7 @@ class CommandeController extends Controller
 
 
          else {
-            error_log('Failed to decode data into an array');
+            log::info('Failed to decode data into an array');
 
         }
 

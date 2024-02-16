@@ -8,7 +8,7 @@ use App\Models\Actif;
 use App\Models\Client;
 use App\Models\Modele;
 use App\Models\Statut;
-
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -317,13 +317,14 @@ class ActifController extends Controller
         
         public function createActifsCommande($produit, $no_commande)
         {
-            $modele_descriptif = $produit['description'];
+            $modele_descriptif = 'Nom : ' . $produit['nom_produit']  . "Description : " . $produit['description'];
             $id_modele = $this->findModele($modele_descriptif);
             $quantite = $produit['quantite_produit'];
             
             
             for ($i = 0; $i < $quantite; $i++) {
                 $actif = new Actif;
+                $actif->nom = "Non défini";
                 $actif->modele_descriptif = $modele_descriptif;
                 $actif->numero_commande = $no_commande;
                 $actif->en_entrepot = FALSE;
@@ -332,7 +333,7 @@ class ActifController extends Controller
                 if ($id_modele) {
                     $actif->id_modele = $id_modele;
                 }
-                
+                log::info('Actif: ' . $actif);
                 $actif->save();
             }
             
@@ -340,10 +341,12 @@ class ActifController extends Controller
         
         public function findModele($modele_descriptif)
         {
+            log::info('Modele descriptif: ' . $modele_descriptif);
             $actifs = Actif::where('modele_descriptif', $modele_descriptif)->get();
             
             foreach ($actifs as $actif) {
                 if ($actif->id_modele) {
+                    Log::info("in the if statement");
                     return $actif->id_modele;
                 }
             }
@@ -558,7 +561,7 @@ class ActifController extends Controller
                                         $status = Statut::firstWhere('nom', $newStatusName);
                                         $id_statut = $status ? $status->id : null;
                                         
-
+                                        
                                         
                                         //On call une method pour aller chercher l'id emplacement
                                         if($location == 'Utilisateurs Inactifs')
@@ -577,8 +580,8 @@ class ActifController extends Controller
                                             $id_emplacement = null;
                                         }
                                         
-
-
+                                        
+                                        
                                         //Gerer proprietaire SI
                                         if ($propriete_si != null && $propriete_si == 'oui') {
                                             $id_proprietaire = $this->findIdServiceInformatique();
@@ -602,8 +605,8 @@ class ActifController extends Controller
                                             Log::info('No proprietaire found');
                                             $id_proprietaire = null;
                                         }
-
-
+                                        
+                                        
                                         Log::error('client before pregmatch is : ' . $client);
                                         if (preg_match('/^\d{3}/', $client) || $client == null) {
                                             Log::info('Client is emplacement or null : ' . $client);
@@ -611,10 +614,10 @@ class ActifController extends Controller
                                         } else {
                                             $id_client = $this->splitNomClient($client);
                                         }
-
-
-
-
+                                        
+                                        
+                                        
+                                        
                                         $actif = Actif::create([
                                             'numero_serie' => $serial, //ok
                                             'nom' => $assetName, //ok
@@ -648,9 +651,9 @@ class ActifController extends Controller
                                         }
                                         private function findIdServiceInformatique(){
                                             $SI_emplacement = DB::table('emplacement')
-                                                ->where('matricule', '999')
-                                                ->first();
-                                        
+                                            ->where('matricule', '999')
+                                            ->first();
+                                            
                                             if ($SI_emplacement) {
                                                 // If the emplacement was found, use its id
                                                 $id_proprietaire = $SI_emplacement->id;
@@ -660,52 +663,52 @@ class ActifController extends Controller
                                             }
                                             return $id_proprietaire;
                                         }
-
+                                        
                                         private function findIdUtilisateurInactif(){
                                             $UI_emplacement = DB::table('emplacement')
                                             ->where('matricule', '998')
                                             ->first();
-                                    
-                                        if ($UI_emplacement) {
-                                            // If the emplacement was found, use its id
-                                            $id_emplacement = $UI_emplacement->id;
-                                        } else {
-                                            Log::info('Emplacement with matricule 998 not found');
-                                            $id_emplacement = null;
+                                            
+                                            if ($UI_emplacement) {
+                                                // If the emplacement was found, use its id
+                                                $id_emplacement = $UI_emplacement->id;
+                                            } else {
+                                                Log::info('Emplacement with matricule 998 not found');
+                                                $id_emplacement = null;
+                                            }
+                                            return $id_emplacement;
                                         }
-                                        return $id_emplacement;
-                                        }
-
+                                        
                                         private function findIdServiceEducatif(){
                                             $UI_emplacement = DB::table('emplacement')
                                             ->where('matricule', '997')
                                             ->first();
-                                    
-                                        if ($UI_emplacement) {
-                                            // If the emplacement was found, use its id
-                                            $id_emplacement = $UI_emplacement->id;
-                                        } else {
-                                            Log::info('Emplacement with matricule 997 not found');
-                                            $id_emplacement = null;
+                                            
+                                            if ($UI_emplacement) {
+                                                // If the emplacement was found, use its id
+                                                $id_emplacement = $UI_emplacement->id;
+                                            } else {
+                                                Log::info('Emplacement with matricule 997 not found');
+                                                $id_emplacement = null;
+                                            }
+                                            return $id_emplacement;
                                         }
-                                        return $id_emplacement;
-                                        }
-
+                                        
                                         private function findIdEER(){
                                             $UI_emplacement = DB::table('emplacement')
                                             ->where('matricule', '996')
                                             ->first();
-                                    
-                                        if ($UI_emplacement) {
-                                            // If the emplacement was found, use its id
-                                            $id_emplacement = $UI_emplacement->id;
-                                        } else {
-                                            Log::info('Emplacement with matricule 996 not found');
-                                            $id_emplacement = null;
+                                            
+                                            if ($UI_emplacement) {
+                                                // If the emplacement was found, use its id
+                                                $id_emplacement = $UI_emplacement->id;
+                                            } else {
+                                                Log::info('Emplacement with matricule 996 not found');
+                                                $id_emplacement = null;
+                                            }
+                                            return $id_emplacement;
                                         }
-                                        return $id_emplacement;
-                                        }
-
+                                        
                                         private function findIdEquipeVolante(){
                                             $UI_emplacement = DB::table('emplacement')
                                             ->where('matricule', '995')
@@ -719,7 +722,7 @@ class ActifController extends Controller
                                             }
                                             return $id_emplacement;
                                         }
-
+                                        
                                         private function splitNomEmplacement($nomEmplacement)
                                         {
                                             Log::info('Attemping to split emplacement : ' . $nomEmplacement);
@@ -729,9 +732,9 @@ class ActifController extends Controller
                                             $nom = trim($nom);
                                             // Query the database to find the id
                                             $emplacement = DB::table('emplacement')
-                                                ->where('matricule', $matricule)
-                                                ->first();
-    
+                                            ->where('matricule', $matricule)
+                                            ->first();
+                                            
                                             if ($emplacement) {
                                                 // If the emplacement was found, use its id
                                                 $id_emplacement = $emplacement->id;
@@ -740,32 +743,44 @@ class ActifController extends Controller
                                                 Log::info('Emplacement not found: ' . $nomEmplacement);
                                             }
                                         }
-
+                                        
                                         private function splitNomClient($fullName){
                                             Log::info('Client name: ' . $fullName);
-                                        // Split the full name into first name and last name
-                                        list($prenom, $nom) = explode(' ', $fullName, 2);
-
-                                        // Query the database to get the client
-                                        $client = DB::table('client')
+                                            // Split the full name into first name and last name
+                                            list($prenom, $nom) = explode(' ', $fullName, 2);
+                                            
+                                            // Query the database to get the client
+                                            $client = DB::table('client')
                                             ->where('prenom', $prenom)
                                             ->where('nom', $nom)
                                             ->first();
+                                            
+                                            // Check if the client was found
+                                            if ($client) {
+                                                // If the client was found, use its id
+                                                $id_client = $client->id;
+                                            } else {
+                                                Log::info('Client with name ' . $client . ' not found');
+                                                $id_client = null;
+                                            }
+                                            return $id_client;
+                                        }
+                                        public function generateLabel($id)
+                                        {
+                                            // Find the actif by ID
+                                            log::info('in generate label');
 
-                                        // Check if the client was found
-                                        if ($client) {
-                                            // If the client was found, use its id
-                                            $id_client = $client->id;
-                                        } else {
-                                            Log::info('Client with name ' . $client . ' not found');
-                                            $id_client = null;
+                                            $actif = Actif::find($id);
+                                            if ($actif) {
+                                                // Generate a QR code for the actif's serial number
+                                                $qrCode = QrCode::format('png')->size(200)->generate($actif->numero_serie);
+                                                
+                                                // Convert the QR code to a data URL so it can be included in the view
+                                                $qrCodeUrl = 'data:image/png;base64,' . base64_encode($qrCode);
+                                                
+                                                // Return a view with the label
+                                                return view('label', ['actif' => $actif, 'qrCodeUrl' => $qrCodeUrl]);
+                                            }
+
                                         }
-                                        return $id_client;
-                                        }
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
                                     }

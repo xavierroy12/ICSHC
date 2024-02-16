@@ -5,6 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ImportationController;
 
 class Kernel extends ConsoleKernel
 {
@@ -33,6 +34,15 @@ class Kernel extends ConsoleKernel
     {
         $this->load(__DIR__.'/Commands');
 
+        $this->commands([
+            \App\Console\Commands\SyncImp::class,
+        ]);
+        $this->commands([
+            \App\Console\Commands\import::class,
+        ]);
+        $this->commands([
+            \App\Console\Commands\sync::class,
+        ]);
         require base_path('routes/console.php');
     }
 }

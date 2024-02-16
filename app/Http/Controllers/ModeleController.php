@@ -206,7 +206,7 @@ class ModeleController extends Controller
                 'memoire_vive' => "",
                 'taille' => "",
                 'id_type_modele' => $typeModeleId,
-                'favoris' => true
+                'favoris' => false
             ]
         );
         return $modele->id;

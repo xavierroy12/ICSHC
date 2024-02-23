@@ -1,4 +1,5 @@
 import { SelectItem } from '../Actif/type';
+import { SelectEmplacement } from '../Emplacement/type'; // Add this line
 import { Fragment, useState } from 'react';
 import {
   Autocomplete,
@@ -19,16 +20,22 @@ type Props = {
   modeles: SelectItem[];
   actifs: light_Actif[];
   setActifs: React.Dispatch<React.SetStateAction<light_Actif[]>>;
+  emplacements: SelectEmplacement[]; // Add this line
+
 };
 export type light_Actif = {
   modele?: string;
   numero_serie?: string;
   adresse_mac?: string;
+  nom?: string; // Add this line
 };
 
-const ActifAddForm = ({ modeles, actifs, setActifs }: Props) => {
+const ActifAddForm = ({ modeles, actifs, setActifs, emplacements }: Props) => {
   const [currentModele, setCurrentLabel] = useState<SelectItem | null>(
     modeles[0] || null
+  );
+  const [currentEmplacement, setCurrentEmplacement] = useState<SelectEmplacement | null>(
+    emplacements[0] || null // Set initial state using the first emplacement
   );
   const [amount, setAmount] = useState<number>(0);
   const [displayTable, setDisplayTable] = useState<boolean>(false);
@@ -57,7 +64,7 @@ const ActifAddForm = ({ modeles, actifs, setActifs }: Props) => {
   return (
     <Form>
       <Fragment>
-        <div className="w-[800px] p-6 bg-slate-100 dark:bg-slate-800">
+        <div className="w-[1000px] p-6 bg-slate-100 dark:bg-slate-800">
           <Typography variant="h6" className="my-8 mx-auto">
             Sélectionnez un modèle
           </Typography>
@@ -75,6 +82,18 @@ const ActifAddForm = ({ modeles, actifs, setActifs }: Props) => {
                 )}
               />
             </div>
+            <div className="w-full mr-10">
+              <Autocomplete
+                options={emplacements}
+                getOptionLabel={(option) => option.label}
+                value={currentEmplacement} // Set value to currentEmplacement
+                onChange={(__event, newValue) => {
+                  setCurrentEmplacement(newValue);
+                }}
+                renderInput={(params) => <TextField {...params} label="Emplacement" variant="outlined" />}
+              />
+            </div>
+
             <div className="mr-10">
               <TextField
                 label="Nombre"
@@ -105,6 +124,7 @@ const ActifAddForm = ({ modeles, actifs, setActifs }: Props) => {
                   >
                     <TableHead>
                       <TableRow>
+                        <TableCell align="left">Nom</TableCell>
                         <TableCell align="left">Numéro de série</TableCell>
                         <TableCell align="right">Adresse MAC</TableCell>
                       </TableRow>
@@ -119,6 +139,16 @@ const ActifAddForm = ({ modeles, actifs, setActifs }: Props) => {
                             },
                           }}
                         >
+                          <TableCell align="left">
+                            <TextField
+                              value={row.nom} // Use the new 'name' property
+                              onChange={(event) => {
+                                const updatedActifs = [...actifs];
+                                updatedActifs[index].nom = event.target.value; // Update the 'name' property
+                                setActifs(updatedActifs);
+                              }}
+                            />
+                          </TableCell>
                           <TableCell align="left">
                             <TextField
                               value={row.numero_serie}

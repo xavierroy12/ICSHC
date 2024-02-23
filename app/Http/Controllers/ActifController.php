@@ -355,17 +355,23 @@ class ActifController extends Controller
         }
         public function createMultiple(Request $request)
         {
+            Log::info('createMultiple function called');
             $data = $request->all();
             $id_modele = Modele::where('nom', $data[0]['modele'])->first()->id;
             foreach ($data as $newActif) {
                 $actif = new Actif;
+                $actif->nom = $newActif['nom'];
                 $actif->numero_serie = $newActif['numero_serie'];
                 $actif->adresse_mac = $newActif['adresse_mac'];
                 $actif->id_modele = $id_modele;
                 $actif->en_entrepot = true;
                 $actif->id_statut = 3;
                 $actif->id_emplacement = 1;
-                $actif->save();
+                try {
+                    $actif->save();
+                } catch (\Exception $e) {
+                    \Log::error('Failed to save actif: ' . $e->getMessage());
+                }
             }
         }
         public function showRapport($rapportName)

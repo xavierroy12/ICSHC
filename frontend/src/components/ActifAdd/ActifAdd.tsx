@@ -3,6 +3,7 @@ import { Fragment, useEffect, useState } from 'react';
 import ActifAddForm, { light_Actif } from './ActifAddForm';
 import { useNavigate } from 'react-router';
 import { LightType, SelectItem } from '../Actif/type';
+import { LightTypeEmplacement, SelectEmplacement } from '../Emplacement/type';
 import FormLayout from '../FormLayout';
 import { toast } from 'react-toastify';
 
@@ -10,6 +11,7 @@ const ActifAdd = () => {
   const navigate = useNavigate();
   const [modeles, setModeles] = useState<SelectItem[]>([]);
   const [actifs, setActifs] = useState<light_Actif[]>([]);
+  const [emplacements, setEmplacements] = useState<SelectEmplacement[]>([]); // Add this line
 
   const initialValues = {
     numero_serie: '',
@@ -25,6 +27,20 @@ const ActifAdd = () => {
           data.map((modele: LightType) => ({
             id: modele.id,
             label: modele.nom,
+          }))
+        );
+      });
+  }, []);
+
+  // New useEffect for emplacements
+  useEffect(() => {
+    fetch(window.name + 'api/emplacements/light')
+      .then((response) => response.json())
+      .then((data) => {
+        setEmplacements(
+          data.map((emplacement: LightTypeEmplacement) => ({
+            id: emplacement.id,
+            label: emplacement.nom,
           }))
         );
       });
@@ -84,6 +100,7 @@ const ActifAdd = () => {
                   modeles={modeles}
                   actifs={actifs}
                   setActifs={setActifs}
+                  emplacements={emplacements}
                 />
               </div>
             </FormLayout>

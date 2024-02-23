@@ -21,5 +21,9 @@ class TypeClientSeeder extends Seeder
             'nom' => 'Élève',
         ]);
 
+        DB::table('type_client')->insert([
+            'nom' => 'Emplacement',
+        ]);
+
     }
 }

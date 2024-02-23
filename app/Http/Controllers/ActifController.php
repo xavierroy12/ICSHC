@@ -8,7 +8,7 @@ use App\Models\Actif;
 use App\Models\Client;
 use App\Models\Modele;
 use App\Models\Statut;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Picqer\Barcode\BarcodeGeneratorHTML;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -506,7 +506,7 @@ class ActifController extends Controller
                                         $data = $request->all();
                                         Log::info('Data: ', $data);
                                         
-                                        $nom = $data['nom'];
+                                        $nom = $data['nom'] ?? "aucun nom trouver en F12";
                                         $numero_serie = $data['numero_serie'];
                                         
                                         $actif = Actif::where('numero_serie', $numero_serie)->first();
@@ -515,9 +515,11 @@ class ActifController extends Controller
                                             $actif->nom = $nom;
                                             $actif->save();
                                             http_response_code(200); // Success
+                                            Log::info('Actif modified successfully');
                                             return response()->json(['message' => 'Actif modified successfully']);
                                         } else {
                                             http_response_code(404); // Not Found
+                                            Log::info('Actif not found in inventory');
                                             return response()->json(['message' => 'Actif not found in inventory, cannot be modified']);
                                         }
                                     }
@@ -772,14 +774,12 @@ class ActifController extends Controller
 
                                             $actif = Actif::find($id);
                                             if ($actif) {
-                                                // Generate a QR code for the actif's serial number
-                                                $qrCode = QrCode::format('png')->size(200)->generate($actif->numero_serie);
-                                                
-                                                // Convert the QR code to a data URL so it can be included in the view
-                                                $qrCodeUrl = 'data:image/png;base64,' . base64_encode($qrCode);
-                                                
+                                                // Generate a barcode for the actif's serial number
+                                                $generator = new BarcodeGeneratorHTML();
+                                                $barcode = $generator->getBarcode($actif->numero_serie, $generator::TYPE_CODE_128);
+
                                                 // Return a view with the label
-                                                return view('label', ['actif' => $actif, 'qrCodeUrl' => $qrCodeUrl]);
+                                                return view('label', ['actif' => $actif, 'barcode' => $barcode]);
                                             }
 
                                         }

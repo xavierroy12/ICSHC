@@ -1,7 +1,7 @@
 # Inventory To-Do List
 
-- [ ] Make a label generator
-- [ ] Assign an actif to an emplacement
+- [ ] Make a label generator -SEMIDONE verify with printer
+- [ ] Assign an actif to an emplacement -SEMIDONE, actif avec emplacement dans limportation
 - [ ] Verify the list of emplacements
 - [ ] Create a flag to tag items that trigger an alert as "OK"
 - [ ] Remake an admin access to test admin features

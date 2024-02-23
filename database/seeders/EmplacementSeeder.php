@@ -271,12 +271,6 @@ class EmplacementSeeder extends Seeder
             'adresse' => 'route de l\'Église',
         ]);
 
-        DB::table('emplacement')->insert([
-            'matricule' => '095',
-            'nom' => 'École de la Voie-Lactée',
-            'numero_civique' => '27',
-            'adresse' => 'route de l\'Église',
-        ]);
 
         DB::table('emplacement')->insert([
             'matricule' => '082',

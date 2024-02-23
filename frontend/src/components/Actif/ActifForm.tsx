@@ -302,7 +302,7 @@ const ActifForm = ({
               window.open('https://inventaireapi.csshc.gouv.qc.ca/label/' + id, '_blank');
             }}
           >
-            Generate Label
+            Générer étiquette
           </Button>
         </Grid>
         <Grid item xs={12}>

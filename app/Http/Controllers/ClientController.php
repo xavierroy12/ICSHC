@@ -9,6 +9,7 @@ use App\Http\Controllers\EmplacementController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActifController;
 use App\Models\TypeClient;
+use Illuminate\Support\Facades\Log;
 
 
 class ClientController extends Controller
@@ -49,15 +50,34 @@ class ClientController extends Controller
         $totalClients = count($clients);
         $counter = 0;
         $typeClient = TypeClient::where('nom', 'Employé')->first();
-
+        $uniqueLieux = [];
+        Log::info('new Test');
         foreach ($clients as $client) {
+            $inactive = False;
+            if ($client['LIEU'] == '---') {
+                Log::info("Client is inactive");
+                $inactive = True;
+            }
             $matriculeLieu = $client['LIEU'];
+
             $emplacement = $emplacementController->getEmplacement($matriculeLieu);
+
+            if(isset($emplacement) && $emplacement != null){
+
+            }
+            else{
+                if (!in_array($client['LIEU'], $uniqueLieux)) {
+                    // Add 'LIEU' to the array
+                    $uniqueLieux[] = $client['LIEU'];
+                }
+            }
+
             $clientData = [
                 'matricule' => $client["MATR"],
                 'nom' => $client["NOM"],
                 'prenom' => $client["PRNOM"],
                 'id_type_client' => $typeClient->id,
+                'inactif' => $inactive,
             ];
 
             $existingClient = Client::where('matricule', $client["MATR"])->first();
@@ -78,17 +98,21 @@ class ClientController extends Controller
                 }
             }
 
-
-
             if ($existingClient) {
                 $existingClient->update($clientData);
 
-            } else {
-                Client::create($clientData);
+            } 
+            else {
+                $newClient = Client::create($clientData);
+                Log::info("New client created: " . print_r($newClient->toArray(), true));
+
             }
             $counter++;
-            error_log("Processed client {$counter} out of {$totalClients}");
+            Log::info("Processed client {$counter} out of {$totalClients}");
 
+        }
+        foreach ($uniqueLieux as $lieu) {
+            Log::info("Unique Lieu: " . $lieu);
         }
     }
 
@@ -112,6 +136,7 @@ class ClientController extends Controller
         foreach ($eleves as $eleve) {
             $matriculeLieu = $eleve['ECO'];
             $emplacement = $emplacementController->getEmplacement($matriculeLieu);
+            
 
             $clientData = [
                 'matricule' => $eleve["FICHE"],

@@ -221,7 +221,7 @@ class ActifController extends Controller
                 'numero_commande' => $actif->numero_commande,
                 'numero_serie' => $actif->numero_serie,
                 'nom' => $actif->nom,
-                'modele' => $actif->modele->nom,
+                'modele' => $actif->modele->nom ?? "Aucun",
                 'categorie' => $actif->modele->categorie->nom,
                 'statut' => $actif->statut->nom,
                 'client' => $actif->client ? ($actif->client->prenom . ' ' . $actif->client->nom) : 'Aucun',

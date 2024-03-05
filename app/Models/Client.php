@@ -19,6 +19,7 @@ class Client extends Model
         'courriel',
         'emplacement_manuel',
         'id_poste',
+        'inactif',
         'actifs',
         'id_type_client',
         'id_emplacement',

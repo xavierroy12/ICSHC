@@ -62,7 +62,7 @@ class EmplacementSeeder extends Seeder
 
         DB::table('emplacement')->insert([
             'matricule' =>'021',
-            'nom' => 'Centre de formation professionnelle du Haut-Saint-François',
+            'nom' => 'CFP du Haut-Saint-François',
             'numero_civique' => '188',
             'adresse' => 'rue Kennedy',
             "est_proprietaire" => true,
@@ -70,7 +70,7 @@ class EmplacementSeeder extends Seeder
 
         DB::table('emplacement')->insert([
             'matricule' => '011',
-            'nom' => 'Centre d\'éducation des adultes de la CSHC',
+            'nom' => 'Centre d\'éducation des adultes (East-Angus)',
             'numero_civique' => '188',
             'adresse' => 'rue Kennedy',
         ]);
@@ -133,14 +133,14 @@ class EmplacementSeeder extends Seeder
 
         DB::table('emplacement')->insert([
             'matricule' => '023',
-            'nom' => 'Centre de formation professionnelle de Coaticook',
+            'nom' => 'CFP de Coaticook',
             'numero_civique' => '125',
             'adresse' => 'rue Morgan',
         ]);
 
         DB::table('emplacement')->insert([
             'matricule' => '013',
-            'nom' => 'Centre d\'éducation des adultes de la CSHC',
+            'nom' => 'Centre d\'éducation des adultes (Coaticook)',
             'numero_civique' => '125',
             'adresse' => 'rue Morgan',
         ]);
@@ -217,14 +217,14 @@ class EmplacementSeeder extends Seeder
 
         DB::table('emplacement')->insert([
             'matricule' => '022',
-            'nom' => 'Centre de formation professionnelle Le Granit',
+            'nom' => 'CFP Le Granit',
             'numero_civique' => '3409',
             'adresse' => 'rue Laval',
         ]);
 
         DB::table('emplacement')->insert([
             'matricule' => '012',
-            'nom' => 'Centre d\'éducation des adultes de la CSHC',
+            'nom' => 'Centre d\'éducation des adultes (Lac-Mégantic)',
             'numero_civique' => '3800',
             'adresse' => 'rue Cousineau',
         ]);
@@ -329,10 +329,60 @@ class EmplacementSeeder extends Seeder
         ]);
 
         DB::table('emplacement')->insert([
+            'matricule' => '041',
+            'nom' => 'École Monseigneur-Durand',
+            'numero_civique' => '311',
+            'adresse' => 'rue Saint-Paul Est',
+        ]);
+
+        DB::table('emplacement')->insert([
             'matricule' => '000',
             'nom' => 'Lieu à déterminer',
             'numero_civique' => '000',
             'adresse' => 'Non-applicable',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' =>'421',
+            'nom' => 'CFP du Haut-Saint-François',
+            'numero_civique' => '188',
+            'adresse' => 'rue Kennedy',
+            "est_proprietaire" => true,
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '311',
+            'nom' => 'Centre d\'éducation des adultes (East Angus)',
+            'numero_civique' => '188',
+            'adresse' => 'rue Kennedy',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '422',
+            'nom' => 'CFP Le Granit',
+            'numero_civique' => '3409',
+            'adresse' => 'rue Laval',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '312',
+            'nom' => 'Centre d\'éducation des adultes (Lac-Mégantic)',
+            'numero_civique' => '3800',
+            'adresse' => 'rue Cousineau',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '423',
+            'nom' => 'CFP de Coaticook',
+            'numero_civique' => '125',
+            'adresse' => 'rue Morgan',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '313',
+            'nom' => 'Centre d\'éducation des adultes (Coaticook)',
+            'numero_civique' => '125',
+            'adresse' => 'rue Morgan',
         ]);
 
         DB::table('emplacement')->insert([

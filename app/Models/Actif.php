@@ -17,6 +17,7 @@ class Actif extends Model
         'en_entrepot',
         'adresse_mac',
         'date_retour',
+        'created_at',
         'note',
         'id_modele',
         'modele_descriptif',

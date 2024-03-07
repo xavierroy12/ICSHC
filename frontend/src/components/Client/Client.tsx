@@ -9,7 +9,9 @@ import ActifsSelect from '../ActifsSelect/ActifsSelect';
 import { LightActif } from '../Actifs/type';
 import FormLayout from '../FormLayout';
 import { toast } from 'react-toastify';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Historique from '../Historique';
+import Switch from '@mui/material/Switch';
 
 type Client_Type = {
   id: number;
@@ -20,15 +22,26 @@ type Client_Type = {
   type_client: string;
   updated_at: string;
   actifs: Actif[];
+  triggerAlerts: number; // add this line
 };
 
 const Client = () => {
   const { id } = useParams<{ id: string }>();
   const [selectedActifs, setSelectedActifs] = useState<LightActif[]>([]);
   const [actifs, setActifs] = useState<Actif[]>([]);
-  const [client, setClient] = useState<Client_Type>();
+  const [client, setClient] = useState<Client_Type | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>();
   const ref = useRef(null);
+
+  const handleToggle = () => {
+    console.log('client', client);
+    if (client) {
+      setClient({
+        ...client,
+        triggerAlerts: client.triggerAlerts ? 0 : 1,
+      });
+    }
+  };
 
   useEffect(() => {
     Promise.all([
@@ -39,7 +52,6 @@ const Client = () => {
         .then(([fetchedActif, fetchedClient]) => {
           setActifs(fetchedActif);
           setClient(fetchedClient);
-          console.log(fetchedClient);
           if (fetchedClient.actifs)
             setSelectedActifs(
               fetchedClient.actifs.map((actif: Actif) => ({
@@ -65,7 +77,10 @@ const Client = () => {
         'Content-Type': 'application/json',
         'X-User-Action-Id': id_user, // send the user id in a custom header
       },
-      body: JSON.stringify({ actifs: selectedRows }),
+      body: JSON.stringify({
+        actifs: selectedRows,
+        triggerAlerts: client?.triggerAlerts ? 1 : 0, // access triggerAlerts from client state
+    }),
     })
       .then((response) => response.json())
       .then(() => {
@@ -74,6 +89,7 @@ const Client = () => {
       .catch(() => {
         toast.error('Une erreur est survenue');
       });
+
   };
 
   return (
@@ -159,7 +175,21 @@ const Client = () => {
                             sx={{ width: 300 }}
                           />
                         </LocalizationProvider>
-                      </Grid>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                        <FormControlLabel
+                            control={
+                            <Switch
+                                checked={client ? Boolean(client.triggerAlerts) : false}
+                                onChange={handleToggle}
+                                name="triggerAlert"
+                                inputProps={{ 'aria-label': 'Trigger Alert' }}
+                                className="input-label "
+                            />
+                            }
+                            label="Active les alertes"
+                        />
+                            </Grid>
                       <Grid item xs={12} sm={12}>
                         <ActifsSelect
                           ref={ref}

@@ -45,9 +45,13 @@ const Dashboard = () => {
     try {
       const response = await fetch(`${window.name}api/getAllAlerts`);
       const data = await response.json();
+      console.log(data); // Log the data here
+
       const alertsWithData = data.filter(
         (alert: { data: any[] }) => alert.data.length > 0
       );
+      console.log(alertsWithData); // Log the data here
+
       setAllAlerts(alertsWithData);
       setOpen(new Array(alertsWithData.length).fill(false));
     } catch (error) {

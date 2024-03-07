@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('courriel', 64)->nullable();
             $table->boolean('emplacement_manuel')->default(FALSE);
             $table->boolean('inactif')->default(FALSE);
-
+            $table->boolean('triggerAlerts')->default(TRUE);
+            $table->boolean('is_Emplacement')->default(False);
             $table->unsignedBigInteger('id_poste')->nullable();
             $table->unsignedBigInteger('id_type_client');
             $table->unsignedBigInteger('id_actif')->nullable();

@@ -26,7 +26,7 @@ import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import AdminPanel from './components/AdminPanel';
 
 if (process.env.NODE_ENV === 'development') {
-  window.name = 'http://localhost:8000/';
+  window.name = 'http://127.0.0.1:8000/';
 } else {
   window.name = 'https://inventaireApi.csshc.gouv.qc.ca/';
 }

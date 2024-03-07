@@ -101,7 +101,7 @@ class ClientController extends Controller
             if ($existingClient) {
                 $existingClient->update($clientData);
 
-            } 
+            }
             else {
                 $newClient = Client::create($clientData);
                 Log::info("New client created: " . print_r($newClient->toArray(), true));
@@ -136,7 +136,7 @@ class ClientController extends Controller
         foreach ($eleves as $eleve) {
             $matriculeLieu = $eleve['ECO'];
             $emplacement = $emplacementController->getEmplacement($matriculeLieu);
-            
+
 
             $clientData = [
                 'matricule' => $eleve["FICHE"],
@@ -206,6 +206,7 @@ class ClientController extends Controller
                 'actifs' => $client->actifs,
                 'emplacement' => $client->emplacement->nom ?? 'Aucun',
                 'poste' => $client->poste->nom ?? 'Aucun',
+                'triggerAlerts' => $client->triggerAlerts,
                 'type_client' => $client->type_client->nom ?? 'Aucun',
             ];
         }
@@ -256,6 +257,7 @@ class ClientController extends Controller
     {
         $clients = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])
             ->where('inactif', false)
+            ->where('is_Emplacement', false)
             ->get()
             ->map(
                 function ($client) {
@@ -275,9 +277,9 @@ class ClientController extends Controller
 
     public function updateActifs(Request $request, $id)
     {
+
         // Retrieve the parent model instance
         $client = Client::with(['actifs'])->findOrFail($id);
-
         // Retrieve the related models
         $old_actifs = $client->actifs;
 
@@ -297,7 +299,9 @@ class ClientController extends Controller
             $actif->id_client = $client->id; // Set the id_client field to the current client's id
             $actif->save();
         }
+        $client->triggerAlerts = $data['triggerAlerts'];
 
+        $client->save();
         // Save the parent model instance
         $client->actifs()->saveMany($actifs);
 
@@ -307,8 +311,11 @@ class ClientController extends Controller
     //Personne inactif dans le système
     public function getInactifClients()
     {
+        $clientsNoAlert = Client::where('triggerAlerts', false)->pluck('id');
+
         $clients = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])
             ->where('inactif', true)
+            ->whereNotIn('id', $clientsNoAlert)
             ->get()
             ->map(
                 function ($client) {
@@ -323,6 +330,9 @@ class ClientController extends Controller
                     ];
                 }
             );
+
+
+
         return response()->json($clients);
     }
 
@@ -331,11 +341,14 @@ class ClientController extends Controller
     {
         $fiveYearsAgo = now()->subYears(5);
 
+        $clientsNoAlert = Client::where('triggerAlerts', false)->pluck('id');
+
+
         $clients = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])
-            ->where('inactif', false)
             ->whereHas('actifs', function ($query) use ($fiveYearsAgo) {
                 $query->whereDate('created_at', '<=', $fiveYearsAgo);
             })
+            ->whereNotIn('id', $clientsNoAlert)
             ->get()
             ->map($this->clientMapFunction());
 
@@ -345,23 +358,30 @@ class ClientController extends Controller
     // Personne ayant plus de 1 appareil
     public function getMoreThanOneActifs()
     {
+        $clientsNoAlert = Client::where('triggerAlerts', false)->pluck('id');
+
+
         $clients = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])
             ->has('actifs', '>', 1)
+            ->whereNotIn('id', $clientsNoAlert)
             ->get()
             ->map($this->clientMapFunction());
-
         return response()->json($clients);
     }
 
     // Personne que le lieu d’attribution ne concorde pas avec l’appareil
     public function getMismatchedActifs()
     {
+        $clientsNoAlert = Client::where('triggerAlerts', false)->pluck('id');
+
         $clients = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])
-            ->whereHas('actifs', function ($query) {
-                $query->whereColumn('actif.id_emplacement', '!=', 'client.id_emplacement');
-            })
-            ->get()
-            ->map($this->clientMapFunction());
+        ->whereHas('actifs', function ($query) {
+            $query->whereColumn('actif.id_emplacement', '!=', 'client.id_emplacement');
+        })
+        ->whereNotIn('id', $clientsNoAlert)
+        ->get()
+        ->map($this->clientMapFunction());
+
 
         return response()->json($clients);
     }
@@ -369,11 +389,16 @@ class ClientController extends Controller
     // Personne ayant des appareils et ne travaillant plus pour vous
     public function getInnactiveActifs()
     {
+        $clientsNoAlert = Client::where('triggerAlerts', false)->pluck('id');
+
+
         $clients = Client::with(['actifs', 'emplacement', 'poste', 'type_client'])
             ->where('inactif', true)
             ->whereHas('actifs')
+            ->whereNotIn('id', $clientsNoAlert)
             ->get()
             ->map($this->clientMapFunction());
+
 
         return response()->json($clients);
     }
@@ -396,6 +421,7 @@ class ClientController extends Controller
     public function getAllAlerts()
     {
         $alerts = [];
+
 
         // Personne que le lieu d’attribution ne concorde pas avec l’appareil (alerte rouge)
         $mismatchedActifs = $this->getMismatchedActifs()->original;
@@ -426,7 +452,17 @@ class ClientController extends Controller
             $alerts[] = ['type' => 'success', 'message' => 'Aucun problème détecté!', 'data' => []];
         }
 
+
         return response()->json($alerts);
+    }
+
+    public function updateAlerts(Request $request, $id)
+    {
+        $client = Client::findOrFail($id);
+        $data = $request->all();
+        $client->triggerAlerts = $data['triggerAlerts'];
+        $client->save();
+        return response()->json($client);
     }
 
 

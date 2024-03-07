@@ -65,14 +65,14 @@ function Login() {
         setLoginStatus('Problème de serveur : ' + error);
       });
   };
-{/*}
-  const bypass = () => {
-    document.cookie = `CookieLogged=${'Minou'}; expires=${new Date(
-      Date.now() + 60 * 24 * 60 * 60 * 1000
-    ).toUTCString()}; path=/`;
-    localStorage.setItem('id_user', '1');
-    window.location.href = '/';
-  };*/}
+
+    const bypass = () => {
+        document.cookie = `CookieLogged=${'Minou'}; expires=${new Date(
+          Date.now() + 60 * 24 * 60 * 60 * 1000
+        ).toUTCString()}; path=/`;
+        localStorage.setItem('id_user', '1');
+        window.location.href = '/';
+      };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -132,14 +132,14 @@ function Login() {
             >
               Se connecter
             </Button>
-           {/* <Button
+           { <Button
               onClick={bypass}
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
               bypass
-        </Button>*/}
+        </Button>}
           </Box>
         </Box>
       </Container>

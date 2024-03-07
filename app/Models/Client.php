@@ -20,6 +20,8 @@ class Client extends Model
         'emplacement_manuel',
         'id_poste',
         'inactif',
+        'triggerAlerts',
+        'is_Emplacement',
         'actifs',
         'id_type_client',
         'id_emplacement',

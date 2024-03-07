@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-//use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\LogController;
 
 class LogRequestMiddleware
@@ -19,6 +19,7 @@ class LogRequestMiddleware
 
     public function handle(Request $request, Closure $next)
     {
+        Log::info('LogRequestMiddleware');
         if ($request->isMethod('post')) {
             $path = str_replace('api/', '', $request->path());
             $actionName = $request->route()->getActionName();

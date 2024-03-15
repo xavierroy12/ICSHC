@@ -1,3 +1,4 @@
+
 import ModeleForm from './ModeleForm';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { LightType, SelectItem } from '../Actif/type';
@@ -155,6 +156,7 @@ const Modele = () => {
                       setFieldValue={setFieldValue}
                       reloadData={reloadData}
                       errors={errors}
+                      onFormSubmit={handleUpdate}
                     />
                   </FormLayout>
                 )}

@@ -14,7 +14,7 @@ class ScolagoDbModel extends Model
     private function makeConnectionDB()
     {
         $port = "2433";
-        $servername = "10.0.1.38";
+        $servername = "10.0.1.36";
         $username = "CSHC_APP_INVENTAIRE";
         $password = "2VADMgWje7TnaerTaqfU";
         $dbname = "PAIE_SCOLAGO";

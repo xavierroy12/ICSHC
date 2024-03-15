@@ -17,6 +17,7 @@ type Props = {
   categories: SelectItem[];
   values: FormikValues;
   dirty: boolean;
+  onFormSubmit: (values: FormikValues) => void;
   setFieldValue: (
     field: string,
     value: unknown,
@@ -33,6 +34,7 @@ const ModeleForm = ({
   setFieldValue,
   reloadData,
   errors,
+  onFormSubmit, // Add this line
 }: Props) => {
   const [open, setOpen] = useState(false);
   const localDarkMode = window.localStorage.getItem('darkMode');
@@ -41,7 +43,7 @@ const ModeleForm = ({
 
   return (
     <div>
-      <Form>
+      <Form onSubmit={onFormSubmit}>
         <Grid
           container
           spacing={3}
@@ -126,6 +128,8 @@ const ModeleForm = ({
               onChange={(event: SyntheticEvent) => {
                 const target = event.target as HTMLInputElement;
                 setFieldValue('favoris', target.checked);
+                console.log('Favoris value:', target.checked); // Log the value
+
               }}
             />
           </Grid>

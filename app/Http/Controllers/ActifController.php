@@ -210,26 +210,29 @@ class ActifController extends Controller
     
     public function listShow()
     {
-        $actifs = Actif::with(['modele.categorie', 'statut', 'client', 'emplacement'])
-        ->whereHas('statut', function ($query) {
-            $query->where('nom', '!=', 'Archivé');
-        })
-        ->get()
-        ->map(function ($actif) {
-            return [
-                'id' => $actif->id,
-                'numero_commande' => $actif->numero_commande,
-                'numero_serie' => $actif->numero_serie,
-                'nom' => $actif->nom,
-                'modele' => $actif->modele->nom ?? "Aucun",
-                'categorie' => $actif->modele->categorie->nom,
-                'statut' => $actif->statut->nom,
-                'client' => $actif->client ? ($actif->client->prenom . ' ' . $actif->client->nom) : 'Aucun',
-                'emplacement' => $actif->emplacement ? ($actif->emplacement->matricule . " - " . $actif->emplacement->nom) : '000 - Aucun emplacement',
-                //'emplacement' => $actif->emplacement->matricule . " - " . $actif->emplacement->nom,
-            ];
-        });
-        return response()->json($actifs);
+        try {
+            $actifs = Actif::with(['modele.categorie', 'statut', 'client', 'emplacement'])
+            ->whereHas('statut', function ($query) {
+                $query->where('nom', '!=', 'Archivé');
+            })
+            ->get()
+            ->map(function ($actif) {
+                return [
+                    'id' => $actif->id ?? "Non définie",
+                    'numero_commande' => $actif->numero_commande,
+                    'numero_serie' => $actif->numero_serie,
+                    'nom' => $actif->nom,
+                    'modele' => $actif->modele->nom ?? "Aucun",
+                    'categorie' => $actif->modele->categorie->nom ?? "Non définie",
+                    'statut' => $actif->statut->nom,
+                    'client' => $actif->client ? ($actif->client->prenom . ' ' . $actif->client->nom) : 'Aucun',
+                    'emplacement' => $actif->emplacement ? ($actif->emplacement->matricule . " - " . $actif->emplacement->nom) : '000 - Aucun emplacement',
+                ];
+            });
+            return response()->json($actifs);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to retrieve actifs: ' . $e->getMessage()], 500);
+        }
     }
     
     public function showActif($id)
@@ -315,9 +318,9 @@ class ActifController extends Controller
         
         
         
-        public function createActifsCommande($produit, $no_commande)
+        public function createActifsCommande($produit, $no_commande, $emplacement)
         {
-            $modele_descriptif = 'Nom : ' . $produit['nom_produit']  . "Description : " . $produit['description'];
+            $modele_descriptif = 'Nom : ' . $produit['nom_produit']  . " Description : " . $produit['description'];
             $id_modele = $this->findModele($modele_descriptif);
             $quantite = $produit['quantite_produit'];
             
@@ -330,6 +333,7 @@ class ActifController extends Controller
                 $actif->en_entrepot = FALSE;
                 $actif->id_statut = 2; // Always 2 in this instance, en attente de reception
                 $actif->id_utilisation = 3; // 3 veut dire Autre
+                $actif->id_emplacement = $emplacement;
                 if ($id_modele) {
                     $actif->id_modele = $id_modele;
                 }
@@ -356,7 +360,7 @@ class ActifController extends Controller
         public function createMultiple(Request $request)
         {
             Log::info('createMultiple function called');
-            $data = $request->all();
+            $data = $request->all(); 
             $id_modele = Modele::where('nom', $data[0]['modele'])->first()->id;
             foreach ($data as $newActif) {
                 $actif = new Actif;

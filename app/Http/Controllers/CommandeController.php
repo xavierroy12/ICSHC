@@ -189,7 +189,7 @@ class CommandeController extends Controller
             if (isset($data['produits'])) {
                 $produits = $data['produits'];
                 foreach ($produits as $produit) {
-                    $actifController->createActifsCommande($produit, $data["no_commande"]);
+                    $actifController->createActifsCommande($produit, $data["no_commande"],$emplacement_id);
                 }
             }
 

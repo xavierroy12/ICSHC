@@ -54,6 +54,8 @@ const AddModelModal = ({
       .then((response) => {
         if (response.ok) {
           toast.success('Données sauvegardées avec succès');
+          reloadModeles(); // Call reloadModeles here
+
         } else {
           toast.error('Une erreur est survenue');
         }
@@ -66,7 +68,7 @@ const AddModelModal = ({
 
   const reloadModeles = () => {
     setTimeout(() => {
-      fetch(window.name + 'api/modeles/light')
+      fetch(window.name + 'api/modeles/light/favorite')
         .then((response) => response.json())
         .then((data) => {
           setModeles(
@@ -129,6 +131,14 @@ const AddModelModal = ({
                   setFieldValue={setFieldValue}
                   reloadData={reloadData}
                   errors={errors}
+                  onFormSubmit={() => {
+                    handleSubmitModele
+                    const validationErrors = validate(values);
+                    if (Object.keys(validationErrors).length === 0) {
+                      handleSubmitModele(values);
+                    }
+
+                  }}
                 />
               </div>
             )}

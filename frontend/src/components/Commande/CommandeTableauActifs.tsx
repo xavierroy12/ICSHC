@@ -46,6 +46,7 @@ const CommandeTableauActifs = ({ commande, setCommande }: Props) => {
                     </TableCell>
                     <TableCell align="left">
                       <TextField
+                        required
                         defaultValue={row.numero_serie}
                         onChange={(event) => {
                           const updatedActifs = commande.actifs.map((actif) => {
@@ -65,6 +66,7 @@ const CommandeTableauActifs = ({ commande, setCommande }: Props) => {
                     </TableCell>
                     <TableCell align="right">
                       <TextField
+                        required
                         defaultValue={row.adresse_mac}
                         onChange={(event) => {
                           const updatedActifs = commande.actifs.map((actif) => {

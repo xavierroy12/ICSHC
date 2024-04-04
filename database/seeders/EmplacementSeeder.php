@@ -195,7 +195,7 @@ class EmplacementSeeder extends Seeder
         ]);
 
         DB::table('emplacement')->insert([
-            'matricule' => '185',
+            'matricule' => '085',
             'nom' => 'École de Ligugé',
             'numero_civique' => '194',
             'adresse' => 'rue de l\'Église',
@@ -241,6 +241,13 @@ class EmplacementSeeder extends Seeder
             'nom' => 'École des Monts-et-Lacs',
             'numero_civique' => '687',
             'adresse' => 'rue Dumas',
+        ]);
+
+        DB::table('emplacement')->insert([
+            'matricule' => '111',
+            'nom' => 'SAE',
+            'numero_civique' => '',
+            'adresse' => '',
         ]);
 
         DB::table('emplacement')->insert([

@@ -295,6 +295,7 @@ class ActifController extends Controller
             ->where('id_statut', $statut_archived->id)
             ->get()
             ->map(function ($actif) {
+                Log::info('actif emplacement is ' . $actif);
                 return [
                     'id' => $actif->id,
                     'numero_commande' => $actif->numero_commande,
@@ -308,8 +309,8 @@ class ActifController extends Controller
                     'statut_id' => $actif->statut->id,
                     'client' =>  $actif->client ? ($actif->client->prenom . ' ' . $actif->client->nom) : 'Aucun',
                     'client_id' => $actif->client ? $actif->client->id : null,
-                    'emplacement' => $actif->emplacement->matricule . " - " . $actif->emplacement->nom,
-                    'emplacement_id' => $actif->emplacement->id,
+                    'emplacement' => ($actif->emplacement->matricule ?? "000") . " - " . ($actif->emplacement->nom ?? "N/A"),                    
+                    'emplacement_id' => $actif->emplacement->id ?? null,
                 ];
             });
             
@@ -350,7 +351,6 @@ class ActifController extends Controller
             
             foreach ($actifs as $actif) {
                 if ($actif->id_modele) {
-                    Log::info("in the if statement");
                     return $actif->id_modele;
                 }
             }
@@ -381,7 +381,6 @@ class ActifController extends Controller
         public function showRapport($rapportName)
         {
             
-            Log::info('showRapport function called with rapportName: ' . $rapportName);
             $data = null;
             switch ($rapportName) {
                 case ("ActifsEcole"):
@@ -514,7 +513,6 @@ class ActifController extends Controller
                                     public function modifierParF12(Request $request)
                                     {
                                         $data = $request->all();
-                                        Log::info('Data: ', $data);
                                         
                                         $nom = $data['nom'] ?? "aucun nom trouver en F12";
                                         $numero_serie = $data['numero_serie'];
@@ -547,21 +545,48 @@ class ActifController extends Controller
                                         $statusMapping = [
                                             'Déployable' => 'Déployable',
                                             'A LOCALISER' => 'Perdu',
+                                            'A LOCALISER (deployed)' => 'Perdu',
+                                            'NON TROUVÉ (deployed)' => 'Perdu',
                                             'En attente' => 'En réparation',
                                             'A réparer' => 'En réparation',
+                                            ' A réparer (undeployable)' =>  'En réparation',
+                                            'A réparer (deployed)' => 'En réparation',
+                                            ' A réparer (deployed)' => 'En réparation',
                                             'A ré-imager' => 'En réparation',
+                                            'A ré-imager (deployed)' => 'En réparation',
                                             'Déployable Déployé' => 'Déployé',
+                                            'Déployable Déployé (deployed)' => 'Déployé',
                                             'Distribué' => 'Déployé',
                                             'En préparation' => 'Déployable',
+                                            'En préparation (deployable)' => 'Déployable',
+                                            'En attente (pending)' => 'En réparation',
                                             'NON TROUVÉ' => 'Perdu',
                                             'Pour pièces' => 'Hors service',
                                             'Recu' => 'Déployable',
+                                            'Recu (pending)' => 'Déployable',
                                             'Retiré' => 'Archivé',
+                                            'Retiré (archived)' => 'Archivé',
+                                            'Distribué (deployed)' => 'Déployé',
+                                            'Déployable (deployed)' => 'Déployé',
+                                            'Distribué (deployable)' => 'Déployé',
+                                            'Déployable (deployable)' => 'Déployable',
+                                            'Déployable Déployé (deployable)' => 'Déployable',
+                                            'Retiré (deployed)' => 'Archivé',
+                                            'A ré-imager (pending)' => 'En réparation',
+                                            ' A réparer (undeployable)' => 'En réparation',
+                                            'Pour pièces (undeployable)' => 'Hors service',
+                                            'A réparer (undeployable)' => 'En réparation',
+
                                             // Add more mappings as needed...
                                         ];
                                         
                                         // Find the new status name based on the old status string
                                         $newStatusName = $statusMapping[$oldStatus] ?? 'Inconnue';
+
+                                        // If the new status name is 'Inconnue', log the old status
+                                        if ($newStatusName === 'Inconnue') {
+                                            Log::info('Old status not found in mapping: ' . $oldStatus);
+                                        }
                                         //Set en_entrepot
                                         if($newStatusName == 'Déployable' || $newStatusName == 'En réparation' || $newStatusName == 'Hors service' || $newStatusName == 'Archivé'){
                                             $entreposer = True;
@@ -572,6 +597,7 @@ class ActifController extends Controller
                                         // Fetch the id of the Statut with the new status name
                                         $status = Statut::firstWhere('nom', $newStatusName);
                                         $id_statut = $status ? $status->id : null;
+                                       
                                         
                                         
                                         
@@ -581,14 +607,12 @@ class ActifController extends Controller
                                             $id_emplacement = $this->findIdUtilisateurInactif();
                                         }
                                         else if($location == 'Équipe volante'){
-                                            Log::error('is this it ?' . $propriete);
                                             $id_emplacement = $this->findIdEquipeVolante();
                                         }
                                         else if($location != null){
                                             $id_emplacement = $this->splitNomEmplacement($location);
                                         }
                                         else{
-                                            Log::info('No emplacement found');
                                             $id_emplacement = null;
                                         }
                                         
@@ -609,19 +633,15 @@ class ActifController extends Controller
                                                 $id_proprietaire = $this->findIdEER();
                                             }
                                             else{
-                                                Log::error('this is where the error is support to pop : ' . $propriete);
                                                 $id_proprietaire = $this->splitNomEmplacement($propriete);
                                             }
                                         }
                                         else{
-                                            Log::info('No proprietaire found');
                                             $id_proprietaire = null;
                                         }
                                         
                                         
-                                        Log::error('client before pregmatch is : ' . $client);
                                         if (preg_match('/^\d{3}/', $client) || $client == null) {
-                                            Log::info('Client is emplacement or null : ' . $client);
                                             $id_client = null;
                                         } else {
                                             $id_client = $this->splitNomClient($client);
@@ -629,7 +649,14 @@ class ActifController extends Controller
                                         
                                         
                                         
-                                        
+                                        if($id_emplacement == null && $location != null){
+                                            Log::info('No emplacement found for : ' . $serial . "Location is : " . $location); 
+
+                                        }
+                                        if($id_emplacement == null)
+                                        {
+                                            Log::info('No emplacement found for : ' . $serial . " but location is probably null"); 
+                                        }
                                         $actif = Actif::create([
                                             'numero_serie' => $serial, //ok
                                             'nom' => $assetName, //ok
@@ -670,7 +697,6 @@ class ActifController extends Controller
                                                 // If the emplacement was found, use its id
                                                 $id_proprietaire = $SI_emplacement->id;
                                             } else {
-                                                Log::info('Emplacement with matricule 999 not found');
                                                 $id_proprietaire = null;
                                             }
                                             return $id_proprietaire;
@@ -737,7 +763,6 @@ class ActifController extends Controller
                                         
                                         private function splitNomEmplacement($nomEmplacement)
                                         {
-                                            Log::info('Attemping to split emplacement : ' . $nomEmplacement);
                                             list($matricule, $nom) = explode(' - ', $nomEmplacement);
                                             // Trim the values to remove any extra spaces
                                             $matricule = trim($matricule);
@@ -757,7 +782,6 @@ class ActifController extends Controller
                                         }
                                         
                                         private function splitNomClient($fullName){
-                                            Log::info('Client name: ' . $fullName);
                                             // Split the full name into first name and last name
                                             list($prenom, $nom) = explode(' ', $fullName, 2);
                                             
@@ -772,7 +796,6 @@ class ActifController extends Controller
                                                 // If the client was found, use its id
                                                 $id_client = $client->id;
                                             } else {
-                                                Log::info('Client with name ' . $client . ' not found');
                                                 $id_client = null;
                                             }
                                             return $id_client;

@@ -16,6 +16,7 @@ class Commande extends Model
 
     protected $fillable = [
         'numero_commande',
+        'tic_facturation',
         'nb_actif',
         'date_commande',
         'id_etat',

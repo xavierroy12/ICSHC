@@ -146,6 +146,18 @@ const Commande = () => {
   }, [numero_commande]);
 
   const handleSubmit = () => {
+    if (!commande) {
+      toast.error("La commande n'est pas défini.");
+      return;
+    }
+    // Check if numero_serie and adresse_mac fields are empty
+    const emptyFields = commande.actifs.filter(actif => !actif.numero_serie || !actif.adresse_mac);
+
+    if (emptyFields.length > 0) {
+      // If there are empty fields, show an error message and return
+      toast.error('Remplissez tous les champs obligatoires.');
+      return;
+    }
     const id_user = localStorage.getItem('id_user') || 'unknown'; // retrieve id_user from local storage, default to 'unknown';
 
     const updatedActifs = commande?.actifs.map((actif) => {

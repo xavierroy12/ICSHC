@@ -74,6 +74,29 @@ class UtilisateurController extends Controller
             return $utilisateur;
         }
     }
+    public function storeAdmin($nom_utilisateur, $nom, $token, $expiry, $email)
+    {
+
+        if ($this->userExists($nom_utilisateur)) {
+            return FALSE;
+        } else {
+            //$id_emplacement = getEmplacementFromClient($email);
+            error_log("Token is $token ");
+            $clientController = new ClientController();
+            $client = $clientController->getClientFromEmail($email);
+            $emplacement = $client->id_emplacement;
+            $utilisateur = new Utilisateur();
+            $utilisateur->nom_utilisateur = $nom_utilisateur;
+            $utilisateur->nom = $nom;
+            $utilisateur->token = $token;
+            $utilisateur->expiration = $expiry;
+            $utilisateur->courriel = $email;
+            $utilisateur->id_emplacement = $emplacement;
+            $utilisateur->id_role = 1;
+            $utilisateur->save();
+            return $utilisateur;
+        }
+    }
     //Takes the username and the token and updates the token and expiry date
     public function updateToken($nom_utilisateur, $token, $expiry)
     {
@@ -122,7 +145,7 @@ class UtilisateurController extends Controller
         } else {
             return [
                 'valid_token' => FALSE,
-                'is_admin' => $utilisateur->id_role == 1 ? TRUE : FALSE,
+                //'is_admin' => $utilisateur->id_role == 1 ? TRUE : FALSE,
             ];
         }
     }
@@ -192,7 +215,7 @@ class UtilisateurController extends Controller
             return [
                 'id' => $utilisateur->id,
                 'nom' => $utilisateur->nom,
-                'emplacement' => $utilisateur->emplacement->matricule. " - " .$utilisateur->emplacement->nom,
+                'emplacement' => ($utilisateur->emplacement->matricule ?? "000") . " - " . ($utilisateur->emplacement->nom ?? "N/A"),
                 'role' => $utilisateur->role->nom,
             ];
         });

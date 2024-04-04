@@ -88,6 +88,7 @@ class CommandeController extends Controller
 
     public function reception(Request $request, $numero_commande)
     {
+        log::info('Reception de la commande');
         $actifs = $request->all();
         foreach ($actifs as $actif) {
             $modele = Modele::where('nom', $actif['modele'])->first();
@@ -174,6 +175,7 @@ class CommandeController extends Controller
             $emplacement_id = Emplacement::where('matricule', $matricule_emplacement)->first()->id;
             log::error('line 172');
             $commande = new Commande;
+            $commande->tic_facturation = $data["tic_facturation"];
             $commande->date_commande = $data["date_creation"];
             $commande->numero_commande = $data["no_commande"];
             $commande->nb_actif = $quantiteTotal;

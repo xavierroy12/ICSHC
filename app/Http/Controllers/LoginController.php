@@ -7,6 +7,7 @@ use App\Http\Controllers\UtilisateurController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Carbon\Carbon; // Import the Carbon class
+use Illuminate\Support\Facades\Log;
 
 
 
@@ -108,13 +109,16 @@ class LoginController extends Controller
             }
             ;
             $entries = ldap_get_entries($ad, $result);
-            return $entries[0][$attrib][0];
+            if (isset($entries[0][$attrib][0])) {
+                return $entries[0][$attrib][0];
+            } else {
+                // Return null or another default value if the attribute doesn't exist
+                return null;
+            }
         }
         //Function to add user to database, store function check if user already exist
-        function addUserDb($ad, $userdn, $user, $nom)
+        function addUserDb($ad, $userdn, $user, $nom, $adm)
         {
-
-
             $utilisateur = new UtilisateurController();
             //If user exist, check if token is expired, if not return false
             if ($utilisateur->userExists($user)) {
@@ -126,9 +130,14 @@ class LoginController extends Controller
                 $token = LoginController::generateToken();
                 $test = $token['token'];
                 $email = showattrib($ad, $userdn, 'extensionattribute3');
-                $userFinal = $utilisateur->store($user, $nom, $token['token'], $token['expiration'], $email);
-
-                return $userFinal;
+                if($adm){
+                    $userFinal = $utilisateur->storeAdmin($user, $nom, $token['token'], $token['expiration'], $email);
+                    return $userFinal;
+                }
+                else{
+                    $userFinal = $utilisateur->store($user, $nom, $token['token'], $token['expiration'], $email);
+                    return $userFinal;
+                }
             }
         }
 
@@ -136,6 +145,7 @@ class LoginController extends Controller
         $domain = 'cshc.qc.ca';
         $basedn = 'dc=cshc,dc=qc,dc=ca';
         $group = 'TechInfo-GLPI';
+        $groupAdmin = 'INV_ADMIN';
 
         //LDAP connection
         $ad = ldap_connect("ldap://{$domain}");
@@ -145,18 +155,29 @@ class LoginController extends Controller
             //info of user in ldap
             $userdn = getDN($ad, $user, $basedn);
             $usercn = showattrib($ad, $userdn, 'cn');
-            $groupdn = getDN($ad, $group, $basedn);
-            $result = ldap_read($ad, $userdn, "(memberof={$groupdn})", array('dn'));
-            $email = showattrib($ad, $userdn, 'extensionattribute3');
-            error_log("User $user email is $email");
+            $groupdnAdmin = getDn($ad, $groupAdmin, $basedn);
+            $result = ldap_read($ad, $userdn, "(memberof={$groupdnAdmin})", array('dn'));
             $entries = ldap_get_entries($ad, $result);
+            $adm = false;
+            Log::info("before group admin");
 
+
+            if ($entries['count'] > 0) {
+                Log::info("User is in admin group");
+                $adm = true;
+            } else {
+                Log::info("User is not in admin group, checking normal group");
+                $groupdn = getDN($ad, $group, $basedn);
+                $result = ldap_read($ad, $userdn, "(memberof={$groupdn})", array('dn'));
+                $entries = ldap_get_entries($ad, $result);
+            }
+            $email = showattrib($ad, $userdn, 'extensionattribute3');
             // If user in group, create cookie and return user info
             if ($entries['count'] > 0) {
                 error_log("User $user is in group $group");
 
 
-                $userFinal = addUserDb($ad, $userdn, $user, $usercn);
+                $userFinal = addUserDb($ad, $userdn, $user, $usercn, $adm);
                 error_log("line 156");
                 $cookie = $this->createCookie($user);
                 $response = response()->json([

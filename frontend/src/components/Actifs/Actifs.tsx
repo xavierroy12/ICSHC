@@ -208,7 +208,7 @@ const Actifs = () => {
             >
               {({ values, handleChange, dirty, setFieldValue, errors }) => (
                 <FormLayout
-                  title="Ajouter des actifs"
+                  title="Modifier des actifs"
                   dirty={dirty}
                   handleConfirm={handleConfirm}
                   open={open}
@@ -226,6 +226,8 @@ const Actifs = () => {
                     setFieldValue={setFieldValue}
                     setSendingType={setSendingType}
                     errors={errors}
+                    selectedActifs={selectedActifs.map(actif => actif.id)} // pass only the IDs
+
                   />
                 </FormLayout>
               )}

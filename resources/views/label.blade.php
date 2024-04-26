@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Label for Actif {{ $actif->nom }}</title>
     <style>
         body {
             width: 4in; /* Adjust to match your label width */
@@ -10,6 +9,12 @@
             text-align: center;
             display: flex;
             flex-direction: column;
+            font-size: 12px; /* Adjust to reduce the size of the text */
+
+        }
+        p {
+            margin: 0; /* Remove margin from all p elements */
+            font-weight: bold;
         }
         
         p:nth-child(1) {
@@ -28,12 +33,22 @@
             align-items: center;
             margin: 0px;
         }
+        .barcode img {
+            height: 20px; /* Adjust to reduce the size of the barcode */
+            width: auto; /* Adjust to maintain the aspect ratio of the barcode */
+        }
     </style>
 </head>
 <body>
-    <p>CSS des hauts cantons</p>
-    <p>{{ $actif->nom }}</p>
-    <div class="barcode">{!! $barcode !!}</div>
-    <p>{{ $actif->numero_serie }}</p>
+    @foreach ($actifs as $actif)
+    <div style="page-break-after: always; margin-top: 10px; padding: 0;">
+            <p>C. S. S. des Hauts-Cantons</p>
+            <p>{{ $actif->nom }}</p>
+            <div class="barcode">        
+                <img src="data:image/png;base64,{{ $barcodes[$actif->id] }}" alt="Barcode">
+            </div>
+            <p>{{ $actif->numero_serie }}</p>
+        </div>
+    @endforeach
 </body>
 </html>

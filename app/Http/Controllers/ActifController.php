@@ -12,6 +12,7 @@ use Picqer\Barcode\BarcodeGeneratorHTML;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 use SplFileObject;
 
 class ActifController extends Controller
@@ -80,6 +81,23 @@ class ActifController extends Controller
         return response()->json(['message' => 'Actifs mis à jour avec succès'], 200);
     }
     
+    public function getIdFromUsername($username)
+    {
+        // Find the client by username
+        Log::info('Username is ' . $username);	
+        $client = Client::where('username', $username)->first();
+        if (!$client) {
+            $client = Client::where('matricule', $username)->first();
+        }
+    
+        if ($client) {
+            Log::info('client id is ' . $client->id);
+            return $client->id;
+        } else {
+            // Return a default value or throw an exception
+            return null;
+        }
+    }
     /**
     * Store a newly created resource in storage.
     */
@@ -532,7 +550,7 @@ class ActifController extends Controller
                                         }
                                     }
                                     
-                                    public function createActifFromImport($assetName, $serial, $purchased, $location, $checkedOut, $oldStatus, $notes, $id_modele, $propriete_si, $macAdress, $propriete, $client)
+                                    public function createActifFromImport($assetName, $serial, $purchased, $location, $checkedOut, $oldStatus, $notes, $id_modele, $propriete_si, $macAdress, $propriete, $client, $username)
                                     {
                                         //On vérifie si l'actif existe déjà dans la base de données, si oui on quitte la fonction
                                         $actif = Actif::where('numero_serie', $serial)->first();
@@ -579,6 +597,8 @@ class ActifController extends Controller
 
                                             // Add more mappings as needed...
                                         ];
+
+                                        $utilisationsMapping = 
                                         
                                         // Find the new status name based on the old status string
                                         $newStatusName = $statusMapping[$oldStatus] ?? 'Inconnue';
@@ -610,6 +630,7 @@ class ActifController extends Controller
                                             $id_emplacement = $this->findIdEquipeVolante();
                                         }
                                         else if($location != null){
+                                            log::info('Location is : ' . $location);
                                             $id_emplacement = $this->splitNomEmplacement($location);
                                         }
                                         else{
@@ -633,18 +654,24 @@ class ActifController extends Controller
                                                 $id_proprietaire = $this->findIdEER();
                                             }
                                             else{
+                                                Log::info("message : " . $propriete . " is not a valid propriete");
                                                 $id_proprietaire = $this->splitNomEmplacement($propriete);
                                             }
                                         }
                                         else{
                                             $id_proprietaire = null;
                                         }
-                                        
-                                        
+                                        Log::error("Checked out = " . $checkedOut);
+                                        log::error('Client is : ' . $client);
+    
                                         if (preg_match('/^\d{3}/', $client) || $client == null) {
                                             $id_client = null;
                                         } else {
                                             $id_client = $this->splitNomClient($client);
+                                        }
+
+                                        if($username != null){
+                                            $id_client = $this->getIdFromUsername($username);
                                         }
                                         
                                         
@@ -763,6 +790,7 @@ class ActifController extends Controller
                                         
                                         private function splitNomEmplacement($nomEmplacement)
                                         {
+
                                             list($matricule, $nom) = explode(' - ', $nomEmplacement);
                                             // Trim the values to remove any extra spaces
                                             $matricule = trim($matricule);
@@ -800,20 +828,19 @@ class ActifController extends Controller
                                             }
                                             return $id_client;
                                         }
-                                        public function generateLabel($id)
+                                        public function generateLabel($ids)
                                         {
-                                            // Find the actif by ID
-                                            log::info('in generate label');
-
-                                            $actif = Actif::find($id);
-                                            if ($actif) {
-                                                // Generate a barcode for the actif's serial number
-                                                $generator = new BarcodeGeneratorHTML();
+                                            $idArray = explode(',', $ids);
+                                            $actifs = collect(Actif::find($idArray));
+                                        
+                                            $barcodes = [];
+                                            $generator = new BarcodeGeneratorPNG();
+                                        
+                                            foreach ($actifs as $actif) {
                                                 $barcode = $generator->getBarcode($actif->numero_serie, $generator::TYPE_CODE_128);
-
-                                                // Return a view with the label
-                                                return view('label', ['actif' => $actif, 'barcode' => $barcode]);
+                                                $barcodes[$actif->id] = base64_encode($barcode);
                                             }
-
+                                        
+                                            return view('label', ['actifs' => $actifs, 'barcodes' => $barcodes]);
                                         }
                                     }

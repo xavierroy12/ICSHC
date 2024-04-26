@@ -27,6 +27,7 @@ type Props = {
   locataires: SelectItem[];
   utilisations: SelectItem[];
   proprietaires: SelectItem[];
+  sourceFinanciere: SelectItem[];
   setSendingType: (type: string) => void;
   errors: FormikErrors<FormikValues>;
 };
@@ -43,6 +44,7 @@ const ActifForm = ({
   locataires,
   utilisations,
   proprietaires,
+  sourceFinanciere,
   setSendingType,
   errors,
 }: Props) => {
@@ -218,6 +220,19 @@ const ActifForm = ({
             label="Propriétaire"
             error={errors.proprietaire ? true : false}
             helperText={errors.proprietaire}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <Field
+            //to finishcccc
+            className="input-field"
+            name="soureFinanciere"
+            component={CustomSelect}
+            options={sourceFinanciere}
+            label="Source financière"
+            error={errors.soureFinanciere ? true : false}
+            helperText={errors.soureFinanciere}
           />
         </Grid>
 

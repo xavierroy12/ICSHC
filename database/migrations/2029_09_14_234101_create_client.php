@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nom', 64)->nullable();
             $table->string('prenom', 32)->nullable();
             $table->string('courriel', 64)->nullable();
+            $table->string('username', 32)->nullable();
             $table->boolean('emplacement_manuel')->default(FALSE);
             $table->boolean('inactif')->default(FALSE);
             $table->boolean('triggerAlerts')->default(TRUE);

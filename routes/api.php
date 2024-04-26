@@ -18,6 +18,7 @@ use App\Http\Controllers\FilterController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\ImportationController;
 use App\Http\Middleware\LogRequestMiddleware;
+use App\Http\Controllers\SourceFinanciereController;
 
 
 Route::middleware(['logrequest', 'throttle:5000,1'])->group(function () {
@@ -42,7 +43,7 @@ Route::middleware(['logrequest', 'throttle:5000,1'])->group(function () {
     Route::get('/client/{id}', [ClientController::class, 'show']);
     Route::get('/clients', [ClientController::class, 'showAll']);
     Route::get('/clients/light', [ClientController::class, 'lightShow']);
-    Route::get('/clients/list', [ClientController::class, 'listShow']);
+    Route::get('/clients/list', [ClientController::class, 'listShwhow']);
     Route::post('/client/actifs/{id}', [ClientController::class, 'updateActifs']);
     Route::post('/client/alerts/{id}', [ClientController::class, 'updateAlerts']);
 
@@ -61,6 +62,8 @@ Route::middleware(['logrequest', 'throttle:5000,1'])->group(function () {
     Route::post('/modele/favoris/{id}', [ModeleController::class, 'updateFavoris']);
     Route::post('/modele/{id}', [ModeleController::class, 'update']);
     Route::post('/modele', [ModeleController::class, 'createNew']);
+
+    Route::get('/sourceFinanciere/light', [SourceFinanciereController::class, 'lightShow']);
 
     Route::get('/categories', [TypeModeleController::class, 'showAll']);
     Route::get('/categories/light', [TypeModeleController::class, 'lightShow']);

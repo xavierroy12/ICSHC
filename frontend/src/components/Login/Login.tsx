@@ -29,6 +29,11 @@ function Login() {
     setPassword(event.target.value);
   };
 
+  const handleFormSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    handleLogin();
+  };
+
   const handleLogin = () => {
     // Send email and password to server for authentication
     fetch('https://inventaireApi.csshc.gouv.qc.ca/api/login', {
@@ -94,7 +99,7 @@ function Login() {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleLogin}
+            onSubmit={handleFormSubmit}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -103,7 +108,7 @@ function Login() {
               required
               fullWidth
               id="username"
-              label="MRodrigue"
+              label="Nom d'utilisateur"
               name="username"
               autoComplete="username"
               autoFocus
@@ -125,7 +130,7 @@ function Login() {
             </Typography>
 
             <Button
-              onClick={handleLogin}
+              type="submit" // Make this button submit the form
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}

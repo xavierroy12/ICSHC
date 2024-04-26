@@ -5,6 +5,7 @@ import List from '../List';
 
 export type Commande = {
   numero_commande: string;
+  tic_facturation: string; //Somewhere over here :D
   etat: string;
   nb_actif: number;
   emplacement: string;
@@ -33,7 +34,7 @@ const CommandeList = () => {
   };
   const columns = [
     {
-      name: 'numero_commande',
+      name: 'tic_facturation',
       label: 'Numéro de commande',
       enableColumnFilter: false,
     },

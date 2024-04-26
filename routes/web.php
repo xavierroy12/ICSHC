@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::get('/label/{id}', [ActifController::class, 'generateLabel']);
+Route::get('/label/{ids}', [ActifController::class, 'generateLabel']);
 
 
 require __DIR__.'/auth.php';

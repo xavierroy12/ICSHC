@@ -141,6 +141,7 @@ class CommandeController extends Controller
         $commandes = Commande::with(['etat', 'emplacement'])->get()->map(function ($commande) {
             return [
                 "numero_commande" => $commande->numero_commande,
+                "tic_facturation" => $commande->tic_facturation ?? "Numéro de commande introuvable",
                 "etat" => $commande->etat->nom,
                 "nb_actif"=> $commande->nb_actif,
                 "emplacement" => $commande->emplacement->nom,

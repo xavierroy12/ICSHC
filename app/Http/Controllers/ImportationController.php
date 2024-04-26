@@ -32,7 +32,7 @@ class ImportationController extends Controller
         $file->fgetcsv( ";"); avec un point virgule
         */ 
         //Get CSV File from storage
-        $csvFile = storage_path('../app/CsvFiles/TestCSV.csv');
+        $csvFile = storage_path('../app/CsvFiles/TestCSV2.csv');
         $file = new SplFileObject($csvFile, 'r');
 
         // Check for BOM
@@ -41,7 +41,7 @@ class ImportationController extends Controller
             $file->rewind();
         }
 
-        $header = $file->fgetcsv( ";");
+        $header = $file->fgetcsv(";");
         $data = [];
     
         while (!$file->eof()) {
@@ -74,16 +74,20 @@ class ImportationController extends Controller
         "MAC Adress": "54BF64777858",
         "Propriété SI": "",
         "Propriété": ""
+        "Username": "xroy",
     },*/
     Log::error('NEW TEST :))))))))))))))))))))))))))))))))))))');
 
 
+
+
     foreach ($data as $row) {
+        Log::error("Checked out = " . $row['Checked Out']);
         //On appelle une fonction du modeleController qui va créer un modele à partir des données du CSV, on retourne l'id du modèle pour l'utiliser dans la creation d'un actif.
         $id_modele = $this->modeleController->createModelFromImport($row['Manufacturer'], $row['Model'], $row['Model No.'], $row['Category']);
 
         //On appelle une fonction du actifController qui va créer un actif à partir des données du CSV.
-        $this->actifController->createActifFromImport($row['Asset Name'], $row['Serial'], $row['Purchased'], $row['Location'], $row['Checked Out'], $row['Status'], $row['Notes'], $id_modele, $row['Propriété SI'], $row['MAC Adress'], $row['Propriété'], $row['Checked Out']);
+        $this->actifController->createActifFromImport($row['Asset Name'], $row['Serial'], $row['Purchased'], $row['Location'], $row['Checked Out'], $row['Status'], $row['Notes'], $id_modele, $row['Propriété SI'], $row['MAC Adress'], $row['Propriété'], $row['Checked Out'], $row['Username']);
     }
     
 

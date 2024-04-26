@@ -27,7 +27,9 @@ class DatabaseSeeder extends Seeder
             HistoriqueSeeder::class,
             CommandeSeeder::class,
             ClientSeeder::class,
+            SourceFinanciereSeeder::class,
             ActifSeeder::class,
+            
         ]);
     }
 }

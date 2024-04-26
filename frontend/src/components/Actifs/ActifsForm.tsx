@@ -29,7 +29,11 @@ type Props = {
   dirty: boolean;
   setSendingType: (type: string) => void;
   errors: FormikErrors<FormikValues>;
+  selectedActifs: number[]; // or number[], if your IDs are numbers
+
 };
+
+
 
 const ActifsForm = ({
   modeles,
@@ -43,8 +47,10 @@ const ActifsForm = ({
   dirty,
   setSendingType,
   errors,
+  selectedActifs,
 }: Props) => {
   const { submitForm } = useFormikContext<FormikValues>();
+
 
   const handleReception = async () => {
     setSendingType('reception');
@@ -86,6 +92,7 @@ const ActifsForm = ({
               isClearable
             />
           </Grid>
+          
           <Grid item xs={12} sm={6}>
             <FormControlLabel
               control={
@@ -168,6 +175,17 @@ const ActifsForm = ({
           </Grid>
 
           <Grid item xs={12}>
+          <Button
+              className="my-5 mx-5 flex float-left"
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                const ids = selectedActifs.join(',');
+                window.open('https://inventaireapi.csshc.gouv.qc.ca/label/' + ids, '_blank');
+              }}
+            >
+              Générer étiquettes
+            </Button>
             <Button
               className="my-5 mx-5 flex float-right"
               variant="contained"
@@ -193,6 +211,7 @@ const ActifsForm = ({
               Réception
             </Button>
           </Grid>
+
         </Grid>
       </Form>
     </Fragment>

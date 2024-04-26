@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('commande', function (Blueprint $table) {
             $table->string('numero_commande')->primary();
-            $table ->string('tic_facturation')->nullable();
+            $table->string('tic_facturation')->nullable();
             $table->integer('nb_actif')->nullable();
             $table->date('date_commande')->nullable();
 

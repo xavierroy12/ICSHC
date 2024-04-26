@@ -53,9 +53,9 @@ class ClientController extends Controller
         $uniqueLieux = [];
         Log::info('new Test');
         foreach ($clients as $client) {
-            $inactive = False;
+            $inactive = False;            
             if ($client['LIEU'] == '---') {
-                Log::info("Client is inactive");
+
                 $inactive = True;
             }
             $matriculeLieu = $client['LIEU'];
@@ -78,6 +78,7 @@ class ClientController extends Controller
                 'prenom' => $client["PRNOM"],
                 'id_type_client' => $typeClient->id,
                 'inactif' => $inactive,
+                'username' => '',
             ];
 
             $existingClient = Client::where('matricule', $client["MATR"])->first();
@@ -86,7 +87,11 @@ class ClientController extends Controller
             if ($client["UserPrincipalName"] != null) {
                 $courriel = $client["UserPrincipalName"];
                 $clientData['courriel'] = $courriel;
+                    // Extract the string before the @ in the email
+                $username = strtok($courriel, '@');
+                $clientData['username'] = $username;
             }
+            
             //If client has emplacement, set emplacement.
 
             if (isset($existingClient) && $existingClient->emplacement_manuel) {
@@ -103,6 +108,7 @@ class ClientController extends Controller
 
             }
             else {
+                Log::info("This is the client data before creating the client: " . print_r($clientData, true));
                 $newClient = Client::create($clientData);
                 Log::info("New client created: " . print_r($newClient->toArray(), true));
 
@@ -111,9 +117,9 @@ class ClientController extends Controller
             Log::info("Processed client {$counter} out of {$totalClients}");
 
         }
-        foreach ($uniqueLieux as $lieu) {
+        /*foreach ($uniqueLieux as $lieu) {
             Log::info("Unique Lieu: " . $lieu);
-        }
+        }*/
     }
 
     public function listClientEleve()

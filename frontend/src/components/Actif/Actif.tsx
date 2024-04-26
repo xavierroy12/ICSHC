@@ -21,6 +21,7 @@ const Actif = () => {
   const [locataires, setLocataires] = useState<SelectItem[]>([]);
   const [utilisations, setUtilisations] = useState<SelectItem[]>([]);
   const [proprietaires, setProprietaires] = useState<SelectItem[]>([]);
+  const [sourceFinanciere, setSourceFinanciere] = useState<SelectItem[]>([]);
   const [actif, setActif] = useState<Actif_Type>();
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const Actif = () => {
       fetch(window.name + 'api/clients/light'),
       fetch(window.name + 'api/utilisations/light'),
       fetch(window.name + 'api/proprietaires/light'),
+      fetch(window.name + 'api/sourceFinanciere/light'),
       fetch(window.name + `api/actif/${id}`),
     ])
       .then((responses) =>
@@ -44,6 +46,7 @@ const Actif = () => {
           fetchedLocataires,
           fetchedUtilisations,
           fetchedProprietaires,
+          fetchedSourceFinanciere,
           fetchedActif,
         ]) => {
           setStatuts(
@@ -76,6 +79,12 @@ const Actif = () => {
               label: utilisation.nom,
             }))
           );
+          setSourceFinanciere(
+            fetchedSourceFinanciere.map((SourceFinanciere: LightType) => ({
+              id: SourceFinanciere.id,
+              label: SourceFinanciere.nom,
+            }))
+          );
           setProprietaires(
             fetchedProprietaires.map((proprietaire: LightType) => ({
               id: proprietaire.id,
@@ -100,6 +109,7 @@ const Actif = () => {
     categorie: actif?.categorie,
     modele: actif?.id_modele.toString(),
     assigne_a: actif?.id_client?.toString(),
+    sourceFinanciere: actif?.id_sourceFinanciere?.toString(),
     en_entrepot: actif?.en_entrepot || false,
     date_creation: actif?.date_creation,
     date_retour: actif?.date_retour,
@@ -139,6 +149,7 @@ const Actif = () => {
       id_assigne_a: values.assigne_a?.id || values.assigne_a || '',
       id_modele: values.modele.id || values.modele,
       id_statut: values.statut.id || values.statut,
+      id_source_financiere: values.sourceFinanciere.id || values.sourceFinanciere,
       id_emplacement: values.emplacement.id || values.emplacement,
       id_proprietaire: values.proprietaire.id || values.proprietaire,
       id_utilisation: values.utilisation.id || values.utilisation,
@@ -277,6 +288,7 @@ const Actif = () => {
                       locataires={locataires}
                       utilisations={utilisations}
                       proprietaires={proprietaires}
+                      sourceFinanciere={sourceFinanciere}
                       setSendingType={setSendingType}
                       errors={errors}
                     />

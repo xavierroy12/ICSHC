@@ -23,6 +23,7 @@ class Client extends Model
         'triggerAlerts',
         'is_Emplacement',
         'actifs',
+        'username',
         'id_type_client',
         'id_emplacement',
     ];

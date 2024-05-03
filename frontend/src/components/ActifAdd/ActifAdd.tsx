@@ -12,6 +12,7 @@ const ActifAdd = () => {
   const [modeles, setModeles] = useState<SelectItem[]>([]);
   const [actifs, setActifs] = useState<light_Actif[]>([]);
   const [emplacements, setEmplacements] = useState<SelectEmplacement[]>([]); // Add this line
+  const [sourceFinancieres, setSourceFinancieres] = useState<SelectItem[]>([]); // Add this line
 
   const initialValues = {
     numero_serie: '',
@@ -41,6 +42,19 @@ const ActifAdd = () => {
           data.map((emplacement: LightTypeEmplacement) => ({
             id: emplacement.id,
             label: emplacement.nom,
+          }))
+        );
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch(window.name + 'api/sourceFinanciere/light')
+      .then((response) => response.json())
+      .then((data) => {
+        setSourceFinancieres(
+          data.map((sourceFinancieres: LightTypeEmplacement) => ({
+            id: sourceFinancieres.id,
+            label: sourceFinancieres.nom,
           }))
         );
       });
@@ -101,6 +115,7 @@ const ActifAdd = () => {
                   actifs={actifs}
                   setActifs={setActifs}
                   emplacements={emplacements}
+                  sourceFinancieres={sourceFinancieres} // Add this line
                 />
               </div>
             </FormLayout>

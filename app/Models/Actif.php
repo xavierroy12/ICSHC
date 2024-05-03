@@ -27,6 +27,8 @@ class Actif extends Model
         'id_proprietaire',
         'id_utilisation',
         'numero_commande',
+        'id_source_financiere', // Added this line
+
         // Autres colonnes autorisées pour l'attribution de masse
     ];
 
@@ -62,6 +64,11 @@ class Actif extends Model
     public function client()
     {
         return $this->belongsTo(Client::class, 'id_client');
+    }
+
+    public function sourceFinanciere()
+    {
+        return $this->belongsTo(SourceFinanciere::class, 'id_source_financiere');
     }
 
 

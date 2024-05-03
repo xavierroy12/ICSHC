@@ -21,6 +21,8 @@ type Props = {
   actifs: light_Actif[];
   setActifs: React.Dispatch<React.SetStateAction<light_Actif[]>>;
   emplacements: SelectEmplacement[]; // Add this line
+  sourceFinancieres: SelectItem[];
+
 
 };
 export type light_Actif = {
@@ -30,7 +32,9 @@ export type light_Actif = {
   nom?: string; // Add this line
 };
 
-const ActifAddForm = ({ modeles, actifs, setActifs, emplacements }: Props) => {
+const ActifAddForm = ({ modeles, actifs, setActifs, emplacements, sourceFinancieres }: Props) => {
+  const [currentSourceFinanciere, setCurrentSourceFinanciere] = useState<SelectItem | null>(sourceFinancieres[0] || null);
+
   const [currentModele, setCurrentLabel] = useState<SelectItem | null>(
     modeles[0] || null
   );
@@ -93,17 +97,30 @@ const ActifAddForm = ({ modeles, actifs, setActifs, emplacements }: Props) => {
                 renderInput={(params) => <TextField {...params} label="Emplacement" variant="outlined" />}
               />
             </div>
-
+            <div className="w-full mr-10">
+              <Autocomplete
+                options={sourceFinancieres}
+                getOptionLabel={(option) => option.label}
+                value={currentSourceFinanciere}
+                onChange={(__event, newValue) => {
+                  setCurrentSourceFinanciere(newValue);
+                }}
+                renderInput={(params) => <TextField {...params} label="Source Financière" variant="outlined" />}
+              />
+            </div>
             <div className="mr-10">
               <TextField
                 label="Nombre"
                 name="amount"
                 value={amount}
+                style={{ width: '75px' }} // Add this line
+
                 onChange={(event) =>
                   setAmount(parseInt(event.target.value) || 0)
                 }
               />
             </div>
+
             <div className="my-auto">
               <Button
                 variant="contained"
@@ -169,6 +186,7 @@ const ActifAddForm = ({ modeles, actifs, setActifs, emplacements }: Props) => {
                                   event.target.value;
                                 setActifs(updatedActifs);
                               }}
+
                             />
                           </TableCell>
                         </TableRow>

@@ -15,6 +15,7 @@ type Props = {
 
   values: FormikValues;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+
   setFieldValue: (
     field: string,
     value: unknown,
@@ -48,11 +49,9 @@ const ActifForm = ({
   setSendingType,
   errors,
 }: Props) => {
-  console.log(values.id);
   const { submitForm } = useFormikContext<FormikValues>();
 
   const isAdmin = useContext(AdminContext);
-
   const handleReception = async () => {
     setSendingType('reception');
     await submitForm();
@@ -227,12 +226,12 @@ const ActifForm = ({
           <Field
             //to finishcccc
             className="input-field"
-            name="soureFinanciere"
+            name="sourceFinanciere"
             component={CustomSelect}
             options={sourceFinanciere}
             label="Source financière"
-            error={errors.soureFinanciere ? true : false}
-            helperText={errors.soureFinanciere}
+            error={errors.sourceFinanciere ? true : false}
+            helperText={errors.sourceFinanciere}
           />
         </Grid>
 

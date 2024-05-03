@@ -11,7 +11,7 @@ export type Actif_Type = {
   id_statut: number;
   id_emplacement: number;
   id_proprietaire: number;
-  id_sourceFinanciere: number;
+  id_source_financiere: number;
   id_utilisation: number;
   id_categorie: number;
   id_modele: number;

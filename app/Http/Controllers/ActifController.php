@@ -84,14 +84,12 @@ class ActifController extends Controller
     public function getIdFromUsername($username)
     {
         // Find the client by username
-        Log::info('Username is ' . $username);	
         $client = Client::where('username', $username)->first();
         if (!$client) {
             $client = Client::where('matricule', $username)->first();
         }
     
         if ($client) {
-            Log::info('client id is ' . $client->id);
             return $client->id;
         } else {
             // Return a default value or throw an exception
@@ -166,7 +164,7 @@ class ActifController extends Controller
             // Get the Actif object to update
             $actif = Actif::findOrFail($id);
             
-            
+
             // Get the data from the form
             $data = $request->all();
             if ($data['id_assigne_a'] == 'Aucun' || $data['id_assigne_a'] == '') {
@@ -192,6 +190,7 @@ class ActifController extends Controller
                 'en_entrepot' => $data['en_entrepot'],
                 'date_retour' => $data['date_retour'],
                 'note' => $data['note'],
+                'id_source_financiere' => $data['id_source_financiere'],
                 'id_modele' => $data['id_modele'],
                 'id_statut' => $data['id_statut'],
                 'id_emplacement' => $data['id_emplacement'],
@@ -200,7 +199,6 @@ class ActifController extends Controller
                 'id_client' => $data['id_assigne_a']
                 //'numero_commande' => $data['numero_commande'], //Todo add this to the form
             ];
-            
             
             // Update the Actif object with the updated data
             $actif->fill($updatedDataActif);
@@ -276,6 +274,7 @@ class ActifController extends Controller
                 'id_modele' => $actif->modele->id,
                 'categorie' => $actif->modele->categorie->nom,
                 'id_statut' => $actif->statut->id,
+                'id_source_financiere' => $actif->id_source_financiere,
                 'id_utilisation' => $actif->utilisation->id ?? "Aucun",
                 'id_proprietaire' => $actif->proprietaire->id ?? "Aucun",
                 'id_emplacement' => $actif->emplacement->id,
@@ -313,7 +312,6 @@ class ActifController extends Controller
             ->where('id_statut', $statut_archived->id)
             ->get()
             ->map(function ($actif) {
-                Log::info('actif emplacement is ' . $actif);
                 return [
                     'id' => $actif->id,
                     'numero_commande' => $actif->numero_commande,
@@ -356,7 +354,6 @@ class ActifController extends Controller
                 if ($id_modele) {
                     $actif->id_modele = $id_modele;
                 }
-                log::info('Actif: ' . $actif);
                 $actif->save();
             }
             
@@ -630,7 +627,6 @@ class ActifController extends Controller
                                             $id_emplacement = $this->findIdEquipeVolante();
                                         }
                                         else if($location != null){
-                                            log::info('Location is : ' . $location);
                                             $id_emplacement = $this->splitNomEmplacement($location);
                                         }
                                         else{
@@ -661,8 +657,6 @@ class ActifController extends Controller
                                         else{
                                             $id_proprietaire = null;
                                         }
-                                        Log::error("Checked out = " . $checkedOut);
-                                        log::error('Client is : ' . $client);
     
                                         if (preg_match('/^\d{3}/', $client) || $client == null) {
                                             $id_client = null;
@@ -738,7 +732,6 @@ class ActifController extends Controller
                                                 // If the emplacement was found, use its id
                                                 $id_emplacement = $UI_emplacement->id;
                                             } else {
-                                                Log::info('Emplacement with matricule 998 not found');
                                                 $id_emplacement = null;
                                             }
                                             return $id_emplacement;
@@ -753,7 +746,6 @@ class ActifController extends Controller
                                                 // If the emplacement was found, use its id
                                                 $id_emplacement = $UI_emplacement->id;
                                             } else {
-                                                Log::info('Emplacement with matricule 997 not found');
                                                 $id_emplacement = null;
                                             }
                                             return $id_emplacement;
@@ -768,7 +760,6 @@ class ActifController extends Controller
                                                 // If the emplacement was found, use its id
                                                 $id_emplacement = $UI_emplacement->id;
                                             } else {
-                                                Log::info('Emplacement with matricule 996 not found');
                                                 $id_emplacement = null;
                                             }
                                             return $id_emplacement;
@@ -782,7 +773,6 @@ class ActifController extends Controller
                                                 // If the emplacement was found, use its id
                                                 $id_emplacement = $UI_emplacement->id;
                                             } else {
-                                                Log::info('Emplacement with matricule 996 not found');
                                                 $id_emplacement = null;
                                             }
                                             return $id_emplacement;

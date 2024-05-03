@@ -25,7 +25,7 @@ return new class extends Migration
             $table->text('note')->nullable();
             $table->text('modele_descriptif')->nullable();
             $table->string('numero_commande')->nullable();
-            $table->unsignedBigInteger('id_sourceFinanciere')->nullable();
+            $table->unsignedBigInteger('id_source_financiere')->nullable();
             $table->unsignedBigInteger('id_modele')->nullable();
             $table->unsignedBigInteger('id_statut');
             $table->unsignedBigInteger('id_emplacement')->nullable();
@@ -33,7 +33,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_utilisation')->nullable();
             $table->unsignedBigInteger('id_client')->nullable();
             $table->foreign('numero_commande')->references('numero_commande')->on('commande');
-            $table->foreign('id_sourceFinanciere')->references('id')->on('source_financiere');
+            $table->foreign('id_source_financiere')->references('id')->on('source_financiere');
             $table->foreign('id_modele')->references('id')->on('modele');
             $table->foreign('id_statut')->references('id')->on('statut');
             $table->foreign('id_emplacement')->references('id')->on('emplacement');

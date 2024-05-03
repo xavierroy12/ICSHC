@@ -92,6 +92,7 @@ const Actif = () => {
             }))
           );
           setActif(fetchedActif);
+
           setLoading(false);
         }
       );
@@ -109,7 +110,7 @@ const Actif = () => {
     categorie: actif?.categorie,
     modele: actif?.id_modele.toString(),
     assigne_a: actif?.id_client?.toString(),
-    sourceFinanciere: actif?.id_sourceFinanciere?.toString(),
+    sourceFinanciere: actif?.id_source_financiere?.toString(),
     en_entrepot: actif?.en_entrepot || false,
     date_creation: actif?.date_creation,
     date_retour: actif?.date_retour,
@@ -133,6 +134,7 @@ const Actif = () => {
   };
 
   const handleConfirm = () => {
+
     const values = formValuesRef.current;
     if (!values) return;
 
@@ -228,7 +230,6 @@ const Actif = () => {
 
       // Set the time of today to 00:00:00 for a fair comparison
       today.setHours(0, 0, 0, 0);
-      console.log(inputDate, today);
 
       if (inputDate > today) {
         errors.date_creation =

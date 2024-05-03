@@ -10,4 +10,6 @@ class SourceFinanciere extends Model
 
     protected $table = 'source_financiere';
     use HasFactory;
+    protected $fillable = ['nom'];
+
 }

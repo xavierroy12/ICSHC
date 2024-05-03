@@ -227,7 +227,7 @@ class ActifController extends Controller
     public function listShow()
     {
         try {
-            $actifs = Actif::with(['modele.categorie', 'statut', 'client', 'emplacement'])
+            $actifs = Actif::with(['modele.categorie', 'statut', 'client', 'emplacement', 'sourceFinanciere'])
             ->whereHas('statut', function ($query) {
                 $query->where('nom', '!=', 'Archivé');
             })
@@ -243,8 +243,12 @@ class ActifController extends Controller
                     'statut' => $actif->statut->nom,
                     'client' => $actif->client ? ($actif->client->prenom . ' ' . $actif->client->nom) : 'Aucun',
                     'emplacement' => $actif->emplacement ? ($actif->emplacement->matricule . " - " . $actif->emplacement->nom) : '000 - Aucun emplacement',
-                ];
+                    'sourceFinanciere' => $actif->sourceFinanciere ? $actif->sourceFinanciere->nom : 'Aucun',
+                        ];
             });
+            Log::info("actif source financiere is :" . $actifs[0]['sourceFinanciere']);
+            Log::info("Actif returned for list is : " . $actifs);
+
             return response()->json($actifs);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to retrieve actifs: ' . $e->getMessage()], 500);

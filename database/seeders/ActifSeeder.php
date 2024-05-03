@@ -36,6 +36,7 @@ class ActifSeeder extends Seeder
             'id_proprietaire' => 1,
             'id_utilisation' => 1,
             'numero_commande' => "69123456789",
+            'id_source_financiere' => 1, 
             'id_client' => $userOldActif[0],
         ]);
 

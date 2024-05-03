@@ -25,6 +25,7 @@ export type selectedFiltersType = {
   statut?: string;
   client?: string;
   emplacement?: string;
+  sourceFinanciere?: string;
 };
 type currentFiltersGroupType = {
   value: number;
@@ -154,6 +155,17 @@ const ActifsList = () => {
         sort: true,
         filterList: selectedFilters.emplacement
           ? [selectedFilters.emplacement]
+          : [],
+      },
+    },
+    {
+      name: 'sourceFinanciere',
+      label: 'Source Financière',
+      options: {
+        filter: true,
+        sort: true,
+        filterList: selectedFilters.sourceFinanciere
+          ? [selectedFilters.sourceFinanciere]
           : [],
       },
     },

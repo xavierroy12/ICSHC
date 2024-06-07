@@ -7,7 +7,7 @@
 - [ ] Dans « Modifier multiples actif », mettre l’option d’assigner tous les actifs sélectionner à un client.
 - [ ] Ajuster les filtres appliquer sur les commandes entrente pour retirer les items qui ne vont pas dans l’inventaire (Chargeurs, écrans, ect…)
 - [ ] Enlever la possibilité d’ajouter des modèles par les techniciens.
-- [ ] Ajouter la possibilité pour les administrateurs de crée des modèles
+- [ X] Ajouter la possibilité pour les administrateurs de crée des modèles
 - [ ] Réception partielle de commande
 
 ## Priorité 2
@@ -22,3 +22,6 @@
 - [ ] Vérifier que la réception de multiple actif fonctionne
 - [ ] Impressions d’étiquette pour de multiples actifs en même temps
 - [ ] Bouton pour sélectionner tous les actifs du tableau.
+
+## Ajout + bug
+- [ ] Modification de multiple actifs semble briser, verifier historique et modificaiton

@@ -27,10 +27,10 @@ type Props = {
     shouldValidate?: boolean | undefined
   ) => void;
   dirty: boolean;
+  sourceFinanciere: SelectItem[];
   setSendingType: (type: string) => void;
   errors: FormikErrors<FormikValues>;
   selectedActifs: number[]; // or number[], if your IDs are numbers
-
 };
 
 
@@ -45,6 +45,7 @@ const ActifsForm = ({
   handleChange,
   setFieldValue,
   dirty,
+  sourceFinanciere,
   setSendingType,
   errors,
   selectedActifs,
@@ -92,7 +93,7 @@ const ActifsForm = ({
               isClearable
             />
           </Grid>
-          
+
           <Grid item xs={12} sm={6}>
             <FormControlLabel
               control={
@@ -127,6 +128,17 @@ const ActifsForm = ({
               options={proprietaires}
               label="Proprietaire"
               isClearable
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Field
+              className="input-field"
+              name="sourceFinanciere"
+              component={CustomSelect}
+              options={sourceFinanciere}
+              label="Source financière"
+              error={errors.sourceFinanciere ? true : false}
+              helperText={errors.sourceFinanciere}
             />
           </Grid>
           <Grid item xs={12}>
@@ -175,7 +187,7 @@ const ActifsForm = ({
           </Grid>
 
           <Grid item xs={12}>
-          <Button
+            <Button
               className="my-5 mx-5 flex float-left"
               variant="contained"
               color="primary"

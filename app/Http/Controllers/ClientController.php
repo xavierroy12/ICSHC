@@ -47,6 +47,7 @@ class ClientController extends Controller
         $scolagoDbModel = new ScolagoDbModel();
         $emplacementController = new EmplacementController();
         $clients = $scolagoDbModel->getEmployees();
+        Log::info($clients);
         $totalClients = count($clients);
         $counter = 0;
         $typeClient = TypeClient::where('nom', 'Employé')->first();

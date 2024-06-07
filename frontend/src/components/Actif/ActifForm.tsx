@@ -224,7 +224,6 @@ const ActifForm = ({
 
         <Grid item xs={12} sm={6}>
           <Field
-            //to finishcccc
             className="input-field"
             name="sourceFinanciere"
             component={CustomSelect}

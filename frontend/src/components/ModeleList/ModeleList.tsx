@@ -151,7 +151,7 @@ const ModeleList = () => {
                 style={{ marginRight: '1rem' }}
                 color="primary"
                 size="medium"
-                onClick={() => navigate('/modele')}
+                onClick={() => navigate('/modele/new')}
               >
                 Ajouter
               </Button>

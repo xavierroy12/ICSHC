@@ -48,6 +48,7 @@ const AddCategorie = ({ handleClose, reloadData }: Props) => {
           id="categorie"
           value={categorie}
           onChange={(e) => setCategorie(e.target.value)}
+          autoComplete="off"
         />
         <Button className="ml-4" variant="contained" onClick={handleSubmit}>
           Ajouter

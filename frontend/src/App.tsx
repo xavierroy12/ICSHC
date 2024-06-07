@@ -7,6 +7,8 @@ import ActifsList from './components/ActifsList';
 import Actifs from './components/Actifs';
 import Actif from './components/Actif';
 import Modele from './components/Modele';
+import ModeleAddPrep from './components/ModeleAdd/ModeleAddPrep';
+
 import ModeleList from './components/ModeleList/ModeleList';
 import Login from './components/Login/Login';
 import Client from './components/Client';
@@ -140,8 +142,7 @@ function App() {
                 <Route path="/actifs/modify" element={<Actifs />} />
                 <Route path="/actif/:id" element={<Actif />} />
                 <Route path="/actif" element={<ActifAdd />} />
-
-                <Route path="/modeles" element={<ModeleList />} />
+                <Route path="/modele/new" element={<ModeleAddPrep />} />                <Route path="/modeles" element={<ModeleList />} />
                 <Route path="/modele/:id" element={<Modele />} />
 
                 <Route path="/client/:id" element={<Client />} />

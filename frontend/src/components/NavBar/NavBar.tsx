@@ -150,6 +150,13 @@ const NavBar = ({ darkMode, handleThemeChange }: Props) => {
                 <MenuItem
                   onClick={handleClose}
                   component={Link}
+                  to={`/modeleAdd`}
+                >
+                  Modele
+                </MenuItem>
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
                   to={`/rapport`}
                 >
                   Rapports

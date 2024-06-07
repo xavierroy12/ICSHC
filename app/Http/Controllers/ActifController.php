@@ -8,6 +8,8 @@ use App\Models\Actif;
 use App\Models\Client;
 use App\Models\Modele;
 use App\Models\Statut;
+use App\Models\Emplacement;
+use App\Models\SourceFinanciere;
 use Picqer\Barcode\BarcodeGeneratorHTML;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -40,21 +42,24 @@ class ActifController extends Controller
     
     public function updateMultiple(Request $request)
     {
+        Log::info('were in update multiple');        
+
         $data = $request->all();
         $arrayIdActifs = $data['ids'];
         $values = $data['values'];
-        
+        Log::info('Values in updatemultiple: ' . print_r($values, true));        
         //request object with all possible fields, if not set, set to null
         $requestData = [
             'en_entrepot' => isset($values['en_entrepot']) ? $values['en_entrepot'] : null,
             'date_retour' => isset($values['date_retour']) ? $values['date_retour'] : null,
             'note' => isset($values['note']) ? $values['note'] : null,
-            'id_modele' => isset($values['modele']) ? $values['modele'] : null,
-            'id_categorie' => isset($values['categorie']) ? $values['categorie'] : null,
-            'id_statut' => isset($values['statut']) ? $values['statut'] : null,
-            'id_emplacement' => isset($values['emplacement']) ? $values['emplacement'] : null,
-            'id_proprietaire' => isset($values['proprietaire']) ? $values['proprietaire'] : null,
-            'id_utilisation' => isset($values['utilisation']) ? $values['utilisation'] : null,
+            'id_modele' => isset($values['id_modele']) ? $values['id_modele'] : null,
+            'id_categorie' => isset($values['id_categorie']) ? $values['id_categorie'] : null,
+            'id_statut' => isset($values['id_statut']) ? $values['id_statut'] : null,
+            'id_emplacement' => isset($values['id_emplacement']) ? $values['id_emplacement'] : null,
+            'id_proprietaire' => isset($values['id_proprietaire']) ? $values['id_proprietaire'] : null,
+            'id_utilisation' => isset($values['id_utilisation']) ? $values['id_utilisation'] : null,
+            'id_source_financiere' => isset($values['id_source_financiere']) ? $values['id_source_financiere'] : null,
         ];
         $filteredData = array_filter($requestData, function ($value) {
             return $value !== null;
@@ -66,6 +71,8 @@ class ActifController extends Controller
             $actif = Actif::findOrFail($id);
             
             $client = Client::where('id_actif', $id);
+
+            log::info('filtered data is : found: ' . print_r($filteredData, true));
             
             //Remove assignation from previous client
             if (isset($values['desassignation']) && $values['desassignation']) {
@@ -378,18 +385,33 @@ class ActifController extends Controller
         }
         public function createMultiple(Request $request)
         {
-            Log::info('createMultiple function called');
             $data = $request->all(); 
+        
             $id_modele = Modele::where('nom', $data[0]['modele'])->first()->id;
+        
+            // Extract the first three digits
+            $matricule = substr($data[0]['emplacement'], 0, 3);
+        
+            // Find the emplacement with the corresponding matricule
+            $emplacement = Emplacement::where('matricule', $matricule)->first();
+            if (!$emplacement) {
+                \Log::error('Failed to find emplacement with matricule: ' . $matricule);
+                return;
+            }
+            $id_emplacement = $emplacement->id;
+        
+            $id_source_financiere = SourceFinanciere::where('nom', $data[0]['source_financiere'])->first()->id;
+        
             foreach ($data as $newActif) {
                 $actif = new Actif;
                 $actif->nom = $newActif['nom'];
                 $actif->numero_serie = $newActif['numero_serie'];
                 $actif->adresse_mac = $newActif['adresse_mac'];
+                $actif->id_source_financiere = $id_source_financiere;
                 $actif->id_modele = $id_modele;
                 $actif->en_entrepot = true;
                 $actif->id_statut = 3;
-                $actif->id_emplacement = 1;
+                $actif->id_emplacement = $id_emplacement;
                 try {
                     $actif->save();
                 } catch (\Exception $e) {

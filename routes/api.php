@@ -43,7 +43,7 @@ Route::middleware(['logrequest', 'throttle:5000,1'])->group(function () {
     Route::get('/client/{id}', [ClientController::class, 'show']);
     Route::get('/clients', [ClientController::class, 'showAll']);
     Route::get('/clients/light', [ClientController::class, 'lightShow']);
-    Route::get('/clients/list', [ClientController::class, 'listShwhow']);
+    Route::get('/clients/list', [ClientController::class, 'listShow']);
     Route::post('/client/actifs/{id}', [ClientController::class, 'updateActifs']);
     Route::post('/client/alerts/{id}', [ClientController::class, 'updateAlerts']);
 

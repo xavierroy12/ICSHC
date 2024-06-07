@@ -34,6 +34,7 @@ class ModeleController extends Controller
     public function createNew(Request $request)
     {
         $data = $request->all();
+        log::info(print_r($data, true));
         $modele = new Modele();
         $modele->nom = $data['nom'];
         $modele->stockage = $data['stockage'] ?? "";

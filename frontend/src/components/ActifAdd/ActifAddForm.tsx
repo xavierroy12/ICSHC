@@ -23,18 +23,20 @@ type Props = {
   emplacements: SelectEmplacement[]; // Add this line
   sourceFinancieres: SelectItem[];
 
-
 };
 export type light_Actif = {
   modele?: string;
   numero_serie?: string;
   adresse_mac?: string;
   nom?: string; // Add this line
+  emplacement?: string; // Add this line
+  source_financiere?: string; // Add this line
 };
 
 const ActifAddForm = ({ modeles, actifs, setActifs, emplacements, sourceFinancieres }: Props) => {
-  const [currentSourceFinanciere, setCurrentSourceFinanciere] = useState<SelectItem | null>(sourceFinancieres[0] || null);
-
+  const [currentSourceFinanciere, setCurrentSourceFinanciere] = useState<SelectItem | null>(
+    sourceFinancieres[0] || null
+  );
   const [currentModele, setCurrentLabel] = useState<SelectItem | null>(
     modeles[0] || null
   );
@@ -45,7 +47,7 @@ const ActifAddForm = ({ modeles, actifs, setActifs, emplacements, sourceFinancie
   const [displayTable, setDisplayTable] = useState<boolean>(false);
 
   const generateTable = () => {
-    if (!currentModele) return;
+    if (!currentModele || !currentEmplacement || !currentSourceFinanciere) return;
     if (amount < 0) return;
     const currentAmount = actifs.length;
     if (amount < currentAmount) {
@@ -58,6 +60,8 @@ const ActifAddForm = ({ modeles, actifs, setActifs, emplacements, sourceFinancie
             modele: currentModele?.label || '',
             numero_serie: '',
             adresse_mac: '',
+            emplacement: currentEmplacement?.label || '', // Add this line
+            source_financiere: currentSourceFinanciere?.label || '', // Add this line
           },
         ]);
       }

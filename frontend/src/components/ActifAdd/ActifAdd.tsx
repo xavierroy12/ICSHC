@@ -18,6 +18,8 @@ const ActifAdd = () => {
     numero_serie: '',
     adresse_mac: '',
     modele: '',
+    emplacement: '',
+    source_financiere: '',
   };
 
   useEffect(() => {

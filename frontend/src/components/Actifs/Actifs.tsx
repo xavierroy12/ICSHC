@@ -22,7 +22,7 @@ const Actifs = () => {
   const [emplacements, setEmplacements] = useState<SelectItem[]>([]);
   const [utilisations, setUtilisations] = useState<SelectItem[]>([]);
   const [proprietaires, setProprietaires] = useState<SelectItem[]>([]);
-
+  const [sourceFinanciere, setSourceFinanciere] = useState<SelectItem[]>([]);
   const [actifs, setActifs] = useState<LightActif[]>([]);
   const [selectedActifs, setSelectedActifs] = useState<LightActif[]>([]);
 
@@ -34,6 +34,7 @@ const Actifs = () => {
       fetch(window.name + 'api/emplacements/light'),
       fetch(window.name + 'api/utilisations/light'),
       fetch(window.name + 'api/proprietaires/light'),
+      fetch(window.name + 'api/sourceFinanciere/light'),
       fetch(window.name + 'api/actifs/light'),
     ])
       .then((responses) =>
@@ -46,6 +47,7 @@ const Actifs = () => {
           emplacementsData,
           utilisationsData,
           proprietairesData,
+          sourceFinanciereData,
           actifsData,
         ]) => {
           setStatuts(
@@ -70,6 +72,12 @@ const Actifs = () => {
             utilisationsData.map((utilisation: LightType) => ({
               id: utilisation.id,
               label: utilisation.nom,
+            }))
+          );
+          setSourceFinanciere(
+            sourceFinanciereData.map((SourceFinanciere: LightType) => ({
+              id: SourceFinanciere.id,
+              label: SourceFinanciere.nom,
             }))
           );
           setProprietaires(
@@ -98,6 +106,7 @@ const Actifs = () => {
     emplacement: '',
     en_entrepot: false,
     utilisation: '',
+    sourceFinanciere: '',
     proprietaire: '',
     date_retour: '',
     note: '',
@@ -135,6 +144,7 @@ const Actifs = () => {
       note: values.note,
       id_modele: values.modele.id || values.modele,
       id_statut: values.statut.id || values.statut,
+      id_source_financiere: values.sourceFinanciere.id || values.sourceFinanciere,
       id_emplacement: values.emplacement.id || values.emplacement,
       id_proprietaire: values.proprietaire.id || values.proprietaire,
       id_utilisation: values.utilisation.id || values.utilisation,
@@ -220,6 +230,7 @@ const Actifs = () => {
                     emplacements={emplacements}
                     utilisations={utilisations}
                     proprietaires={proprietaires}
+                    sourceFinanciere={sourceFinanciere}
                     values={values}
                     handleChange={handleChange}
                     dirty={dirty}

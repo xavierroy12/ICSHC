@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Modele } from './type';
 import List from '../List';
 import { toast } from 'react-toastify';
+const id_role = localStorage.getItem('id_role');
 
 const ModeleList = () => {
   const navigate = useNavigate();
@@ -146,15 +147,17 @@ const ModeleList = () => {
           />
           <Fragment>
             <div className="float-right m-4 ">
-              <Button
-                className="ml-12"
-                style={{ marginRight: '1rem' }}
-                color="primary"
-                size="medium"
-                onClick={() => navigate('/modele/new')}
-              >
-                Ajouter
-              </Button>
+              {id_role === '1' && (
+                <Button
+                  className="ml-12"
+                  style={{ marginRight: '1rem' }}
+                  color="primary"
+                  size="medium"
+                  onClick={() => navigate('/modele/new')}
+                >
+                  Ajouter
+                </Button>
+              )}
             </div>
           </Fragment>
         </div>
